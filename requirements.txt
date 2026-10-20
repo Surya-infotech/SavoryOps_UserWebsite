@@ -1,0 +1,26 @@
+npm create vite@latest
+npm install
+npm i react-router-dom
+npm install @mui/icons-material @mui/material @emotion/react @emotion/styled
+npm i react-bootstrap bootstrap
+npm install react-responsive-carousel
+npm i dotenv
+npm i moment
+npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons @fortawesome/fontawesome-svg-core
+npm install --save-dev node-sass
+npm install -D sass-embedded
+npm install react-quill
+npm install react-phone-number-input
+npm install react-world-flags
+npm install moment-timezone@latest
+npm install validator
+npm install js-cookie
+npm install recharts
+npm install lucide-react
+npm install qrcode
+npm i react-datepicker
+npm install qr-code-styling
+npm install crypto-js
+npm i country-state-city
+npm install jspdf jspdf-autotable
+npm install html2canvas
