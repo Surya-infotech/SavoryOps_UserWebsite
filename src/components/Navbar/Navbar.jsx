@@ -99,9 +99,6 @@ const Navbar = ({ userdomain }) => {
             <img src="/logo.png" alt="SavoryOps Logo" className="nav-brand-logo" />
             <div className="nav-brand-info">
               <span className="nav-brand-name">{brandDisplayName}</span>
-              <span className="nav-brand-tagline">
-                {userdomain ? "Artisanal Kitchen & Bar" : "Culinary Cloud SaaS"}
-              </span>
             </div>
           </Link>
 
@@ -174,7 +171,6 @@ const Navbar = ({ userdomain }) => {
               <div className="mobile-drawer-header">
                 <div className="nav-brand-info">
                   <span className="nav-brand-name">{brandDisplayName}</span>
-                  <span className="nav-brand-tagline">Menu & Online Orders</span>
                 </div>
                 <button
                   type="button"
