@@ -1,4 +1,3 @@
-import React from "react";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import SpaIcon from "@mui/icons-material/Spa";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";

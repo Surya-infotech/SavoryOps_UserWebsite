@@ -1,4 +1,3 @@
-import React from "react";
 import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
 import HomeDishes from "../../Components/Home/HomeDishes.jsx";

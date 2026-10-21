@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     server: {
-      host: env.VITE_HOST,
+      host: true,
       port: parseInt(env.VITE_PORT),
       cors: true,
       allowedHosts: true,
