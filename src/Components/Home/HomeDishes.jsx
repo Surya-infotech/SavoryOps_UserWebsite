@@ -4,6 +4,45 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import "../../Scss/Components/Home/homedishes.scss";
 
+/**
+ * Standard Veg/Non-Veg FSSAI-compliant diet badge
+ */
+export const DietIndicator = ({ isVeg, className = "" }) => {
+  return (
+    <span
+      className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
+      title={isVeg ? "Pure Vegetarian" : "Non-Vegetarian"}
+      aria-label={isVeg ? "Pure Vegetarian" : "Non-Vegetarian"}
+    >
+      {isVeg ? (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="diet-svg"
+        >
+          <rect x="1" y="1" width="14" height="14" rx="3" stroke="#2e7d32" strokeWidth="1.8" fill="#ffffff" />
+          <circle cx="8" cy="8" r="3.75" fill="#2e7d32" />
+        </svg>
+      ) : (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="diet-svg"
+        >
+          <rect x="1" y="1" width="14" height="14" rx="3" stroke="#c62828" strokeWidth="1.8" fill="#ffffff" />
+          <circle cx="8" cy="8" r="3.75" fill="#c62828" />
+        </svg>
+      )}
+    </span>
+  );
+};
+
 const SAMPLE_DISHES = [
   {
     id: 1,
@@ -13,6 +52,7 @@ const SAMPLE_DISHES = [
     desc: "San Marzano marinara, torn buffalo mozzarella, organic sweet basil, extra virgin olive oil.",
     price: "$18.50",
     image: "/banners/banner-pizza.jpg",
+    isVeg: true,
   },
   {
     id: 2,
@@ -22,6 +62,7 @@ const SAMPLE_DISHES = [
     desc: "Aged prosciutto di Parma, wild mushrooms, creamy gorgonzola, black truffle drizzle.",
     price: "$23.00",
     image: "/banners/banner-pizza.jpg",
+    isVeg: false,
   },
   {
     id: 3,
@@ -31,6 +72,7 @@ const SAMPLE_DISHES = [
     desc: "Double smashed Angus beef patties, aged Wisconsin cheddar, crispy bacon, house savory sauce.",
     price: "$16.75",
     image: "/banners/banner-burger.jpg",
+    isVeg: false,
   },
   {
     id: 4,
@@ -40,6 +82,7 @@ const SAMPLE_DISHES = [
     desc: "Brioche bun, charred caramelized onions, chipotle BBQ sauce, Monterey jack cheese.",
     price: "$17.50",
     image: "/banners/banner-burger.jpg",
+    isVeg: false,
   },
   {
     id: 5,
@@ -49,6 +92,7 @@ const SAMPLE_DISHES = [
     desc: "Rich 18-hour simmered broth, melt-in-mouth chashu pork belly, bamboo shoots, nitamago egg.",
     price: "$19.25",
     image: "/banners/banner-feast.jpg",
+    isVeg: false,
   },
   {
     id: 6,
@@ -58,6 +102,7 @@ const SAMPLE_DISHES = [
     desc: "Atlantic salmon, yellowfin tuna, sweet eel nigiri, and California crunch rolls.",
     price: "$26.00",
     image: "/banners/banner-feast.jpg",
+    isVeg: false,
   },
   {
     id: 7,
@@ -67,6 +112,7 @@ const SAMPLE_DISHES = [
     desc: "Warm decadent liquid chocolate core served with French vanilla bean gelato and fresh berries.",
     price: "$11.50",
     image: "/banners/banner-dessert.jpg",
+    isVeg: true,
   },
   {
     id: 8,
@@ -76,6 +122,7 @@ const SAMPLE_DISHES = [
     desc: "Crushed raspberries, sparkling botanical citrus water, passionfruit purée, fresh garden mint.",
     price: "$8.50",
     image: "/banners/banner-dessert.jpg",
+    isVeg: true,
   },
 ];
 
@@ -141,6 +188,7 @@ const HomeDishes = () => {
                 <span className="dish-tag-badge">
                   {dish.menuname}
                 </span>
+                <DietIndicator isVeg={dish.isVeg} />
               </div>
 
               <div className="dish-content">
