@@ -1,109 +1,74 @@
-/* SavoryOps User Website App Styles */
+/* ==========================================================================
+   SavoryOps User Website - Global App Layout Styles
+   ========================================================================== */
+
 .user-app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-color, #f8fafc);
   color: var(--text-primary, #0f172a);
-}
-
-.user-app-header {
-  background: #ffffff;
-  border-bottom: 1px solid var(--border-color, #e2e8f0);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.brand-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand-logo {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-}
-
-.brand-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--primary-color, #028802);
-  margin: 0;
-}
-
-.subdomain-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: color-mix(in srgb, var(--primary-color, #028802) 12%, transparent);
-  color: var(--primary-color, #028802);
-  padding: 6px 14px;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border: 1px solid color-mix(in srgb, var(--primary-color, #028802) 30%, transparent);
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .user-app-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-.hero-card {
+/* Secondary Pages Wrapper */
+.subpage-container {
+  max-width: 1320px;
+  width: 100%;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  flex: 1;
+}
+
+.subpage-hero {
   background: #ffffff;
   border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-  margin-top: 1rem;
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
 }
 
-.hero-card h2 {
-  font-size: 1.75rem;
-  font-weight: 700;
+.subpage-hero h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
   margin-bottom: 0.75rem;
-  color: var(--text-primary, #0f172a);
 }
 
-.hero-card p {
-  color: var(--text-secondary, #64748b);
-  font-size: 1rem;
+.subpage-hero p {
+  color: #64748b;
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
   line-height: 1.6;
 }
 
-.subdomain-details-box {
-  margin-top: 1.5rem;
-  padding: 1.25rem;
-  background: #f1f5f9;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
+.subpage-back-btn {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-}
-
-.detail-row {
-  display: flex;
-  gap: 12px;
-  font-size: 0.95rem;
-}
-
-.detail-label {
+  padding: 0.75rem 1.5rem;
+  background: #028802;
+  color: #ffffff;
+  border-radius: 10px;
   font-weight: 600;
-  color: #334155;
-  min-width: 140px;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.detail-value {
-  color: #0f172a;
-  font-family: monospace;
+.subpage-back-btn:hover {
+  background: #026b02;
+  transform: translateY(-2px);
 }

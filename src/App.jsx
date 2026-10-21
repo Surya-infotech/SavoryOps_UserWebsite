@@ -1,70 +1,102 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
-import './App.css';
+import Navbar from "./components/Navbar/Navbar.jsx";
+import Footer from "./components/Footer/Footer.jsx";
+import HomePage from "./pages/Home/HomePage.jsx";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import "./App.css";
+
+const SubpagePlaceholder = ({ title, subtitle, icon }) => (
+  <div className="subpage-container">
+    <div className="subpage-hero">
+      <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>{icon}</div>
+      <h2>{title}</h2>
+      <p>{subtitle}</p>
+      <Link to="/" className="subpage-back-btn">
+        <ArrowBackIcon fontSize="small" />
+        <span>Return to Home</span>
+      </Link>
+    </div>
+  </div>
+);
 
 const AppContent = ({ userdomain }) => {
   return (
     <div className="user-app-container">
-      <header className="user-app-header">
-        <div className="brand-wrapper">
-          <img src="/logo.png" alt="SavoryOps Logo" className="brand-logo" />
-          <h1 className="brand-title">SavoryOps</h1>
-        </div>
-        <div>
-          {userdomain ? (
-            <span className="subdomain-pill">
-              Subdomain: <strong>{userdomain}</strong>
-            </span>
-          ) : (
-            <span className="subdomain-pill" style={{ opacity: 0.8 }}>
-              Base Domain
-            </span>
-          )}
-        </div>
-      </header>
+      {/* Top Glassmorphic Navigation Bar */}
+      <Navbar userdomain={userdomain} />
 
+      {/* Main Content Router */}
       <Box component="main" className="user-app-main">
         <Routes>
+          <Route path="/" element={<HomePage userdomain={userdomain} />} />
           <Route
-            path="/"
+            path="/menu"
             element={
-              <div className="hero-card">
-                <h2>{userdomain ? `Welcome to ${userdomain}` : "SavoryOps User Website"}</h2>
-                <p>
-                  {userdomain
-                    ? `You are currently browsing the dedicated tenant website on subdomain "${userdomain}".`
-                    : "No subdomain detected. Please navigate to a specific restaurant subdomain (e.g., restaurant.savoryops.website)."}
-                </p>
-
-                <div className="subdomain-details-box">
-                  <div className="detail-row">
-                    <span className="detail-label">Current Hostname:</span>
-                    <span className="detail-value">{window.location.hostname}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Detected Subdomain:</span>
-                    <span className="detail-value">{userdomain || "None (Base Host / Localhost)"}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Configured Base Host:</span>
-                    <span className="detail-value">{import.meta.env.VITE_HOST || "Not Set"}</span>
-                  </div>
-                </div>
-              </div>
+              <SubpagePlaceholder
+                icon="🍕"
+                title="Full Culinary Menu"
+                subtitle="Browse through our wide selection of artisan wood-fired pizzas, gourmet smash burgers, Asian noodle bowls, and handcrafted desserts."
+              />
+            }
+          />
+          <Route
+            path="/offers"
+            element={
+              <SubpagePlaceholder
+                icon="🔥"
+                title="Special Offers & Deals"
+                subtitle="Exclusive dining discounts, midweek feast packages, and promo vouchers crafted for our food lovers."
+              />
+            }
+          />
+          <Route
+            path="/reservation"
+            element={
+              <SubpagePlaceholder
+                icon="🍷"
+                title="Book A Table"
+                subtitle="Reserve your table online in seconds with instant confirmation and contactless dining preferences."
+              />
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <SubpagePlaceholder
+                icon="🌿"
+                title="About Our Kitchen"
+                subtitle="Passionate chefs, farm-fresh local produce, and centuries-old culinary traditions reimagined for modern gastronomy."
+              />
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <SubpagePlaceholder
+                icon="📞"
+                title="Contact & Catering"
+                subtitle="Have a question or planning a catering event? Reach out to our dedicated support team."
+              />
             }
           />
           <Route
             path="*"
             element={
-              <div className="hero-card">
-                <h2>Page Not Found</h2>
-                <p>The page you requested could not be found.</p>
-              </div>
+              <SubpagePlaceholder
+                icon="🔍"
+                title="Page Not Found"
+                subtitle="The page you requested does not exist or has been moved."
+              />
             }
           />
         </Routes>
       </Box>
+
+      {/* Modern Footer */}
+      <Footer userdomain={userdomain} />
     </div>
   );
 };
