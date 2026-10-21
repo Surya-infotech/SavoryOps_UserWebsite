@@ -222,8 +222,8 @@ const HomePage = ({ userdomain }) => {
                 </div>
 
                 <div className="dish-content">
-                  <h3 className="dish-title">{dish.title}</h3>
-                  <p className="dish-desc">{dish.desc}</p>
+                  <h3 className="dish-title" title={dish.title}>{dish.title}</h3>
+                  <p className="dish-desc" title={dish.desc}>{dish.desc}</p>
 
                   <div className="dish-footer-row">
                     <div className="dish-price-group">
