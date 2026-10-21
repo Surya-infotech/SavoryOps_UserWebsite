@@ -404,26 +404,15 @@
   top: calc(100% + 8px);
   right: 0;
   min-width: 200px;
-  max-height: 300px;
+  max-height: 280px;
   overflow-y: auto;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
   z-index: 1050;
-  padding: 0.5rem;
+  padding: 0.45rem;
   animation: navDropdownFade 0.2s ease;
-}
-
-.language-menu-header {
-  padding: 0.35rem 0.65rem 0.45rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #94a3b8;
-  border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 0.35rem;
 }
 
 .language-menu-list {
