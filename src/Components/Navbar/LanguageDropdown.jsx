@@ -1,1 +1,0 @@
-export { LanguageDropdown as default, LanguageDropdown } from "./Navbar.jsx";
