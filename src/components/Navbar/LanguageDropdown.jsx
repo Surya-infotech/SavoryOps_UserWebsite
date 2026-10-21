@@ -69,9 +69,6 @@ const LanguageDropdown = ({ className = "" }) => {
 
       {isOpen && (
         <div className="language-dropdown-menu" role="listbox">
-          <div className="language-menu-header">
-            <span>Select Language</span>
-          </div>
           <ul className="language-menu-list">
             {languages.map((language) => {
               const isSelected = language.name === selectedLanguage;
