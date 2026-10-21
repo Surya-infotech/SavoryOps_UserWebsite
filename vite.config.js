@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
       host: env.VITE_HOST,
       port: parseInt(env.VITE_PORT),
       cors: true,
+      allowedHosts: true,
       hmr: {
         host: env.VITE_HOST,
       },
