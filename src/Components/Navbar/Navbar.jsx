@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
+import FlagModule from "react-world-flags";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -9,16 +16,410 @@ import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import LanguageDropdown from "./LanguageDropdown.jsx";
-import ProfileDropdown from "./ProfileDropdown.jsx";
-import BranchDropdown from "./BranchDropdown.jsx";
+import LoginIcon from "@mui/icons-material/Login";
+import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
+import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Components/Navbar/navbar.scss";
 
+const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);
+
+/* ==========================================================================
+   1. BranchDropdown Component
+   ========================================================================== */
+export const BranchDropdown = ({ className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const branches = DEFAULT_BRANCHES;
+  const [selectedBranch, setSelectedBranch] = useState(() => getStoredBranch(DEFAULT_BRANCHES));
+  const dropdownRef = useRef(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleBranchSelect = (branch) => {
+    setSelectedBranch(branch);
+    localStorage.setItem("selectedBranchId", branch.id);
+    localStorage.setItem("selectedBranchName", branch.name);
+    setIsOpen(false);
+    setSearch("");
+
+    // Notify other components (HomePage, Reservation, etc.) about branch change
+    window.dispatchEvent(
+      new CustomEvent("branchChange", {
+        detail: branch,
+      })
+    );
+  };
+
+  const filteredBranches = branches.filter((branch) => {
+    const query = search.toLowerCase().trim();
+    if (!query) return true;
+    return (
+      branch.name.toLowerCase().includes(query) ||
+      (branch.address && branch.address.toLowerCase().includes(query)) ||
+      (branch.tagline && branch.tagline.toLowerCase().includes(query))
+    );
+  });
+
+  return (
+    <div
+      ref={dropdownRef}
+      className={`branch-dropdown-wrapper ${className} ${isOpen ? "open" : ""}`}
+    >
+      <button
+        type="button"
+        className="branch-trigger-btn"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        title={`Current Branch: ${selectedBranch?.name} (Click to change)`}
+      >
+        <LocationOnIcon className="branch-icon-pin" style={{ fontSize: "0.85rem" }} />
+        <span className="branch-active-name">{selectedBranch?.name || "Select Branch"}</span>
+        <KeyboardArrowDownIcon
+          className={`branch-chevron ${isOpen ? "rotated" : ""}`}
+          style={{ fontSize: "0.95rem" }}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="branch-dropdown-menu" role="listbox">
+          <div className="branch-menu-header">
+            <div className="branch-menu-header-text">
+              <span className="branch-menu-title">Select Location</span>
+              <span className="branch-menu-subtitle">
+                {branches.length} available {branches.length === 1 ? "branch" : "branches"}
+              </span>
+            </div>
+          </div>
+
+          <div className="branch-search-container">
+            <SearchIcon className="branch-search-icon" fontSize="small" />
+            <input
+              type="text"
+              className="branch-search-input"
+              placeholder="Search branch or area..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              autoFocus
+            />
+          </div>
+
+          <div className="branch-list-scroller">
+            {filteredBranches.length === 0 ? (
+              <div className="branch-empty-state">
+                <p>No branches found matching "{search}"</p>
+              </div>
+            ) : (
+              filteredBranches.map((branch) => {
+                const isSelected = selectedBranch?.id === branch.id;
+                return (
+                  <div
+                    key={branch.id}
+                    className={`branch-item-card ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleBranchSelect(branch)}
+                    role="option"
+                    aria-selected={isSelected}
+                  >
+                    <div className="branch-item-icon-wrapper">
+                      <StorefrontIcon fontSize="small" />
+                    </div>
+
+                    <div className="branch-item-details">
+                      <div className="branch-item-name-row">
+                        <span className="branch-item-name">{branch.name}</span>
+                        {branch.status && (
+                          <span className="branch-item-status-pill">{branch.status}</span>
+                        )}
+                      </div>
+                      {branch.address && (
+                        <span className="branch-item-address">{branch.address}</span>
+                      )}
+                      {branch.timing && (
+                        <div className="branch-item-timing">
+                          <AccessTimeIcon style={{ fontSize: "0.75rem" }} />
+                          <span>{branch.timing}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {isSelected && (
+                      <div className="branch-item-check">
+                        <CheckIcon fontSize="small" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ==========================================================================
+   2. LanguageDropdown Component
+   ========================================================================== */
+export const LanguageDropdown = ({ className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    () => localStorage.getItem("selectedLanguage") || "English"
+  );
+  const dropdownRef = useRef(null);
+  const languages = getLanguageOptions();
+
+  const selectedLang =
+    languages.find((lang) => lang.name === selectedLanguage) ||
+    languages.find((lang) => lang.name === "English") ||
+    languages[0];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleLanguageSelect = (lang) => {
+    setSelectedLanguage(lang.name);
+    localStorage.setItem("selectedLanguage", lang.name);
+    setIsOpen(false);
+
+    // Dispatch event in case other components listen to language change
+    window.dispatchEvent(
+      new CustomEvent("languageChange", { detail: { language: lang.name, code: lang.code } })
+    );
+  };
+
+  return (
+    <div
+      ref={dropdownRef}
+      className={`language-dropdown-wrapper ${className} ${isOpen ? "open" : ""}`}
+    >
+      <button
+        type="button"
+        className="language-dropdown-btn"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        title={`Selected Language: ${selectedLang?.name}`}
+      >
+        <span className="lang-flag-container">
+          <Flag code={selectedLang?.code} className="flag-icon" alt={selectedLang?.name} />
+        </span>
+        <span className="lang-name-label">{selectedLang?.name.substring(0, 3)}</span>
+      </button>
+
+      {isOpen && (
+        <div className="language-dropdown-menu" role="listbox">
+          <ul className="language-menu-list">
+            {languages.map((language) => {
+              const isSelected = language.name === selectedLanguage;
+              return (
+                <li
+                  key={language.code}
+                  className={`language-menu-item ${isSelected ? "selected" : ""}`}
+                  onClick={() => handleLanguageSelect(language)}
+                  role="option"
+                  aria-selected={isSelected}
+                >
+                  <span className="lang-flag-container">
+                    <Flag code={language.code} className="flag-icon" alt={language.name} />
+                  </span>
+                  <span className="language-item-name">{language.name}</span>
+                  {isSelected && <CheckIcon className="language-item-check" />}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ==========================================================================
+   3. ProfileDropdown Component
+   ========================================================================== */
+export const ProfileDropdown = ({ className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Check if a customer name is saved in storage (or default to Guest)
+  const customerName = localStorage.getItem("customer_name") || "Guest User";
+  const customerEmail = localStorage.getItem("customer_email") || "Sign in for orders & rewards";
+  const isLoggedIn = Boolean(localStorage.getItem("customer_name"));
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("customer_name");
+    localStorage.removeItem("customer_email");
+    setIsOpen(false);
+    window.location.reload();
+  };
+
+  return (
+    <div
+      ref={dropdownRef}
+      className={`profile-dropdown-wrapper ${className} ${isOpen ? "open" : ""}`}
+    >
+      <button
+        type="button"
+        className={`nav-profile-btn ${isOpen ? "active" : ""}`}
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        title="Account & Profile"
+      >
+        <PersonOutlinedIcon className="nav-profile-icon" />
+      </button>
+
+      {isOpen && (
+        <div className="profile-dropdown-menu" role="menu">
+          {/* User Info Header */}
+          <div className="profile-menu-header">
+            <div className="profile-avatar">
+              <PersonOutlinedIcon />
+            </div>
+            <div className="profile-user-details">
+              <span className="profile-name">{customerName}</span>
+              <span className="profile-subtitle">{customerEmail}</span>
+            </div>
+          </div>
+
+          <div className="profile-menu-divider" />
+
+          {/* Quick Nav Links */}
+          <div className="profile-menu-links">
+            <Link
+              to="/menu"
+              className="profile-menu-item"
+              onClick={() => setIsOpen(false)}
+            >
+              <RestaurantMenuIcon fontSize="small" />
+              <span>Explore Menu</span>
+            </Link>
+
+            <Link
+              to="/reservation"
+              className="profile-menu-item"
+              onClick={() => setIsOpen(false)}
+            >
+              <TableRestaurantIcon fontSize="small" />
+              <span>Table Reservations</span>
+            </Link>
+
+            <Link
+              to="/offers"
+              className="profile-menu-item"
+              onClick={() => setIsOpen(false)}
+            >
+              <LocalOfferIcon fontSize="small" />
+              <span>Special Offers & Deals</span>
+            </Link>
+
+            <Link
+              to="/contact"
+              className="profile-menu-item"
+              onClick={() => setIsOpen(false)}
+            >
+              <PhoneInTalkIcon fontSize="small" />
+              <span>Customer Helpline</span>
+            </Link>
+          </div>
+
+          <div className="profile-menu-divider" />
+
+          {/* Action Button */}
+          <div className="profile-menu-footer">
+            {isLoggedIn ? (
+              <button
+                type="button"
+                className="profile-action-btn logout"
+                onClick={handleSignOut}
+              >
+                <span>Sign Out</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="profile-action-btn login"
+                onClick={() => {
+                  setIsOpen(false);
+                  const name = prompt("Enter your name to sign in as guest:");
+                  if (name && name.trim()) {
+                    localStorage.setItem("customer_name", name.trim());
+                    localStorage.setItem(
+                      "customer_email",
+                      `${name.toLowerCase().replace(/\s+/g, "")}@example.com`
+                    );
+                    window.location.reload();
+                  }
+                }}
+              >
+                <LoginIcon fontSize="small" />
+                <span>Sign In / Join</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ==========================================================================
+   4. Main Navbar Component
+   ========================================================================== */
 const Navbar = ({ userdomain }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
+
+  // Close mobile drawer on route change
+  const [prevPath, setPrevPath] = useState(location.pathname);
+  if (prevPath !== location.pathname) {
+    setPrevPath(location.pathname);
+    setMobileMenuOpen(false);
+  }
 
   // Scroll listener for elevation
   useEffect(() => {
@@ -32,11 +433,6 @@ const Navbar = ({ userdomain }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Close mobile drawer on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
 
   // Lock body scroll when mobile drawer is open
   useEffect(() => {
