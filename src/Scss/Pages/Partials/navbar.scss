@@ -811,7 +811,6 @@
 
   &:hover {
     background: rgba(2, 136, 2, 0.08);
-    border-color: rgba(2, 136, 2, 0.35);
     color: #028802;
 
     .branch-chevron {
@@ -821,7 +820,6 @@
 
   .branch-dropdown-wrapper.open & {
     background: #ffffff;
-    border-color: #028802;
     box-shadow: 0 0 0 2px rgba(2, 136, 2, 0.15);
     color: #028802;
   }
