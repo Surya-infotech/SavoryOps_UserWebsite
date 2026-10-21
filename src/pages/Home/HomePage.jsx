@@ -5,7 +5,6 @@ import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import SpaIcon from "@mui/icons-material/Spa";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
-import StarIcon from "@mui/icons-material/Star";
 import AddIcon from "@mui/icons-material/Add";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -226,10 +225,6 @@ const HomePage = ({ userdomain }) => {
                 <div className="dish-img-box">
                   <img src={dish.image} alt={dish.title} className="dish-img" loading="lazy" />
                   <span className="dish-tag-badge">{dish.tag}</span>
-                  <div className="dish-rating-badge">
-                    <StarIcon fontSize="inherit" style={{ color: "#f59e0b" }} />
-                    <span>{dish.rating}</span>
-                  </div>
                 </div>
 
                 <div className="dish-content">
