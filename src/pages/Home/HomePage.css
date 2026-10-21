@@ -266,12 +266,6 @@
   flex-direction: column;
 }
 
-.dish-price-label {
-  font-size: 0.7rem;
-  color: #94a3b8;
-  text-transform: uppercase;
-  font-weight: 600;
-}
 
 .dish-price {
   font-size: 1.25rem;

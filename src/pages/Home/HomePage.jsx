@@ -15,81 +15,73 @@ const SAMPLE_DISHES = [
   {
     id: 1,
     category: "pizza",
+    menuname: "Artisanal Pizza",
     title: "Wood-Fired Margherita Royale",
     desc: "San Marzano marinara, torn buffalo mozzarella, organic sweet basil, extra virgin olive oil.",
     price: "$18.50",
-    rating: "4.9",
-    tag: "Bestseller",
     image: "/banners/banner-pizza.jpg",
   },
   {
     id: 2,
     category: "pizza",
+    menuname: "Artisanal Pizza",
     title: "Truffle Prosciutto Gorgonzola",
     desc: "Aged prosciutto di Parma, wild mushrooms, creamy gorgonzola, black truffle drizzle.",
     price: "$23.00",
-    rating: "5.0",
-    tag: "Chef's Pick",
     image: "/banners/banner-pizza.jpg",
   },
   {
     id: 3,
     category: "burgers",
+    menuname: "Smash Burgers",
     title: "Double Cheddar Smash Stack",
     desc: "Double smashed Angus beef patties, aged Wisconsin cheddar, crispy bacon, house savory sauce.",
     price: "$16.75",
-    rating: "4.8",
-    tag: "Popular",
     image: "/banners/banner-burger.jpg",
   },
   {
     id: 4,
     category: "burgers",
+    menuname: "Smash Burgers",
     title: "Smoky BBQ Bacon Burger",
     desc: "Brioche bun, charred caramelized onions, chipotle BBQ sauce, Monterey jack cheese.",
     price: "$17.50",
-    rating: "4.9",
-    tag: "Trending",
     image: "/banners/banner-burger.jpg",
   },
   {
     id: 5,
     category: "asian",
+    menuname: "Asian & Ramen",
     title: "Signature Chashu Tonkotsu",
     desc: "Rich 18-hour simmered broth, melt-in-mouth chashu pork belly, bamboo shoots, nitamago egg.",
     price: "$19.25",
-    rating: "5.0",
-    tag: "Signature",
     image: "/banners/banner-feast.jpg",
   },
   {
     id: 6,
     category: "asian",
+    menuname: "Asian & Ramen",
     title: "Deluxe Sashimi & Nigiri Platter",
     desc: "Atlantic salmon, yellowfin tuna, sweet eel nigiri, and California crunch rolls.",
     price: "$26.00",
-    rating: "4.9",
-    tag: "Fresh Catch",
     image: "/banners/banner-feast.jpg",
   },
   {
     id: 7,
     category: "dessert",
+    menuname: "Desserts & Drinks",
     title: "Molten Belgian Chocolate Cake",
     desc: "Warm decadent liquid chocolate core served with French vanilla bean gelato and fresh berries.",
     price: "$11.50",
-    rating: "4.9",
-    tag: "Sweet Delight",
     image: "/banners/banner-dessert.jpg",
   },
   {
     id: 8,
     category: "dessert",
+    menuname: "Desserts & Drinks",
     title: "Artisanal Passion Berry Mocktail",
     desc: "Crushed raspberries, sparkling botanical citrus water, passionfruit purée, fresh garden mint.",
     price: "$8.50",
-    rating: "4.7",
-    tag: "Refreshing",
     image: "/banners/banner-dessert.jpg",
   },
 ];
@@ -224,7 +216,9 @@ const HomePage = ({ userdomain }) => {
               <div key={dish.id} className="dish-card">
                 <div className="dish-img-box">
                   <img src={dish.image} alt={dish.title} className="dish-img" loading="lazy" />
-                  <span className="dish-tag-badge">{dish.tag}</span>
+                  <span className="dish-tag-badge">
+                    {dish.menuname}
+                  </span>
                 </div>
 
                 <div className="dish-content">
@@ -233,7 +227,6 @@ const HomePage = ({ userdomain }) => {
 
                   <div className="dish-footer-row">
                     <div className="dish-price-group">
-                      <span className="dish-price-label">Price</span>
                       <span className="dish-price">{dish.price}</span>
                     </div>
 
