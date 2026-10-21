@@ -387,18 +387,6 @@
   line-height: 1;
 }
 
-.lang-chevron-icon {
-  font-size: 1.15rem !important;
-  color: #64748b;
-  transition: transform 0.2s ease, color 0.2s ease;
-  margin-left: -2px;
-}
-
-.lang-chevron-icon.rotate {
-  transform: rotate(180deg);
-  color: #028802;
-}
-
 .language-dropdown-menu {
   position: absolute;
   top: calc(100% + 8px);

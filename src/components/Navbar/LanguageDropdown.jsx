@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import FlagModule from "react-world-flags";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CheckIcon from "@mui/icons-material/Check";
 import { getLanguageOptions } from "../../constants/languages";
 
@@ -64,7 +63,6 @@ const LanguageDropdown = ({ className = "" }) => {
           <Flag code={selectedLang?.code} className="flag-icon" alt={selectedLang?.name} />
         </span>
         <span className="lang-name-label">{selectedLang?.name.substring(0, 3)}</span>
-        <KeyboardArrowDownIcon className={`lang-chevron-icon ${isOpen ? "rotate" : ""}`} />
       </button>
 
       {isOpen && (
