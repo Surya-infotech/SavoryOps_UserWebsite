@@ -89,15 +89,6 @@ const Navbar = ({ userdomain }) => {
                 <PhoneInTalkIcon style={{ fontSize: "0.95rem" }} />
                 <span>+1 (800) 555-FOOD</span>
               </a>
-              {userdomain ? (
-                <span className="tenant-badge" title="Tenant Subdomain">
-                  🏢 {userdomain}.savoryops
-                </span>
-              ) : (
-                <span className="tenant-badge" style={{ opacity: 0.85 }}>
-                  🌐 Base Platform
-                </span>
-              )}
             </div>
           </div>
         </div>
