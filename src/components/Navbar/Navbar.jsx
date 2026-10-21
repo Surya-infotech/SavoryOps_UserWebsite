@@ -11,6 +11,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LanguageDropdown from "./LanguageDropdown.jsx";
 import ProfileDropdown from "./ProfileDropdown.jsx";
+import BranchDropdown from "./BranchDropdown.jsx";
 import "./Navbar.css";
 
 const Navbar = ({ userdomain }) => {
@@ -50,7 +51,6 @@ const Navbar = ({ userdomain }) => {
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { label: "Home", path: "/" },
     { label: "Menu", path: "/menu", icon: <RestaurantMenuIcon fontSize="inherit" /> },
     { label: "Offers", path: "/offers", badge: "Hot", icon: <LocalOfferIcon fontSize="inherit" /> },
     { label: "Book Table", path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
@@ -101,6 +101,9 @@ const Navbar = ({ userdomain }) => {
               <span className="nav-brand-name">{brandDisplayName}</span>
             </div>
           </Link>
+
+          {/* Branch Selector Dropdown */}
+          <BranchDropdown />
 
           {/* Desktop Navigation Links */}
           <div className="nav-links-container">
@@ -183,6 +186,12 @@ const Navbar = ({ userdomain }) => {
               </div>
 
               <div className="mobile-drawer-content">
+                {/* Mobile Branch Selector */}
+                <div className="mobile-branch-section">
+                  <span className="mobile-section-label">Selected Branch</span>
+                  <BranchDropdown className="mobile-branch-dropdown" />
+                </div>
+
                 <form className="mobile-search-box" onSubmit={handleSearchSubmit}>
                   <SearchIcon className="nav-search-icon" />
                   <input
