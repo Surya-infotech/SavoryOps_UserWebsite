@@ -277,20 +277,26 @@
   background: #028802;
   color: #ffffff;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
-  font-size: 0.875rem;
-  font-weight: 700;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+  flex-shrink: 0;
 }
 
 .dish-add-btn:hover {
   background: #026b02;
-  transform: scale(1.04);
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
+}
+
+.dish-add-btn.added {
+  background: #026b02;
 }
 
 /* --- Special Promotion Card Banner --- */

@@ -232,19 +232,15 @@ const HomePage = ({ userdomain }) => {
 
                     <button
                       type="button"
-                      className="dish-add-btn"
+                      className={`dish-add-btn ${count > 0 ? "added" : ""}`}
                       onClick={() => handleAddToCart(dish.id)}
+                      aria-label="Add to cart"
+                      title={count > 0 ? `Added (${count})` : "Add to cart"}
                     >
                       {count > 0 ? (
-                        <>
-                          <CheckCircleIcon fontSize="small" />
-                          <span>Added ({count})</span>
-                        </>
+                        <CheckCircleIcon fontSize="small" />
                       ) : (
-                        <>
-                          <AddIcon fontSize="small" />
-                          <span>Add</span>
-                        </>
+                        <AddIcon fontSize="small" />
                       )}
                     </button>
                   </div>
