@@ -293,51 +293,6 @@ const HomePage = ({ userdomain }) => {
           </div>
         </div>
       </section>
-
-      {/* 5. MULTI-TENANT DIAGNOSTICS CARD */}
-      <section className="subdomain-diagnostics-section">
-        <div className="tenant-details-card">
-          <div className="tenant-details-header">
-            <div>
-              <h4 className="tenant-details-title">
-                {userdomain ? `Tenant Subdomain: "${userdomain}"` : "Base Platform Mode"}
-              </h4>
-              <p style={{ color: "#64748b", fontSize: "0.875rem", margin: 0 }}>
-                {userdomain
-                  ? "You are currently viewing the branded tenant storefront."
-                  : "No tenant subdomain detected. The storefront defaults to SavoryOps platform preview."}
-              </p>
-            </div>
-            <span
-              style={{
-                background: userdomain ? "#dcfce7" : "#f1f5f9",
-                color: userdomain ? "#166534" : "#475569",
-                padding: "4px 12px",
-                borderRadius: "9999px",
-                fontWeight: 700,
-                fontSize: "0.8125rem",
-              }}
-            >
-              {userdomain ? "🟢 Active Subdomain" : "⚪ Main Domain"}
-            </span>
-          </div>
-
-          <div className="tenant-info-grid">
-            <div className="tenant-info-box">
-              <span className="tenant-info-label">Active Hostname</span>
-              <span className="tenant-info-val">{window.location.hostname}</span>
-            </div>
-            <div className="tenant-info-box">
-              <span className="tenant-info-label">Detected Tenant</span>
-              <span className="tenant-info-val">{userdomain || "None (Base Host)"}</span>
-            </div>
-            <div className="tenant-info-box">
-              <span className="tenant-info-label">Configured Base Host</span>
-              <span className="tenant-info-val">{import.meta.env.VITE_HOST || "Not Set"}</span>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
