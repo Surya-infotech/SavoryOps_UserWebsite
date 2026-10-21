@@ -138,12 +138,7 @@ export const BranchDropdown = ({ className = "" }) => {
                     </div>
 
                     <div className="branch-item-details">
-                      <div className="branch-item-name-row">
-                        <span className="branch-item-name">{branch.name}</span>
-                        {branch.status && (
-                          <span className="branch-item-status-pill">{branch.status}</span>
-                        )}
-                      </div>
+                      <span className="branch-item-name">{branch.name}</span>
                       {branch.address && (
                         <span className="branch-item-address">{branch.address}</span>
                       )}

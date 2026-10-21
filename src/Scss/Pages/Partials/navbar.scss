@@ -974,27 +974,10 @@
   gap: 2px;
 }
 
-.branch-item-name-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
 .branch-item-name {
   font-size: 0.88rem;
   font-weight: 700;
   color: #0f172a;
-}
-
-.branch-item-status-pill {
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 1px 7px;
-  border-radius: 9999px;
-  background: #dcfce7;
-  color: #15803d;
-  white-space: nowrap;
 }
 
 .branch-item-address {
