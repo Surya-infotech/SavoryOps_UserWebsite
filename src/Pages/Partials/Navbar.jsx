@@ -7,7 +7,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -147,12 +146,6 @@ export const BranchDropdown = ({ className = "" }) => {
                       </div>
                       {branch.address && (
                         <span className="branch-item-address">{branch.address}</span>
-                      )}
-                      {branch.timing && (
-                        <div className="branch-item-timing">
-                          <AccessTimeIcon style={{ fontSize: "0.75rem" }} />
-                          <span>{branch.timing}</span>
-                        </div>
                       )}
                     </div>
 
