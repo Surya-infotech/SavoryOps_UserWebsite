@@ -1,6 +1,9 @@
 /* ==========================================================================
-   SavoryOps User Website - Home Page Hero Banner Carousel
+   SavoryOps User Website - Home Page Hero Banner Carousel (SCSS)
+   Parity with SavoryOps_OwnerWeb Scss architecture
    ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
 
 .hero-banner-container {
   position: relative;
@@ -55,14 +58,38 @@
               transform 1s cubic-bezier(0.16, 1, 0.3, 1);
   transform: scale(1.05);
   pointer-events: none;
-}
 
-.hero-slide.active {
-  opacity: 1;
-  visibility: visible;
-  transform: scale(1);
-  pointer-events: auto;
-  z-index: 2;
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    pointer-events: auto;
+    z-index: 2;
+
+    .hero-slide-bg {
+      transform: scale(1.04);
+    }
+
+    .hero-badge-pill {
+      animation: heroFadeSlideUp 0.6s ease-out 0.15s both;
+    }
+
+    .hero-title {
+      animation: heroFadeSlideUp 0.7s ease-out 0.25s both;
+    }
+
+    .hero-description {
+      animation: heroFadeSlideUp 0.7s ease-out 0.35s both;
+    }
+
+    .hero-actions-group {
+      animation: heroFadeSlideUp 0.7s ease-out 0.45s both;
+    }
+
+    .hero-floating-badges {
+      animation: heroFadeSlideUp 0.8s ease-out 0.55s both;
+    }
+  }
 }
 
 /* Background Image Layer */
@@ -76,10 +103,6 @@
   object-position: center;
   filter: brightness(0.92);
   transition: transform 6s ease-out;
-}
-
-.hero-slide.active .hero-slide-bg {
-  transform: scale(1.04);
 }
 
 /* Atmospheric Overlays */
@@ -123,27 +146,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-}
-
-/* Animated Entrance for Slide Active State */
-.hero-slide.active .hero-badge-pill {
-  animation: heroFadeSlideUp 0.6s ease-out 0.15s both;
-}
-
-.hero-slide.active .hero-title {
-  animation: heroFadeSlideUp 0.7s ease-out 0.25s both;
-}
-
-.hero-slide.active .hero-description {
-  animation: heroFadeSlideUp 0.7s ease-out 0.35s both;
-}
-
-.hero-slide.active .hero-actions-group {
-  animation: heroFadeSlideUp 0.7s ease-out 0.45s both;
-}
-
-.hero-slide.active .hero-floating-badges {
-  animation: heroFadeSlideUp 0.8s ease-out 0.55s both;
 }
 
 @keyframes heroFadeSlideUp {
@@ -192,13 +194,13 @@
   color: #ffffff;
   margin: 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
 
-.hero-title .highlight-text {
-  background: linear-gradient(135deg, #69e869 0%, #22c55e 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  .highlight-text {
+    background: linear-gradient(135deg, #69e869 0%, #22c55e 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 /* Description */
@@ -235,27 +237,27 @@
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-}
 
-.hero-btn-primary::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transition: left 0.6s ease;
-}
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.6s ease;
+  }
 
-.hero-btn-primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(2, 136, 2, 0.55);
-  background: linear-gradient(135deg, #039e03 0%, #028802 100%);
-}
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(2, 136, 2, 0.55);
+    background: linear-gradient(135deg, #039e03 0%, #028802 100%);
 
-.hero-btn-primary:hover::after {
-  left: 100%;
+    &::after {
+      left: 100%;
+    }
+  }
 }
 
 .hero-btn-secondary {
@@ -272,13 +274,13 @@
   backdrop-filter: blur(10px);
   text-decoration: none;
   transition: all 0.25s ease;
-}
 
-.hero-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-2px);
-  color: #ffffff;
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    color: #ffffff;
+  }
 }
 
 /* Floating Highlights Bar Inside Hero */
@@ -325,13 +327,13 @@
   z-index: 10;
   backdrop-filter: blur(8px);
   transition: all 0.25s ease;
-}
 
-.hero-nav-arrow:hover {
-  background: rgba(2, 136, 2, 0.85);
-  border-color: #69e869;
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 0 18px rgba(2, 136, 2, 0.5);
+  &:hover {
+    background: rgba(2, 136, 2, 0.85);
+    border-color: #69e869;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 18px rgba(2, 136, 2, 0.5);
+  }
 }
 
 .hero-nav-prev {
@@ -372,11 +374,15 @@
   overflow: hidden;
   transition: width 0.3s ease, background 0.3s ease;
   padding: 0;
-}
 
-.hero-dot-btn.active {
-  width: 60px;
-  background: rgba(255, 255, 255, 0.35);
+  &.active {
+    width: 60px;
+    background: rgba(255, 255, 255, 0.35);
+
+    .hero-dot-progress {
+      animation: heroProgressFill 5s linear forwards;
+    }
+  }
 }
 
 .hero-dot-progress {
@@ -387,10 +393,6 @@
   width: 0%;
   background: #69e869;
   border-radius: 9999px;
-}
-
-.hero-dot-btn.active .hero-dot-progress {
-  animation: heroProgressFill 5s linear forwards;
 }
 
 @keyframes heroProgressFill {

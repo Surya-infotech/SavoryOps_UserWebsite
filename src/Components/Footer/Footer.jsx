@@ -4,7 +4,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import "./Footer.css";
+import "../../Scss/Components/Footer/footer.scss";
 
 const Footer = ({ userdomain }) => {
   const [email, setEmail] = useState("");

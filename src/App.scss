@@ -1,6 +1,9 @@
 /* ==========================================================================
-   SavoryOps User Website - Global App Layout Styles
+   SavoryOps User Website - Global App Layout Styles (SCSS)
+   Parity with SavoryOps_OwnerWeb App.scss
    ========================================================================== */
+
+@use "Scss/Customize/var.scss" as var;
 
 .user-app-container {
   min-height: 100vh;
@@ -34,25 +37,25 @@
 .subpage-hero {
   background: #ffffff;
   border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 20px;
+  border-radius: var(--radius-xl, 20px);
   padding: 3rem 2rem;
   text-align: center;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-}
 
-.subpage-hero h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 0.75rem;
-}
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+  }
 
-.subpage-hero p {
-  color: #64748b;
-  font-size: 1.05rem;
-  max-width: 600px;
-  margin: 0 auto 1.5rem;
-  line-height: 1.6;
+  p {
+    color: #64748b;
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+  }
 }
 
 .subpage-back-btn {
@@ -60,15 +63,15 @@
   align-items: center;
   gap: 8px;
   padding: 0.75rem 1.5rem;
-  background: #028802;
+  background: var(--primary-color, #028802);
   color: #ffffff;
-  border-radius: 10px;
+  border-radius: var(--radius-sm, 10px);
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
-}
 
-.subpage-back-btn:hover {
-  background: #026b02;
-  transform: translateY(-2px);
+  &:hover {
+    background: var(--primary-hover, #026b02);
+    transform: translateY(-2px);
+  }
 }

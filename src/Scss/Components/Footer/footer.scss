@@ -1,6 +1,9 @@
 /* ==========================================================================
-   SavoryOps User Website - Footer Styles
+   SavoryOps User Website - Footer Styles (SCSS)
+   Parity with SavoryOps_OwnerWeb Scss architecture
    ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
 
 .savory-footer {
   background: #0f172a;
@@ -77,17 +80,17 @@
   font-weight: 700;
   margin-bottom: 1.25rem;
   position: relative;
-}
 
-.footer-col-title::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 28px;
-  height: 2px;
-  background: #028802;
-  border-radius: 2px;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 28px;
+    height: 2px;
+    background: #028802;
+    border-radius: 2px;
+  }
 }
 
 .footer-nav-list {
@@ -107,11 +110,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-}
 
-.footer-nav-link:hover {
-  color: #69e869;
-  transform: translateX(4px);
+  &:hover {
+    color: #69e869;
+    transform: translateX(4px);
+  }
 }
 
 /* Newsletter Column */
@@ -145,10 +148,10 @@
   outline: none;
   flex: 1;
   min-width: 0;
-}
 
-.footer-newsletter-input::placeholder {
-  color: #64748b;
+  &::placeholder {
+    color: #64748b;
+  }
 }
 
 .footer-newsletter-btn {
@@ -161,10 +164,10 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: background 0.2s;
-}
 
-.footer-newsletter-btn:hover {
-  background: #026b02;
+  &:hover {
+    background: #026b02;
+  }
 }
 
 /* Bottom Bar */
@@ -183,16 +186,16 @@
 .footer-bottom-links {
   display: flex;
   gap: 1.5rem;
-}
 
-.footer-bottom-links a {
-  color: #64748b;
-  text-decoration: none;
-  transition: color 0.2s;
-}
+  a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s;
 
-.footer-bottom-links a:hover {
-  color: #cbd5e1;
+    &:hover {
+      color: #cbd5e1;
+    }
+  }
 }
 
 /* Responsive */

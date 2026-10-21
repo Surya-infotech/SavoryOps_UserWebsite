@@ -1,0 +1,65 @@
+/* ==========================================================================
+   SavoryOps User Website - Page Not Found Styles (SCSS)
+   Parity with SavoryOps_OwnerWeb Scss/Partials/pagenotfound.scss
+   ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
+
+.page-not-found {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+
+  .pnf-content {
+    background: #ffffff;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: var(--radius-xl, 20px);
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 540px;
+    width: 100%;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  }
+
+  .pnf-code {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--primary-color, #028802);
+    margin: 0 0 0.5rem;
+  }
+
+  .pnf-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.75rem;
+  }
+
+  .pnf-message {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 auto 1.75rem;
+  }
+
+  .pnf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.75rem 1.75rem;
+    background: var(--primary-color, #028802);
+    color: #ffffff;
+    border-radius: var(--radius-sm, 10px);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--primary-hover, #026b02);
+      transform: translateY(-2px);
+    }
+  }
+}

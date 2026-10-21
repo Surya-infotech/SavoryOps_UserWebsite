@@ -1,6 +1,9 @@
 /* ==========================================================================
-   SavoryOps User Website - Home Page Styles
+   SavoryOps User Website - Home Page Styles (SCSS)
+   Parity with SavoryOps_OwnerWeb Scss architecture
    ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
 
 .home-page-container {
   width: 100%;
@@ -35,12 +38,12 @@
   gap: 1rem;
   box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
 
-.feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 32px -4px rgba(2, 136, 2, 0.12);
-  border-color: rgba(2, 136, 2, 0.25);
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -4px rgba(2, 136, 2, 0.12);
+    border-color: rgba(2, 136, 2, 0.25);
+  }
 }
 
 .feature-icon-wrapper {
@@ -52,26 +55,26 @@
   justify-content: center;
   flex-shrink: 0;
   font-size: 1.4rem;
-}
 
-.feature-icon-green {
-  background: rgba(2, 136, 2, 0.1);
-  color: #028802;
-}
+  &.feature-icon-green {
+    background: rgba(2, 136, 2, 0.1);
+    color: #028802;
+  }
 
-.feature-icon-amber {
-  background: rgba(245, 158, 11, 0.12);
-  color: #d97706;
-}
+  &.feature-icon-amber {
+    background: rgba(245, 158, 11, 0.12);
+    color: #d97706;
+  }
 
-.feature-icon-purple {
-  background: rgba(139, 92, 246, 0.12);
-  color: #7c3aed;
-}
+  &.feature-icon-purple {
+    background: rgba(139, 92, 246, 0.12);
+    color: #7c3aed;
+  }
 
-.feature-icon-rose {
-  background: rgba(244, 63, 94, 0.12);
-  color: #e11d48;
+  &.feature-icon-rose {
+    background: rgba(244, 63, 94, 0.12);
+    color: #e11d48;
+  }
 }
 
 .feature-text {
@@ -158,19 +161,19 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
 
-.category-tab-btn:hover {
-  background: #f1f5f9;
-  color: #028802;
-  border-color: rgba(2, 136, 2, 0.3);
-}
+  &:hover {
+    background: #f1f5f9;
+    color: #028802;
+    border-color: rgba(2, 136, 2, 0.3);
+  }
 
-.category-tab-btn.active {
-  background: #028802;
-  color: #ffffff;
-  border-color: #028802;
-  box-shadow: 0 4px 14px rgba(2, 136, 2, 0.3);
+  &.active {
+    background: #028802;
+    color: #ffffff;
+    border-color: #028802;
+    box-shadow: 0 4px 14px rgba(2, 136, 2, 0.3);
+  }
 }
 
 /* Dishes Grid */
@@ -190,12 +193,16 @@
   height: 410px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-}
 
-.dish-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
-  border-color: rgba(2, 136, 2, 0.3);
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+    border-color: rgba(2, 136, 2, 0.3);
+
+    .dish-img {
+      transform: scale(1.08);
+    }
+  }
 }
 
 .dish-img-box {
@@ -212,10 +219,6 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
-}
-
-.dish-card:hover .dish-img {
-  transform: scale(1.08);
 }
 
 .dish-tag-badge {
@@ -281,7 +284,6 @@
   flex-direction: column;
 }
 
-
 .dish-price {
   font-size: 1.25rem;
   font-weight: 800;
@@ -302,16 +304,16 @@
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
   flex-shrink: 0;
-}
 
-.dish-add-btn:hover {
-  background: #026b02;
-  transform: scale(1.08);
-  box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
-}
+  &:hover {
+    background: #026b02;
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
+  }
 
-.dish-add-btn.added {
-  background: #026b02;
+  &.added {
+    background: #026b02;
+  }
 }
 
 /* --- Special Promotion Card Banner --- */
@@ -385,11 +387,11 @@
   color: #ffffff;
   font-size: 0.95rem;
   font-weight: 600;
-}
 
-.promo-code-box strong {
-  color: #69e869;
-  letter-spacing: 1px;
+  strong {
+    color: #69e869;
+    letter-spacing: 1px;
+  }
 }
 
 /* Responsive */

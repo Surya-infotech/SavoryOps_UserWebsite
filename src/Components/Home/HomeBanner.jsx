@@ -8,7 +8,7 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import StarIcon from "@mui/icons-material/Star";
 import SpaIcon from "@mui/icons-material/Spa";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import "./HomeBanner.css";
+import "../../Scss/Components/Home/homebanner.scss";
 
 const BANNER_SLIDES = [
   {

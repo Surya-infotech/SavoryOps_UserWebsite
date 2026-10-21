@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import HomeBanner from "../../components/Home/HomeBanner.jsx";
+import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import SpaIcon from "@mui/icons-material/Spa";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import "./HomePage.css";
+import "../../Scss/Pages/Home/homepage.scss";
 
 const SAMPLE_DISHES = [
   {

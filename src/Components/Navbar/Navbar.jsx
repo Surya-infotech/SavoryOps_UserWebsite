@@ -12,7 +12,7 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LanguageDropdown from "./LanguageDropdown.jsx";
 import ProfileDropdown from "./ProfileDropdown.jsx";
 import BranchDropdown from "./BranchDropdown.jsx";
-import "./Navbar.css";
+import "../../Scss/Components/Navbar/navbar.scss";
 
 const Navbar = ({ userdomain }) => {
   const [isScrolled, setIsScrolled] = useState(false);
