@@ -67,7 +67,7 @@ const BANNER_SLIDES = [
 
 const SLIDE_DURATION = 5000; // 5 seconds per slide
 
-const HomeBanner = ({ userdomain }) => {
+const HomeBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);

@@ -5,13 +5,11 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import "../../Scss/Pages/Partials/footer.scss";
 
-const Footer = ({ userdomain }) => {
+const Footer = () => {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const brandDisplayName = userdomain
-    ? userdomain.charAt(0).toUpperCase() + userdomain.slice(1)
-    : "SavoryOps";
+  const brandDisplayName = "SavoryOps";
 
   const handleSubscribe = (e) => {
     e.preventDefault();

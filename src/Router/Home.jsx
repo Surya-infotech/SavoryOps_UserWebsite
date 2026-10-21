@@ -4,10 +4,10 @@ import HomePage from "../Pages/Home/HomePage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
 import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 
-const HomeRouter = ({ userdomain }) => {
+const HomeRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage userdomain={userdomain} />} />
+      <Route path="/" element={<HomePage />} />
       <Route
         path="/menu"
         element={

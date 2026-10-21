@@ -5,11 +5,11 @@ import HomeDishes from "../../Components/Home/HomeDishes.jsx";
 import HomePromo from "../../Components/Home/HomePromo.jsx";
 import "../../Scss/Pages/Home/homepage.scss";
 
-const HomePage = ({ userdomain }) => {
+const HomePage = () => {
   return (
     <div className="home-page-container">
       {/* 1. Hero Banner Carousel Section */}
-      <HomeBanner userdomain={userdomain} />
+      <HomeBanner />
 
       {/* 2. Value Proposition / Feature Strip Section */}
       <HomeFeatures />
@@ -18,7 +18,7 @@ const HomePage = ({ userdomain }) => {
       <HomeDishes />
 
       {/* 4. Promotional Callout Strip Section */}
-      <HomePromo userdomain={userdomain} />
+      <HomePromo />
     </div>
   );
 };

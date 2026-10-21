@@ -396,7 +396,7 @@ export const ProfileDropdown = ({ className = "" }) => {
 /* ==========================================================================
    4. Main Navbar Component
    ========================================================================== */
-const Navbar = ({ userdomain }) => {
+const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -440,9 +440,7 @@ const Navbar = ({ userdomain }) => {
     { label: "Book Table", path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
   ];
 
-  const brandDisplayName = userdomain
-    ? userdomain.charAt(0).toUpperCase() + userdomain.slice(1)
-    : "SavoryOps";
+  const brandDisplayName = "SavoryOps";
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

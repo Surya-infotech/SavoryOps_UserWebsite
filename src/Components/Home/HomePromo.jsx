@@ -4,10 +4,8 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import "../../Scss/Components/Home/homepromo.scss";
 
-const HomePromo = ({ userdomain }) => {
-  const brandDisplayName = userdomain
-    ? userdomain.charAt(0).toUpperCase() + userdomain.slice(1)
-    : "SavoryOps Dining";
+const HomePromo = () => {
+  const brandDisplayName = "SavoryOps Dining";
 
   return (
     <section className="promo-strip-section">
