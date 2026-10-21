@@ -103,11 +103,6 @@ const HomeBanner = ({ userdomain }) => {
       onMouseLeave={() => setIsPaused(false)}
       aria-label="Featured Restaurant Banners Carousel"
     >
-      {/* Slide Counter (e.g. 01 / 04) */}
-      <div className="hero-slide-counter">
-        <strong>0{currentSlide + 1}</strong> / 0{BANNER_SLIDES.length}
-      </div>
-
       {/* Navigation Arrows */}
       <button
         type="button"
