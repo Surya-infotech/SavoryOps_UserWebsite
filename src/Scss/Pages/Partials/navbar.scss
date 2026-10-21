@@ -71,8 +71,17 @@
 }
 
 @keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
 }
 
 .nav-top-text {
@@ -520,6 +529,7 @@
     opacity: 0;
     transform: translateY(-6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -893,8 +903,7 @@
 
   &:focus-within {
     background: #ffffff;
-    border-color: #028802;
-    box-shadow: 0 0 0 2px rgba(2, 136, 2, 0.12);
+    box-shadow: 0 0 0 3px rgba(2, 136, 2, 0.15);
   }
 }
 
@@ -1069,15 +1078,19 @@
   .nav-links-container {
     display: none;
   }
+
   .nav-main .branch-active-name {
     max-width: 105px;
   }
+
   .nav-mobile-toggle {
     display: inline-flex;
   }
+
   .nav-cta-btn {
     display: none;
   }
+
   .nav-top-left .nav-top-text {
     display: none;
   }
@@ -1093,22 +1106,28 @@
   .nav-top-inner {
     justify-content: center;
   }
+
   .nav-top-right {
     display: none;
   }
+
   .nav-main {
     padding: 0.75rem 1rem;
   }
+
   .nav-brand-name {
     font-size: 1.2rem;
   }
+
   .nav-brand-logo {
     width: 36px;
     height: 36px;
   }
+
   .lang-name-label {
     display: none;
   }
+
   .language-dropdown-btn {
     padding: 0.45rem 0.5rem;
     gap: 4px;
