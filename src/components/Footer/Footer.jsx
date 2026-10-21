@@ -110,9 +110,10 @@ const Footer = ({ userdomain }) => {
             <strong style={{ color: "#69e869" }}>SavoryOps</strong> SaaS Restaurant Suite.
           </div>
           <div className="footer-bottom-links">
+            <Link to="/about">About Us</Link>
+            <Link to="/contact">Contact</Link>
             <Link to="#">Privacy Policy</Link>
             <Link to="#">Terms of Service</Link>
-            <Link to="#">Security & Allergens</Link>
           </div>
         </div>
       </div>

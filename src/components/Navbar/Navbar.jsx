@@ -54,8 +54,6 @@ const Navbar = ({ userdomain }) => {
     { label: "Menu", path: "/menu", icon: <RestaurantMenuIcon fontSize="inherit" /> },
     { label: "Offers", path: "/offers", badge: "Hot", icon: <LocalOfferIcon fontSize="inherit" /> },
     { label: "Book Table", path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
-    { label: "About Us", path: "/about" },
-    { label: "Contact", path: "/contact" },
   ];
 
   const brandDisplayName = userdomain
