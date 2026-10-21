@@ -129,12 +129,19 @@
 }
 
 /* Brand */
-.nav-brand-link {
+.nav-brand-group {
   display: flex;
   align-items: center;
   gap: 12px;
   text-decoration: none;
+}
+
+.nav-brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
   transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .nav-brand-link:hover {
@@ -142,8 +149,8 @@
 }
 
 .nav-brand-logo {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(2, 136, 2, 0.2));
 }
@@ -151,6 +158,19 @@
 .nav-brand-info {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.nav-brand-name-link {
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1.1;
+  transition: opacity 0.15s ease;
+}
+
+.nav-brand-name-link:hover {
+  opacity: 0.85;
 }
 
 .nav-brand-name {
@@ -765,66 +785,44 @@
 .branch-trigger-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 0.35rem 0.85rem;
-  background: #f8fafc;
+  gap: 5px;
+  padding: 2px 8px 2px 6px;
+  background: #f1f5f9;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
-  color: #0f172a;
+  color: #334155;
+  line-height: 1.2;
 }
 
 .branch-trigger-btn:hover {
-  background: rgba(2, 136, 2, 0.05);
+  background: rgba(2, 136, 2, 0.08);
   border-color: rgba(2, 136, 2, 0.35);
-  transform: translateY(-1px);
+  color: #028802;
 }
 
 .branch-dropdown-wrapper.open .branch-trigger-btn {
   background: #ffffff;
   border-color: #028802;
-  box-shadow: 0 0 0 3px rgba(2, 136, 2, 0.12);
+  box-shadow: 0 0 0 2px rgba(2, 136, 2, 0.15);
+  color: #028802;
 }
 
 .branch-icon-pin {
+  color: #028802;
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: rgba(2, 136, 2, 0.1);
-  color: #028802;
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.branch-trigger-btn:hover .branch-icon-pin {
-  transform: scale(1.05);
-}
-
-.branch-text-block {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  line-height: 1.15;
-}
-
-.branch-caption {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #028802;
 }
 
 .branch-active-name {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #0f172a;
-  max-width: 180px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: inherit;
+  max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -833,6 +831,11 @@
 .branch-chevron {
   color: #64748b;
   transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.branch-trigger-btn:hover .branch-chevron {
+  color: #028802;
 }
 
 .branch-chevron.rotated {
@@ -1077,7 +1080,7 @@
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 480px) {
   .nav-main .branch-dropdown-wrapper {
     display: none;
   }

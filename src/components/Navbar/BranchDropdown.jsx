@@ -66,18 +66,13 @@ const BranchDropdown = ({ className = "" }) => {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={`Current Branch: ${selectedBranch?.name}`}
+        title={`Current Branch: ${selectedBranch?.name} (Click to change)`}
       >
-        <span className="branch-icon-pin">
-          <LocationOnIcon fontSize="small" />
-        </span>
-        <div className="branch-text-block">
-          <span className="branch-caption">Branch</span>
-          <span className="branch-active-name">{selectedBranch?.name || "Select Branch"}</span>
-        </div>
+        <LocationOnIcon className="branch-icon-pin" style={{ fontSize: "0.85rem" }} />
+        <span className="branch-active-name">{selectedBranch?.name || "Select Branch"}</span>
         <KeyboardArrowDownIcon
           className={`branch-chevron ${isOpen ? "rotated" : ""}`}
-          fontSize="small"
+          style={{ fontSize: "0.95rem" }}
         />
       </button>
 

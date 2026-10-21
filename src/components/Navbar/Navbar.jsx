@@ -94,16 +94,19 @@ const Navbar = ({ userdomain }) => {
 
         {/* --- Main Navigation Bar --- */}
         <nav className="nav-main">
-          {/* Brand Logo & Name */}
-          <Link to="/" className="nav-brand-link">
-            <img src="/logo.png" alt="SavoryOps Logo" className="nav-brand-logo" />
-            <div className="nav-brand-info">
-              <span className="nav-brand-name">{brandDisplayName}</span>
-            </div>
-          </Link>
+          {/* Brand & Branch Section */}
+          <div className="nav-brand-group">
+            <Link to="/" className="nav-brand-link" title="Return to Home">
+              <img src="/logo.png" alt="SavoryOps Logo" className="nav-brand-logo" />
+            </Link>
 
-          {/* Branch Selector Dropdown */}
-          <BranchDropdown />
+            <div className="nav-brand-info">
+              <Link to="/" className="nav-brand-name-link">
+                <span className="nav-brand-name">{brandDisplayName}</span>
+              </Link>
+              <BranchDropdown />
+            </div>
+          </div>
 
           {/* Desktop Navigation Links */}
           <div className="nav-links-container">
