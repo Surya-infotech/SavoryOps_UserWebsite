@@ -9,7 +9,8 @@ import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import LanguageDropdown from "./LanguageDropdown.jsx";
+import ProfileDropdown from "./ProfileDropdown.jsx";
 import "./Navbar.css";
 
 const Navbar = ({ userdomain }) => {
@@ -135,8 +136,10 @@ const Navbar = ({ userdomain }) => {
             />
           </form>
 
-          {/* Action Buttons: Cart & Order */}
+          {/* Action Buttons: Language, Cart & Profile */}
           <div className="nav-actions">
+            <LanguageDropdown />
+
             <button
               type="button"
               className="nav-cart-btn"
@@ -147,10 +150,7 @@ const Navbar = ({ userdomain }) => {
               <span className="cart-count-badge">2</span>
             </button>
 
-            <Link to="/menu" className="nav-cta-btn">
-              <span>Order Now</span>
-              <ArrowForwardIcon fontSize="inherit" />
-            </Link>
+            <ProfileDropdown />
 
             <button
               type="button"
