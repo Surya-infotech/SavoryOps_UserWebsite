@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
-import EmailIcon from "@mui/icons-material/Email";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import "../../Scss/Components/Footer/footer.scss";
+import "../../Scss/Pages/Partials/footer.scss";
 
 const Footer = ({ userdomain }) => {
   const [email, setEmail] = useState("");

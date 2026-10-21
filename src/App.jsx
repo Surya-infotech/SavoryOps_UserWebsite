@@ -1,9 +1,8 @@
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
-import Navbar from "./Components/Navbar/Navbar.jsx";
-import Footer from "./Components/Footer/Footer.jsx";
+import Navbar from "./Pages/Partials/Navbar.jsx";
+import Footer from "./Pages/Partials/Footer.jsx";
 import HomeRouter from "./Router/Home.jsx";
 import "./App.scss";
 

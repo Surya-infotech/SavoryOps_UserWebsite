@@ -19,7 +19,7 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LoginIcon from "@mui/icons-material/Login";
 import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
 import { getLanguageOptions } from "../../constants/languages";
-import "../../Scss/Components/Navbar/navbar.scss";
+import "../../Scss/Pages/Partials/navbar.scss";
 
 const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);
 
