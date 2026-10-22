@@ -431,7 +431,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <SettingsOutlinedIcon fontSize="small" />
-                  <span>Setting</span>
+                  <span>Settings</span>
                 </Link>
               </div>
             </>

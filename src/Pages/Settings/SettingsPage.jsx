@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
@@ -14,6 +13,7 @@ import "../../Scss/Pages/Settings/settings.scss";
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
+const softwareName = import.meta.env.VITE_SOFTWARE_NAME || "SavoryOps";
 
 const TIMEZONE_OPTIONS = moment.tz.names().map((tz) => ({
   value: tz,
@@ -37,6 +37,11 @@ const TIME_FORMAT_OPTIONS = [
 const SettingsPage = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+
+  // Update document title
+  useEffect(() => {
+    document.title = `Settings | ${softwareName}`;
+  }, []);
 
   // Active Vertical Tab State: "datetime" | "delete"
   const [activeTab, setActiveTab] = useState("datetime");
@@ -228,15 +233,7 @@ const SettingsPage = () => {
       <div className="settings-container">
         {/* Page Top Header */}
         <header className="settings-page-header">
-          <div className="settings-title-row">
-            <div className="settings-title-icon">
-              <SettingsOutlinedIcon />
-            </div>
-            <h1>Setting</h1>
-          </div>
-          <p className="settings-header-desc">
-            Manage your personal preferences, date and time display formats, and account settings.
-          </p>
+          <h1 className="settings-page-title">Settings</h1>
         </header>
 
         {/* Vertical Tabs & Content Layout */}

@@ -22,44 +22,14 @@
 
 /* Page Header */
 .settings-page-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 
-  .settings-title-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 0.5rem;
-
-    .settings-title-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(2, 136, 2, 0.1);
-      color: #028802;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      svg {
-        font-size: 1.5rem;
-      }
-    }
-
-    h1 {
-      font-size: 1.9rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0;
-      letter-spacing: -0.5px;
-    }
-  }
-
-  .settings-header-desc {
-    color: #64748b;
-    font-size: 0.95rem;
-    margin: 0 0 0 56px;
-    max-width: 650px;
-    line-height: 1.5;
+  .settings-page-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    letter-spacing: -0.5px;
   }
 }
 
