@@ -25,10 +25,13 @@ $light_border_color: #e2e8f0;
 
   /* Backgrounds & Neutrals */
   --bg-color: #{$light_background_color};
+  --background-color: #{$light_background_color};
   --card-bg: #{$light_card_color};
+  --form-input-color: #{$light_card_color};
   --text-primary: #{$light_text_primary};
   --text-secondary: #{$light_text_secondary};
   --text-muted: #{$light_text_muted};
+  --text-color: #{$light_text_primary};
   --border-color: #{$light_border_color};
 
   /* Border Radii */

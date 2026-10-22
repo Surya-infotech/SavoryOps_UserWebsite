@@ -8,6 +8,7 @@ import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
+import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import "../../Scss/Pages/Settings/settings.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -259,73 +260,46 @@ const SettingsPage = () => {
                 <div className="preview-value-text">{formattedLivePreview}</div>
               </div>
 
-              {/* Settings Form Controls */}
+              {/* Settings Form Controls (Matching SavoryOps_OwnerWeb Dropdown) */}
               <div className="settings-form-grid">
                 {/* 1. Timezone Select */}
-                <div className="setting-field-card">
-                  <div className="field-label-row">
-                    <label htmlFor="settings-timezone-select" className="field-title">
-                      Timezone
-                    </label>
-                    <span className="field-hint">Synchronized with your regional time</span>
-                  </div>
-                  <select
-                    id="settings-timezone-select"
-                    className="custom-select-control"
-                    value={timezone}
-                    onChange={(e) => setTimezone(e.target.value)}
-                  >
-                    {TIMEZONE_OPTIONS.map((tz) => (
-                      <option key={tz.value} value={tz.value}>
-                        {tz.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Dropdown
+                  id="settings-timezone-select"
+                  label="Timezone"
+                  selectedValue={timezone}
+                  onValueChange={(val) => setTimezone(val)}
+                  options={TIMEZONE_OPTIONS}
+                  labelKey="label"
+                  valueKey="value"
+                  placeholder="Select Timezone"
+                  showSearch={true}
+                />
 
                 {/* 2. Date Format Dropdown */}
-                <div className="setting-field-card">
-                  <div className="field-label-row">
-                    <label htmlFor="settings-dateformat-select" className="field-title">
-                      Date Format
-                    </label>
-                    <span className="field-hint">Select date display format</span>
-                  </div>
-                  <select
-                    id="settings-dateformat-select"
-                    className="custom-select-control"
-                    value={dateFormat}
-                    onChange={(e) => setDateFormat(e.target.value)}
-                  >
-                    {DATE_FORMAT_OPTIONS.map((df) => (
-                      <option key={df.value} value={df.value}>
-                        {df.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Dropdown
+                  id="settings-dateformat-select"
+                  label="Date Format"
+                  selectedValue={dateFormat}
+                  onValueChange={(val) => setDateFormat(val)}
+                  options={DATE_FORMAT_OPTIONS}
+                  labelKey="label"
+                  valueKey="value"
+                  placeholder="Select Date Format"
+                  showSearch={false}
+                />
 
                 {/* 3. Time Format Dropdown */}
-                <div className="setting-field-card">
-                  <div className="field-label-row">
-                    <label htmlFor="settings-timeformat-select" className="field-title">
-                      Time Format
-                    </label>
-                    <span className="field-hint">Select time display format</span>
-                  </div>
-                  <select
-                    id="settings-timeformat-select"
-                    className="custom-select-control"
-                    value={timeFormat}
-                    onChange={(e) => setTimeFormat(e.target.value)}
-                  >
-                    {TIME_FORMAT_OPTIONS.map((tf) => (
-                      <option key={tf.value} value={tf.value}>
-                        {tf.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Dropdown
+                  id="settings-timeformat-select"
+                  label="Time Format"
+                  selectedValue={timeFormat}
+                  onValueChange={(val) => setTimeFormat(val)}
+                  options={TIME_FORMAT_OPTIONS}
+                  labelKey="label"
+                  valueKey="value"
+                  placeholder="Select Time Format"
+                  showSearch={false}
+                />
               </div>
 
               {/* Action Footer */}
