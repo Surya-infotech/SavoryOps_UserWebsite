@@ -35,15 +35,15 @@ const Footer = () => {
             </p>
             <div className="footer-contact-items">
               <div className="footer-contact-item">
-                <LocationOnIcon fontSize="small" style={{ color: "#69e869" }} />
+                <LocationOnIcon fontSize="small" />
                 <span>452 Gourmet Blvd, Culinary District</span>
               </div>
               <div className="footer-contact-item">
-                <PhoneIcon fontSize="small" style={{ color: "#69e869" }} />
+                <PhoneIcon fontSize="small" />
                 <span>+1 (800) 555-FOOD (3663)</span>
               </div>
               <div className="footer-contact-item">
-                <AccessTimeIcon fontSize="small" style={{ color: "#69e869" }} />
+                <AccessTimeIcon fontSize="small" />
                 <span>Mon - Sun: 10:00 AM - 11:30 PM</span>
               </div>
             </div>
@@ -93,7 +93,7 @@ const Footer = () => {
               </button>
             </form>
             {subscribed && (
-              <span style={{ color: "#69e869", fontSize: "0.85rem", fontWeight: 600 }}>
+              <span className="footer-subscribed-msg">
                 🎉 Thank you for subscribing! Check your inbox soon.
               </span>
             )}
@@ -104,7 +104,7 @@ const Footer = () => {
         <div className="footer-bottom-bar">
           <div>
             © {new Date().getFullYear()} {brandDisplayName}. Powered by{" "}
-            <strong style={{ color: "#69e869" }}>SavoryOps</strong> SaaS Restaurant Suite.
+            <strong className="footer-brand-highlight">SavoryOps</strong> SaaS Restaurant Suite.
           </div>
           <div className="footer-bottom-links">
             <Link to="/about">About Us</Link>

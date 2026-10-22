@@ -1,0 +1,71 @@
+/* ==========================================================================
+   SavoryOps User Website - Global Snackbar Styles (SCSS)
+   ========================================================================== */
+
+@use "../Customize/var.scss" as var;
+
+.savory-global-snackbar {
+  z-index: 999999 !important;
+  top: 25px !important;
+  right: 25px !important;
+
+  .savory-snackbar-alert {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 12px;
+    align-items: center;
+    padding: 8px 18px;
+    display: flex;
+
+    &.severity-success {
+      background-color: #028802;
+      box-shadow: 0 10px 25px -5px rgba(2, 136, 2, 0.4), 0 8px 10px -6px rgba(2, 136, 2, 0.2);
+    }
+
+    &.severity-error {
+      background-color: #d32f2f;
+      box-shadow: 0 10px 25px -5px rgba(211, 47, 47, 0.4), 0 8px 10px -6px rgba(211, 47, 47, 0.2);
+    }
+
+    &.severity-warning {
+      background-color: #ed6c02;
+      box-shadow: 0 10px 25px -5px rgba(237, 108, 2, 0.4), 0 8px 10px -6px rgba(237, 108, 2, 0.2);
+    }
+
+    &.severity-info {
+      background-color: #0288d1;
+      box-shadow: 0 10px 25px -5px rgba(2, 136, 209, 0.4), 0 8px 10px -6px rgba(2, 136, 209, 0.2);
+    }
+
+    .MuiAlert-icon {
+      color: #ffffff;
+      font-size: 1.25rem;
+      margin-right: 8px;
+      padding: 0;
+    }
+
+    .MuiAlert-message {
+      padding: 0;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .MuiAlert-action {
+      padding: 0 0 0 12px;
+      margin-right: -4px;
+
+      button {
+        color: #ffffff;
+        padding: 4px;
+        opacity: 0.85;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+          opacity: 1;
+          background: rgba(255, 255, 255, 0.15);
+        }
+      }
+    }
+  }
+}

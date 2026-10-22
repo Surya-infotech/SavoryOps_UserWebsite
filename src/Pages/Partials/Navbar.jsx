@@ -87,11 +87,10 @@ export const BranchDropdown = ({ className = "" }) => {
         aria-haspopup="listbox"
         title={`Current Branch: ${selectedBranch?.name} (Click to change)`}
       >
-        <LocationOnIcon className="branch-icon-pin" style={{ fontSize: "0.85rem" }} />
+        <LocationOnIcon className="branch-icon-pin" />
         <span className="branch-active-name">{selectedBranch?.name || "Select Branch"}</span>
         <KeyboardArrowDownIcon
           className={`branch-chevron ${isOpen ? "rotated" : ""}`}
-          style={{ fontSize: "0.95rem" }}
         />
       </button>
 
@@ -436,7 +435,6 @@ export const ProfileDropdown = ({ className = "" }) => {
                 to="/signin"
                 className="profile-action-btn login"
                 onClick={() => setIsOpen(false)}
-                style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center" }}
                 id="nav-profile-signin-link"
               >
                 <LoginIcon fontSize="small" />
@@ -524,7 +522,7 @@ const Navbar = () => {
 
             <div className="nav-top-right">
               <a href="tel:+18005553663" className="top-contact-link">
-                <PhoneInTalkIcon style={{ fontSize: "0.95rem" }} />
+                <PhoneInTalkIcon />
                 <span>+1 (800) 555-FOOD</span>
               </a>
             </div>
@@ -654,7 +652,7 @@ const Navbar = () => {
                         to={link.path}
                         className={`mobile-nav-item ${isActive ? "active" : ""}`}
                       >
-                        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span className="mobile-nav-link-content">
                           {link.icon}
                           {link.label}
                         </span>
@@ -668,18 +666,8 @@ const Navbar = () => {
               <div className="mobile-drawer-footer">
                 <Link
                   to="/signin"
-                  className="nav-cta-btn"
+                  className="nav-cta-btn mobile-signin-btn"
                   onClick={() => setMobileMenuOpen(false)}
-                  style={{
-                    justifyContent: "center",
-                    width: "100%",
-                    display: "flex",
-                    background: "rgba(2, 136, 2, 0.08)",
-                    color: "#028802",
-                    border: "1.5px solid rgba(2, 136, 2, 0.25)",
-                    boxShadow: "none",
-                    marginBottom: "8px",
-                  }}
                   id="mobile-drawer-signin-btn"
                 >
                   <LoginIcon fontSize="small" />
@@ -687,22 +675,14 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/reservation"
-                  className="nav-cta-btn"
-                  style={{ justifyContent: "center", width: "100%", display: "flex" }}
+                  className="nav-cta-btn mobile-book-btn"
                 >
                   <TableRestaurantIcon fontSize="small" />
                   <span>Book A Table</span>
                 </Link>
                 <a
                   href="tel:+18005553663"
-                  style={{
-                    textAlign: "center",
-                    color: "#64748b",
-                    fontSize: "0.85rem",
-                    fontWeight: 500,
-                    textDecoration: "none",
-                    paddingTop: "0.5rem",
-                  }}
+                  className="mobile-helpline-link"
                 >
                   📞 Helpline: +1 (800) 555-FOOD
                 </a>

@@ -42,6 +42,14 @@
   text-align: center;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
 
+  .subpage-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   h2 {
     font-size: 2rem;
     font-weight: 800;

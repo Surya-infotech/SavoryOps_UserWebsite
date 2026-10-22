@@ -210,6 +210,10 @@
           background: rgba(2, 136, 2, 0.08);
           text-decoration: underline;
         }
+
+        svg {
+          font-size: 0.85rem;
+        }
       }
     }
   }
@@ -549,6 +553,10 @@
       font-size: 0.9rem;
       color: #64748b;
       margin-top: 8px;
+
+      .MuiCircularProgress-root {
+        color: #028802;
+      }
     }
   }
 

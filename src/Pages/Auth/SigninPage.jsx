@@ -318,7 +318,7 @@ const SigninPage = () => {
                     className="edit-phone-btn"
                     title="Change phone number"
                   >
-                    <EditIcon style={{ fontSize: "0.85rem" }} />
+                    <EditIcon />
                     <span>Edit</span>
                   </button>
                 </p>
@@ -490,7 +490,7 @@ const SigninPage = () => {
                   Signed in as <strong>{authenticatedUser?.phone}</strong>
                 </p>
                 <div className="success-redirect-loader">
-                  <CircularProgress size={24} style={{ color: "#028802" }} />
+                  <CircularProgress size={24} />
                   <span>Loading dining menu...</span>
                 </div>
               </div>

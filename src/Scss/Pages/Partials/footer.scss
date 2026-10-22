@@ -71,6 +71,20 @@
   align-items: center;
   gap: 8px;
   color: #cbd5e1;
+
+  svg {
+    color: #69e869;
+  }
+}
+
+.footer-subscribed-msg {
+  color: #69e869;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.footer-brand-highlight {
+  color: #69e869;
 }
 
 /* Links Columns */

@@ -5,6 +5,7 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import "../Scss/Components/snackbar.scss";
 
 const SnackbarContext = createContext({
   showSnackbar: () => {},
@@ -65,20 +66,6 @@ export const SnackbarProvider = ({ children }) => {
     }
   };
 
-  const getAlertBackgroundColor = () => {
-    switch (snackbarState.severity) {
-      case "error":
-        return "#d32f2f";
-      case "warning":
-        return "#ed6c02";
-      case "info":
-        return "#0288d1";
-      case "success":
-      default:
-        return "#028802";
-    }
-  };
-
   return (
     <SnackbarContext.Provider value={{ showSnackbar, hideSnackbar }}>
       {children}
@@ -89,31 +76,14 @@ export const SnackbarProvider = ({ children }) => {
         autoHideDuration={snackbarState.duration}
         onClose={hideSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        style={{ zIndex: 999999, top: "25px", right: "25px" }}
+        className="savory-global-snackbar"
       >
         <Alert
           onClose={hideSnackbar}
           severity={snackbarState.severity}
           variant="filled"
           icon={getAlertIcon()}
-          sx={{
-            background: getAlertBackgroundColor(),
-            color: "#ffffff",
-            fontSize: "0.95rem",
-            fontWeight: 600,
-            boxShadow:
-              snackbarState.severity === "success"
-                ? "0 10px 25px -5px rgba(2, 136, 2, 0.4), 0 8px 10px -6px rgba(2, 136, 2, 0.2)"
-                : "0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15)",
-            borderRadius: "12px",
-            alignItems: "center",
-            py: 1,
-            px: 2.2,
-            "& .MuiAlert-icon": {
-              color: "#ffffff",
-              fontSize: "1.25rem",
-            },
-          }}
+          className={`savory-snackbar-alert severity-${snackbarState.severity}`}
         >
           {snackbarState.message}
         </Alert>
