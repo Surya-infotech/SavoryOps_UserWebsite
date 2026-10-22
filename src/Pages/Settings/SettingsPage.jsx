@@ -10,6 +10,7 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
+import { useLanguage } from "../../Context/useLanguage.js";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import "../../Scss/Pages/Settings/settings.scss";
 
@@ -40,11 +41,12 @@ const TIME_FORMAT_OPTIONS = [
 const SettingsPage = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+  const { translations = {} } = useLanguage();
 
   // Update document title
   useEffect(() => {
-    document.title = `Settings | ${softwareName}`;
-  }, []);
+    document.title = `${translations.settings || "Settings"} | ${softwareName}`;
+  }, [translations]);
 
   // Active Vertical Tab State: "datetime" | "delete"
   const [activeTab, setActiveTab] = useState("datetime");
@@ -397,7 +399,7 @@ const SettingsPage = () => {
       <div className="settings-container">
         {/* Page Top Header */}
         <header className="settings-page-header">
-          <h1 className="settings-page-title">Settings</h1>
+          <h1 className="settings-page-title">{translations.settings || "Settings"}</h1>
         </header>
 
         {/* Vertical Tabs & Content Layout */}
@@ -414,7 +416,7 @@ const SettingsPage = () => {
                 <CalendarMonthOutlinedIcon />
               </div>
               <div className="tab-text-group">
-                <span className="tab-title">Date and Time</span>
+                <span className="tab-title">{translations.datetime || "Date and Time"}</span>
                 <span className="tab-subtitle">Format & timezone</span>
               </div>
             </button>
@@ -429,7 +431,7 @@ const SettingsPage = () => {
                 <DeleteForeverOutlinedIcon />
               </div>
               <div className="tab-text-group">
-                <span className="tab-title">Delete Account</span>
+                <span className="tab-title">{translations.deleteAccount || "Delete Account"}</span>
                 <span className="tab-subtitle">Permanent removal</span>
               </div>
             </button>
@@ -454,7 +456,7 @@ const SettingsPage = () => {
                 {/* 1. Timezone Select */}
                 <Dropdown
                   id="settings-timezone-select"
-                  label="Timezone"
+                  label={translations.timezone || "Timezone"}
                   selectedValue={timezone}
                   onValueChange={(val) => setTimezone(val)}
                   options={TIMEZONE_OPTIONS}
@@ -468,7 +470,7 @@ const SettingsPage = () => {
                 <div className="settings-form-row-2col">
                   <Dropdown
                     id="settings-dateformat-select"
-                    label="Date Format"
+                    label={translations.dateformat || "Date Format"}
                     selectedValue={dateFormat}
                     onValueChange={(val) => setDateFormat(val)}
                     options={DATE_FORMAT_OPTIONS}
@@ -480,7 +482,7 @@ const SettingsPage = () => {
 
                   <Dropdown
                     id="settings-timeformat-select"
-                    label="Time Format"
+                    label={translations.timeformat || "Time Format"}
                     selectedValue={timeFormat}
                     onValueChange={(val) => setTimeFormat(val)}
                     options={TIME_FORMAT_OPTIONS}
@@ -504,12 +506,12 @@ const SettingsPage = () => {
                   {isSaving ? (
                     <>
                       <CircularProgress size={18} color="inherit" />
-                      <span>Saving...</span>
+                      <span>{translations.saving || "Saving..."}</span>
                     </>
                   ) : (
                     <>
                       <SaveOutlinedIcon fontSize="small" />
-                      <span>Save Changes</span>
+                      <span>{translations.savechanges || translations.save || "Save Changes"}</span>
                     </>
                   )}
                 </button>
@@ -521,9 +523,9 @@ const SettingsPage = () => {
           {activeTab === "delete" && (
             <main className="settings-content-panel delete-account-panel" id="panel-delete-account">
               <div className="panel-header-section">
-                <h2 className="panel-title">Delete Account</h2>
+                <h2 className="panel-title">{translations.deleteAccount || "Delete Account"}</h2>
                 <p className="panel-subtitle">
-                  Permanently remove your account, saved preferences, past reservations, and dining records.
+                  {translations.deleteaccountpagehint || "Permanently remove your account, saved preferences, past reservations, and dining records."}
                 </p>
               </div>
 
@@ -533,32 +535,32 @@ const SettingsPage = () => {
                   <WarningAmberOutlinedIcon />
                 </div>
                 <div className="danger-content">
-                  <h4>Warning: This Action is Irreversible</h4>
+                  <h4>{translations.warningirreversible || "Warning: This Action is Irreversible"}</h4>
                   <p>
-                    Once your account is deleted, all past order histories, table reservations, saved addresses, and loyalty rewards will be permanently wiped from our records.
+                    {translations.warningpermanentdeletehint || "Once your account is deleted, all past order histories, table reservations, saved addresses, and loyalty rewards will be permanently wiped from our records."}
                   </p>
                 </div>
               </div>
 
               {/* Consequences Checklist */}
               <div className="consequences-card">
-                <h5>What happens when you delete your account:</h5>
+                <h5>{translations.whathappensondeletion || "What happens when you delete your account:"}</h5>
                 <ul>
                   <li>
                     <span className="bullet-cross">✕</span>
-                    <span>All active table reservations and bookings will be immediately cancelled.</span>
+                    <span>{translations.bulletcancelreservations || "All active table reservations and bookings will be immediately cancelled."}</span>
                   </li>
                   <li>
                     <span className="bullet-cross">✕</span>
-                    <span>Past culinary receipts, favorite dishes, and dining reviews will be permanently deleted.</span>
+                    <span>{translations.bulletreceiptsdeleted || "Past culinary receipts, favorite dishes, and dining reviews will be permanently deleted."}</span>
                   </li>
                   <li>
                     <span className="bullet-cross">✕</span>
-                    <span>Any active promo discount coupons or reward points will be forfeited.</span>
+                    <span>{translations.bulletrewardsforfeited || "Any active promo discount coupons or reward points will be forfeited."}</span>
                   </li>
                   <li>
                     <span className="bullet-cross">✕</span>
-                    <span>You will be immediately logged out of all active devices.</span>
+                    <span>{translations.bulletloggedoutdevices || "You will be immediately logged out of all active devices."}</span>
                   </li>
                 </ul>
               </div>
@@ -571,11 +573,11 @@ const SettingsPage = () => {
                 <div className="phone-info-text">
                   {deleteOtpSent
                     ? (maskedPhone
-                      ? `Enter the 6-digit verification code sent to your phone (${maskedPhone}) to confirm account deletion.`
-                      : "Enter the 6-digit verification code sent to your phone to confirm account deletion.")
+                      ? (translations.deleteaccountenterotphint || `Enter the 6-digit verification code sent to your phone (${maskedPhone}) to confirm account deletion.`)
+                      : (translations.deleteaccountenterotphint || "Enter the 6-digit verification code sent to your phone to confirm account deletion."))
                     : (maskedPhone
-                      ? `A verification code will be sent to your registered phone number (${maskedPhone}) to confirm account deletion.`
-                      : "A verification code will be sent to your registered phone number to confirm account deletion.")
+                      ? (translations.deleteaccountotpscreenhint || `A verification code will be sent to your registered phone number (${maskedPhone}) to confirm account deletion.`)
+                      : (translations.deleteaccountotpscreenhint || "A verification code will be sent to your registered phone number to confirm account deletion."))
                   }
                 </div>
               </div>
@@ -593,12 +595,12 @@ const SettingsPage = () => {
                     {isSendingDeleteOtp ? (
                       <>
                         <CircularProgress size={16} color="inherit" />
-                        <span>Sending Verification Code...</span>
+                        <span>{translations.sendingcode || "Sending Verification Code..."}</span>
                       </>
                     ) : (
                       <>
                         <ShieldOutlinedIcon fontSize="small" />
-                        <span>Send Verification Code</span>
+                        <span>{translations.sendverificationcode || "Send Verification Code"}</span>
                       </>
                     )}
                   </button>
@@ -610,9 +612,9 @@ const SettingsPage = () => {
                       <ShieldOutlinedIcon />
                     </div>
                     <div className="otp-header-info">
-                      <h4 className="otp-card-title">Verification Code</h4>
+                      <h4 className="otp-card-title">{translations.verificationcode || "Verification Code"}</h4>
                       <p className="otp-card-subtitle">
-                        Enter the 6-digit verification code sent to your phone
+                        {translations.deleteaccountenterotphint || "Enter the 6-digit verification code sent to your phone"}
                       </p>
                     </div>
                   </div>
@@ -645,7 +647,7 @@ const SettingsPage = () => {
                     <div className="delete-resend-row">
                       {resendCountdown > 0 ? (
                         <span className="resend-countdown-label">
-                          Resend code in <strong>0:{resendCountdown.toString().padStart(2, "0")}</strong>
+                          {translations.resendin || "Resend code in"} <strong>0:{resendCountdown.toString().padStart(2, "0")}</strong>
                         </span>
                       ) : (
                         <button
@@ -655,7 +657,7 @@ const SettingsPage = () => {
                           disabled={isSendingDeleteOtp}
                         >
                           <RefreshIcon fontSize="small" />
-                          <span>{isSendingDeleteOtp ? "Sending code..." : "Resend Verification Code"}</span>
+                          <span>{isSendingDeleteOtp ? (translations.sendingcode || "Sending code...") : (translations.resendotp || "Resend Verification Code")}</span>
                         </button>
                       )}
                     </div>
@@ -671,7 +673,7 @@ const SettingsPage = () => {
                         }}
                         disabled={isDeleting}
                       >
-                        Cancel
+                        {translations.cancel || "Cancel"}
                       </button>
 
                       <button
@@ -682,7 +684,7 @@ const SettingsPage = () => {
                         id="trigger-delete-modal-btn"
                       >
                         <DeleteForeverOutlinedIcon fontSize="small" />
-                        <span>Delete My Account</span>
+                        <span>{translations.deletemyaccount || translations.deleteAccount || "Delete My Account"}</span>
                       </button>
                     </div>
                   </div>
@@ -701,11 +703,11 @@ const SettingsPage = () => {
               <div className="modal-warning-icon">
                 <WarningAmberOutlinedIcon />
               </div>
-              <h3>Confirm Account Deletion</h3>
+              <h3>{translations.confirmaccountdeletion || "Confirm Account Deletion"}</h3>
             </div>
 
             <p className="modal-body-text">
-              Are you absolutely sure you want to delete your SavoryOps account? This will permanently delete your customer profile, orders, and booking records.
+              {translations.confirmaccountdeletionsure || "Are you absolutely sure you want to delete your SavoryOps account? This will permanently delete your customer profile, orders, and booking records."}
             </p>
 
             <div className="modal-actions-row">
@@ -715,7 +717,7 @@ const SettingsPage = () => {
                 onClick={() => setIsDeleteModalOpen(false)}
                 disabled={isDeleting}
               >
-                Cancel
+                {translations.cancel || "Cancel"}
               </button>
               <button
                 type="button"
@@ -727,12 +729,12 @@ const SettingsPage = () => {
                 {isDeleting ? (
                   <>
                     <CircularProgress size={16} color="inherit" />
-                    <span>Deleting...</span>
+                    <span>{translations.deleting || "Deleting..."}</span>
                   </>
                 ) : (
                   <>
                     <DeleteForeverOutlinedIcon fontSize="small" />
-                    <span>Permanently Delete</span>
+                    <span>{translations.permanentlydelete || translations.delete || "Permanently Delete"}</span>
                   </>
                 )}
               </button>

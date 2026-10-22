@@ -22,6 +22,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
+import { useLanguage } from "../../Context/useLanguage.js";
 import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
@@ -32,6 +33,7 @@ const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.defaul
    1. BranchDropdown Component
    ========================================================================== */
 export const BranchDropdown = ({ className = "" }) => {
+  const { translations = {} } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const branches = DEFAULT_BRANCHES;
@@ -93,7 +95,7 @@ export const BranchDropdown = ({ className = "" }) => {
         title={`Current Branch: ${selectedBranch?.name} (Click to change)`}
       >
         <LocationOnIcon className="branch-icon-pin" />
-        <span className="branch-active-name">{selectedBranch?.name || "Select Branch"}</span>
+        <span className="branch-active-name">{selectedBranch?.name || translations.selectbranch || "Select Branch"}</span>
         <KeyboardArrowDownIcon
           className={`branch-chevron ${isOpen ? "rotated" : ""}`}
         />
@@ -103,9 +105,9 @@ export const BranchDropdown = ({ className = "" }) => {
         <div className="branch-dropdown-menu" role="listbox">
           <div className="branch-menu-header">
             <div className="branch-menu-header-text">
-              <span className="branch-menu-title">Select Location</span>
+              <span className="branch-menu-title">{translations.selectbranch || "Select Location"}</span>
               <span className="branch-menu-subtitle">
-                {branches.length} available {branches.length === 1 ? "branch" : "branches"}
+                {branches.length} available {branches.length === 1 ? (translations.branch || "branch") : (translations.branches || "branches")}
               </span>
             </div>
           </div>
@@ -115,7 +117,7 @@ export const BranchDropdown = ({ className = "" }) => {
             <input
               type="text"
               className="branch-search-input"
-              placeholder="Search branch or area..."
+              placeholder={translations.searchbranchname || "Search branch or area..."}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               autoFocus
@@ -171,11 +173,18 @@ export const BranchDropdown = ({ className = "" }) => {
    ========================================================================== */
 export const LanguageDropdown = ({ className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { language, changeLanguage } = useLanguage();
   const [selectedLanguage, setSelectedLanguage] = useState(
-    () => localStorage.getItem("selectedLanguage") || "English"
+    () => language || localStorage.getItem("selectedLanguage") || "English"
   );
   const dropdownRef = useRef(null);
   const languages = getLanguageOptions();
+
+  useEffect(() => {
+    if (language) {
+      setSelectedLanguage(language);
+    }
+  }, [language]);
 
   const selectedLang =
     languages.find((lang) => lang.name === selectedLanguage) ||
@@ -199,13 +208,8 @@ export const LanguageDropdown = ({ className = "" }) => {
 
   const handleLanguageSelect = (lang) => {
     setSelectedLanguage(lang.name);
-    localStorage.setItem("selectedLanguage", lang.name);
+    changeLanguage(lang.name);
     setIsOpen(false);
-
-    // Dispatch event in case other components listen to language change
-    window.dispatchEvent(
-      new CustomEvent("languageChange", { detail: { language: lang.name, code: lang.code } })
-    );
   };
 
   return (
@@ -230,20 +234,20 @@ export const LanguageDropdown = ({ className = "" }) => {
       {isOpen && (
         <div className="language-dropdown-menu" role="listbox">
           <ul className="language-menu-list">
-            {languages.map((language) => {
-              const isSelected = language.name === selectedLanguage;
+            {languages.map((item) => {
+              const isSelected = item.name === selectedLanguage;
               return (
                 <li
-                  key={language.code}
+                  key={item.code}
                   className={`language-menu-item ${isSelected ? "selected" : ""}`}
-                  onClick={() => handleLanguageSelect(language)}
+                  onClick={() => handleLanguageSelect(item)}
                   role="option"
                   aria-selected={isSelected}
                 >
                   <span className="lang-flag-container">
-                    <Flag code={language.code} className="flag-icon" alt={language.name} />
+                    <Flag code={item.code} className="flag-icon" alt={item.name} />
                   </span>
-                  <span className="language-item-name">{language.name}</span>
+                  <span className="language-item-name">{item.name}</span>
                   {isSelected && <CheckIcon className="language-item-check" />}
                 </li>
               );
@@ -267,6 +271,7 @@ export const ProfileDropdown = ({ className = "" }) => {
   const dropdownRef = useRef(null);
   const [customerDetails, setCustomerDetails] = useState(null);
   const { showSnackbar } = useSnackbar();
+  const { translations = {} } = useLanguage();
 
   // Reactive Customer Authentication State
   const [authState, setAuthState] = useState(() => {
@@ -416,7 +421,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <ReceiptLongOutlinedIcon fontSize="small" />
-                  <span>Orders</span>
+                  <span>{translations.orders || translations.order || "Orders"}</span>
                 </Link>
 
                 <Link
@@ -425,7 +430,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <TableRestaurantIcon fontSize="small" />
-                  <span>Table Reservations</span>
+                  <span>{translations.tablereservation || "Table Reservations"}</span>
                 </Link>
 
                 <Link
@@ -434,7 +439,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <LocationOnOutlinedIcon fontSize="small" />
-                  <span>Manage Address</span>
+                  <span>{translations.manageaddress || "Manage Address"}</span>
                 </Link>
 
                 <Link
@@ -443,7 +448,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <RateReviewOutlinedIcon fontSize="small" />
-                  <span>My Reviews</span>
+                  <span>{translations.myreviews || "My Reviews"}</span>
                 </Link>
 
                 <Link
@@ -452,7 +457,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <SettingsOutlinedIcon fontSize="small" />
-                  <span>Settings</span>
+                  <span>{translations.settings || "Settings"}</span>
                 </Link>
               </div>
             </>
@@ -469,7 +474,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                 onClick={handleSignOut}
               >
                 <LogoutIcon fontSize="small" />
-                <span>Sign Out</span>
+                <span>{translations.logout || "Sign Out"}</span>
               </button>
             ) : (
               <Link
@@ -479,7 +484,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                 id="nav-profile-signin-link"
               >
                 <LoginIcon fontSize="small" />
-                <span>Sign In with Phone</span>
+                <span>{translations.signinwithphone || "Sign In with Phone"}</span>
               </Link>
             )}
           </div>
@@ -493,6 +498,7 @@ export const ProfileDropdown = ({ className = "" }) => {
    4. Main Navbar Component
    ========================================================================== */
 const Navbar = () => {
+  const { translations = {} } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -531,9 +537,9 @@ const Navbar = () => {
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { label: "Menu", path: "/menu", icon: <RestaurantMenuIcon fontSize="inherit" /> },
-    { label: "Offers", path: "/offers", badge: "Hot", icon: <LocalOfferIcon fontSize="inherit" /> },
-    { label: "Book Table", path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
+    { label: translations.menu || translations.menus || "Menu", path: "/menu", icon: <RestaurantMenuIcon fontSize="inherit" /> },
+    { label: translations.offers || "Offers", path: "/offers", badge: "Hot", icon: <LocalOfferIcon fontSize="inherit" /> },
+    { label: translations.booktable || translations.tablereservation || "Book Table", path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
   ];
 
   const brandDisplayName = "SavoryOps";
@@ -609,7 +615,7 @@ const Navbar = () => {
             <input
               type="text"
               className="nav-search-input"
-              placeholder="Search pizza, burgers..."
+              placeholder={translations.searchdishes || "Search pizza, burgers..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoComplete="off"
@@ -623,7 +629,7 @@ const Navbar = () => {
             <button
               type="button"
               className="nav-cart-btn"
-              title="View Cart"
+              title={translations.cart || "View Cart"}
               onClick={() => alert("Cart: 2 delicious items ready for checkout!")}
             >
               <ShoppingBagOutlinedIcon fontSize="small" />
@@ -679,7 +685,7 @@ const Navbar = () => {
                   <input
                     type="text"
                     className="nav-search-input"
-                    placeholder="Search dishes..."
+                    placeholder={translations.searchdishes || "Search dishes..."}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     autoComplete="off"
@@ -714,20 +720,20 @@ const Navbar = () => {
                   id="mobile-drawer-signin-btn"
                 >
                   <LoginIcon fontSize="small" />
-                  <span>{localStorage.getItem("savoryopscustomer_token") ? "My Account" : "Sign In with Phone"}</span>
+                  <span>{localStorage.getItem("savoryopscustomer_token") ? (translations.myaccount || "My Account") : (translations.signinwithphone || "Sign In with Phone")}</span>
                 </Link>
                 <Link
                   to="/reservation"
                   className="nav-cta-btn mobile-book-btn"
                 >
                   <TableRestaurantIcon fontSize="small" />
-                  <span>Book A Table</span>
+                  <span>{translations.booktable || "Book A Table"}</span>
                 </Link>
                 <a
                   href="tel:+18005553663"
                   className="mobile-helpline-link"
                 >
-                  📞 Helpline: +1 (800) 555-FOOD
+                  📞 {translations.helpline || "Helpline"}: +1 (800) 555-FOOD
                 </a>
               </div>
             </div>
