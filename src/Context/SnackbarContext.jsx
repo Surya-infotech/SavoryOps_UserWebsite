@@ -5,6 +5,7 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import { useLanguage } from "./useLanguage.js";
 import "../Scss/Components/snackbar.scss";
 
 const SnackbarContext = createContext({
@@ -15,6 +16,7 @@ const SnackbarContext = createContext({
 export const useSnackbar = () => useContext(SnackbarContext);
 
 export const SnackbarProvider = ({ children }) => {
+  const { isRtl } = useLanguage();
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     message: "",
@@ -75,15 +77,16 @@ export const SnackbarProvider = ({ children }) => {
         open={snackbarState.open}
         autoHideDuration={snackbarState.duration}
         onClose={hideSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        className="savory-global-snackbar"
+        anchorOrigin={{ vertical: "top", horizontal: isRtl ? "left" : "right" }}
+        className={`savory-global-snackbar ${isRtl ? "is-rtl" : ""}`}
       >
         <Alert
           onClose={hideSnackbar}
           severity={snackbarState.severity}
           variant="filled"
           icon={getAlertIcon()}
-          className={`savory-snackbar-alert severity-${snackbarState.severity}`}
+          dir={isRtl ? "rtl" : "ltr"}
+          className={`savory-snackbar-alert severity-${snackbarState.severity} ${isRtl ? "is-rtl" : ""}`}
         >
           {snackbarState.message}
         </Alert>
