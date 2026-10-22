@@ -461,7 +461,7 @@ export const ProfileDropdown = ({ className = "" }) => {
 
           {/* Action Button */}
           <div className="profile-menu-footer">
-            {authState.isLoggedIn ? (
+            {isLoggedIn ? (
               <button
                 type="button"
                 className="profile-action-btn logout"
