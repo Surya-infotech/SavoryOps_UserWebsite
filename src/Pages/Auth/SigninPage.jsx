@@ -9,6 +9,7 @@ import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import "../../Scss/Pages/Auth/signin.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -49,6 +50,7 @@ const SigninPage = () => {
   const [resendTimer, setResendTimer] = useState(0);
   const [serverMessage, setServerMessage] = useState("");
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
+  const { showSnackbar } = useSnackbar();
 
   // Return destination
   const fromDestination = location.state?.from || "/";
@@ -235,6 +237,8 @@ const SigninPage = () => {
     // Only store CUSTOMER_ID and savoryopscustomer_token in localStorage
     localStorage.setItem(customerTokenName, customerToken);
     localStorage.setItem(customerIdName, String(customerId));
+
+    showSnackbar("Signed in successfully!", "success");
 
     // Dispatch custom event to notify Navbar and other components immediately
     window.dispatchEvent(

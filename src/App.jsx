@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
+import { SnackbarProvider } from "./Context/SnackbarContext.jsx";
 import Navbar from "./Pages/Partials/Navbar.jsx";
 import Footer from "./Pages/Partials/Footer.jsx";
 import HomeRouter from "./Router/Home.jsx";
@@ -31,9 +32,11 @@ const App = () => {
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
       <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<AppContent />} />
-        </Routes>
+        <SnackbarProvider>
+          <Routes>
+            <Route path="/*" element={<AppContent />} />
+          </Routes>
+        </SnackbarProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

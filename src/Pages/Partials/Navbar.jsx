@@ -16,9 +16,7 @@ import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LoginIcon from "@mui/icons-material/Login";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
@@ -263,7 +261,7 @@ export const ProfileDropdown = ({ className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [customerDetails, setCustomerDetails] = useState(null);
-  const [showSignOutToast, setShowSignOutToast] = useState(false);
+  const { showSnackbar } = useSnackbar();
 
   // Reactive Customer Authentication State
   const [authState, setAuthState] = useState(() => {
@@ -342,7 +340,7 @@ export const ProfileDropdown = ({ className = "" }) => {
       subtitle: "Sign in with phone for orders & rewards",
     });
 
-    setShowSignOutToast(true);
+    showSnackbar("Signed out successfully!", "success");
 
     window.dispatchEvent(
       new CustomEvent("customerAuthChange", {
@@ -448,39 +446,6 @@ export const ProfileDropdown = ({ className = "" }) => {
           </div>
         </div>
       )}
-
-      {/* Sign Out Success Toast */}
-      <Snackbar
-        open={showSignOutToast}
-        autoHideDuration={3500}
-        onClose={() => setShowSignOutToast(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        style={{ zIndex: 999999, top: "25px", right: "25px" }}
-      >
-        <Alert
-          onClose={() => setShowSignOutToast(false)}
-          severity="success"
-          variant="filled"
-          icon={<CheckCircleOutlinedIcon fontSize="inherit" />}
-          sx={{
-            background: "#028802",
-            color: "#ffffff",
-            fontSize: "0.95rem",
-            fontWeight: 600,
-            boxShadow: "0 10px 25px -5px rgba(2, 136, 2, 0.4), 0 8px 10px -6px rgba(2, 136, 2, 0.2)",
-            borderRadius: "12px",
-            alignItems: "center",
-            py: 1,
-            px: 2.2,
-            "& .MuiAlert-icon": {
-              color: "#ffffff",
-              fontSize: "1.25rem",
-            },
-          }}
-        >
-          Signed out successfully!
-        </Alert>
-      </Snackbar>
     </div>
   );
 };
