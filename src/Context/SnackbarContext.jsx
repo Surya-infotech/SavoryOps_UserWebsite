@@ -18,10 +18,10 @@ export const SnackbarProvider = ({ children }) => {
     open: false,
     message: "",
     severity: "success",
-    duration: 3500,
+    duration: 5000,
   });
 
-  const showSnackbar = useCallback((message, severity = "success", duration = 3500) => {
+  const showSnackbar = useCallback((message, severity = "success", duration = 5000) => {
     if (!message) return;
     setSnackbarState({
       open: true,
@@ -41,7 +41,7 @@ export const SnackbarProvider = ({ children }) => {
     const handleGlobalToast = (event) => {
       const { message, severity, duration } = event.detail || {};
       if (message) {
-        showSnackbar(message, severity || "success", duration || 3500);
+        showSnackbar(message, severity || "success", duration || 5000);
       }
     };
 
