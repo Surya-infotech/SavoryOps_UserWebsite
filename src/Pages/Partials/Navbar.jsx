@@ -278,7 +278,7 @@ export const ProfileDropdown = ({ className = "" }) => {
     if (!customerId || !adminPanelBackendPath) return;
 
     try {
-      const response = await fetch(`${adminPanelBackendPath}/Customer/General/GetProfile/${customerId}`, {
+      const response = await fetch(`${adminPanelBackendPath}/Website/General/GetCustomerDetails/${customerId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
