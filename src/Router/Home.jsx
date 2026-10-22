@@ -3,6 +3,7 @@ import HomePage from "../Pages/Home/HomePage.jsx";
 import SigninPage from "../Pages/Auth/SigninPage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
 import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
+import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
 
 const HomeRouter = () => {
   return (
@@ -69,16 +70,7 @@ const HomeRouter = () => {
           />
         }
       />
-      <Route
-        path="/settings"
-        element={
-          <SubpagePlaceholder
-            icon="⚙️"
-            title="Setting"
-            subtitle="Manage your profile settings, dining notifications, and account preferences."
-          />
-        }
-      />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route
         path="/manage-address"
         element={
