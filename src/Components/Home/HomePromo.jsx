@@ -14,20 +14,20 @@ const HomePromo = () => {
         <div className="promo-card-content">
           <span className="promo-pill">
             <LocalOfferIcon fontSize="inherit" />
-            {translations.specialtenantpromotion || "Special Tenant Promotion"}
+            {translations.specialtenantpromotion}
           </span>
           <h3 className="promo-title">
-            {translations.experiencediningat || "Experience Exquisite Dining at"} {brandDisplayName}
+            {translations.experiencediningat} {brandDisplayName}
           </h3>
           <p className="promo-desc">
-            {translations.promodesc || "Whether you are craving a cozy dinner night at home or a candle-lit table reservation, enjoy our chef-special feasts with flat 20% savings."}
+            {translations.promodesc}
           </p>
           <div className="promo-cta-row">
             <div className="promo-code-box">
-              {translations.usecode || "Use Code:"} <strong>FEAST20</strong>
+              {translations.usecode} <strong>FEAST20</strong>
             </div>
             <Link to="/menu" className="hero-btn-primary promo-cta-btn">
-              <span>{translations.ordernow || "Order Now"}</span>
+              <span>{translations.ordernow}</span>
               <ArrowForwardIcon fontSize="inherit" />
             </Link>
           </div>

@@ -18,8 +18,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🍕"
-            title={translations.fullculinarymenu || "Full Culinary Menu"}
-            subtitle={translations.menusubtitle || "Browse through our wide selection of artisan wood-fired pizzas, gourmet smash burgers, Asian noodle bowls, and handcrafted desserts."}
+            title={translations.fullculinarymenu}
+            subtitle={translations.menusubtitle}
           />
         }
       />
@@ -28,8 +28,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🔥"
-            title={translations.specialoffers || "Special Offers & Deals"}
-            subtitle={translations.offerssubtitle || "Exclusive dining discounts, midweek feast packages, and promo vouchers crafted for our food lovers."}
+            title={translations.specialoffers}
+            subtitle={translations.offerssubtitle}
           />
         }
       />
@@ -38,8 +38,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🍷"
-            title={translations.tablebooking || "Book A Table"}
-            subtitle={translations.bookingsubtitle || "Reserve your table online in seconds with instant confirmation and contactless dining preferences."}
+            title={translations.tablebooking}
+            subtitle={translations.bookingsubtitle}
           />
         }
       />
@@ -48,8 +48,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🌿"
-            title={translations.aboutkitchen || "About Our Kitchen"}
-            subtitle={translations.aboutsubtitle || "Passionate chefs, farm-fresh local produce, and centuries-old culinary traditions reimagined for modern gastronomy."}
+            title={translations.aboutkitchen}
+            subtitle={translations.aboutsubtitle}
           />
         }
       />
@@ -58,8 +58,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="📞"
-            title={translations.contactcatering || "Contact & Catering"}
-            subtitle={translations.contactsubtitle || "Have a question or planning a catering event? Reach out to our dedicated support team."}
+            title={translations.contactcatering}
+            subtitle={translations.contactsubtitle}
           />
         }
       />
@@ -68,8 +68,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🧾"
-            title={translations.orders || "Orders"}
-            subtitle={translations.orderssubtitle || "View, reorder, and track your active delivery orders and dining receipts."}
+            title={translations.orders}
+            subtitle={translations.orderssubtitle}
           />
         }
       />
@@ -79,8 +79,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="📍"
-            title={translations.manageaddress || "Manage Address"}
-            subtitle={translations.addresssubtitle || "Save and organize your favorite home, office, and delivery addresses for quick ordering."}
+            title={translations.manageaddress}
+            subtitle={translations.addresssubtitle}
           />
         }
       />
@@ -89,8 +89,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="⭐"
-            title={translations.myreviews || "My Reviews"}
-            subtitle={translations.reviewssubtitle || "Check your past dining reviews, dish ratings, and culinary feedback."}
+            title={translations.myreviews}
+            subtitle={translations.reviewssubtitle}
           />
         }
       />

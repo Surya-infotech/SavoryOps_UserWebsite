@@ -92,10 +92,10 @@ export const BranchDropdown = ({ className = "" }) => {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={`Current Branch: ${selectedBranch?.name} (Click to change)`}
+        title={selectedBranch?.name || translations.selectbranch}
       >
         <LocationOnIcon className="branch-icon-pin" />
-        <span className="branch-active-name">{selectedBranch?.name || translations.selectbranch || "Select Branch"}</span>
+        <span className="branch-active-name">{selectedBranch?.name || translations.selectbranch}</span>
         <KeyboardArrowDownIcon
           className={`branch-chevron ${isOpen ? "rotated" : ""}`}
         />
@@ -105,9 +105,9 @@ export const BranchDropdown = ({ className = "" }) => {
         <div className="branch-dropdown-menu" role="listbox">
           <div className="branch-menu-header">
             <div className="branch-menu-header-text">
-              <span className="branch-menu-title">{translations.selectbranch || "Select Location"}</span>
+              <span className="branch-menu-title">{translations.selectbranch}</span>
               <span className="branch-menu-subtitle">
-                {branches.length} available {branches.length === 1 ? (translations.branch || "branch") : (translations.branches || "branches")}
+                {branches.length} available {branches.length === 1 ? translations.branch : translations.branches}
               </span>
             </div>
           </div>
@@ -117,7 +117,7 @@ export const BranchDropdown = ({ className = "" }) => {
             <input
               type="text"
               className="branch-search-input"
-              placeholder={translations.searchbranchname || "Search branch or area..."}
+              placeholder={translations.searchbranchname}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               autoFocus
@@ -128,7 +128,7 @@ export const BranchDropdown = ({ className = "" }) => {
           <div className="branch-list-scroller">
             {filteredBranches.length === 0 ? (
               <div className="branch-empty-state">
-                <p>{translations.nobranchesfound || "No branches found"} "{search}"</p>
+                <p>{translations.nobranchesfound} "{search}"</p>
               </div>
             ) : (
               filteredBranches.map((branch) => {
@@ -281,8 +281,8 @@ export const ProfileDropdown = ({ className = "" }) => {
 
     return {
       isLoggedIn: loggedIn,
-      name: loggedIn ? (translations.myaccount || "My Account") : (translations.guestuser || "Guest User"),
-      subtitle: loggedIn ? "" : (translations.signinwithphone || "Sign in with phone for orders & rewards"),
+      name: loggedIn ? translations.myaccount : translations.guestuser,
+      subtitle: loggedIn ? "" : translations.signinwithphone,
     };
   });
 
@@ -306,7 +306,7 @@ export const ProfileDropdown = ({ className = "" }) => {
           const fullName = `${data.customerfirstname || ""} ${data.customerlastname || ""}`.trim();
           setAuthState({
             isLoggedIn: true,
-            name: fullName || (translations.myaccount || "My Account"),
+            name: fullName || translations.myaccount,
             subtitle: data.phone || "",
           });
         }
@@ -333,8 +333,8 @@ export const ProfileDropdown = ({ className = "" }) => {
         setIsOpen(false);
         setAuthState({
           isLoggedIn: false,
-          name: translations.guestuser || "Guest User",
-          subtitle: translations.signinwithphone || "Sign in with phone for orders & rewards",
+          name: translations.guestuser,
+          subtitle: translations.signinwithphone,
         });
       }
     };
@@ -367,11 +367,11 @@ export const ProfileDropdown = ({ className = "" }) => {
     setIsOpen(false);
     setAuthState({
       isLoggedIn: false,
-      name: translations.guestuser || "Guest User",
-      subtitle: translations.signinwithphone || "Sign in with phone for orders & rewards",
+      name: translations.guestuser,
+      subtitle: translations.signinwithphone,
     });
 
-    showSnackbar(translations.signedoutsuccessfully || "Signed out successfully!", "success");
+    showSnackbar(translations.signedoutsuccessfully, "success");
 
     window.dispatchEvent(
       new CustomEvent("customerAuthChange", {
@@ -421,7 +421,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <ReceiptLongOutlinedIcon fontSize="small" />
-                  <span>{translations.orders || translations.order || "Orders"}</span>
+                  <span>{translations.orders}</span>
                 </Link>
 
                 <Link
@@ -430,7 +430,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <TableRestaurantIcon fontSize="small" />
-                  <span>{translations.tablereservation || "Table Reservations"}</span>
+                  <span>{translations.tablereservation}</span>
                 </Link>
 
                 <Link
@@ -439,7 +439,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <LocationOnOutlinedIcon fontSize="small" />
-                  <span>{translations.manageaddress || "Manage Address"}</span>
+                  <span>{translations.manageaddress}</span>
                 </Link>
 
                 <Link
@@ -448,7 +448,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <RateReviewOutlinedIcon fontSize="small" />
-                  <span>{translations.myreviews || "My Reviews"}</span>
+                  <span>{translations.myreviews}</span>
                 </Link>
 
                 <Link
@@ -457,7 +457,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <SettingsOutlinedIcon fontSize="small" />
-                  <span>{translations.settings || "Settings"}</span>
+                  <span>{translations.settings}</span>
                 </Link>
               </div>
             </>
@@ -474,7 +474,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                 onClick={handleSignOut}
               >
                 <LogoutIcon fontSize="small" />
-                <span>{translations.logout || "Sign Out"}</span>
+                <span>{translations.logout}</span>
               </button>
             ) : (
               <Link
@@ -484,7 +484,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                 id="nav-profile-signin-link"
               >
                 <LoginIcon fontSize="small" />
-                <span>{translations.signinwithphone || "Sign In with Phone"}</span>
+                <span>{translations.signinwithphone}</span>
               </Link>
             )}
           </div>
@@ -537,9 +537,9 @@ const Navbar = () => {
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { label: translations.menu || translations.menus || "Menu", path: "/menu", icon: <RestaurantMenuIcon fontSize="inherit" /> },
-    { label: translations.offers || "Offers", path: "/offers", badge: "Hot", icon: <LocalOfferIcon fontSize="inherit" /> },
-    { label: translations.booktable || translations.tablereservation || "Book Table", path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
+    { label: translations.menu, path: "/menu", icon: <RestaurantMenuIcon fontSize="inherit" /> },
+    { label: translations.offers, path: "/offers", badge: "Hot", icon: <LocalOfferIcon fontSize="inherit" /> },
+    { label: translations.booktable, path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
   ];
 
   const brandDisplayName = "SavoryOps";
@@ -560,10 +560,10 @@ const Navbar = () => {
             <div className="nav-top-left">
               <span className="top-badge">
                 <span className="live-dot"></span>
-                {translations.livekitchen || "Live Kitchen"}
+                {translations.livekitchen}
               </span>
               <span className="nav-top-text">
-                {translations.navpromo || "✨ Free Express Delivery on orders over $30 • Use code FEAST20 for 20% OFF"}
+                {translations.navpromo}
               </span>
             </div>
 
@@ -615,7 +615,7 @@ const Navbar = () => {
             <input
               type="text"
               className="nav-search-input"
-              placeholder={translations.searchdishes || "Search pizza, burgers..."}
+              placeholder={translations.searchdishes}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoComplete="off"
@@ -629,7 +629,7 @@ const Navbar = () => {
             <button
               type="button"
               className="nav-cart-btn"
-              title={translations.cart || "View Cart"}
+              title={translations.cart}
               onClick={() => alert("Cart: 2 delicious items ready for checkout!")}
             >
               <ShoppingBagOutlinedIcon fontSize="small" />
@@ -676,7 +676,7 @@ const Navbar = () => {
               <div className="mobile-drawer-content">
                 {/* Mobile Branch Selector */}
                 <div className="mobile-branch-section">
-                  <span className="mobile-section-label">{translations.selectbranch || "Selected Branch"}</span>
+                  <span className="mobile-section-label">{translations.selectbranch}</span>
                   <BranchDropdown className="mobile-branch-dropdown" />
                 </div>
 
@@ -685,7 +685,7 @@ const Navbar = () => {
                   <input
                     type="text"
                     className="nav-search-input"
-                    placeholder={translations.searchdishes || "Search dishes..."}
+                    placeholder={translations.searchdishes}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     autoComplete="off"
@@ -720,20 +720,20 @@ const Navbar = () => {
                   id="mobile-drawer-signin-btn"
                 >
                   <LoginIcon fontSize="small" />
-                  <span>{localStorage.getItem("savoryopscustomer_token") ? (translations.myaccount || "My Account") : (translations.signinwithphone || "Sign In with Phone")}</span>
+                  <span>{localStorage.getItem("savoryopscustomer_token") ? translations.myaccount : translations.signinwithphone}</span>
                 </Link>
                 <Link
                   to="/reservation"
                   className="nav-cta-btn mobile-book-btn"
                 >
                   <TableRestaurantIcon fontSize="small" />
-                  <span>{translations.booktable || "Book A Table"}</span>
+                  <span>{translations.booktable}</span>
                 </Link>
                 <a
                   href="tel:+18005553663"
                   className="mobile-helpline-link"
                 >
-                  📞 {translations.helpline || "Helpline"}: +1 (800) 555-FOOD
+                  📞 {translations.helpline}: +1 (800) 555-FOOD
                 </a>
               </div>
             </div>

@@ -33,12 +33,12 @@ const Footer = () => {
               <span className="footer-brand-title">{brandDisplayName}</span>
             </div>
             <p className="footer-brand-text">
-              {translations.footerbrandtext || "Delivering exquisite flavors crafted with farm-fresh organic ingredients, artisanal passion, and culinary mastery."}
+              {translations.footerbrandtext}
             </p>
             <div className="footer-contact-items">
               <div className="footer-contact-item">
                 <LocationOnIcon fontSize="small" />
-                <span>{translations.addressdistrict || "452 Gourmet Blvd, Culinary District"}</span>
+                <span>{translations.addressdistrict}</span>
               </div>
               <div className="footer-contact-item">
                 <PhoneIcon fontSize="small" />
@@ -46,57 +46,57 @@ const Footer = () => {
               </div>
               <div className="footer-contact-item">
                 <AccessTimeIcon fontSize="small" />
-                <span>{translations.workinghours || "Mon - Sun: 10:00 AM - 11:30 PM"}</span>
+                <span>{translations.workinghours}</span>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="footer-col">
-            <h4 className="footer-col-title">{translations.exploremenu || "Explore Menu"}</h4>
+            <h4 className="footer-col-title">{translations.exploremenu}</h4>
             <ul className="footer-nav-list">
-              <li><Link to="/menu" className="footer-nav-link">🍕 {translations.artisanpizzas || "Artisanal Pizzas"}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍔 {translations.smashburgers || "Gourmet Smash Burgers"}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍜 {translations.ramenbowls || "Ramen & Asian Bowls"}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍰 {translations.dessertsgelato || "Desserts & Gelato"}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍹 {translations.handcraftedmocktails || "Handcrafted Mocktails"}</Link></li>
+              <li><Link to="/menu" className="footer-nav-link">🍕 {translations.artisanpizzas}</Link></li>
+              <li><Link to="/menu" className="footer-nav-link">🍔 {translations.smashburgers}</Link></li>
+              <li><Link to="/menu" className="footer-nav-link">🍜 {translations.ramenbowls}</Link></li>
+              <li><Link to="/menu" className="footer-nav-link">🍰 {translations.dessertsgelato}</Link></li>
+              <li><Link to="/menu" className="footer-nav-link">🍹 {translations.handcraftedmocktails}</Link></li>
             </ul>
           </div>
 
           {/* Service Links */}
           <div className="footer-col">
-            <h4 className="footer-col-title">{translations.services || "Services"}</h4>
+            <h4 className="footer-col-title">{translations.services}</h4>
             <ul className="footer-nav-list">
-              <li><Link to="/reservation" className="footer-nav-link">{translations.tablereservation || "Table Reservation"}</Link></li>
-              <li><Link to="/offers" className="footer-nav-link">{translations.specialoffers || "Special Offers & Deals"}</Link></li>
-              <li><Link to="/about" className="footer-nav-link">{translations.aboutourkitchen || "About Our Kitchen"}</Link></li>
-              <li><Link to="/contact" className="footer-nav-link">{translations.cateringevents || "Catering & Events"}</Link></li>
-              <li><Link to="/contact" className="footer-nav-link">{translations.customersupport || "Customer Support"}</Link></li>
+              <li><Link to="/reservation" className="footer-nav-link">{translations.tablereservation}</Link></li>
+              <li><Link to="/offers" className="footer-nav-link">{translations.specialoffers}</Link></li>
+              <li><Link to="/about" className="footer-nav-link">{translations.aboutourkitchen}</Link></li>
+              <li><Link to="/contact" className="footer-nav-link">{translations.cateringevents}</Link></li>
+              <li><Link to="/contact" className="footer-nav-link">{translations.customersupport}</Link></li>
             </ul>
           </div>
 
           {/* Newsletter Column */}
           <div className="footer-col footer-newsletter-box">
-            <h4 className="footer-col-title">{translations.stayinspired || "Stay Inspired"}</h4>
+            <h4 className="footer-col-title">{translations.stayinspired}</h4>
             <p className="footer-newsletter-text">
-              {translations.subscribetext || "Subscribe to get secret chef recipes, exclusive discounts, and invitations to tasting events."}
+              {translations.subscribetext}
             </p>
             <form className="footer-newsletter-form" onSubmit={handleSubscribe}>
               <input
                 type="email"
                 className="footer-newsletter-input"
-                placeholder={translations.enteryouremail || "Enter your email"}
+                placeholder={translations.enteryouremail}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <button type="submit" className="footer-newsletter-btn">
-                {translations.join || "Join"}
+                {translations.join}
               </button>
             </form>
             {subscribed && (
               <span className="footer-subscribed-msg">
-                {translations.thankyousubscribing || "🎉 Thank you for subscribing! Check your inbox soon."}
+                {translations.thankyousubscribing}
               </span>
             )}
           </div>
@@ -105,14 +105,14 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="footer-bottom-bar">
           <div>
-            © {new Date().getFullYear()} {brandDisplayName}. {translations.allrightsreserved || "All rights reserved."} Powered by{" "}
+            © {new Date().getFullYear()} {brandDisplayName}. {translations.allrightsreserved} Powered by{" "}
             <strong className="footer-brand-highlight">SavoryOps</strong> SaaS Restaurant Suite.
           </div>
           <div className="footer-bottom-links">
-            <Link to="/about">{translations.aboutus || "About Us"}</Link>
-            <Link to="/contact">{translations.contact || "Contact"}</Link>
-            <Link to="#">{translations.privacypolicy || "Privacy Policy"}</Link>
-            <Link to="#">{translations.termsofservice || "Terms of Service"}</Link>
+            <Link to="/about">{translations.aboutus}</Link>
+            <Link to="/contact">{translations.contact}</Link>
+            <Link to="#">{translations.privacypolicy}</Link>
+            <Link to="#">{translations.termsofservice}</Link>
           </div>
         </div>
       </div>

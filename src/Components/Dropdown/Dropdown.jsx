@@ -17,7 +17,7 @@ const Dropdown = ({
   options = [],
   labelKey = "label",
   valueKey = "value",
-  placeholder = "Select an option",
+  placeholder,
   disabled = false,
   showSearch = true,
   className = "",
@@ -89,7 +89,7 @@ const Dropdown = ({
       }
       return selected;
     }
-    return placeholder;
+    return placeholder || translations.selectoption;
   };
 
   return (
@@ -142,7 +142,7 @@ const Dropdown = ({
                     ref={searchInputRef}
                     type="text"
                     className="dropdown-search-input"
-                    placeholder={translations.search || "Search..."}
+                    placeholder={translations.search}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     autoComplete="off"

@@ -14,8 +14,8 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
   return (
     <span
       className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? (translations.purevegetarian || "Pure Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
-      aria-label={isVeg ? (translations.purevegetarian || "Pure Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
+      title={isVeg ? translations.purevegetarian : translations.nonvegetarian}
+      aria-label={isVeg ? translations.purevegetarian : translations.nonvegetarian}
     >
       {isVeg ? (
         <svg
@@ -53,11 +53,11 @@ const HomeDishes = () => {
 
   const categories = useMemo(
     () => [
-      { id: "all", label: translations.allspecialties || "🍽️ All Specialties" },
-      { id: "pizza", label: `🍕 ${translations.artisanpizzas || "Artisanal Pizza"}` },
-      { id: "burgers", label: `🍔 ${translations.smashburgers || "Smash Burgers"}` },
-      { id: "asian", label: `🍜 ${translations.ramenbowls || "Asian & Ramen"}` },
-      { id: "dessert", label: `🍰 ${translations.dessertsgelato || "Desserts & Drinks"}` },
+      { id: "all", label: translations.allspecialties },
+      { id: "pizza", label: `🍕 ${translations.artisanpizzas}` },
+      { id: "burgers", label: `🍔 ${translations.smashburgers}` },
+      { id: "asian", label: `🍜 ${translations.ramenbowls}` },
+      { id: "dessert", label: `🍰 ${translations.dessertsgelato}` },
     ],
     [translations]
   );
@@ -67,9 +67,9 @@ const HomeDishes = () => {
       {
         id: 1,
         category: "pizza",
-        menuname: translations.artisanpizzas || "Artisanal Pizza",
-        title: translations.dishmargherita || "Wood-Fired Margherita Royale",
-        desc: translations.dishmargheritadesc || "San Marzano marinara, torn buffalo mozzarella, organic sweet basil, extra virgin olive oil.",
+        menuname: translations.artisanpizzas,
+        title: translations.dishmargherita,
+        desc: translations.dishmargheritadesc,
         price: "$18.50",
         image: "/banners/banner-pizza.jpg",
         isVeg: true,
@@ -77,9 +77,9 @@ const HomeDishes = () => {
       {
         id: 2,
         category: "pizza",
-        menuname: translations.artisanpizzas || "Artisanal Pizza",
-        title: translations.dishtruffle || "Truffle Prosciutto Gorgonzola",
-        desc: translations.dishtruffledesc || "Aged prosciutto di Parma, wild mushrooms, creamy gorgonzola, black truffle drizzle.",
+        menuname: translations.artisanpizzas,
+        title: translations.dishtruffle,
+        desc: translations.dishtruffledesc,
         price: "$23.00",
         image: "/banners/banner-pizza.jpg",
         isVeg: false,
@@ -87,9 +87,9 @@ const HomeDishes = () => {
       {
         id: 3,
         category: "burgers",
-        menuname: translations.smashburgers || "Smash Burgers",
-        title: translations.dishdoublecheddar || "Double Cheddar Smash Stack",
-        desc: translations.dishdoublecheddardesc || "Double smashed Angus beef patties, aged Wisconsin cheddar, crispy bacon, house savory sauce.",
+        menuname: translations.smashburgers,
+        title: translations.dishdoublecheddar,
+        desc: translations.dishdoublecheddardesc,
         price: "$16.75",
         image: "/banners/banner-burger.jpg",
         isVeg: false,
@@ -97,9 +97,9 @@ const HomeDishes = () => {
       {
         id: 4,
         category: "burgers",
-        menuname: translations.smashburgers || "Smash Burgers",
-        title: translations.dishsmokybbq || "Smoky BBQ Bacon Burger",
-        desc: translations.dishsmokybbqdesc || "Brioche bun, charred caramelized onions, chipotle BBQ sauce, Monterey jack cheese.",
+        menuname: translations.smashburgers,
+        title: translations.dishsmokybbq,
+        desc: translations.dishsmokybbqdesc,
         price: "$17.50",
         image: "/banners/banner-burger.jpg",
         isVeg: false,
@@ -107,9 +107,9 @@ const HomeDishes = () => {
       {
         id: 5,
         category: "asian",
-        menuname: translations.ramenbowls || "Asian & Ramen",
-        title: translations.dishtonkotsu || "Signature Chashu Tonkotsu",
-        desc: translations.dishtonkotsudesc || "Rich 18-hour simmered broth, melt-in-mouth chashu pork belly, bamboo shoots, nitamago egg.",
+        menuname: translations.ramenbowls,
+        title: translations.dishtonkotsu,
+        desc: translations.dishtonkotsudesc,
         price: "$19.25",
         image: "/banners/banner-feast.jpg",
         isVeg: false,
@@ -117,9 +117,9 @@ const HomeDishes = () => {
       {
         id: 6,
         category: "asian",
-        menuname: translations.ramenbowls || "Asian & Ramen",
-        title: translations.dishsashimi || "Deluxe Sashimi & Nigiri Platter",
-        desc: translations.dishsashimidesc || "Atlantic salmon, yellowfin tuna, sweet eel nigiri, and California crunch rolls.",
+        menuname: translations.ramenbowls,
+        title: translations.dishsashimi,
+        desc: translations.dishsashimidesc,
         price: "$26.00",
         image: "/banners/banner-feast.jpg",
         isVeg: false,
@@ -127,9 +127,9 @@ const HomeDishes = () => {
       {
         id: 7,
         category: "dessert",
-        menuname: translations.dessertsgelato || "Desserts & Drinks",
-        title: translations.dishchoccake || "Molten Belgian Chocolate Cake",
-        desc: translations.dishchoccakedesc || "Warm decadent liquid chocolate core served with French vanilla bean gelato and fresh berries.",
+        menuname: translations.dessertsgelato,
+        title: translations.dishchoccake,
+        desc: translations.dishchoccakedesc,
         price: "$11.50",
         image: "/banners/banner-dessert.jpg",
         isVeg: true,
@@ -137,9 +137,9 @@ const HomeDishes = () => {
       {
         id: 8,
         category: "dessert",
-        menuname: translations.handcraftedmocktails || translations.dessertsgelato || "Desserts & Drinks",
-        title: translations.dishmocktail || "Artisanal Passion Berry Mocktail",
-        desc: translations.dishmocktaildesc || "Crushed raspberries, sparkling botanical citrus water, passionfruit purée, fresh garden mint.",
+        menuname: translations.handcraftedmocktails,
+        title: translations.dishmocktail,
+        desc: translations.dishmocktaildesc,
         price: "$8.50",
         image: "/banners/banner-dessert.jpg",
         isVeg: true,
@@ -165,12 +165,11 @@ const HomeDishes = () => {
       <div className="section-header-block">
         <span className="section-pill-tag">
           <RestaurantMenuIcon fontSize="inherit" />
-          {translations.curatedmenu || "Curated Menu"}
+          {translations.curatedmenu}
         </span>
-        <h2 className="section-main-title">{translations.mostlovedspecialties || "Most Loved Specialties"}</h2>
+        <h2 className="section-main-title">{translations.mostlovedspecialties}</h2>
         <p className="section-subtitle">
-          {translations.mostlovedsubtitle ||
-            "Crafted with culinary expertise and the finest ingredients. Explore our most popular dishes cooked to absolute perfection."}
+          {translations.mostlovedsubtitle}
         </p>
       </div>
 
@@ -217,8 +216,8 @@ const HomeDishes = () => {
                     type="button"
                     className={`dish-add-btn ${count > 0 ? "added" : ""}`}
                     onClick={() => handleAddToCart(dish.id)}
-                    aria-label={translations.addtocart || "Add to cart"}
-                    title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add to cart")}
+                    aria-label={translations.addtocart}
+                    title={count > 0 ? `${translations.added} (${count})` : translations.addtocart}
                   >
                     {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
                   </button>

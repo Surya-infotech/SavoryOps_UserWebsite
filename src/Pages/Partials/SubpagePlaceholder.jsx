@@ -13,7 +13,7 @@ const SubpagePlaceholder = ({ title, subtitle, icon }) => {
         <p>{subtitle}</p>
         <Link to="/" className="subpage-back-btn">
           <ArrowBackIcon fontSize="small" />
-          <span>{translations.returntohome || "Return to Home"}</span>
+          <span>{translations.returntohome}</span>
         </Link>
       </div>
     </div>
