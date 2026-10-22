@@ -317,6 +317,27 @@ export const ProfileDropdown = ({ className = "" }) => {
     if (customerId) {
       fetchCustomerDetails(customerId, token);
     }
+
+    const handleAuthChange = (event) => {
+      const detail = event?.detail;
+      if (detail?.isLoggedIn && detail?.customerId) {
+        const currentToken = localStorage.getItem(customerTokenName);
+        fetchCustomerDetails(detail.customerId, currentToken);
+      } else {
+        setCustomerDetails(null);
+        setIsOpen(false);
+        setAuthState({
+          isLoggedIn: false,
+          name: "Guest User",
+          subtitle: "Sign in with phone for orders & rewards",
+        });
+      }
+    };
+
+    window.addEventListener("customerAuthChange", handleAuthChange);
+    return () => {
+      window.removeEventListener("customerAuthChange", handleAuthChange);
+    };
   }, []);
 
   useEffect(() => {
