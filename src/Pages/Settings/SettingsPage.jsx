@@ -241,13 +241,6 @@ const SettingsPage = () => {
           {/* Tab 1: Date and Time Panel */}
           {activeTab === "datetime" && (
             <main className="settings-content-panel" id="panel-datetime">
-              <div className="panel-header-section">
-                <h2 className="panel-title">Date and Time Settings</h2>
-                <p className="panel-subtitle">
-                  Configure how dates and time formats are displayed across your orders, table bookings, and dining receipts.
-                </p>
-              </div>
-
               {/* Live Preview Box */}
               <div className="live-preview-banner">
                 <div className="preview-left">
@@ -275,31 +268,32 @@ const SettingsPage = () => {
                   showSearch={true}
                 />
 
-                {/* 2. Date Format Dropdown */}
-                <Dropdown
-                  id="settings-dateformat-select"
-                  label="Date Format"
-                  selectedValue={dateFormat}
-                  onValueChange={(val) => setDateFormat(val)}
-                  options={DATE_FORMAT_OPTIONS}
-                  labelKey="label"
-                  valueKey="value"
-                  placeholder="Select Date Format"
-                  showSearch={false}
-                />
+                {/* 2. Date Format & Time Format in One Row */}
+                <div className="settings-form-row-2col">
+                  <Dropdown
+                    id="settings-dateformat-select"
+                    label="Date Format"
+                    selectedValue={dateFormat}
+                    onValueChange={(val) => setDateFormat(val)}
+                    options={DATE_FORMAT_OPTIONS}
+                    labelKey="label"
+                    valueKey="value"
+                    placeholder="Select Date Format"
+                    showSearch={false}
+                  />
 
-                {/* 3. Time Format Dropdown */}
-                <Dropdown
-                  id="settings-timeformat-select"
-                  label="Time Format"
-                  selectedValue={timeFormat}
-                  onValueChange={(val) => setTimeFormat(val)}
-                  options={TIME_FORMAT_OPTIONS}
-                  labelKey="label"
-                  valueKey="value"
-                  placeholder="Select Time Format"
-                  showSearch={false}
-                />
+                  <Dropdown
+                    id="settings-timeformat-select"
+                    label="Time Format"
+                    selectedValue={timeFormat}
+                    onValueChange={(val) => setTimeFormat(val)}
+                    options={TIME_FORMAT_OPTIONS}
+                    labelKey="label"
+                    valueKey="value"
+                    placeholder="Select Time Format"
+                    showSearch={false}
+                  />
+                </div>
               </div>
 
               {/* Action Footer */}
