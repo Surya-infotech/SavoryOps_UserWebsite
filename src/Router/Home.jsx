@@ -59,6 +59,46 @@ const HomeRouter = () => {
           />
         }
       />
+      <Route
+        path="/orders"
+        element={
+          <SubpagePlaceholder
+            icon="🧾"
+            title="Orders"
+            subtitle="View, reorder, and track your active delivery orders and dining receipts."
+          />
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <SubpagePlaceholder
+            icon="⚙️"
+            title="Setting"
+            subtitle="Manage your profile settings, dining notifications, and account preferences."
+          />
+        }
+      />
+      <Route
+        path="/manage-address"
+        element={
+          <SubpagePlaceholder
+            icon="📍"
+            title="Manage Address"
+            subtitle="Save and organize your favorite home, office, and delivery addresses for quick ordering."
+          />
+        }
+      />
+      <Route
+        path="/my-reviews"
+        element={
+          <SubpagePlaceholder
+            icon="⭐"
+            title="My Reviews"
+            subtitle="Check your past dining reviews, dish ratings, and culinary feedback."
+          />
+        }
+      />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

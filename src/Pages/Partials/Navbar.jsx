@@ -16,6 +16,11 @@ import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
 import { getLanguageOptions } from "../../constants/languages";
@@ -383,12 +388,12 @@ export const ProfileDropdown = ({ className = "" }) => {
           {/* Quick Nav Links */}
           <div className="profile-menu-links">
             <Link
-              to="/menu"
+              to="/orders"
               className="profile-menu-item"
               onClick={() => setIsOpen(false)}
             >
-              <RestaurantMenuIcon fontSize="small" />
-              <span>Explore Menu</span>
+              <ReceiptLongOutlinedIcon fontSize="small" />
+              <span>Orders</span>
             </Link>
 
             <Link
@@ -401,21 +406,30 @@ export const ProfileDropdown = ({ className = "" }) => {
             </Link>
 
             <Link
-              to="/offers"
+              to="/manage-address"
               className="profile-menu-item"
               onClick={() => setIsOpen(false)}
             >
-              <LocalOfferIcon fontSize="small" />
-              <span>Special Offers & Deals</span>
+              <LocationOnOutlinedIcon fontSize="small" />
+              <span>Manage Address</span>
             </Link>
 
             <Link
-              to="/contact"
+              to="/my-reviews"
               className="profile-menu-item"
               onClick={() => setIsOpen(false)}
             >
-              <PhoneInTalkIcon fontSize="small" />
-              <span>Customer Helpline</span>
+              <RateReviewOutlinedIcon fontSize="small" />
+              <span>My Reviews</span>
+            </Link>
+
+            <Link
+              to="/settings"
+              className="profile-menu-item"
+              onClick={() => setIsOpen(false)}
+            >
+              <SettingsOutlinedIcon fontSize="small" />
+              <span>Setting</span>
             </Link>
           </div>
 
@@ -429,6 +443,7 @@ export const ProfileDropdown = ({ className = "" }) => {
                 className="profile-action-btn logout"
                 onClick={handleSignOut}
               >
+                <LogoutIcon fontSize="small" />
                 <span>Sign Out</span>
               </button>
             ) : (
