@@ -2,14 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
+import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Pages/Auth/signin.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -34,6 +33,8 @@ const maskPhone = (phoneStr) => {
 const SigninPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showSnackbar } = useSnackbar();
+  const { translations = {} } = useLanguage();
 
   // Auth flow step: "phone" | "otp" | "success"
   const [step, setStep] = useState("phone");
@@ -50,7 +51,6 @@ const SigninPage = () => {
   const [resendTimer, setResendTimer] = useState(0);
   const [serverMessage, setServerMessage] = useState("");
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
-  const { showSnackbar } = useSnackbar();
 
   // Return destination
   const fromDestination = location.state?.from || "/";
@@ -86,12 +86,12 @@ const SigninPage = () => {
     setServerMessage("");
 
     if (!phoneNumber) {
-      setPhoneError("Please enter your mobile phone number.");
+      setPhoneError(translations.enterphoneerror || "Please enter your mobile phone number.");
       return;
     }
 
     if (!isValidPhoneNumber(phoneNumber)) {
-      setPhoneError("Please enter a valid phone number with country code.");
+      setPhoneError(translations.validphoneerror || "Please enter a valid phone number with country code.");
       return;
     }
 
@@ -110,17 +110,17 @@ const SigninPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setServerMessage(data.message || "Verification code sent to your phone.");
+        setServerMessage(data.message || translations.sentcodesubtitle || "Verification code sent to your phone.");
         setStep("otp");
         setResendTimer(RESEND_COOLDOWN_SECONDS);
         setOtpValues(Array(OTP_LENGTH).fill(""));
         setOtpError("");
       } else {
-        setPhoneError(data.message || "Failed to send verification code. Please try again.");
+        setPhoneError(data.message || translations.failedtosendotp || "Failed to send verification code. Please try again.");
       }
     } catch (err) {
       console.error("Error sending OTP:", err);
-      setPhoneError("Server error. Please try again later.");
+      setPhoneError(translations.servererror || "Server error. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
@@ -190,7 +190,7 @@ const SigninPage = () => {
 
     const fullOtp = otpValues.join("");
     if (fullOtp.length !== OTP_LENGTH) {
-      setOtpError(`Please enter all ${OTP_LENGTH} digits of your verification code.`);
+      setOtpError(translations.enterallotpdigits || `Please enter all ${OTP_LENGTH} digits of your verification code.`);
       return;
     }
 
@@ -215,11 +215,11 @@ const SigninPage = () => {
       if (response.ok && data.token) {
         verifySuccessData = data;
       } else {
-        setOtpError(data.message || "Invalid verification code. Please try again.");
+        setOtpError(data.message || translations.invalidotp || "Invalid verification code. Please try again.");
       }
     } catch (err) {
       console.error("OTP verification error:", err);
-      setOtpError("Server error. Please try again later.");
+      setOtpError(translations.servererror || "Server error. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
@@ -238,7 +238,7 @@ const SigninPage = () => {
     localStorage.setItem(customerTokenName, customerToken);
     localStorage.setItem(customerIdName, String(customerId));
 
-    showSnackbar("Signed in successfully!", "success");
+    showSnackbar(translations.signedinsuccessfully || "Signed in successfully!", "success");
 
     // Dispatch custom event to notify Navbar and other components immediately
     window.dispatchEvent(
@@ -299,27 +299,27 @@ const SigninPage = () => {
 
             {step === "phone" && (
               <>
-                <h1 className="auth-title">Welcome to Our Kitchen</h1>
+                <h1 className="auth-title">{translations.welcomekitchen || "Welcome to Our Kitchen"}</h1>
                 <p className="auth-subtitle">
-                  Sign in with your phone number to access order tracking, table bookings & rewards.
+                  {translations.signinsubtitle || "Sign in with your phone number to access order tracking, table bookings & rewards."}
                 </p>
               </>
             )}
 
             {step === "otp" && (
               <>
-                <h1 className="auth-title">Verify Phone Number</h1>
+                <h1 className="auth-title">{translations.verifyphonenumber || "Verify Phone Number"}</h1>
                 <p className="auth-subtitle">
-                  We've sent a 6-digit confirmation code to{" "}
+                  {translations.sentcodesubtitle || "We've sent a 6-digit confirmation code to"}{" "}
                   <strong className="phone-highlight">{maskPhone(phoneNumber)}</strong>
                   <button
                     type="button"
                     onClick={handleBackToPhone}
                     className="edit-phone-btn"
-                    title="Change phone number"
+                    title={translations.edit || "Change phone number"}
                   >
                     <EditIcon />
-                    <span>Edit</span>
+                    <span>{translations.edit || "Edit"}</span>
                   </button>
                 </p>
               </>
@@ -327,9 +327,9 @@ const SigninPage = () => {
 
             {step === "success" && (
               <>
-                <h1 className="auth-title">Welcome Back!</h1>
+                <h1 className="auth-title">{translations.welcomeback || "Welcome Back!"}</h1>
                 <p className="auth-subtitle">
-                  You've successfully signed in. Redirecting you to the kitchen...
+                  {translations.redirectingkitchen || "You've successfully signed in. Redirecting you to the kitchen..."}
                 </p>
               </>
             )}
@@ -342,7 +342,7 @@ const SigninPage = () => {
               <form onSubmit={handlePhoneSubmit} className="auth-form" noValidate autoComplete="off">
                 <div className="form-field-group">
                   <label htmlFor="customer-phone-input" className="form-label">
-                    Mobile Phone Number
+                    {translations.mobilephonenumber || "Mobile Phone Number"}
                   </label>
                   <div className={`phone-input-container ${phoneError ? "has-error" : ""}`}>
                     <PhoneInput
@@ -351,7 +351,7 @@ const SigninPage = () => {
                       defaultCountry="US"
                       value={phoneNumber}
                       onChange={setPhoneNumber}
-                      placeholder="Enter mobile number"
+                      placeholder={translations.entermobilenumber || "Enter mobile number"}
                       className="custom-phone-input"
                       autoFocus
                       autoComplete="off"
@@ -369,14 +369,14 @@ const SigninPage = () => {
 
                 {/* Quick Demo Fill Helper */}
                 <div className="demo-fill-strip">
-                  <span className="demo-label">Testing Demo:</span>
+                  <span className="demo-label">{translations.testingdemo || "Testing Demo:"}</span>
                   <button
                     type="button"
                     className="demo-chip-btn"
                     onClick={handleFillDemo}
                     id="signin-demo-phone-chip"
                   >
-                    <span>Use Demo (+1 212 555 0101)</span>
+                    <span>{translations.usedemo || "Use Demo (+1 212 555 0101)"}</span>
                   </button>
                 </div>
 
@@ -390,10 +390,10 @@ const SigninPage = () => {
                   {isSubmitting ? (
                     <>
                       <CircularProgress size={20} color="inherit" />
-                      <span>Sending Code...</span>
+                      <span>{translations.sendingcode || "Sending Code..."}</span>
                     </>
                   ) : (
-                    <span>Send Verification Code</span>
+                    <span>{translations.sendverificationcode || "Send Verification Code"}</span>
                   )}
                 </button>
 
@@ -401,11 +401,11 @@ const SigninPage = () => {
                 <div className="auth-trust-strip">
                   <div className="trust-item">
                     <VerifiedUserOutlinedIcon fontSize="small" />
-                    <span>Encrypted & Secure</span>
+                    <span>{translations.encryptedsecure || "Encrypted & Secure"}</span>
                   </div>
                   <div className="trust-dot">•</div>
                   <div className="trust-item">
-                    <span>No Password Needed</span>
+                    <span>{translations.nopasswordneeded || "No Password Needed"}</span>
                   </div>
                 </div>
               </form>
@@ -421,7 +421,7 @@ const SigninPage = () => {
                 )}
 
                 <div className="form-field-group">
-                  <label className="form-label">Enter 6-Digit Code</label>
+                  <label className="form-label">{translations.enter6digitcode || "Enter 6-Digit Code"}</label>
                   <div className="otp-boxes-grid" onPaste={handleOtpPaste}>
                     {otpValues.map((digit, index) => (
                       <input
@@ -451,7 +451,8 @@ const SigninPage = () => {
                 <div className="resend-strip">
                   {resendTimer > 0 ? (
                     <span className="resend-timer-text">
-                      Resend code in <strong>0:{resendTimer.toString().padStart(2, "0")}</strong>
+                      {translations.resendcodein || "Resend code in"}{" "}
+                      <strong>0:{resendTimer.toString().padStart(2, "0")}</strong>
                     </span>
                   ) : (
                     <button
@@ -462,7 +463,7 @@ const SigninPage = () => {
                       id="signin-resend-otp-btn"
                     >
                       <RefreshIcon fontSize="small" />
-                      <span>Resend Verification Code</span>
+                      <span>{translations.resendverificationcode || "Resend Verification Code"}</span>
                     </button>
                   )}
                 </div>
@@ -477,10 +478,10 @@ const SigninPage = () => {
                   {isSubmitting ? (
                     <>
                       <CircularProgress size={20} color="inherit" />
-                      <span>Verifying Code...</span>
+                      <span>{translations.verifyingcode || "Verifying Code..."}</span>
                     </>
                   ) : (
-                    <span>Verify & Continue</span>
+                    <span>{translations.verifyandcontinue || "Verify & Continue"}</span>
                   )}
                 </button>
               </form>
@@ -491,11 +492,11 @@ const SigninPage = () => {
               <div className="auth-success-box">
                 <div className="success-pulse-ring" />
                 <p className="success-msg">
-                  Signed in as <strong>{authenticatedUser?.phone}</strong>
+                  {translations.signedinas || "Signed in as"} <strong>{authenticatedUser?.phone}</strong>
                 </p>
                 <div className="success-redirect-loader">
                   <CircularProgress size={24} />
-                  <span>Loading dining menu...</span>
+                  <span>{translations.loadingdiningmenu || "Loading dining menu..."}</span>
                 </div>
               </div>
             )}
@@ -504,9 +505,10 @@ const SigninPage = () => {
           {/* Card Footer / Terms */}
           <div className="signin-card-footer">
             <p className="terms-disclaimer">
-              By continuing, you agree to our{" "}
-              <Link to="/about">Terms of Hospitality</Link> and{" "}
-              <Link to="/about">Privacy Policy</Link>.
+              {translations.bycontinuingagree || "By continuing, you agree to our"}{" "}
+              <Link to="/about">{translations.termsofhospitality || "Terms of Hospitality"}</Link>{" "}
+              {translations.and || "and"}{" "}
+              <Link to="/about">{translations.privacypolicy || "Privacy Policy"}</Link>.
             </p>
           </div>
         </div>

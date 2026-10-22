@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { useLanguage } from "../Context/useLanguage.js";
 import HomePage from "../Pages/Home/HomePage.jsx";
 import SigninPage from "../Pages/Auth/SigninPage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
@@ -6,6 +7,8 @@ import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
 
 const HomeRouter = () => {
+  const { translations = {} } = useLanguage();
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -15,8 +18,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🍕"
-            title="Full Culinary Menu"
-            subtitle="Browse through our wide selection of artisan wood-fired pizzas, gourmet smash burgers, Asian noodle bowls, and handcrafted desserts."
+            title={translations.fullculinarymenu || "Full Culinary Menu"}
+            subtitle={translations.menusubtitle || "Browse through our wide selection of artisan wood-fired pizzas, gourmet smash burgers, Asian noodle bowls, and handcrafted desserts."}
           />
         }
       />
@@ -25,8 +28,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🔥"
-            title="Special Offers & Deals"
-            subtitle="Exclusive dining discounts, midweek feast packages, and promo vouchers crafted for our food lovers."
+            title={translations.specialoffers || "Special Offers & Deals"}
+            subtitle={translations.offerssubtitle || "Exclusive dining discounts, midweek feast packages, and promo vouchers crafted for our food lovers."}
           />
         }
       />
@@ -35,8 +38,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🍷"
-            title="Book A Table"
-            subtitle="Reserve your table online in seconds with instant confirmation and contactless dining preferences."
+            title={translations.tablebooking || "Book A Table"}
+            subtitle={translations.bookingsubtitle || "Reserve your table online in seconds with instant confirmation and contactless dining preferences."}
           />
         }
       />
@@ -45,8 +48,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🌿"
-            title="About Our Kitchen"
-            subtitle="Passionate chefs, farm-fresh local produce, and centuries-old culinary traditions reimagined for modern gastronomy."
+            title={translations.aboutkitchen || "About Our Kitchen"}
+            subtitle={translations.aboutsubtitle || "Passionate chefs, farm-fresh local produce, and centuries-old culinary traditions reimagined for modern gastronomy."}
           />
         }
       />
@@ -55,8 +58,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="📞"
-            title="Contact & Catering"
-            subtitle="Have a question or planning a catering event? Reach out to our dedicated support team."
+            title={translations.contactcatering || "Contact & Catering"}
+            subtitle={translations.contactsubtitle || "Have a question or planning a catering event? Reach out to our dedicated support team."}
           />
         }
       />
@@ -65,8 +68,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="🧾"
-            title="Orders"
-            subtitle="View, reorder, and track your active delivery orders and dining receipts."
+            title={translations.orders || "Orders"}
+            subtitle={translations.orderssubtitle || "View, reorder, and track your active delivery orders and dining receipts."}
           />
         }
       />
@@ -76,8 +79,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="📍"
-            title="Manage Address"
-            subtitle="Save and organize your favorite home, office, and delivery addresses for quick ordering."
+            title={translations.manageaddress || "Manage Address"}
+            subtitle={translations.addresssubtitle || "Save and organize your favorite home, office, and delivery addresses for quick ordering."}
           />
         }
       />
@@ -86,8 +89,8 @@ const HomeRouter = () => {
         element={
           <SubpagePlaceholder
             icon="⭐"
-            title="My Reviews"
-            subtitle="Check your past dining reviews, dish ratings, and culinary feedback."
+            title={translations.myreviews || "My Reviews"}
+            subtitle={translations.reviewssubtitle || "Check your past dining reviews, dish ratings, and culinary feedback."}
           />
         }
       />

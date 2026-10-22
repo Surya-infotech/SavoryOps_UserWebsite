@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/Home/homepromo.scss";
 
 const HomePromo = () => {
+  const { translations = {} } = useLanguage();
   const brandDisplayName = "SavoryOps Dining";
 
   return (
@@ -12,20 +14,20 @@ const HomePromo = () => {
         <div className="promo-card-content">
           <span className="promo-pill">
             <LocalOfferIcon fontSize="inherit" />
-            Special Tenant Promotion
+            {translations.specialtenantpromotion || "Special Tenant Promotion"}
           </span>
           <h3 className="promo-title">
-            Experience Exquisite Dining at {brandDisplayName}
+            {translations.experiencediningat || "Experience Exquisite Dining at"} {brandDisplayName}
           </h3>
           <p className="promo-desc">
-            Whether you are craving a cozy dinner night at home or a candle-lit table reservation, enjoy our chef-special feasts with flat 20% savings.
+            {translations.promodesc || "Whether you are craving a cozy dinner night at home or a candle-lit table reservation, enjoy our chef-special feasts with flat 20% savings."}
           </p>
           <div className="promo-cta-row">
             <div className="promo-code-box">
-              Use Code: <strong>FEAST20</strong>
+              {translations.usecode || "Use Code:"} <strong>FEAST20</strong>
             </div>
             <Link to="/menu" className="hero-btn-primary promo-cta-btn">
-              <span>Order Now</span>
+              <span>{translations.ordernow || "Order Now"}</span>
               <ArrowForwardIcon fontSize="inherit" />
             </Link>
           </div>

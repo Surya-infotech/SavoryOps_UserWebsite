@@ -3,6 +3,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/General/dropdown.scss";
 
 /**
@@ -28,11 +29,7 @@ const Dropdown = ({
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  const isRtl = false;
-  const translations = {
-    searchPlaceholder: "Search...",
-    norecordfound: "No record found",
-  };
+  const { translations = {}, isRtl } = useLanguage();
 
   const handleDropdownToggle = () => {
     if (!disabled) {
@@ -145,7 +142,7 @@ const Dropdown = ({
                     ref={searchInputRef}
                     type="text"
                     className="dropdown-search-input"
-                    placeholder={translations.searchPlaceholder}
+                    placeholder={translations.search || "Search..."}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     autoComplete="off"

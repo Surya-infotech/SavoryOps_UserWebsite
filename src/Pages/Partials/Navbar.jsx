@@ -128,7 +128,7 @@ export const BranchDropdown = ({ className = "" }) => {
           <div className="branch-list-scroller">
             {filteredBranches.length === 0 ? (
               <div className="branch-empty-state">
-                <p>No branches found matching "{search}"</p>
+                <p>{translations.nobranchesfound || "No branches found"} "{search}"</p>
               </div>
             ) : (
               filteredBranches.map((branch) => {
@@ -281,8 +281,8 @@ export const ProfileDropdown = ({ className = "" }) => {
 
     return {
       isLoggedIn: loggedIn,
-      name: loggedIn ? "My Account" : "Guest User",
-      subtitle: loggedIn ? "" : "Sign in with phone for orders & rewards",
+      name: loggedIn ? (translations.myaccount || "My Account") : (translations.guestuser || "Guest User"),
+      subtitle: loggedIn ? "" : (translations.signinwithphone || "Sign in with phone for orders & rewards"),
     };
   });
 
@@ -306,7 +306,7 @@ export const ProfileDropdown = ({ className = "" }) => {
           const fullName = `${data.customerfirstname || ""} ${data.customerlastname || ""}`.trim();
           setAuthState({
             isLoggedIn: true,
-            name: fullName,
+            name: fullName || (translations.myaccount || "My Account"),
             subtitle: data.phone || "",
           });
         }
@@ -333,8 +333,8 @@ export const ProfileDropdown = ({ className = "" }) => {
         setIsOpen(false);
         setAuthState({
           isLoggedIn: false,
-          name: "Guest User",
-          subtitle: "Sign in with phone for orders & rewards",
+          name: translations.guestuser || "Guest User",
+          subtitle: translations.signinwithphone || "Sign in with phone for orders & rewards",
         });
       }
     };
@@ -367,11 +367,11 @@ export const ProfileDropdown = ({ className = "" }) => {
     setIsOpen(false);
     setAuthState({
       isLoggedIn: false,
-      name: "Guest User",
-      subtitle: "Sign in with phone for orders & rewards",
+      name: translations.guestuser || "Guest User",
+      subtitle: translations.signinwithphone || "Sign in with phone for orders & rewards",
     });
 
-    showSnackbar("Signed out successfully!", "success");
+    showSnackbar(translations.signedoutsuccessfully || "Signed out successfully!", "success");
 
     window.dispatchEvent(
       new CustomEvent("customerAuthChange", {
@@ -560,10 +560,10 @@ const Navbar = () => {
             <div className="nav-top-left">
               <span className="top-badge">
                 <span className="live-dot"></span>
-                Live Kitchen
+                {translations.livekitchen || "Live Kitchen"}
               </span>
               <span className="nav-top-text">
-                ✨ Free Express Delivery on orders over $30 • Use code <strong>FEAST20</strong> for 20% OFF
+                {translations.navpromo || "✨ Free Express Delivery on orders over $30 • Use code FEAST20 for 20% OFF"}
               </span>
             </div>
 
@@ -676,7 +676,7 @@ const Navbar = () => {
               <div className="mobile-drawer-content">
                 {/* Mobile Branch Selector */}
                 <div className="mobile-branch-section">
-                  <span className="mobile-section-label">Selected Branch</span>
+                  <span className="mobile-section-label">{translations.selectbranch || "Selected Branch"}</span>
                   <BranchDropdown className="mobile-branch-dropdown" />
                 </div>
 

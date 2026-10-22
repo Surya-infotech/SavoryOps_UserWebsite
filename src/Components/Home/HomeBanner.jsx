@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -8,77 +8,86 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import StarIcon from "@mui/icons-material/Star";
 import SpaIcon from "@mui/icons-material/Spa";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/Home/homebanner.scss";
-
-const BANNER_SLIDES = [
-  {
-    id: 1,
-    image: "/banners/banner-pizza.jpg",
-    tag: "Wood-Fired Signature",
-    tagType: "hot",
-    titlePrefix: "Authentic Stone-Baked ",
-    titleHighlight: "Artisanal Pizza",
-    description:
-      "Hand-tossed slow-fermented crust topped with rich San Marzano tomato sauce, fresh creamy fior di latte mozzarella, and aromatic basil leaves straight from our brick oven.",
-    primaryBtn: { text: "Order Pizza Now", link: "/menu" },
-    secondaryBtn: { text: "Explore Flavors", link: "/menu" },
-    highlightBadge: "Save 25% Today",
-  },
-  {
-    id: 2,
-    image: "/banners/banner-burger.jpg",
-    tag: "Prime Gourmet Burger",
-    tagType: "chef",
-    titlePrefix: "Sizzling Double Bacon ",
-    titleHighlight: "Smash Burger",
-    description:
-      "100% grass-fed Angus beef patties seared to juicy perfection, smothered with melted aged cheddar, smoked applewood bacon, and house secret savory sauce on toasted brioche.",
-    primaryBtn: { text: "Taste The Crunch", link: "/menu" },
-    secondaryBtn: { text: "Chef's Specials", link: "/offers" },
-    highlightBadge: "Bestseller ★★★★★",
-  },
-  {
-    id: 3,
-    image: "/banners/banner-feast.jpg",
-    tag: "Authentic Culinary Feast",
-    tagType: "trending",
-    titlePrefix: "Signature Tonkotsu Ramen & ",
-    titleHighlight: "Sushi Banquet",
-    description:
-      "Indulge in 18-hour slow-simmered rich pork broth, tender chashu slices, seasoned eggs, paired with fresh salmon sashimi and artisanal handcrafted nigiri platters.",
-    primaryBtn: { text: "Book A Table", link: "/reservation" },
-    secondaryBtn: { text: "Order Takeout", link: "/menu" },
-    highlightBadge: "Fine Dining Experience",
-  },
-  {
-    id: 4,
-    image: "/banners/banner-dessert.jpg",
-    tag: "Sweet Indulgence & Bar",
-    tagType: "sweet",
-    titlePrefix: "Molten Belgian Lava Cake & ",
-    titleHighlight: "Craft Cocktails",
-    description:
-      "Warm flowing dark chocolate ganache served alongside pure Madagascar vanilla bean gelato, paired with refreshing handcrafted botanical fruit mocktails & coolers.",
-    primaryBtn: { text: "Dessert & Drinks", link: "/menu" },
-    secondaryBtn: { text: "Reserve Evening", link: "/reservation" },
-    highlightBadge: "Evening Special",
-  },
-];
 
 const SLIDE_DURATION = 5000; // 5 seconds per slide
 
 const HomeBanner = () => {
+  const { translations = {} } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);
 
+  const bannerSlides = useMemo(
+    () => [
+      {
+        id: 1,
+        image: "/banners/banner-pizza.jpg",
+        tag: translations.woodfiredsignature || "Wood-Fired Signature",
+        tagType: "hot",
+        titlePrefix: translations.authenticstonebaked || "Authentic Stone-Baked ",
+        titleHighlight: translations.artisanalpizza || "Artisanal Pizza",
+        description:
+          translations.pizzabannerdesc ||
+          "Hand-tossed slow-fermented crust topped with rich San Marzano tomato sauce, fresh creamy fior di latte mozzarella, and aromatic basil leaves straight from our brick oven.",
+        primaryBtn: { text: translations.orderpizzanow || "Order Pizza Now", link: "/menu" },
+        secondaryBtn: { text: translations.exploreflavors || "Explore Flavors", link: "/menu" },
+        highlightBadge: translations.save25today || "Save 25% Today",
+      },
+      {
+        id: 2,
+        image: "/banners/banner-burger.jpg",
+        tag: translations.primegourmetburger || "Prime Gourmet Burger",
+        tagType: "chef",
+        titlePrefix: translations.sizzlingdoublebacon || "Sizzling Double Bacon ",
+        titleHighlight: translations.smashburger || "Smash Burger",
+        description:
+          translations.burgerbannerdesc ||
+          "100% grass-fed Angus beef patties seared to juicy perfection, smothered with melted aged cheddar, smoked applewood bacon, and house secret savory sauce on toasted brioche.",
+        primaryBtn: { text: translations.tastethecrunch || "Taste The Crunch", link: "/menu" },
+        secondaryBtn: { text: translations.chefspecials || "Chef's Specials", link: "/offers" },
+        highlightBadge: translations.bestseller || "Bestseller ★★★★★",
+      },
+      {
+        id: 3,
+        image: "/banners/banner-feast.jpg",
+        tag: translations.authenticculinaryfeast || "Authentic Culinary Feast",
+        tagType: "trending",
+        titlePrefix: translations.ramenbannersubtitle || "Signature Tonkotsu Ramen & ",
+        titleHighlight: translations.sushibanquet || "Sushi Banquet",
+        description:
+          translations.feastbannerdesc ||
+          "Indulge in 18-hour slow-simmered rich pork broth, tender chashu slices, seasoned eggs, paired with fresh salmon sashimi and artisanal handcrafted nigiri platters.",
+        primaryBtn: { text: translations.booktable || "Book A Table", link: "/reservation" },
+        secondaryBtn: { text: translations.ordertakeout || "Order Takeout", link: "/menu" },
+        highlightBadge: translations.finediningexperience || "Fine Dining Experience",
+      },
+      {
+        id: 4,
+        image: "/banners/banner-dessert.jpg",
+        tag: translations.sweetindulgencebar || "Sweet Indulgence & Bar",
+        tagType: "sweet",
+        titlePrefix: translations.dessertbannersubtitle || "Molten Belgian Lava Cake & ",
+        titleHighlight: translations.craftcocktails || "Craft Cocktails",
+        description:
+          translations.dessertbannerdesc ||
+          "Warm flowing dark chocolate ganache served alongside pure Madagascar vanilla bean gelato, paired with refreshing handcrafted botanical fruit mocktails & coolers.",
+        primaryBtn: { text: translations.dessertanddrinks || "Dessert & Drinks", link: "/menu" },
+        secondaryBtn: { text: translations.reserveevening || "Reserve Evening", link: "/reservation" },
+        highlightBadge: translations.eveningspecial || "Evening Special",
+      },
+    ],
+    [translations]
+  );
+
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % BANNER_SLIDES.length);
-  }, []);
+    setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
+  }, [bannerSlides.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + BANNER_SLIDES.length) % BANNER_SLIDES.length);
-  }, []);
+    setCurrentSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length);
+  }, [bannerSlides.length]);
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
@@ -124,7 +133,7 @@ const HomeBanner = () => {
 
       {/* Slides Track */}
       <div className="hero-slider-track">
-        {BANNER_SLIDES.map((slide, index) => {
+        {bannerSlides.map((slide, index) => {
           const isActive = index === currentSlide;
           return (
             <div
@@ -180,15 +189,15 @@ const HomeBanner = () => {
                   <div className="hero-floating-badges">
                     <div className="floating-pill">
                       <StarIcon fontSize="inherit" className="floating-pill-icon" />
-                      <span>4.9/5 (2,800+ Verified Diners)</span>
+                      <span>{translations.verifieddiners || "4.9/5 (2,800+ Verified Diners)"}</span>
                     </div>
                     <div className="floating-pill">
                       <BoltIcon fontSize="inherit" className="floating-pill-icon" />
-                      <span>Avg. 28 Mins Doorstep Delivery</span>
+                      <span>{translations.doorstepdelivery || "Avg. 28 Mins Doorstep Delivery"}</span>
                     </div>
                     <div className="floating-pill">
                       <SpaIcon fontSize="inherit" className="floating-pill-icon" />
-                      <span>100% Fresh Farm Ingredients</span>
+                      <span>{translations.freshfarmingredients || "100% Fresh Farm Ingredients"}</span>
                     </div>
                   </div>
                 </div>
@@ -200,7 +209,7 @@ const HomeBanner = () => {
 
       {/* Progress Dots & Indicators */}
       <div className="hero-indicators-container">
-        {BANNER_SLIDES.map((slide, index) => {
+        {bannerSlides.map((slide, index) => {
           const isActive = index === currentSlide;
           return (
             <button

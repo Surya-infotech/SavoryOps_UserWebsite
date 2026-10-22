@@ -177,7 +177,7 @@ const SettingsPage = () => {
     const token = localStorage.getItem(customerTokenName);
 
     if (!customerId) {
-      showSnackbar("Please sign in to save your settings.", "warning");
+      showSnackbar(translations.signinwithphone || "Please sign in to save your settings.", "warning");
       return;
     }
 
@@ -213,13 +213,13 @@ const SettingsPage = () => {
           })
         );
 
-        showSnackbar(data?.message || "Date & Time settings saved successfully!", "success");
+        showSnackbar(data?.message || translations.datetimesettingsavedsuccesfully || "Date & Time settings saved successfully!", "success");
       } else {
-        showSnackbar(data?.message || "Failed to update Date & Time settings.", "error");
+        showSnackbar(data?.message || translations.servererror || "Failed to update Date & Time settings.", "error");
       }
     } catch (error) {
       console.error("Error saving datetime settings:", error);
-      showSnackbar("Server error. Please try again later.", "error");
+      showSnackbar(translations.servererror || "Server error. Please try again later.", "error");
     } finally {
       setIsSaving(false);
     }
@@ -281,7 +281,7 @@ const SettingsPage = () => {
     const token = localStorage.getItem(customerTokenName);
 
     if (!customerId || !token) {
-      showSnackbar("Please sign in to delete your account.", "warning");
+      showSnackbar(translations.signinwithphone || "Please sign in to delete your account.", "warning");
       return;
     }
 
@@ -307,16 +307,16 @@ const SettingsPage = () => {
         setTimeout(() => {
           otpInputRefs.current[0]?.focus();
         }, 150);
-        showSnackbar(data?.message || "Verification code sent to your registered phone number.", "success");
+        showSnackbar(data?.message || translations.sentcodesubtitle || "Verification code sent to your registered phone number.", "success");
       } else {
-        const errorMsg = data?.message || "Failed to send verification code. Please try again.";
+        const errorMsg = data?.message || translations.failedtosendotp || "Failed to send verification code. Please try again.";
         setDeleteOtpError(errorMsg);
         showSnackbar(errorMsg, "error");
       }
     } catch (error) {
       console.error("Error sending delete account OTP:", error);
-      setDeleteOtpError("Server error. Please try again later.");
-      showSnackbar("Server error. Please try again later.", "error");
+      setDeleteOtpError(translations.servererror || "Server error. Please try again later.");
+      showSnackbar(translations.servererror || "Server error. Please try again later.", "error");
     } finally {
       setIsSendingDeleteOtp(false);
     }
@@ -327,7 +327,7 @@ const SettingsPage = () => {
     setDeleteOtpError("");
     const cleanOtp = otpValues.join("").trim();
     if (!cleanOtp || cleanOtp.length !== OTP_LENGTH || !/^\d{6}$/.test(cleanOtp)) {
-      setDeleteOtpError("Please enter all 6 digits of your verification code.");
+      setDeleteOtpError(translations.enterallotpdigits || "Please enter all 6 digits of your verification code.");
       return;
     }
     setIsDeleteModalOpen(true);
@@ -339,13 +339,13 @@ const SettingsPage = () => {
     const token = localStorage.getItem(customerTokenName);
 
     if (!customerId || !token) {
-      showSnackbar("Please sign in to delete your account.", "warning");
+      showSnackbar(translations.signinwithphone || "Please sign in to delete your account.", "warning");
       return;
     }
 
     const cleanOtp = otpValues.join("").trim();
     if (!cleanOtp || cleanOtp.length !== OTP_LENGTH) {
-      setDeleteOtpError("Please enter all 6 digits of your verification code.");
+      setDeleteOtpError(translations.enterallotpdigits || "Please enter all 6 digits of your verification code.");
       setIsDeleteModalOpen(false);
       return;
     }
@@ -377,17 +377,17 @@ const SettingsPage = () => {
         );
 
         setIsDeleteModalOpen(false);
-        showSnackbar(data?.message || "Your account has been deleted successfully.", "info");
+        showSnackbar(data?.message || translations.youraccountdeletedsuccessfully || "Account deleted successfully. You have been logged out.", "info");
         navigate("/", { replace: true });
       } else {
-        const errorMsg = data?.message || "Invalid or expired verification code. Please check and try again.";
+        const errorMsg = data?.message || translations.invalidotp || "Invalid or expired verification code. Please check and try again.";
         setDeleteOtpError(errorMsg);
         showSnackbar(errorMsg, "error");
         setIsDeleteModalOpen(false);
       }
     } catch (error) {
       console.error("Error deleting account:", error);
-      showSnackbar("Server error while deleting account. Please try again later.", "error");
+      showSnackbar(translations.failedtodeleteaccount || "Server error while deleting account. Please try again later.", "error");
       setIsDeleteModalOpen(false);
     } finally {
       setIsDeleting(false);
@@ -417,7 +417,7 @@ const SettingsPage = () => {
               </div>
               <div className="tab-text-group">
                 <span className="tab-title">{translations.datetime || "Date and Time"}</span>
-                <span className="tab-subtitle">Format & timezone</span>
+                <span className="tab-subtitle">{translations.formattimezone || "Format & timezone"}</span>
               </div>
             </button>
 
@@ -432,7 +432,7 @@ const SettingsPage = () => {
               </div>
               <div className="tab-text-group">
                 <span className="tab-title">{translations.deleteAccount || "Delete Account"}</span>
-                <span className="tab-subtitle">Permanent removal</span>
+                <span className="tab-subtitle">{translations.permanentremoval || "Permanent removal"}</span>
               </div>
             </button>
           </aside>
@@ -444,7 +444,7 @@ const SettingsPage = () => {
               <div className="preview-banner">
                 <div className="preview-left">
                   <div className="preview-label-group">
-                    <span className="preview-label">Preview</span>
+                    <span className="preview-label">{translations.preview || "Preview"}</span>
                     <span className="preview-timezone-note">{timezone}</span>
                   </div>
                 </div>
@@ -462,7 +462,7 @@ const SettingsPage = () => {
                   options={TIMEZONE_OPTIONS}
                   labelKey="label"
                   valueKey="value"
-                  placeholder="Select Timezone"
+                  placeholder={translations.selectoption || "Select Timezone"}
                   showSearch={true}
                 />
 
@@ -476,7 +476,7 @@ const SettingsPage = () => {
                     options={DATE_FORMAT_OPTIONS}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="Select Date Format"
+                    placeholder={translations.selectoption || "Select Date Format"}
                     showSearch={false}
                   />
 
@@ -488,7 +488,7 @@ const SettingsPage = () => {
                     options={TIME_FORMAT_OPTIONS}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="Select Time Format"
+                    placeholder={translations.selectoption || "Select Time Format"}
                     showSearch={false}
                   />
                 </div>
