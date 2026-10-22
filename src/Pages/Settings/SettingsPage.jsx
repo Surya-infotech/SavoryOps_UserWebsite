@@ -1,10 +1,13 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import PhonelinkLockOutlinedIcon from "@mui/icons-material/PhonelinkLockOutlined";
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
@@ -53,10 +56,56 @@ const SettingsPage = () => {
   const [isLoadingSettings, setIsLoadingSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Delete Account State
-  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
+  // Delete Account State (Matching SavoryOps_UserApp OTP flow with modern 6-digit box UI)
+  const OTP_LENGTH = 6;
+  const [otpValues, setOtpValues] = useState(Array(OTP_LENGTH).fill(""));
+  const otpInputRefs = useRef([]);
+  const [deleteOtpError, setDeleteOtpError] = useState("");
+  const [isSendingDeleteOtp, setIsSendingDeleteOtp] = useState(false);
+  const [deleteOtpSent, setDeleteOtpSent] = useState(false);
+  const [maskedPhone, setMaskedPhone] = useState("");
+  const [resendCountdown, setResendCountdown] = useState(0);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Resend Countdown Timer
+  useEffect(() => {
+    let timer;
+    if (resendCountdown > 0) {
+      timer = setInterval(() => {
+        setResendCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [resendCountdown]);
+
+  // Load registered customer phone for delete account display hint
+  const loadCustomerPhone = async (customerId, token) => {
+    if (!customerId || !adminPanelBackendPath) return;
+    try {
+      const response = await fetch(
+        `${adminPanelBackendPath}/Website/General/GetCustomerDetails/${customerId}`, {
+        headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data?.phone) {
+          const str = String(data.phone).trim();
+          if (str.length > 4) {
+            const last4 = str.slice(-4);
+            const masked = str.slice(0, -4).replace(/[^\s+]/g, "*") + last4;
+            setMaskedPhone(masked);
+          } else {
+            setMaskedPhone(str);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error loading phone for delete account:", err);
+    }
+  };
 
   // Fetch saved settings from backend API
   const fetchDateTimeSettings = async (customerId, token) => {
@@ -98,13 +147,14 @@ const SettingsPage = () => {
     }
   };
 
-  // Fetch saved settings on mount if customer is logged in, and listen to auth changes
+  // Fetch saved settings & customer phone on mount if customer is logged in, and listen to auth changes
   useEffect(() => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
 
     if (customerId) {
       fetchDateTimeSettings(customerId, token);
+      loadCustomerPhone(customerId, token);
     }
 
     const handleAuthChange = (event) => {
@@ -112,6 +162,12 @@ const SettingsPage = () => {
       if (detail?.isLoggedIn && detail?.customerId) {
         const currentToken = localStorage.getItem(customerTokenName);
         fetchDateTimeSettings(detail.customerId, currentToken);
+        loadCustomerPhone(detail.customerId, currentToken);
+      } else {
+        setMaskedPhone("");
+        setDeleteOtpSent(false);
+        setOtpValues(Array(OTP_LENGTH).fill(""));
+        setDeleteOtpError("");
       }
     };
 
@@ -185,44 +241,170 @@ const SettingsPage = () => {
     }
   };
 
-  // Handle Delete Account Execution
+  // Handlers: 6-Digit OTP Box interaction
+  const handleOtpChange = (index, value) => {
+    const cleanVal = value.replace(/\D/g, "");
+    if (!cleanVal && value !== "") return;
+
+    const newValues = [...otpValues];
+
+    if (cleanVal.length > 1) {
+      const pastedDigits = cleanVal.slice(0, OTP_LENGTH).split("");
+      for (let i = 0; i < OTP_LENGTH; i++) {
+        newValues[i] = pastedDigits[i] || "";
+      }
+      setOtpValues(newValues);
+      setDeleteOtpError("");
+      const nextFocus = Math.min(pastedDigits.length, OTP_LENGTH - 1);
+      otpInputRefs.current[nextFocus]?.focus();
+      return;
+    }
+
+    newValues[index] = cleanVal;
+    setOtpValues(newValues);
+    setDeleteOtpError("");
+
+    if (cleanVal && index < OTP_LENGTH - 1) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otpValues[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, OTP_LENGTH);
+    if (!pasted) return;
+
+    const newValues = [...otpValues];
+    pasted.split("").forEach((char, i) => {
+      newValues[i] = char;
+    });
+    setOtpValues(newValues);
+    setDeleteOtpError("");
+
+    const nextIndex = Math.min(pasted.length, OTP_LENGTH - 1);
+    otpInputRefs.current[nextIndex]?.focus();
+  };
+
+  // Step 1: Send Delete Account OTP
+  const handleSendDeleteOtp = async () => {
+    const customerId = localStorage.getItem(customerIdName);
+    const token = localStorage.getItem(customerTokenName);
+
+    if (!customerId || !token) {
+      showSnackbar("Please sign in to delete your account.", "warning");
+      return;
+    }
+
+    setDeleteOtpError("");
+    setIsSendingDeleteOtp(true);
+    try {
+      const response = await fetch(
+        `${adminPanelBackendPath}/Website/General/DeleteAccountSendOtp/${customerId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (response.ok) {
+        setDeleteOtpSent(true);
+        setResendCountdown(60);
+        setOtpValues(Array(OTP_LENGTH).fill(""));
+        setDeleteOtpError("");
+        if (data?.maskedPhone) {
+          setMaskedPhone(data?.maskedPhone);
+        }
+        setTimeout(() => {
+          otpInputRefs.current[0]?.focus();
+        }, 150);
+        showSnackbar(data?.message || "Verification code sent to your registered phone number.", "success");
+      } else {
+        const errorMsg = data?.message || "Failed to send verification code. Please try again.";
+        setDeleteOtpError(errorMsg);
+        showSnackbar(errorMsg, "error");
+      }
+    } catch (error) {
+      console.error("Error sending delete account OTP:", error);
+      setDeleteOtpError("Server error. Please try again later.");
+      showSnackbar("Server error. Please try again later.", "error");
+    } finally {
+      setIsSendingDeleteOtp(false);
+    }
+  };
+
+  // Step 2: Open Confirmation Modal if OTP is valid
+  const handleOpenDeleteConfirmModal = () => {
+    setDeleteOtpError("");
+    const cleanOtp = otpValues.join("").trim();
+    if (!cleanOtp || cleanOtp.length !== OTP_LENGTH || !/^\d{6}$/.test(cleanOtp)) {
+      setDeleteOtpError("Please enter all 6 digits of your verification code.");
+      return;
+    }
+    setIsDeleteModalOpen(true);
+  };
+
+  // Step 3: Verify OTP and Execute Account Deletion
   const handleConfirmDeleteAccount = async () => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
 
+    if (!customerId || !token) {
+      showSnackbar("Please sign in to delete your account.", "warning");
+      return;
+    }
+
+    const cleanOtp = otpValues.join("").trim();
+    if (!cleanOtp || cleanOtp.length !== OTP_LENGTH) {
+      setDeleteOtpError("Please enter all 6 digits of your verification code.");
+      setIsDeleteModalOpen(false);
+      return;
+    }
+
     setIsDeleting(true);
     try {
-      if (customerId && adminPanelBackendPath) {
-        try {
-          let deleteRes = await fetch(
-            `${adminPanelBackendPath}/Website/General/DeleteAccount/${customerId}`,
-            {
-              method: "DELETE",
-              headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
-            }
-          );
-        } catch (apiError) {
-          console.warn("Backend delete account notice:", apiError);
-        }
+      const response = await fetch(
+        `${adminPanelBackendPath}/Website/General/DeleteAccountVerifyAndDelete/${customerId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
+        body: JSON.stringify({ otp: cleanOtp }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (response.ok) {
+        // Clear authentication and preferences from localStorage
+        localStorage.removeItem(customerTokenName);
+        localStorage.removeItem(customerIdName);
+        localStorage.removeItem("DateFormat");
+        localStorage.removeItem("TimeFormat");
+        localStorage.removeItem("TimeZone");
+
+        // Notify application state
+        window.dispatchEvent(
+          new CustomEvent("customerAuthChange", {
+            detail: { isLoggedIn: false, customerId: null },
+          })
+        );
+
+        setIsDeleteModalOpen(false);
+        showSnackbar(data?.message || "Your account has been deleted successfully.", "info");
+        navigate("/", { replace: true });
+      } else {
+        const errorMsg = data?.message || "Invalid or expired verification code. Please check and try again.";
+        setDeleteOtpError(errorMsg);
+        showSnackbar(errorMsg, "error");
+        setIsDeleteModalOpen(false);
       }
-
-      // Clear authentication storage
-      localStorage.removeItem(customerTokenName);
-      localStorage.removeItem(customerIdName);
-
-      // Notify application state
-      window.dispatchEvent(
-        new CustomEvent("customerAuthChange", {
-          detail: { isLoggedIn: false, customerId: null },
-        })
-      );
-
-      setIsDeleteModalOpen(false);
-      showSnackbar("Your account has been deleted successfully.", "info");
-      navigate("/", { replace: true });
     } catch (error) {
       console.error("Error deleting account:", error);
-      showSnackbar("Error processing account deletion.", "error");
+      showSnackbar("Server error while deleting account. Please try again later.", "error");
+      setIsDeleteModalOpen(false);
     } finally {
       setIsDeleting(false);
     }
@@ -399,29 +581,131 @@ const SettingsPage = () => {
                 </ul>
               </div>
 
-              {/* Confirmation Checkbox & Delete Trigger */}
-              <div className="delete-actions-row">
-                <label className="confirmation-checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={deleteConfirmed}
-                    onChange={(e) => setDeleteConfirmed(e.target.value ? e.target.checked : false)}
-                    id="confirm-delete-checkbox"
-                  />
-                  <span>I understand that this action is permanent and cannot be undone.</span>
-                </label>
-
-                <button
-                  type="button"
-                  className="delete-danger-btn"
-                  disabled={!deleteConfirmed}
-                  onClick={() => setIsDeleteModalOpen(true)}
-                  id="trigger-delete-modal-btn"
-                >
-                  <DeleteForeverOutlinedIcon fontSize="small" />
-                  <span>Delete My Account</span>
-                </button>
+              {/* Phone Lock Info Card (Matching SavoryOps_UserApp) */}
+              <div className="delete-phone-info-card">
+                <div className="phone-icon-pill">
+                  <PhonelinkLockOutlinedIcon />
+                </div>
+                <div className="phone-info-text">
+                  {deleteOtpSent
+                    ? (maskedPhone
+                      ? `Enter the 6-digit verification code sent to your phone (${maskedPhone}) to confirm account deletion.`
+                      : "Enter the 6-digit verification code sent to your phone to confirm account deletion.")
+                    : (maskedPhone
+                      ? `A verification code will be sent to your registered phone number (${maskedPhone}) to confirm account deletion.`
+                      : "A verification code will be sent to your registered phone number to confirm account deletion.")
+                  }
+                </div>
               </div>
+
+              {/* Step 1: Send OTP / Step 2: Enter OTP */}
+              {!deleteOtpSent ? (
+                <div className="delete-actions-row">
+                  <button
+                    type="button"
+                    className="delete-send-otp-btn"
+                    onClick={handleSendDeleteOtp}
+                    disabled={isSendingDeleteOtp}
+                    id="trigger-send-delete-otp-btn"
+                  >
+                    {isSendingDeleteOtp ? (
+                      <>
+                        <CircularProgress size={16} color="inherit" />
+                        <span>Sending Verification Code...</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShieldOutlinedIcon fontSize="small" />
+                        <span>Send Verification Code</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <div className="delete-otp-card">
+                  <div className="otp-card-header">
+                    <div className="otp-shield-pill">
+                      <ShieldOutlinedIcon />
+                    </div>
+                    <div className="otp-header-info">
+                      <h4 className="otp-card-title">Verification Code</h4>
+                      <p className="otp-card-subtitle">
+                        Enter the 6-digit verification code sent to your phone
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="otp-card-body">
+                    <div className="otp-boxes-grid" onPaste={handleOtpPaste}>
+                      {otpValues.map((digit, index) => (
+                        <input
+                          key={index}
+                          ref={(el) => (otpInputRefs.current[index] = el)}
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={1}
+                          value={digit}
+                          onChange={(e) => handleOtpChange(index, e.target.value)}
+                          onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                          className={`otp-digit-box ${digit ? "filled" : ""} ${deleteOtpError ? "error" : ""}`}
+                          id={`delete-otp-box-${index}`}
+                          autoComplete="one-time-code"
+                        />
+                      ))}
+                    </div>
+
+                    {deleteOtpError && (
+                      <span className="delete-otp-error-text" role="alert">
+                        {deleteOtpError}
+                      </span>
+                    )}
+
+                    <div className="delete-resend-row">
+                      {resendCountdown > 0 ? (
+                        <span className="resend-countdown-label">
+                          Resend code in <strong>0:{resendCountdown.toString().padStart(2, "0")}</strong>
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          className="delete-resend-btn"
+                          onClick={handleSendDeleteOtp}
+                          disabled={isSendingDeleteOtp}
+                        >
+                          <RefreshIcon fontSize="small" />
+                          <span>{isSendingDeleteOtp ? "Sending code..." : "Resend Verification Code"}</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="delete-card-actions">
+                      <button
+                        type="button"
+                        className="delete-cancel-btn"
+                        onClick={() => {
+                          setDeleteOtpSent(false);
+                          setOtpValues(Array(OTP_LENGTH).fill(""));
+                          setDeleteOtpError("");
+                        }}
+                        disabled={isDeleting}
+                      >
+                        Cancel
+                      </button>
+
+                      <button
+                        type="button"
+                        className="delete-danger-btn"
+                        disabled={otpValues.join("").length !== OTP_LENGTH || isDeleting}
+                        onClick={handleOpenDeleteConfirmModal}
+                        id="trigger-delete-modal-btn"
+                      >
+                        <DeleteForeverOutlinedIcon fontSize="small" />
+                        <span>Delete My Account</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </main>
           )}
         </div>
