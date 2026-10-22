@@ -427,6 +427,7 @@
   top: calc(100% + 8px);
   right: 0;
   min-width: 200px;
+  max-width: calc(100vw - 24px);
   max-height: 280px;
   overflow-y: auto;
   background: #ffffff;
@@ -436,6 +437,13 @@
   z-index: 1050;
   padding: 0.45rem;
   animation: navDropdownFade 0.2s ease;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    right: auto;
+    left: 0;
+    text-align: right;
+  }
 }
 
 .language-menu-list {
@@ -519,6 +527,7 @@
   top: calc(100% + 8px);
   right: 0;
   width: 260px;
+  max-width: calc(100vw - 24px);
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
@@ -526,6 +535,13 @@
   z-index: 1050;
   padding: 0.75rem;
   animation: navDropdownFade 0.2s ease;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    right: auto;
+    left: 0;
+    text-align: right;
+  }
 }
 
 @keyframes navDropdownFade {
@@ -568,6 +584,11 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    text-align: right;
+  }
 }
 
 .profile-name {
@@ -610,6 +631,11 @@
   font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.15s ease;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    text-align: right;
+  }
 
   &:hover {
     background: rgba(2, 136, 2, 0.08);
@@ -719,6 +745,18 @@
 
   &.open {
     transform: translateX(0);
+  }
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    right: auto;
+    left: 0;
+    box-shadow: 10px 0 35px rgba(0, 0, 0, 0.15);
+    transform: translateX(-100%);
+
+    &.open {
+      transform: translateX(0);
+    }
   }
 }
 
@@ -916,11 +954,23 @@
   z-index: 1050;
   padding: 0.75rem;
   animation: navDropdownFade 0.2s ease;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    left: auto;
+    right: 0;
+    text-align: right;
+  }
 }
 
 .branch-menu-header {
   padding: 0.25rem 0.4rem 0.5rem;
   border-bottom: 1px solid #f1f5f9;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    text-align: right;
+  }
 }
 
 .branch-menu-title {
@@ -1021,6 +1071,11 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    text-align: right;
+  }
 }
 
 .branch-item-name {
