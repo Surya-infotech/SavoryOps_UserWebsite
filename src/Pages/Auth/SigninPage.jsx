@@ -339,7 +339,7 @@ const SigninPage = () => {
           <div className="signin-card-body">
             {/* STEP 1: Phone Input Form */}
             {step === "phone" && (
-              <form onSubmit={handlePhoneSubmit} className="auth-form" noValidate>
+              <form onSubmit={handlePhoneSubmit} className="auth-form" noValidate autoComplete="off">
                 <div className="form-field-group">
                   <label htmlFor="customer-phone-input" className="form-label">
                     Mobile Phone Number
@@ -354,6 +354,10 @@ const SigninPage = () => {
                       placeholder="Enter mobile number"
                       className="custom-phone-input"
                       autoFocus
+                      autoComplete="off"
+                      numberInputProps={{
+                        autoComplete: "off",
+                      }}
                     />
                   </div>
                   {phoneError && (
@@ -409,7 +413,7 @@ const SigninPage = () => {
 
             {/* STEP 2: OTP Verification Form */}
             {step === "otp" && (
-              <form onSubmit={handleVerifyOtp} className="auth-form" noValidate>
+              <form onSubmit={handleVerifyOtp} className="auth-form" noValidate autoComplete="off">
                 {serverMessage && (
                   <div className="server-notice-banner">
                     <span>{serverMessage}</span>
