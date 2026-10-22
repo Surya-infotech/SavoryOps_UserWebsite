@@ -70,6 +70,7 @@
   "signinsubtitle": "Sign in with your phone number to access order tracking, table bookings & rewards.",
   "verifyphonenumber": "Verify Phone Number",
   "sentcodesubtitle": "We've sent a 6-digit confirmation code to",
+  "otpsentsuccessnotice": "An OTP has been sent to your phone to sign in to SavoryOps Website.",
   "edit": "Edit",
   "welcomeback": "Welcome Back!",
   "redirectingkitchen": "You've successfully signed in. Redirecting you to the kitchen...",

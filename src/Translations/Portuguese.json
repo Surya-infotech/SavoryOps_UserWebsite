@@ -70,6 +70,7 @@
   "signinsubtitle": "Entre com seu número de telefone para acompanhar pedidos, reservar mesas e ganhar recompensas.",
   "verifyphonenumber": "Verificar número de telefone",
   "sentcodesubtitle": "Enviamos um código de confirmação de 6 dígitos para",
+  "otpsentsuccessnotice": "Um código de verificação foi enviado para o seu telefone para iniciar sessão no site SavoryOps.",
   "edit": "Editar",
   "welcomeback": "Bem-vindo de volta!",
   "redirectingkitchen": "Login realizado com sucesso. Redirecionando...",

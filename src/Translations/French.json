@@ -70,6 +70,7 @@
   "signinsubtitle": "Connectez-vous avec votre numéro de téléphone pour suivre vos commandes et récompenses.",
   "verifyphonenumber": "Vérifier le numéro de téléphone",
   "sentcodesubtitle": "Nous avons envoyé un code de confirmation à 6 chiffres au",
+  "otpsentsuccessnotice": "Un code de vérification a été envoyé à votre téléphone pour vous connecter au site SavoryOps.",
   "edit": "Modifier",
   "welcomeback": "Ravi de vous revoir !",
   "redirectingkitchen": "Connexion réussie. Redirection en cours...",

@@ -70,6 +70,7 @@
   "signinsubtitle": "Log in met je telefoonnummer om bestellingen te volgen en tafels te reserveren.",
   "verifyphonenumber": "Telefoonnummer verifiëren",
   "sentcodesubtitle": "We hebben een 6-cijferige verificatiecode gestuurd naar",
+  "otpsentsuccessnotice": "Er is een verificatiecode naar uw telefoon verzonden om in te loggen op de SavoryOps-website.",
   "edit": "Wijzigen",
   "welcomeback": "Welkom terug!",
   "redirectingkitchen": "Je bent succesvol ingelogd. We sturen je door...",

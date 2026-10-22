@@ -110,13 +110,13 @@ const SigninPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setServerMessage(data.message || translations.sentcodesubtitle);
+        setServerMessage(translations.otpsentsuccessnotice);
         setStep("otp");
         setResendTimer(RESEND_COOLDOWN_SECONDS);
         setOtpValues(Array(OTP_LENGTH).fill(""));
         setOtpError("");
       } else {
-        setPhoneError(data.message || translations.failedtosendotp);
+        setPhoneError(translations.failedtosendotp);
       }
     } catch (err) {
       console.error("Error sending OTP:", err);
