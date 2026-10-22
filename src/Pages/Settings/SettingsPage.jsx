@@ -47,20 +47,11 @@ const SettingsPage = () => {
   const [timeFormat, setTimeFormat] = useState(() => localStorage.getItem("TimeFormat") || "hh:mm A");
   const [isLoadingSettings, setIsLoadingSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Delete Account State
   const [deleteConfirmed, setDeleteConfirmed] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Live timer for formatted preview
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   // Fetch saved settings from backend API
   const fetchDateTimeSettings = async (customerId, token) => {
@@ -126,14 +117,14 @@ const SettingsPage = () => {
   }, []);
 
   // Formatted preview string
-  const formattedLivePreview = useMemo(() => {
+  const formattedPreview = useMemo(() => {
     try {
       const combinedFormat = `${dateFormat} ${timeFormat}`;
-      return moment(currentTime).tz(timezone).format(combinedFormat);
+      return moment().tz(timezone).format(combinedFormat);
     } catch {
-      return moment(currentTime).format(`${dateFormat} ${timeFormat}`);
+      return moment().format(`${dateFormat} ${timeFormat}`);
     }
-  }, [currentTime, timezone, dateFormat, timeFormat]);
+  }, [timezone, dateFormat, timeFormat]);
 
   // Handle Save Date & Time Settings
   const handleSaveDateTime = async () => {
@@ -286,16 +277,15 @@ const SettingsPage = () => {
           {/* Tab 1: Date and Time Panel */}
           {activeTab === "datetime" && (
             <main className="settings-content-panel" id="panel-datetime">
-              {/* Live Preview Box */}
-              <div className="live-preview-banner">
+              {/* Preview Box */}
+              <div className="preview-banner">
                 <div className="preview-left">
-                  <div className="preview-badge-dot" />
                   <div className="preview-label-group">
-                    <span className="preview-label">Live Display Preview</span>
+                    <span className="preview-label">Preview</span>
                     <span className="preview-timezone-note">{timezone}</span>
                   </div>
                 </div>
-                <div className="preview-value-text">{formattedLivePreview}</div>
+                <div className="preview-value-text">{formattedPreview}</div>
               </div>
 
               {/* Settings Form Controls (Matching SavoryOps_OwnerWeb Dropdown) */}

@@ -229,7 +229,8 @@
   }
 }
 
-/* Live Preview Banner (Date & Time) */
+/* Preview Banner (Date & Time) */
+.preview-banner,
 .live-preview-banner {
   background: linear-gradient(135deg, rgba(2, 136, 2, 0.08) 0%, rgba(105, 232, 105, 0.08) 100%);
   border: 1.5px solid rgba(2, 136, 2, 0.2);
@@ -270,6 +271,7 @@
       .preview-timezone-note {
         font-size: 0.8rem;
         color: #64748b;
+        margin-top: 2px;
       }
     }
   }
