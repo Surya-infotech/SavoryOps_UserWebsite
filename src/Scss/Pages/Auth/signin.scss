@@ -324,6 +324,42 @@
         }
       }
     }
+
+    /* RTL Mode Support */
+    &.is-rtl,
+    &[dir="rtl"],
+    [dir="rtl"] &,
+    body.rtl-mode & {
+      direction: rtl;
+
+      .custom-phone-input {
+        direction: rtl;
+
+        .PhoneInputCountry {
+          padding-right: 0;
+          padding-left: 8px;
+          border-right: none;
+          border-left: 1.5px solid #e2e8f0;
+          margin-right: 0;
+          margin-left: 4px;
+
+          .PhoneInputCountrySelectArrow {
+            margin-left: 0;
+            margin-right: 6px;
+          }
+        }
+
+        .PhoneInputInput {
+          direction: ltr;
+          text-align: right;
+
+          &::placeholder {
+            direction: rtl;
+            text-align: right;
+          }
+        }
+      }
+    }
   }
 
   /* Demo Fill Strip */

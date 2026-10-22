@@ -34,7 +34,7 @@ const SigninPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { showSnackbar } = useSnackbar();
-  const { translations = {} } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
 
   // Auth flow step: "phone" | "otp" | "success"
   const [step, setStep] = useState("phone");
@@ -344,7 +344,10 @@ const SigninPage = () => {
                   <label htmlFor="customer-phone-input" className="form-label">
                     {translations.mobilephonenumber}
                   </label>
-                  <div className={`phone-input-container ${phoneError ? "has-error" : ""}`}>
+                  <div
+                    className={`phone-input-container ${phoneError ? "has-error" : ""} ${isRtl ? "is-rtl" : ""}`}
+                    dir={isRtl ? "rtl" : "ltr"}
+                  >
                     <PhoneInput
                       id="customer-phone-input"
                       international
@@ -355,8 +358,10 @@ const SigninPage = () => {
                       className="custom-phone-input"
                       autoFocus
                       autoComplete="off"
+                      dir={isRtl ? "rtl" : "ltr"}
                       numberInputProps={{
                         autoComplete: "off",
+                        dir: "ltr",
                       }}
                     />
                   </div>
