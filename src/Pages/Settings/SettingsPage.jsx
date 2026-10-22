@@ -148,7 +148,7 @@ const SettingsPage = () => {
     }
   };
 
-  // Fetch saved settings & customer phone on mount if customer is logged in, and listen to auth changes
+  // Fetch saved settings & customer phone on mount if customer is logged in
   useEffect(() => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
@@ -157,25 +157,6 @@ const SettingsPage = () => {
       fetchDateTimeSettings(customerId, token);
       loadCustomerPhone(customerId, token);
     }
-
-    const handleAuthChange = (event) => {
-      const detail = event?.detail;
-      if (detail?.isLoggedIn && detail?.customerId) {
-        const currentToken = localStorage.getItem(customerTokenName);
-        fetchDateTimeSettings(detail.customerId, currentToken);
-        loadCustomerPhone(detail.customerId, currentToken);
-      } else {
-        setMaskedPhone("");
-        setDeleteOtpSent(false);
-        setOtpValues(Array(OTP_LENGTH).fill(""));
-        setDeleteOtpError("");
-      }
-    };
-
-    window.addEventListener("customerAuthChange", handleAuthChange);
-    return () => {
-      window.removeEventListener("customerAuthChange", handleAuthChange);
-    };
   }, []);
 
   // Formatted preview string
