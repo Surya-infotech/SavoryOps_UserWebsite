@@ -175,7 +175,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 5px;
 }
 
 .nav-brand-name-link {
@@ -584,6 +584,9 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  justify-content: center;
 
   [dir="rtl"] &,
   body.rtl-mode & {
@@ -592,17 +595,21 @@
 }
 
 .profile-name {
+  display: block;
   font-size: 0.92rem;
   font-weight: 700;
   color: #0f172a;
+  line-height: 1.35;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .profile-subtitle {
+  display: block;
   font-size: 0.75rem;
   color: #64748b;
+  line-height: 1.35;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -273,17 +273,11 @@ export const ProfileDropdown = ({ className = "" }) => {
   const { showSnackbar } = useSnackbar();
   const { translations = {} } = useLanguage();
 
-  // Reactive Customer Authentication State
-  const [authState, setAuthState] = useState(() => {
+  // Customer Authentication State
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem(customerTokenName);
     const customerId = localStorage.getItem(customerIdName);
-    const loggedIn = Boolean(token || customerId);
-
-    return {
-      isLoggedIn: loggedIn,
-      name: loggedIn ? translations.myaccount : translations.guestuser,
-      subtitle: loggedIn ? "" : translations.signinwithphone,
-    };
+    return Boolean(token || customerId);
   });
 
   const fetchCustomerDetails = async (customerId, token) => {
@@ -303,12 +297,7 @@ export const ProfileDropdown = ({ className = "" }) => {
         const data = await response.json();
         if (data) {
           setCustomerDetails(data);
-          const fullName = `${data.customerfirstname || ""} ${data.customerlastname || ""}`.trim();
-          setAuthState({
-            isLoggedIn: true,
-            name: fullName || translations.myaccount,
-            subtitle: data.phone || "",
-          });
+          setIsLoggedIn(true);
         }
       }
     } catch (error) {
@@ -327,15 +316,12 @@ export const ProfileDropdown = ({ className = "" }) => {
       const detail = event?.detail;
       if (detail?.isLoggedIn && detail?.customerId) {
         const currentToken = localStorage.getItem(customerTokenName);
+        setIsLoggedIn(true);
         fetchCustomerDetails(detail.customerId, currentToken);
       } else {
         setCustomerDetails(null);
         setIsOpen(false);
-        setAuthState({
-          isLoggedIn: false,
-          name: translations.guestuser,
-          subtitle: translations.signinwithphone,
-        });
+        setIsLoggedIn(false);
       }
     };
 
@@ -365,13 +351,9 @@ export const ProfileDropdown = ({ className = "" }) => {
     localStorage.removeItem(customerIdName);
     setCustomerDetails(null);
     setIsOpen(false);
-    setAuthState({
-      isLoggedIn: false,
-      name: translations.guestuser,
-      subtitle: translations.signinwithphone,
-    });
+    setIsLoggedIn(false);
 
-    showSnackbar(translations.signedoutsuccessfully, "success");
+    showSnackbar(translations.signedoutsuccessfully || "Signed out successfully", "success");
 
     window.dispatchEvent(
       new CustomEvent("customerAuthChange", {
@@ -379,6 +361,18 @@ export const ProfileDropdown = ({ className = "" }) => {
       })
     );
   };
+
+  const fullName = customerDetails
+    ? `${customerDetails.customerfirstname || ""} ${customerDetails.customerlastname || ""}`.trim()
+    : "";
+
+  const displayName = isLoggedIn
+    ? (fullName || translations.myaccount || "My Account")
+    : (translations.guestuser || "Guest User");
+
+  const displaySubtitle = isLoggedIn
+    ? (customerDetails?.phone || "")
+    : (translations.signinwithphone || "Sign in with phone");
 
   return (
     <div
@@ -404,12 +398,12 @@ export const ProfileDropdown = ({ className = "" }) => {
               <PersonOutlinedIcon />
             </div>
             <div className="profile-user-details">
-              <span className="profile-name">{authState.name}</span>
-              <span className="profile-subtitle">{authState.subtitle}</span>
+              <span className="profile-name">{displayName}</span>
+              <span className="profile-subtitle">{displaySubtitle}</span>
             </div>
           </div>
 
-          {authState.isLoggedIn && (
+          {isLoggedIn && (
             <>
               <div className="profile-menu-divider" />
 
