@@ -114,6 +114,7 @@ export const BranchDropdown = ({ className = "" }) => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               autoFocus
+              autoComplete="off"
             />
           </div>
 
@@ -563,7 +564,7 @@ const Navbar = () => {
           </div>
 
           {/* Quick Food Search */}
-          <form className="nav-search-box" onSubmit={handleSearchSubmit}>
+          <form className="nav-search-box" onSubmit={handleSearchSubmit} autoComplete="off">
             <SearchIcon className="nav-search-icon" />
             <input
               type="text"
@@ -571,6 +572,7 @@ const Navbar = () => {
               placeholder="Search pizza, burgers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              autoComplete="off"
             />
           </form>
 
@@ -632,7 +634,7 @@ const Navbar = () => {
                   <BranchDropdown className="mobile-branch-dropdown" />
                 </div>
 
-                <form className="mobile-search-box" onSubmit={handleSearchSubmit}>
+                <form className="mobile-search-box" onSubmit={handleSearchSubmit} autoComplete="off">
                   <SearchIcon className="nav-search-icon" />
                   <input
                     type="text"
@@ -640,6 +642,7 @@ const Navbar = () => {
                     placeholder="Search dishes..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    autoComplete="off"
                   />
                 </form>
 
