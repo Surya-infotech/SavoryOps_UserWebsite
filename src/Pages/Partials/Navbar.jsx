@@ -383,55 +383,59 @@ export const ProfileDropdown = ({ className = "" }) => {
             </div>
           </div>
 
-          <div className="profile-menu-divider" />
+          {authState.isLoggedIn && (
+            <>
+              <div className="profile-menu-divider" />
 
-          {/* Quick Nav Links */}
-          <div className="profile-menu-links">
-            <Link
-              to="/orders"
-              className="profile-menu-item"
-              onClick={() => setIsOpen(false)}
-            >
-              <ReceiptLongOutlinedIcon fontSize="small" />
-              <span>Orders</span>
-            </Link>
+              {/* Quick Nav Links */}
+              <div className="profile-menu-links">
+                <Link
+                  to="/orders"
+                  className="profile-menu-item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ReceiptLongOutlinedIcon fontSize="small" />
+                  <span>Orders</span>
+                </Link>
 
-            <Link
-              to="/reservation"
-              className="profile-menu-item"
-              onClick={() => setIsOpen(false)}
-            >
-              <TableRestaurantIcon fontSize="small" />
-              <span>Table Reservations</span>
-            </Link>
+                <Link
+                  to="/reservation"
+                  className="profile-menu-item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <TableRestaurantIcon fontSize="small" />
+                  <span>Table Reservations</span>
+                </Link>
 
-            <Link
-              to="/manage-address"
-              className="profile-menu-item"
-              onClick={() => setIsOpen(false)}
-            >
-              <LocationOnOutlinedIcon fontSize="small" />
-              <span>Manage Address</span>
-            </Link>
+                <Link
+                  to="/manage-address"
+                  className="profile-menu-item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <LocationOnOutlinedIcon fontSize="small" />
+                  <span>Manage Address</span>
+                </Link>
 
-            <Link
-              to="/my-reviews"
-              className="profile-menu-item"
-              onClick={() => setIsOpen(false)}
-            >
-              <RateReviewOutlinedIcon fontSize="small" />
-              <span>My Reviews</span>
-            </Link>
+                <Link
+                  to="/my-reviews"
+                  className="profile-menu-item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <RateReviewOutlinedIcon fontSize="small" />
+                  <span>My Reviews</span>
+                </Link>
 
-            <Link
-              to="/settings"
-              className="profile-menu-item"
-              onClick={() => setIsOpen(false)}
-            >
-              <SettingsOutlinedIcon fontSize="small" />
-              <span>Setting</span>
-            </Link>
-          </div>
+                <Link
+                  to="/settings"
+                  className="profile-menu-item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <SettingsOutlinedIcon fontSize="small" />
+                  <span>Setting</span>
+                </Link>
+              </div>
+            </>
+          )}
 
           <div className="profile-menu-divider" />
 
