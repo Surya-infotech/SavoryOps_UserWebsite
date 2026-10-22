@@ -12,8 +12,8 @@ import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import "../../Scss/Pages/Settings/settings.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-const customerTokenName = "savoryopscustomer_token";
-const customerIdName = "CUSTOMER_ID";
+const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
+const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
 const TIMEZONE_OPTIONS = moment.tz.names().map((tz) => ({
   value: tz,
@@ -42,9 +42,10 @@ const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState("datetime");
 
   // Date and Time Preferences
-  const [timezone, setTimezone] = useState("Asia/Kolkata");
-  const [dateFormat, setDateFormat] = useState("DD/MM/YYYY");
-  const [timeFormat, setTimeFormat] = useState("hh:mm A");
+  const [timezone, setTimezone] = useState(() => localStorage.getItem("TimeZone") || "Asia/Kolkata");
+  const [dateFormat, setDateFormat] = useState(() => localStorage.getItem("DateFormat") || "DD/MM/YYYY");
+  const [timeFormat, setTimeFormat] = useState(() => localStorage.getItem("TimeFormat") || "hh:mm A");
+  const [isLoadingSettings, setIsLoadingSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -61,38 +62,67 @@ const SettingsPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch saved settings on mount if customer is logged in
+  // Fetch saved settings from backend API
+  const fetchDateTimeSettings = async (customerId, token) => {
+    if (!customerId || !adminPanelBackendPath) return;
+
+    setIsLoadingSettings(true);
+    try {
+      const response = await fetch(
+        `${adminPanelBackendPath}/Website/General/GetDateTime/${customerId}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const loadedTimezone = data.timezone || data.timeZone;
+        const loadedDateFormat = data.dateformat || data.dateFormat;
+        const loadedTimeFormat = data.timeformat || data.timeFormat;
+
+        if (loadedTimezone) {
+          setTimezone(loadedTimezone);
+          localStorage.setItem("TimeZone", loadedTimezone);
+        }
+        if (loadedDateFormat) {
+          setDateFormat(loadedDateFormat);
+          localStorage.setItem("DateFormat", loadedDateFormat);
+        }
+        if (loadedTimeFormat) {
+          setTimeFormat(loadedTimeFormat);
+          localStorage.setItem("TimeFormat", loadedTimeFormat);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching datetime settings:", error);
+    } finally {
+      setIsLoadingSettings(false);
+    }
+  };
+
+  // Fetch saved settings on mount if customer is logged in, and listen to auth changes
   useEffect(() => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
 
-    if (customerId && adminPanelBackendPath) {
-      const fetchDateTimeSettings = async () => {
-        try {
-          const response = await fetch(
-            `${adminPanelBackendPath}/Customer/Setting/GetDateTime/${customerId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                "x-user": "customer",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (response.ok) {
-            const data = await response.json();
-            if (data.timezone) setTimezone(data.timezone);
-            if (data.dateformat) setDateFormat(data.dateformat);
-            if (data.timeformat) setTimeFormat(data.timeformat);
-          }
-        } catch (error) {
-          console.error("Error fetching datetime settings:", error);
-        }
-      };
-
-      fetchDateTimeSettings();
+    if (customerId) {
+      fetchDateTimeSettings(customerId, token);
     }
+
+    const handleAuthChange = (event) => {
+      const detail = event?.detail;
+      if (detail?.isLoggedIn && detail?.customerId) {
+        const currentToken = localStorage.getItem(customerTokenName);
+        fetchDateTimeSettings(detail.customerId, currentToken);
+      }
+    };
+
+    window.addEventListener("customerAuthChange", handleAuthChange);
+    return () => {
+      window.removeEventListener("customerAuthChange", handleAuthChange);
+    };
   }, []);
 
   // Formatted preview string
@@ -110,31 +140,50 @@ const SettingsPage = () => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
 
+    if (!customerId) {
+      showSnackbar("Please sign in to save your settings.", "warning");
+      return;
+    }
+
     setIsSaving(true);
     try {
-      if (customerId && adminPanelBackendPath) {
-        await fetch(
-          `${adminPanelBackendPath}/Customer/Setting/EditDateTime/${customerId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              "x-user": "customer",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              dateformat: dateFormat,
-              timeformat: timeFormat,
-              timezone,
-            }),
-          }
-        );
-      }
+      const payload = {
+        dateformat: dateFormat,
+        timeformat: timeFormat,
+        timezone,
+      };
 
-      showSnackbar("Date & Time settings saved successfully!", "success");
+      const response = await fetch(
+        `${adminPanelBackendPath}/Website/General/EditDateTime/${customerId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}` },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Persist to local storage
+        localStorage.setItem("DateFormat", dateFormat);
+        localStorage.setItem("TimeFormat", timeFormat);
+        localStorage.setItem("TimeZone", timezone);
+
+        // Notify application components of updated date & time settings
+        window.dispatchEvent(
+          new CustomEvent("dateTimeSettingsChange", {
+            detail: { dateFormat, timeFormat, timezone },
+          })
+        );
+
+        showSnackbar(data?.message || "Date & Time settings saved successfully!", "success");
+      } else {
+        showSnackbar(data?.message || "Failed to update Date & Time settings.", "error");
+      }
     } catch (error) {
       console.error("Error saving datetime settings:", error);
-      showSnackbar("Date & Time settings saved locally.", "success");
+      showSnackbar("Server error. Please try again later.", "error");
     } finally {
       setIsSaving(false);
     }
@@ -149,15 +198,11 @@ const SettingsPage = () => {
     try {
       if (customerId && adminPanelBackendPath) {
         try {
-          await fetch(
-            `${adminPanelBackendPath}/Customer/General/DeleteAccount/${customerId}`,
+          let deleteRes = await fetch(
+            `${adminPanelBackendPath}/Website/General/DeleteAccount/${customerId}`,
             {
               method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                "x-user": "customer",
-                Authorization: `Bearer ${token}`,
-              },
+              headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
             }
           );
         } catch (apiError) {
@@ -302,7 +347,7 @@ const SettingsPage = () => {
                   type="button"
                   className="save-primary-btn"
                   onClick={handleSaveDateTime}
-                  disabled={isSaving}
+                  disabled={isSaving || isLoadingSettings}
                   id="settings-save-datetime-btn"
                 >
                   {isSaving ? (
