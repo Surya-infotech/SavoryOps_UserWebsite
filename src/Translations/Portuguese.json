@@ -199,5 +199,6 @@
   "deleting": "Excluindo...",
   "failedtodeleteaccount": "Falha ao excluir conta. Tente novamente.",
   "failedtosendotp": "Falha ao enviar código. Tente novamente.",
-  "youraccountdeletedsuccessfully": "Conta excluída com sucesso. Você foi desconectado."
+  "youraccountdeletedsuccessfully": "Conta excluída com sucesso. Você foi desconectado.",
+  "deleteaccountotpsent": "Código de verificação enviado para o seu número de telefone registado."
 }

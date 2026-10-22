@@ -199,5 +199,6 @@
   "deleting": "جارٍ الحذف...",
   "failedtodeleteaccount": "فشل حذف الحساب. يرجى المحاولة مرة أخرى.",
   "failedtosendotp": "فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
-  "youraccountdeletedsuccessfully": "تم حذف الحساب بنجاح. لقد تم تسجيل خروجك."
+  "youraccountdeletedsuccessfully": "تم حذف الحساب بنجاح. لقد تم تسجيل خروجك.",
+  "deleteaccountotpsent": "تم إرسال رمز التحقق إلى رقم هاتفك المسجل."
 }

@@ -199,5 +199,6 @@
   "deleting": "Verwijderen...",
   "failedtodeleteaccount": "Account verwijderen mislukt. Probeer het opnieuw.",
   "failedtosendotp": "Verificatiecode verzenden mislukt. Probeer het opnieuw.",
-  "youraccountdeletedsuccessfully": "Account succesvol verwijderd. Je bent uitgelogd."
+  "youraccountdeletedsuccessfully": "Account succesvol verwijderd. Je bent uitgelogd.",
+  "deleteaccountotpsent": "Verificatiecode verzonden naar uw geregistreerde telefoonnummer."
 }

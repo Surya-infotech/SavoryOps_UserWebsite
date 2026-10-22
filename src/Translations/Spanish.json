@@ -199,5 +199,6 @@
   "deleting": "Eliminando...",
   "failedtodeleteaccount": "Error al eliminar la cuenta. Por favor, inténtalo de nuevo.",
   "failedtosendotp": "Error al enviar el código de verificación. Por favor, inténtalo de nuevo.",
-  "youraccountdeletedsuccessfully": "Cuenta eliminada con éxito. Has sido desconectado."
+  "youraccountdeletedsuccessfully": "Cuenta eliminada con éxito. Has sido desconectado.",
+  "deleteaccountotpsent": "Código de verificación enviado a su número de teléfono registrado."
 }

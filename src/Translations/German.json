@@ -199,5 +199,6 @@
   "deleting": "Wird gelöscht...",
   "failedtodeleteaccount": "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
   "failedtosendotp": "Bestätigungscode konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
-  "youraccountdeletedsuccessfully": "Konto erfolgreich gelöscht. Sie wurden abgemeldet."
+  "youraccountdeletedsuccessfully": "Konto erfolgreich gelöscht. Sie wurden abgemeldet.",
+  "deleteaccountotpsent": "Bestätigungscode an Ihre registrierte Telefonnummer gesendet."
 }

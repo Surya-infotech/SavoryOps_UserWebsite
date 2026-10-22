@@ -199,5 +199,6 @@
   "deleting": "Usuwanie...",
   "failedtodeleteaccount": "Nie udało się usunąć konta. Spróbuj ponownie.",
   "failedtosendotp": "Nie udało się wysłać kodu. Spróbuj ponownie.",
-  "youraccountdeletedsuccessfully": "Konto zostało pomyślnie usunięte. Zostałeś wylogowany."
+  "youraccountdeletedsuccessfully": "Konto zostało pomyślnie usunięte. Zostałeś wylogowany.",
+  "deleteaccountotpsent": "Kod weryfikacyjny został wysłany na Twój zarejestrowany numer telefonu."
 }

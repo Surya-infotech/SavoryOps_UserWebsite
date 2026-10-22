@@ -199,5 +199,6 @@
   "deleting": "Suppression...",
   "failedtodeleteaccount": "Échec de la suppression du compte. Veuillez réessayer.",
   "failedtosendotp": "Échec de l'envoi du code. Veuillez réessayer.",
-  "youraccountdeletedsuccessfully": "Compte supprimé avec succès. Vous avez été déconnecté."
+  "youraccountdeletedsuccessfully": "Compte supprimé avec succès. Vous avez été déconnecté.",
+  "deleteaccountotpsent": "Code de vérification envoyé à votre numéro de téléphone enregistré."
 }

@@ -215,7 +215,7 @@ const SigninPage = () => {
       if (response.ok && data.token) {
         verifySuccessData = data;
       } else {
-        setOtpError(data.message || translations.invalidotp);
+        setOtpError(translations.invalidotp || data.message);
       }
     } catch (err) {
       console.error("OTP verification error:", err);

@@ -213,9 +213,9 @@ const SettingsPage = () => {
           })
         );
 
-        showSnackbar(data?.message || translations.datetimesettingsavedsuccesfully, "success");
+        showSnackbar(translations.datetimesettingsavedsuccesfully || data?.message || "Date & time settings saved successfully.", "success");
       } else {
-        showSnackbar(data?.message || translations.servererror, "error");
+        showSnackbar(translations.servererror || data?.message || "Server error", "error");
       }
     } catch (error) {
       console.error("Error saving datetime settings:", error);
@@ -307,9 +307,9 @@ const SettingsPage = () => {
         setTimeout(() => {
           otpInputRefs.current[0]?.focus();
         }, 150);
-        showSnackbar(data?.message || translations.sentcodesubtitle, "success");
+        showSnackbar(translations.deleteaccountotpsent || translations.otpsentsuccessnotice || "Verification code sent to your registered phone number.", "success");
       } else {
-        const errorMsg = data?.message || translations.failedtosendotp;
+        const errorMsg = translations.failedtosendotp || data?.message;
         setDeleteOtpError(errorMsg);
         showSnackbar(errorMsg, "error");
       }
@@ -377,10 +377,10 @@ const SettingsPage = () => {
         );
 
         setIsDeleteModalOpen(false);
-        showSnackbar(data?.message || translations.youraccountdeletedsuccessfully, "info");
+        showSnackbar(translations.youraccountdeletedsuccessfully || "Account deleted successfully. You have been logged out.", "info");
         navigate("/", { replace: true });
       } else {
-        const errorMsg = data?.message || translations.invalidotp;
+        const errorMsg = translations.invalidotp || data?.message;
         setDeleteOtpError(errorMsg);
         showSnackbar(errorMsg, "error");
         setIsDeleteModalOpen(false);

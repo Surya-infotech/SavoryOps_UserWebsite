@@ -199,5 +199,6 @@
   "deleting": "Eliminazione...",
   "failedtodeleteaccount": "Impossibile eliminare l'account. Riprova più tardi.",
   "failedtosendotp": "Invio codice fallito. Riprova più tardi.",
-  "youraccountdeletedsuccessfully": "Account eliminato con successo. Sei stato disconnesso."
+  "youraccountdeletedsuccessfully": "Account eliminato con successo. Sei stato disconnesso.",
+  "deleteaccountotpsent": "Codice di verifica inviato al tuo numero di telefono registrato."
 }

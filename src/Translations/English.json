@@ -199,5 +199,6 @@
   "deleting": "Deleting...",
   "failedtodeleteaccount": "Failed to delete account. Please try again.",
   "failedtosendotp": "Failed to send verification code. Please try again.",
-  "youraccountdeletedsuccessfully": "Account deleted successfully. You have been logged out."
+  "youraccountdeletedsuccessfully": "Account deleted successfully. You have been logged out.",
+  "deleteaccountotpsent": "Verification code sent to your registered phone number."
 }
