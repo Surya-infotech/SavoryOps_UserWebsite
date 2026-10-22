@@ -249,17 +249,68 @@ export const LanguageDropdown = ({ className = "" }) => {
   );
 };
 
+const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
+const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
+
 /* ==========================================================================
    3. ProfileDropdown Component
    ========================================================================== */
 export const ProfileDropdown = ({ className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [customerDetails, setCustomerDetails] = useState(null);
 
-  // Check if a customer name is saved in storage (or default to Guest)
-  const customerName = localStorage.getItem("customer_name") || "Guest User";
-  const customerEmail = localStorage.getItem("customer_email") || "Sign in for orders & rewards";
-  const isLoggedIn = Boolean(localStorage.getItem("customer_name"));
+  // Reactive Customer Authentication State
+  const [authState, setAuthState] = useState(() => {
+    const token = localStorage.getItem(customerTokenName);
+    const customerId = localStorage.getItem(customerIdName);
+    const loggedIn = Boolean(token || customerId);
+
+    return {
+      isLoggedIn: loggedIn,
+      name: loggedIn ? "My Account" : "Guest User",
+      subtitle: loggedIn ? "" : "Sign in with phone for orders & rewards",
+    };
+  });
+
+  const fetchCustomerDetails = async (customerId, token) => {
+    if (!customerId || !adminPanelBackendPath) return;
+
+    try {
+      const response = await fetch(`${adminPanelBackendPath}/Customer/General/GetProfile/${customerId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "customer",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data) {
+          setCustomerDetails(data);
+          const fullName = `${data.customerfirstname || ""} ${data.customerlastname || ""}`.trim();
+          setAuthState({
+            isLoggedIn: true,
+            name: fullName,
+            subtitle: data.phone || "",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching customer details:", error);
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem(customerTokenName);
+    const customerId = localStorage.getItem(customerIdName);
+    if (customerId) {
+      fetchCustomerDetails(customerId, token);
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -277,10 +328,21 @@ export const ProfileDropdown = ({ className = "" }) => {
   }, [isOpen]);
 
   const handleSignOut = () => {
-    localStorage.removeItem("customer_name");
-    localStorage.removeItem("customer_email");
+    localStorage.removeItem(customerTokenName);
+    localStorage.removeItem(customerIdName);
+    setCustomerDetails(null);
     setIsOpen(false);
-    window.location.reload();
+    setAuthState({
+      isLoggedIn: false,
+      name: "Guest User",
+      subtitle: "Sign in with phone for orders & rewards",
+    });
+
+    window.dispatchEvent(
+      new CustomEvent("customerAuthChange", {
+        detail: { isLoggedIn: false },
+      })
+    );
   };
 
   return (
@@ -307,8 +369,8 @@ export const ProfileDropdown = ({ className = "" }) => {
               <PersonOutlinedIcon />
             </div>
             <div className="profile-user-details">
-              <span className="profile-name">{customerName}</span>
-              <span className="profile-subtitle">{customerEmail}</span>
+              <span className="profile-name">{authState.name}</span>
+              <span className="profile-subtitle">{authState.subtitle}</span>
             </div>
           </div>
 
@@ -357,7 +419,7 @@ export const ProfileDropdown = ({ className = "" }) => {
 
           {/* Action Button */}
           <div className="profile-menu-footer">
-            {isLoggedIn ? (
+            {authState.isLoggedIn ? (
               <button
                 type="button"
                 className="profile-action-btn logout"
@@ -366,25 +428,16 @@ export const ProfileDropdown = ({ className = "" }) => {
                 <span>Sign Out</span>
               </button>
             ) : (
-              <button
-                type="button"
+              <Link
+                to="/signin"
                 className="profile-action-btn login"
-                onClick={() => {
-                  setIsOpen(false);
-                  const name = prompt("Enter your name to sign in as guest:");
-                  if (name && name.trim()) {
-                    localStorage.setItem("customer_name", name.trim());
-                    localStorage.setItem(
-                      "customer_email",
-                      `${name.toLowerCase().replace(/\s+/g, "")}@example.com`
-                    );
-                    window.location.reload();
-                  }
-                }}
+                onClick={() => setIsOpen(false)}
+                style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center" }}
+                id="nav-profile-signin-link"
               >
                 <LoginIcon fontSize="small" />
-                <span>Sign In / Join</span>
-              </button>
+                <span>Sign In with Phone</span>
+              </Link>
             )}
           </div>
         </div>
@@ -609,6 +662,25 @@ const Navbar = () => {
               </div>
 
               <div className="mobile-drawer-footer">
+                <Link
+                  to="/signin"
+                  className="nav-cta-btn"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    justifyContent: "center",
+                    width: "100%",
+                    display: "flex",
+                    background: "rgba(2, 136, 2, 0.08)",
+                    color: "#028802",
+                    border: "1.5px solid rgba(2, 136, 2, 0.25)",
+                    boxShadow: "none",
+                    marginBottom: "8px",
+                  }}
+                  id="mobile-drawer-signin-btn"
+                >
+                  <LoginIcon fontSize="small" />
+                  <span>{localStorage.getItem("savoryopscustomer_token") ? "My Account" : "Sign In with Phone"}</span>
+                </Link>
                 <Link
                   to="/reservation"
                   className="nav-cta-btn"
