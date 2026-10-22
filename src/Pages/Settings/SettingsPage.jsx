@@ -58,6 +58,7 @@ const SettingsPage = () => {
 
   // Delete Account State (Matching SavoryOps_UserApp OTP flow with modern 6-digit box UI)
   const OTP_LENGTH = 6;
+  const RESEND_COOLDOWN_SECONDS = 30;
   const [otpValues, setOtpValues] = useState(Array(OTP_LENGTH).fill(""));
   const otpInputRefs = useRef([]);
   const [deleteOtpError, setDeleteOtpError] = useState("");
@@ -314,7 +315,7 @@ const SettingsPage = () => {
 
       if (response.ok) {
         setDeleteOtpSent(true);
-        setResendCountdown(60);
+        setResendCountdown(RESEND_COOLDOWN_SECONDS);
         setOtpValues(Array(OTP_LENGTH).fill(""));
         setDeleteOtpError("");
         if (data?.maskedPhone) {
