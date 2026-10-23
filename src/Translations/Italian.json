@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "Impossibile eliminare l'account. Riprova più tardi.",
   "failedtosendotp": "Invio codice fallito. Riprova più tardi.",
   "youraccountdeletedsuccessfully": "Account eliminato con successo. Sei stato disconnesso.",
-  "deleteaccountotpsent": "Codice di verifica inviato al tuo numero di telefono registrato."
+  "deleteaccountotpsent": "Codice di verifica inviato al tuo numero di telefono registrato.",
+  "undermaintenance": "In manutenzione",
+  "undermaintenancetitle": "Stiamo preparando qualcosa di eccezionale",
+  "undermaintenancedesc": "Il nostro sito web è temporaneamente non in linea per manutenzione programmata e aggiornamenti al menu. Ci scusiamo per il disagio, torneremo prestissimo!",
+  "systemmaintenancemode": "Modalità di manutenzione programmata",
+  "checkstatusagain": "Verifica disponibilità",
+  "checkingstatus": "Verifica in corso...",
+  "autocheckin": "Riconnessione automatica ogni 30 secondi",
+  "contactus": "Hai bisogno di assistenza?",
+  "contactemail": "Assistenza via e-mail",
+  "directline": "Linea diretta",
+  "followus": "Seguici",
+  "savoryopsplatform": "Offerto da SavoryOps Hospitality Cloud",
+  "lastchecked": "Ultimo controllo"
 }

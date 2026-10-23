@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "Failed to delete account. Please try again.",
   "failedtosendotp": "Failed to send verification code. Please try again.",
   "youraccountdeletedsuccessfully": "Account deleted successfully. You have been logged out.",
-  "deleteaccountotpsent": "Verification code sent to your registered phone number."
+  "deleteaccountotpsent": "Verification code sent to your registered phone number.",
+  "undermaintenance": "Under Maintenance",
+  "undermaintenancetitle": "We're Brewing Something Exceptional",
+  "undermaintenancedesc": "Our restaurant website is temporarily offline for scheduled system updates and menu enhancements. We apologize for the inconvenience and will be back shortly!",
+  "systemmaintenancemode": "Scheduled Maintenance Mode",
+  "checkstatusagain": "Check Availability",
+  "checkingstatus": "Checking Status...",
+  "autocheckin": "Auto-reconnecting every 30 seconds",
+  "contactus": "Need Direct Assistance?",
+  "contactemail": "Email Support",
+  "directline": "Helpline",
+  "followus": "Connect With Us",
+  "savoryopsplatform": "Powered by SavoryOps Hospitality Cloud",
+  "lastchecked": "Last checked"
 }

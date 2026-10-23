@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
   "failedtosendotp": "Bestätigungscode konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
   "youraccountdeletedsuccessfully": "Konto erfolgreich gelöscht. Sie wurden abgemeldet.",
-  "deleteaccountotpsent": "Bestätigungscode an Ihre registrierte Telefonnummer gesendet."
+  "deleteaccountotpsent": "Bestätigungscode an Ihre registrierte Telefonnummer gesendet.",
+  "undermaintenance": "Wartungsarbeiten",
+  "undermaintenancetitle": "Wir bereiten etwas Besonderes vor",
+  "undermaintenancedesc": "Unsere Restaurant-Website ist wegen geplanter System- und Menüaktualisierungen vorübergehend offline. Wir entschuldigen uns für die Unannehmlichkeiten und sind bald wieder da!",
+  "systemmaintenancemode": "Geplanter Wartungsmodus",
+  "checkstatusagain": "Verfügbarkeit prüfen",
+  "checkingstatus": "Status wird überprüft...",
+  "autocheckin": "Automatische Wiederverbindung alle 30 Sekunden",
+  "contactus": "Direkte Hilfe benötigt?",
+  "contactemail": "E-Mail-Support",
+  "directline": "Hotline",
+  "followus": "Folgen Sie uns",
+  "savoryopsplatform": "Bereitgestellt von SavoryOps Hospitality Cloud",
+  "lastchecked": "Zuletzt geprüft"
 }

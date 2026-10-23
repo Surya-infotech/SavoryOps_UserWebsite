@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "Account verwijderen mislukt. Probeer het opnieuw.",
   "failedtosendotp": "Verificatiecode verzenden mislukt. Probeer het opnieuw.",
   "youraccountdeletedsuccessfully": "Account succesvol verwijderd. Je bent uitgelogd.",
-  "deleteaccountotpsent": "Verificatiecode verzonden naar uw geregistreerde telefoonnummer."
+  "deleteaccountotpsent": "Verificatiecode verzonden naar uw geregistreerde telefoonnummer.",
+  "undermaintenance": "In onderhoud",
+  "undermaintenancetitle": "We bereiden iets bijzonders voor",
+  "undermaintenancedesc": "Onze restaurantwebsite is tijdelijk offline voor gepland systeemonderhoud en menu-updates. Onze excuses voor het ongemak, we zijn snel weer terug!",
+  "systemmaintenancemode": "Geplande onderhoudsmodus",
+  "checkstatusagain": "Beschikbaarheid controleren",
+  "checkingstatus": "Status controleren...",
+  "autocheckin": "Automatisch opnieuw verbinden elke 30 seconden",
+  "contactus": "Directe assistentie nodig?",
+  "contactemail": "E-mailondersteuning",
+  "directline": "Hulplijn",
+  "followus": "Volg ons",
+  "savoryopsplatform": "Aangedreven door SavoryOps Hospitality Cloud",
+  "lastchecked": "Laatst gecontroleerd"
 }

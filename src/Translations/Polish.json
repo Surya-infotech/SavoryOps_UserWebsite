@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "Nie udało się usunąć konta. Spróbuj ponownie.",
   "failedtosendotp": "Nie udało się wysłać kodu. Spróbuj ponownie.",
   "youraccountdeletedsuccessfully": "Konto zostało pomyślnie usunięte. Zostałeś wylogowany.",
-  "deleteaccountotpsent": "Kod weryfikacyjny został wysłany na Twój zarejestrowany numer telefonu."
+  "deleteaccountotpsent": "Kod weryfikacyjny został wysłany na Twój zarejestrowany numer telefonu.",
+  "undermaintenance": "W trakcie konserwacji",
+  "undermaintenancetitle": "Przygotowujemy coś wyjątkowego",
+  "undermaintenancedesc": "Strona naszej restauracji jest chwilowo niedostępna z powodu planowanych prac konserwacyjnych. Przepraszamy za utrudnienia, wkrótce wracamy!",
+  "systemmaintenancemode": "Tryb planowanej konserwacji",
+  "checkstatusagain": "Sprawdź dostępność",
+  "checkingstatus": "Sprawdzanie statusu...",
+  "autocheckin": "Automatyczne sprawdzanie co 30 sekund",
+  "contactus": "Potrzebujesz pomocy?",
+  "contactemail": "Wsparcie e-mail",
+  "directline": "Infolinia",
+  "followus": "Dołącz do nas",
+  "savoryopsplatform": "Wspierane przez SavoryOps Hospitality Cloud",
+  "lastchecked": "Ostatnie sprawdzenie"
 }

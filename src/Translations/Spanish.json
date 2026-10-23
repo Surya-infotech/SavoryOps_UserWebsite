@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "Error al eliminar la cuenta. Por favor, inténtalo de nuevo.",
   "failedtosendotp": "Error al enviar el código de verificación. Por favor, inténtalo de nuevo.",
   "youraccountdeletedsuccessfully": "Cuenta eliminada con éxito. Has sido desconectado.",
-  "deleteaccountotpsent": "Código de verificación enviado a su número de teléfono registrado."
+  "deleteaccountotpsent": "Código de verificación enviado a su número de teléfono registrado.",
+  "undermaintenance": "En mantenimiento",
+  "undermaintenancetitle": "Estamos preparando algo excepcional",
+  "undermaintenancedesc": "El sitio web de nuestro restaurante está temporalmente fuera de línea por mantenimiento programado y mejoras de menú. ¡Disculpe las molestias, volveremos muy pronto!",
+  "systemmaintenancemode": "Modo de mantenimiento programado",
+  "checkstatusagain": "Comprobar disponibilidad",
+  "checkingstatus": "Comprobando estado...",
+  "autocheckin": "Reconexión automática cada 30 segundos",
+  "contactus": "¿Necesita asistencia directa?",
+  "contactemail": "Soporte por correo",
+  "directline": "Línea de ayuda",
+  "followus": "Conéctate con nosotros",
+  "savoryopsplatform": "Desarrollado por SavoryOps Hospitality Cloud",
+  "lastchecked": "Última comprobación"
 }

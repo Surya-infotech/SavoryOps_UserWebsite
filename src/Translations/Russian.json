@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "Не удалось удалить аккаунт. Пожалуйста, попробуйте снова.",
   "failedtosendotp": "Не удалось отправить код подтверждения. Попробуйте еще раз.",
   "youraccountdeletedsuccessfully": "Аккаунт успешно удален. Вы вышли из системы.",
-  "deleteaccountotpsent": "Код подтверждения отправлен на ваш зарегистрированный номер телефона."
+  "deleteaccountotpsent": "Код подтверждения отправлен на ваш зарегистрированный номер телефона.",
+  "undermaintenance": "Технические работы",
+  "undermaintenancetitle": "Мы готовим для вас кое-что особенное",
+  "undermaintenancedesc": "Наш сайт временно недоступен в связи с плановым техническим обслуживанием и обновлением меню. Приносим извинения за неудобства, скоро мы вернемся!",
+  "systemmaintenancemode": "Режим планового обслуживания",
+  "checkstatusagain": "Проверить доступность",
+  "checkingstatus": "Проверка статуса...",
+  "autocheckin": "Автопроверка каждые 30 секунд",
+  "contactus": "Нужна помощь?",
+  "contactemail": "Поддержка по e-mail",
+  "directline": "Горячая линия",
+  "followus": "Мы в соцсетях",
+  "savoryopsplatform": "На платформе SavoryOps Hospitality Cloud",
+  "lastchecked": "Последняя проверка"
 }

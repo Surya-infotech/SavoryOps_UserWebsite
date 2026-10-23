@@ -200,5 +200,18 @@
   "failedtodeleteaccount": "فشل حذف الحساب. يرجى المحاولة مرة أخرى.",
   "failedtosendotp": "فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
   "youraccountdeletedsuccessfully": "تم حذف الحساب بنجاح. لقد تم تسجيل خروجك.",
-  "deleteaccountotpsent": "تم إرسال رمز التحقق إلى رقم هاتفك المسجل."
+  "deleteaccountotpsent": "تم إرسال رمز التحقق إلى رقم هاتفك المسجل.",
+  "undermaintenance": "قيد الصيانة",
+  "undermaintenancetitle": "نحن نقوم بتحسين تجربتكم",
+  "undermaintenancedesc": "موقع المطعم متوقف مؤقتاً لإجراء تحديثات مجدولة للنظام وتحسينات على القائمة. نعتذر عن أي إزعاج وسنعود قريباً جداً!",
+  "systemmaintenancemode": "وضع الصيانة المجدولة",
+  "checkstatusagain": "التحقق من التوفر",
+  "checkingstatus": "جارٍ التحقق...",
+  "autocheckin": "إعادة الاتصال تلقائياً كل 30 ثانية",
+  "contactus": "هل تحتاج إلى مساعدة؟",
+  "contactemail": "الدعم عبر البريد",
+  "directline": "خط المساعدة",
+  "followus": "تابعنا",
+  "savoryopsplatform": "مدعوم من منصة SavoryOps السحابية",
+  "lastchecked": "آخر فحص"
 }
