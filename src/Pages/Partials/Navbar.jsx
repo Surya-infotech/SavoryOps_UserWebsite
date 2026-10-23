@@ -174,40 +174,39 @@ export const BranchDropdown = ({ className = "" }) => {
 export const LanguageDropdown = ({ className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { language, changeLanguage } = useLanguage();
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    () => language || localStorage.getItem("selectedLanguage") || "English"
-  );
   const dropdownRef = useRef(null);
   const languages = getLanguageOptions();
 
-  useEffect(() => {
-    if (language) {
-      setSelectedLanguage(language);
-    }
-  }, [language]);
+  const currentLanguage = language || localStorage.getItem("selectedLanguage") || "English";
 
   const selectedLang =
-    languages.find((lang) => lang.name === selectedLanguage) ||
+    languages.find((lang) => lang.name.toLowerCase() === currentLanguage.toLowerCase()) ||
     languages.find((lang) => lang.name === "English") ||
     languages[0];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest?.(".language-dropdown-wrapper")
+      ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [isOpen]);
 
   const handleLanguageSelect = (lang) => {
-    setSelectedLanguage(lang.name);
+    if (!lang || !lang.name) return;
     changeLanguage(lang.name);
     setIsOpen(false);
   };
@@ -235,12 +234,25 @@ export const LanguageDropdown = ({ className = "" }) => {
         <div className="language-dropdown-menu" role="listbox">
           <ul className="language-menu-list">
             {languages.map((item) => {
-              const isSelected = item.name === selectedLanguage;
+              const isSelected = item.name.toLowerCase() === currentLanguage.toLowerCase();
               return (
                 <li
                   key={item.code}
                   className={`language-menu-item ${isSelected ? "selected" : ""}`}
-                  onClick={() => handleLanguageSelect(item)}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleLanguageSelect(item);
+                  }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    handleLanguageSelect(item);
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleLanguageSelect(item);
+                  }}
                   role="option"
                   aria-selected={isSelected}
                 >
