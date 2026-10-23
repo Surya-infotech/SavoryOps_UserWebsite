@@ -10,14 +10,28 @@ import HomeRouter from "./Router/Home.jsx";
 import "./App.scss";
 import "./Scss/Components/Status/undermaintenance.scss";
 
-const LoadingSplash = () => {
+const LoadingSplash = ({ business }) => {
+  const businessName = business?.businessname;
+  const businessLogo = business?.imageUrl;
+
   return (
     <div className="website-status-loading-screen">
       <div className="loading-card">
         <div className="pulse-logo-wrap">
-          <RestaurantIcon />
+          {businessLogo ? (
+            <img
+              src={businessLogo}
+              alt={businessName}
+              style={{ width: 50, height: 50, borderRadius: 10, objectFit: "cover" }}
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
+            />
+          ) : (
+            <RestaurantIcon />
+          )}
         </div>
-        <h3 className="loading-title">SavoryOps</h3>
+        <h3 className="loading-title">{businessName}</h3>
         <p className="loading-subtitle">Preparing your culinary experience...</p>
         <div className="loading-spinner-bar" />
       </div>
@@ -46,10 +60,10 @@ const AppContent = () => {
 };
 
 const WebsiteGuard = () => {
-  const { loading, isWebsiteEnabled } = useWebsiteStatus();
+  const { loading, isWebsiteEnabled, business } = useWebsiteStatus();
 
   if (loading) {
-    return <LoadingSplash />;
+    return <LoadingSplash business={business} />;
   }
 
   if (!isWebsiteEnabled) {

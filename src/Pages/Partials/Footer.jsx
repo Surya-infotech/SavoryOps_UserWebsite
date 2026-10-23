@@ -3,15 +3,19 @@ import { Link } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
 import "../../Scss/Pages/Partials/footer.scss";
 
 const Footer = () => {
   const { translations = {} } = useLanguage();
+  const { business } = useWebsiteStatus();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const brandDisplayName = "SavoryOps";
+  const brandDisplayName = business?.businessname;
+  const brandLogoUrl = business?.imageUrl;
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -29,11 +33,15 @@ const Footer = () => {
           {/* Brand Info */}
           <div className="footer-brand">
             <div className="footer-logo-row">
-              <img src="/logo.png" alt="Logo" className="footer-logo" />
+              <img
+                src={brandLogoUrl}
+                alt={brandDisplayName}
+                className="footer-logo"
+              />
               <span className="footer-brand-title">{brandDisplayName}</span>
             </div>
             <p className="footer-brand-text">
-              {translations.footerbrandtext}
+              {business?.aboutus || translations.footerbrandtext}
             </p>
             <div className="footer-contact-items">
               <div className="footer-contact-item">
@@ -44,6 +52,14 @@ const Footer = () => {
                 <PhoneIcon fontSize="small" />
                 <span>+1 (800) 555-FOOD (3663)</span>
               </div>
+              {business?.email && (
+                <div className="footer-contact-item">
+                  <EmailOutlinedIcon fontSize="small" />
+                  <a href={`mailto:${business.email}`} style={{ color: "inherit", textDecoration: "none" }}>
+                    {business.email}
+                  </a>
+                </div>
+              )}
               <div className="footer-contact-item">
                 <AccessTimeIcon fontSize="small" />
                 <span>{translations.workinghours}</span>

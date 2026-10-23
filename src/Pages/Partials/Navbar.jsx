@@ -23,6 +23,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
 import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
@@ -548,7 +549,9 @@ const Navbar = () => {
     { label: translations.booktable, path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
   ];
 
-  const brandDisplayName = "SavoryOps";
+  const { business } = useWebsiteStatus();
+  const brandDisplayName = business?.businessname;
+  const brandLogoUrl = business?.imageUrl;
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -586,8 +589,12 @@ const Navbar = () => {
         <nav className="nav-main">
           {/* Brand & Branch Section */}
           <div className="nav-brand-group">
-            <Link to="/" className="nav-brand-link" title="Return to Home">
-              <img src="/logo.png" alt="SavoryOps Logo" className="nav-brand-logo" />
+            <Link to="/" className="nav-brand-link" title={brandDisplayName}>
+              <img
+                src={brandLogoUrl}
+                alt={brandDisplayName}
+                className="nav-brand-logo"
+              />
             </Link>
 
             <div className="nav-brand-info">
@@ -666,8 +673,15 @@ const Navbar = () => {
             />
             <div className={`mobile-drawer ${mobileMenuOpen ? "open" : ""}`}>
               <div className="mobile-drawer-header">
-                <div className="nav-brand-info">
-                  <span className="nav-brand-name">{brandDisplayName}</span>
+                <div className="nav-brand-group mobile-brand-group">
+                  <img
+                    src={brandLogoUrl}
+                    alt={brandDisplayName}
+                    className="nav-brand-logo mobile-logo"
+                  />
+                  <div className="nav-brand-info">
+                    <span className="nav-brand-name">{brandDisplayName}</span>
+                  </div>
                 </div>
                 <button
                   type="button"

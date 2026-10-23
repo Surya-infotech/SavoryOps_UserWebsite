@@ -11,6 +11,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import "../../Scss/Pages/Settings/settings.scss";
 
@@ -42,11 +43,13 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const { translations = {} } = useLanguage();
+  const { business } = useWebsiteStatus();
+  const businessDisplayName = business?.businessname;
 
   // Update document title
   useEffect(() => {
-    document.title = `${translations.settings} | ${softwareName}`;
-  }, [translations]);
+    document.title = `${translations.settings} | ${businessDisplayName}`;
+  }, [translations, businessDisplayName]);
 
   // Active Vertical Tab State: "datetime" | "delete"
   const [activeTab, setActiveTab] = useState("datetime");

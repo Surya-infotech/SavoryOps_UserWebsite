@@ -9,6 +9,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
 import "../../Scss/Pages/Auth/signin.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -35,6 +36,10 @@ const SigninPage = () => {
   const location = useLocation();
   const { showSnackbar } = useSnackbar();
   const { translations = {}, isRtl } = useLanguage();
+  const { business } = useWebsiteStatus();
+
+  const brandDisplayName = business?.businessname;
+  const brandLogoUrl = business?.imageUrl;
 
   // Auth flow step: "phone" | "otp" | "success"
   const [step, setStep] = useState("phone");
@@ -285,9 +290,13 @@ const SigninPage = () => {
           <div className="signin-card-header">
             {/* Brand Logo and Software Name */}
             <div className="logo-container">
-              <Link to="/" className="logo-button" title={`${softwareName} Home`}>
-                <img src={logoUrl} className="logo" alt={softwareName} />
-                <h2 className="software-name">{softwareName}</h2>
+              <Link to="/" className="logo-button" title={`${brandDisplayName} Home`}>
+                <img
+                  src={brandLogoUrl}
+                  className="logo"
+                  alt={brandDisplayName}
+                />
+                <h2 className="software-name">{brandDisplayName}</h2>
               </Link>
             </div>
 
