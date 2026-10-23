@@ -66,11 +66,11 @@ export const WebsiteStatusProvider = ({ children }) => {
     }
 
     try {
-      const url = `${adminPanelBackendPath}/Website/General/CheckWebsiteStatus?subdomain=${encodeURIComponent(currentSubdomain)}`;
+      const url = `${adminPanelBackendPath}/Website/General/CheckWebsiteStatus`;
 
       const response = await fetch(url, {
         method: "GET",
-        headers: { "Content-Type": "application/json", "x-user": "admin" },
+        headers: { "Content-Type": "application/json", "x-user": "admin", "x-subdomain": currentSubdomain },
       });
 
       const data = await response.json();
