@@ -90,7 +90,7 @@ const SettingsPage = () => {
 
   // Load registered customer phone for delete account display hint
   const loadCustomerPhone = async (customerId, token) => {
-    if (!customerId || !adminPanelBackendPath) return;
+    if (!customerId || !token || !adminPanelBackendPath) return;
     try {
       const response = await fetch(
         `${adminPanelBackendPath}/Website/General/GetCustomerDetails/${customerId}`, {
@@ -116,7 +116,7 @@ const SettingsPage = () => {
 
   // Fetch saved settings from backend API
   const fetchDateTimeSettings = async (customerId, token) => {
-    if (!customerId || !adminPanelBackendPath) return;
+    if (!customerId || !token || !adminPanelBackendPath) return;
 
     setIsLoadingSettings(true);
     try {
@@ -154,12 +154,12 @@ const SettingsPage = () => {
     }
   };
 
-  // Fetch saved settings & customer phone on mount if customer is logged in
+  // Fetch saved settings & customer phone on mount only if customer account is logged in
   useEffect(() => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
 
-    if (customerId) {
+    if (customerId && token) {
       fetchDateTimeSettings(customerId, token);
       loadCustomerPhone(customerId, token);
     }
@@ -180,7 +180,7 @@ const SettingsPage = () => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
 
-    if (!customerId) {
+    if (!customerId || !token) {
       showSnackbar(translations.signinwithphone, "warning");
       return;
     }
