@@ -294,7 +294,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  padding: 2rem 1.25rem;
+  overflow-y: auto;
   animation: modalFadeIn 0.2s ease;
 }
 
@@ -315,9 +316,10 @@
   box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
   display: flex;
   flex-direction: column;
-  max-height: 90vh;
+  margin: auto;
+  position: relative;
   animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+  overflow: visible;
 
   .modal-header {
     display: flex;
@@ -325,6 +327,9 @@
     align-items: center;
     padding: 1.35rem 1.75rem;
     border-bottom: 1px solid #f1f5f9;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    background: #ffffff;
 
     .modal-title {
       font-size: 1.28rem;
@@ -356,10 +361,14 @@
 
   .address-modal-form {
     padding: 1.5rem 1.75rem;
-    overflow-y: auto;
+    overflow: visible;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
+    background: #ffffff;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+    position: relative;
 
     .span-full {
       grid-column: 1 / -1;
@@ -712,11 +721,13 @@
   }
 
   .address-modal-dialog {
-    max-height: 95vh;
+    margin: auto;
+    overflow: visible;
 
     .address-modal-form {
       grid-template-columns: 1fr;
       padding: 1.25rem 1rem;
+      overflow: visible;
     }
   }
 

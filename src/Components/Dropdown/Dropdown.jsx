@@ -26,6 +26,7 @@ const Dropdown = ({
 }) => {
   const [selected, setSelected] = useState(selectedValue || null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -34,6 +35,16 @@ const Dropdown = ({
 
   const handleDropdownToggle = () => {
     if (!disabled) {
+      if (!isDropdownOpen && dropdownRef.current) {
+        const rect = dropdownRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        if (spaceBelow < 280 && spaceAbove > spaceBelow) {
+          setOpenUpward(true);
+        } else {
+          setOpenUpward(false);
+        }
+      }
       setIsDropdownOpen((prev) => !prev);
     }
   };
@@ -54,6 +65,7 @@ const Dropdown = ({
   useEffect(() => {
     if (!isDropdownOpen) {
       setSearchTerm("");
+      setOpenUpward(false);
     } else if (showSearch) {
       setTimeout(() => {
         searchInputRef.current?.focus();
@@ -115,7 +127,9 @@ const Dropdown = ({
         </div>
       )}
       <div
-        className={`dropdown ${isRtl ? "rtl-dropdown" : ""} ${isDropdownOpen ? "open is-open" : ""}`}
+        className={`dropdown ${isRtl ? "rtl-dropdown" : ""} ${
+          isDropdownOpen ? "open is-open" : ""
+        } ${openUpward ? "dropup open-upward" : ""}`}
         ref={dropdownRef}
         dir={isRtl ? "rtl" : "ltr"}
       >
