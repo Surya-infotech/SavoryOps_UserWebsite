@@ -384,7 +384,7 @@ const ProfilePage = () => {
       const response = await fetch(
         `${adminPanelBackendPath}/Website/General/UpdateProfile/${customerId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
+        headers: { "x-user": "customer", Authorization: `Bearer ${token}`, },
         body: formData,
       });
 
