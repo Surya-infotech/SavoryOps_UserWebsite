@@ -123,16 +123,12 @@ const PolicyPage = () => {
   return (
     <div className={`policy-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       <div className="policy-container">
-        {/* Breadcrumb Navigation */}
-        <nav className="policy-breadcrumbs" aria-label="Breadcrumb">
-          <Link to="/" className="breadcrumb-link">
-            {businessName || "Home"}
-          </Link>
-          <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-active">
-            {currentPolicy ? currentPolicy.title : "Policy Details"}
-          </span>
-        </nav>
+        {/* Page Top Header */}
+        <header className="policy-page-header">
+          <h1 className="policy-page-title">
+            {currentPolicy ? currentPolicy.title : "Terms & Condition"}
+          </h1>
+        </header>
 
         {/* Hero Header */}
         <header className="policy-hero-header">

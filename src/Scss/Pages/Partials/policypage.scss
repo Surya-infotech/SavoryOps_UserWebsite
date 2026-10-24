@@ -21,38 +21,16 @@
     gap: 24px;
   }
 
-  /* Breadcrumbs */
-  .policy-breadcrumbs {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.88rem;
-    color: #64748b;
+  /* Page Top Header */
+  .policy-page-header {
+    margin-bottom: 0.25rem;
 
-    .breadcrumb-link {
-      color: #028802;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: #016601;
-        text-decoration: underline;
-      }
-    }
-
-    .breadcrumb-separator {
-      color: #cbd5e1;
-      font-weight: 400;
-    }
-
-    .breadcrumb-active {
+    .policy-page-title {
+      font-size: 1.85rem;
+      font-weight: 800;
       color: #0f172a;
-      font-weight: 600;
-      max-width: 320px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      margin: 0;
+      letter-spacing: -0.5px;
     }
   }
 

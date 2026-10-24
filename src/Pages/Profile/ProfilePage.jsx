@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
@@ -434,23 +434,16 @@ const ProfilePage = () => {
   return (
     <div className={`profile-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       <div className="profile-page-container">
-        {/* Breadcrumb Navigation */}
-        <nav className="profile-breadcrumbs" aria-label="Breadcrumb">
-          <Link to="/" className="breadcrumb-link">
-            {businessDisplayName || "Home"}
-          </Link>
-          <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-active">
-            {translations.myaccount || "My Profile"}
-          </span>
-        </nav>
+        {/* Page Top Header */}
+        <header className="profile-page-header">
+          <h1 className="profile-page-title">{translations.myaccount || "My Account"}</h1>
+        </header>
 
         {/* Profile Card Layout */}
         <div className="profile-card">
           {/* Card Header Banner */}
           <div className="profile-card-header">
             <div className="profile-header-meta">
-              <h1 className="profile-title">{translations.myaccount || "Customer Profile"}</h1>
               <p className="profile-subtitle">
                 Manage your personal details, delivery address, and account preferences.
               </p>

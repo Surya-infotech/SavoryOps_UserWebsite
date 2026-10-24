@@ -19,31 +19,16 @@
   gap: 1.5rem;
 }
 
-/* Breadcrumbs */
-.profile-breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.88rem;
-  color: #64748b;
+/* Page Header */
+.profile-page-header {
+  margin-bottom: 0.25rem;
 
-  .breadcrumb-link {
-    color: #64748b;
-    text-decoration: none;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #028802;
-    }
-  }
-
-  .breadcrumb-separator {
-    color: #cbd5e1;
-  }
-
-  .breadcrumb-active {
+  .profile-page-title {
+    font-size: 1.85rem;
+    font-weight: 800;
     color: #0f172a;
-    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.5px;
   }
 }
 
