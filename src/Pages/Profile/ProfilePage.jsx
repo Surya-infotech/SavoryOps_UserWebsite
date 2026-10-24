@@ -529,7 +529,7 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="profile-form" noValidate>
+          <form onSubmit={handleSubmit} className="profile-form" noValidate autoComplete="off">
             <input
               ref={fileInputRef}
               type="file"
@@ -549,8 +549,10 @@ const ProfilePage = () => {
                   <PersonOutlineOutlinedIcon className="field-icon" />
                   <input
                     id="profile-first-name"
+                    name="profile_first_name_field"
                     type="text"
                     className="text-input"
+                    autoComplete="off"
                     placeholder="Enter first name"
                     value={firstName}
                     onChange={(e) => {
@@ -576,8 +578,10 @@ const ProfilePage = () => {
                   <PersonOutlineOutlinedIcon className="field-icon" />
                   <input
                     id="profile-last-name"
+                    name="profile_last_name_field"
                     type="text"
                     className="text-input"
+                    autoComplete="off"
                     placeholder="Enter last name"
                     value={lastName}
                     onChange={(e) => {
@@ -603,8 +607,10 @@ const ProfilePage = () => {
                   <EmailOutlinedIcon className="field-icon" />
                   <input
                     id="profile-email"
+                    name="profile_email_address_field"
                     type="email"
                     className="text-input"
+                    autoComplete="off"
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => {
@@ -625,6 +631,11 @@ const ProfilePage = () => {
                 <div className={`phone-input-wrap ${mobileNumberError ? "has-error" : ""}`}>
                   <PhoneInput
                     id="profile-phone"
+                    name="profile_phone_number_field"
+                    autoComplete="off"
+                    numberInputProps={{
+                      autoComplete: "off"
+                    }}
                     international
                     defaultCountry="US"
                     value={mobileNumber}
@@ -673,6 +684,8 @@ const ProfilePage = () => {
                   <HomeOutlinedIcon className="field-icon textarea-icon" />
                   <textarea
                     id="profile-address"
+                    name="profile_street_address_field"
+                    autoComplete="off"
                     rows={3}
                     className="textarea-input"
                     placeholder="Apartment, suite, street address"
