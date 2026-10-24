@@ -526,13 +526,6 @@ const SettingsPage = () => {
           {/* Tab 2: Delete Account Panel */}
           {activeTab === "delete" && (
             <main className="settings-content-panel delete-account-panel" id="panel-delete-account">
-              <div className="panel-header-section">
-                <h2 className="panel-title">{translations.deleteAccount}</h2>
-                <p className="panel-subtitle">
-                  {translations.deleteaccountpagehint}
-                </p>
-              </div>
-
               {/* Danger Warning Box */}
               <div className="danger-warning-box">
                 <div className="danger-icon-pill">
