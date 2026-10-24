@@ -1,10 +1,8 @@
 import { useMemo, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PolicyOutlinedIcon from "@mui/icons-material/PolicyOutlined";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
@@ -19,7 +17,6 @@ const POLICY_TYPE_LABELS = {
 
 const PolicyPage = () => {
   const { policyId } = useParams();
-  const navigate = useNavigate();
   const { business, policies = [], loading } = useWebsiteStatus();
   const { translations = {}, isRtl } = useLanguage();
 
@@ -107,10 +104,6 @@ const PolicyPage = () => {
     return html;
   }, [currentPolicy?.content]);
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   if (loading) {
     return (
       <div className="policy-page-loading">
@@ -154,27 +147,6 @@ const PolicyPage = () => {
                 </p>
               )}
             </div>
-          </div>
-
-          <div className="policy-hero-actions no-print">
-            <button
-              type="button"
-              className="policy-action-btn"
-              onClick={handlePrint}
-              title="Print Policy"
-            >
-              <PrintOutlinedIcon fontSize="small" />
-              <span>Print</span>
-            </button>
-            <button
-              type="button"
-              className="policy-action-btn secondary"
-              onClick={() => navigate("/")}
-              title="Return to Home"
-            >
-              <ArrowBackOutlinedIcon fontSize="small" />
-              <span>Back to Dining</span>
-            </button>
           </div>
         </header>
 

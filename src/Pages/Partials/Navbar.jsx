@@ -404,7 +404,7 @@ export const ProfileDropdown = ({ className = "" }) => {
     >
       <button
         type="button"
-        className={`nav-profile-btn ${isOpen ? "active" : ""} ${isLoggedIn && customerDetails?.profileurl && !imgError ? "has-avatar" : ""}`}
+        className={`nav-profile-btn ${isOpen ? "active" : ""}`}
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
