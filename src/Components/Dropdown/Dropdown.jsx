@@ -114,7 +114,7 @@ const Dropdown = ({
         </div>
       )}
       <div
-        className={`dropdown ${isRtl ? "rtl-dropdown" : ""}`}
+        className={`dropdown ${isRtl ? "rtl-dropdown" : ""} ${isDropdownOpen ? "open is-open" : ""}`}
         ref={dropdownRef}
         dir={isRtl ? "rtl" : "ltr"}
       >

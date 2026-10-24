@@ -38,13 +38,14 @@
   border: 1px solid #e2e8f0;
   border-radius: 20px;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
 }
 
 /* Card Header */
 .profile-card-header {
   padding: 2.25rem 2.5rem;
   border-bottom: 1px solid #f1f5f9;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;

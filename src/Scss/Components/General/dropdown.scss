@@ -34,6 +34,11 @@
   position: relative;
   width: 100%;
 
+  &.open,
+  &.is-open {
+    z-index: 1050;
+  }
+
   .dropdownbtn {
     padding: 10px 14px !important;
     display: flex !important;
