@@ -435,7 +435,7 @@ const ProfilePage = () => {
             </h1>
             <p className="profile-page-subtitle">
               {translations.profilesubtitle ||
-                "Manage your personal details, delivery address, and account preferences."}
+                "Manage your personal details and account preferences."}
             </p>
           </div>
         </header>
