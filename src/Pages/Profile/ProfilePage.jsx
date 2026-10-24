@@ -9,7 +9,6 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
@@ -522,17 +521,6 @@ const ProfilePage = () => {
                     <CameraAltOutlinedIcon fontSize="small" />
                     <span>Choose Photo</span>
                   </button>
-                  {currentDisplayAvatar && (
-                    <button
-                      type="button"
-                      className="avatar-remove-btn"
-                      onClick={handleRemoveImage}
-                      title="Remove Photo"
-                    >
-                      <DeleteOutlineIcon fontSize="small" />
-                      <span>Remove</span>
-                    </button>
-                  )}
                 </div>
                 <p className="avatar-help-note">
                   Recommended: Square JPG, PNG, or WEBP. Max size: 5MB.
