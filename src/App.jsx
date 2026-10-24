@@ -22,7 +22,7 @@ const LoadingSplash = ({ business }) => {
             <img
               src={businessLogo}
               alt={businessName}
-              style={{ width: 50, height: 50, borderRadius: 10, objectFit: "cover" }}
+              style={{ width: 50, height: 50, borderRadius: 10, objectFit: "fill" }}
               onError={(e) => {
                 e.target.style.display = "none";
               }}
@@ -31,7 +31,7 @@ const LoadingSplash = ({ business }) => {
             <RestaurantIcon />
           )}
         </div>
-        <h3 className="loading-title">{businessName}</h3>
+        {businessName && <h3 className="loading-title">{businessName}</h3>}
         <p className="loading-subtitle">Preparing your culinary experience...</p>
         <div className="loading-spinner-bar" />
       </div>
