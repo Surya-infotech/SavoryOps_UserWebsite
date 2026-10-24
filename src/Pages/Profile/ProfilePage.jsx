@@ -8,6 +8,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -440,12 +441,74 @@ const ProfilePage = () => {
 
         {/* Profile Card Layout */}
         <div className="profile-card">
-          {/* Card Header Banner */}
+          {/* Unified Card Header Banner */}
           <div className="profile-card-header">
-            <div className="profile-header-meta">
-              <p className="profile-subtitle">
-                Manage your personal details, delivery address, and account preferences.
-              </p>
+            <div className="profile-header-main">
+              {/* Avatar Preview */}
+              <div className="avatar-preview-box">
+                {currentDisplayAvatar ? (
+                  <img
+                    src={currentDisplayAvatar}
+                    alt={`${firstName} ${lastName}`}
+                    className="avatar-image"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <div className="avatar-placeholder">
+                    <PersonOutlineOutlinedIcon />
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  className="avatar-edit-btn"
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Upload profile photo"
+                  aria-label="Upload profile photo"
+                >
+                  <CameraAltOutlinedIcon fontSize="small" />
+                </button>
+              </div>
+
+              {/* User Meta & Action */}
+              <div className="profile-header-meta">
+                <div className="profile-name-row">
+                  <h2 className="profile-user-name">
+                    {firstName || lastName ? `${firstName} ${lastName}`.trim() : (translations.myaccount || "My Account")}
+                  </h2>
+                  <span className="profile-verified-badge">
+                    <VerifiedUserOutlinedIcon fontSize="inherit" />
+                    <span>Verified Customer</span>
+                  </span>
+                </div>
+                <p className="profile-subtitle">
+                  {email || mobileNumber ? (
+                    <>
+                      {email && <span>{email}</span>}
+                      {email && mobileNumber && <span className="meta-dot">•</span>}
+                      {mobileNumber && <span>{mobileNumber}</span>}
+                    </>
+                  ) : (
+                    "Manage your personal details, delivery address, and account preferences."
+                  )}
+                </p>
+
+                <div className="avatar-actions-row">
+                  <button
+                    type="button"
+                    className="avatar-choose-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <CameraAltOutlinedIcon fontSize="small" />
+                    <span>Choose Photo</span>
+                  </button>
+                  <span className="avatar-help-note">
+                    Square JPG, PNG, or WEBP • Max 5MB
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Profile Completion Badge */}
@@ -474,61 +537,13 @@ const ProfilePage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="profile-form" noValidate>
-            {/* Avatar Upload Strip */}
-            <div className="profile-avatar-section">
-              <div className="avatar-preview-box">
-                {currentDisplayAvatar ? (
-                  <img
-                    src={currentDisplayAvatar}
-                    alt={`${firstName} ${lastName}`}
-                    className="avatar-image"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <div className="avatar-placeholder">
-                    <PersonOutlineOutlinedIcon />
-                  </div>
-                )}
-
-                <button
-                  type="button"
-                  className="avatar-edit-btn"
-                  onClick={() => fileInputRef.current?.click()}
-                  title="Upload profile photo"
-                  aria-label="Upload profile photo"
-                >
-                  <CameraAltOutlinedIcon fontSize="small" />
-                </button>
-              </div>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png, image/jpeg, image/webp"
-                className="hidden-file-input"
-                onChange={handleImageChange}
-              />
-
-              <div className="avatar-info-text">
-                <div className="avatar-actions-row">
-                  <button
-                    type="button"
-                    className="avatar-choose-btn"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <CameraAltOutlinedIcon fontSize="small" />
-                    <span>Choose Photo</span>
-                  </button>
-                </div>
-                <p className="avatar-help-note">
-                  Recommended: Square JPG, PNG, or WEBP. Max size: 5MB.
-                </p>
-              </div>
-            </div>
-
-            <div className="profile-divider" />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png, image/jpeg, image/webp"
+              className="hidden-file-input"
+              onChange={handleImageChange}
+            />
 
             {/* Form Fields Grid */}
             <div className="profile-fields-grid">
