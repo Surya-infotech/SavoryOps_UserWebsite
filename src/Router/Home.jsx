@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useLanguage } from "../Context/useLanguage.js";
 import HomePage from "../Pages/Home/HomePage.jsx";
 import SigninPage from "../Pages/Partials/SigninPage.jsx";
@@ -6,6 +6,20 @@ import PolicyPage from "../Pages/Partials/PolicyPage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
 import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
+
+const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
+const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
+
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem(customerTokenName);
+  const customerId = localStorage.getItem(customerIdName);
+
+  if (!token || !customerId) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
 
 const HomeRouter = () => {
   const { translations = {} } = useLanguage();
@@ -76,7 +90,14 @@ const HomeRouter = () => {
           />
         }
       />
-      <Route path="/settings" element={<SettingsPage />} />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/manage-address"
         element={
