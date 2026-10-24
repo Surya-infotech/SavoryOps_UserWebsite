@@ -530,6 +530,10 @@ const ProfilePage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="profile-form" noValidate autoComplete="off">
+            {/* Dummy hidden inputs to absorb browser autofill/autocomplete triggers */}
+            <input type="text" name="prevent_autofill_user" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+            <input type="password" name="prevent_autofill_pwd" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+
             <input
               ref={fileInputRef}
               type="file"
@@ -549,10 +553,16 @@ const ProfilePage = () => {
                   <PersonOutlineOutlinedIcon className="field-icon" />
                   <input
                     id="profile-first-name"
-                    name="profile_first_name_field"
+                    name="profile_fn_val"
                     type="text"
                     className="text-input"
                     autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
+                    data-lpignore="true"
+                    data-form-type="other"
                     placeholder="Enter first name"
                     value={firstName}
                     onChange={(e) => {
@@ -578,10 +588,16 @@ const ProfilePage = () => {
                   <PersonOutlineOutlinedIcon className="field-icon" />
                   <input
                     id="profile-last-name"
-                    name="profile_last_name_field"
+                    name="profile_ln_val"
                     type="text"
                     className="text-input"
                     autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
+                    data-lpignore="true"
+                    data-form-type="other"
                     placeholder="Enter last name"
                     value={lastName}
                     onChange={(e) => {
@@ -607,10 +623,16 @@ const ProfilePage = () => {
                   <EmailOutlinedIcon className="field-icon" />
                   <input
                     id="profile-email"
-                    name="profile_email_address_field"
+                    name="profile_em_val"
                     type="email"
                     className="text-input"
                     autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
+                    data-lpignore="true"
+                    data-form-type="other"
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => {
@@ -631,10 +653,15 @@ const ProfilePage = () => {
                 <div className={`phone-input-wrap ${mobileNumberError ? "has-error" : ""}`}>
                   <PhoneInput
                     id="profile-phone"
-                    name="profile_phone_number_field"
+                    name="profile_ph_val"
                     autoComplete="off"
                     numberInputProps={{
-                      autoComplete: "off"
+                      autoComplete: "off",
+                      autoCorrect: "off",
+                      autoCapitalize: "off",
+                      spellCheck: "false",
+                      "aria-autocomplete": "none",
+                      "data-lpignore": "true",
                     }}
                     international
                     defaultCountry="US"
@@ -684,8 +711,13 @@ const ProfilePage = () => {
                   <HomeOutlinedIcon className="field-icon textarea-icon" />
                   <textarea
                     id="profile-address"
-                    name="profile_street_address_field"
+                    name="profile_addr_val"
                     autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
+                    data-lpignore="true"
                     rows={3}
                     className="textarea-input"
                     placeholder="Apartment, suite, street address"

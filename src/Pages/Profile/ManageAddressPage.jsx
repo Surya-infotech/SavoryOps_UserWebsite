@@ -577,9 +577,16 @@ const ManageAddressPage = () => {
                   <HomeOutlinedIcon className="field-icon textarea-icon" />
                   <textarea
                     id="address-street"
+                    name="modal_addr_street"
                     rows={2}
                     className="textarea-input"
                     placeholder="House/Apartment number, street name, landmark"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    aria-autocomplete="none"
+                    data-lpignore="true"
                     value={streetAddress}
                     onChange={(e) => {
                       setStreetAddress(e.target.value);
@@ -666,6 +673,9 @@ const ManageAddressPage = () => {
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
+                    aria-autocomplete="none"
+                    data-lpignore="true"
+                    data-form-type="other"
                     value={pincode}
                     onChange={(e) => {
                       setPincode(e.target.value);
