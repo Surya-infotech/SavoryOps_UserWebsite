@@ -15,7 +15,6 @@ import "../../Scss/Pages/Auth/signin.scss";
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
-const softwareName = import.meta.env.VITE_SOFTWARE_NAME || "SavoryOps";
 const logoUrl = "/logo.png";
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 30;
