@@ -148,9 +148,6 @@ const PolicyPage = () => {
                   </span>
                 )}
               </div>
-              <h1 className="policy-hero-title">
-                {currentPolicy ? currentPolicy.title : "Business Policy"}
-              </h1>
               {businessName && (
                 <p className="policy-business-tag">
                   {businessName} • Official Restaurant Policy
