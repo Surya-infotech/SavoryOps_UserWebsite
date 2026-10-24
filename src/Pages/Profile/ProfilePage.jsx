@@ -40,9 +40,30 @@ const ProfilePage = () => {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  // Countries list memo
+  const countries = useMemo(() => {
+    return Country.getAllCountries().map((c) => ({
+      name: c.name,
+      isoCode: c.isoCode,
+    }));
+  }, []);
+
+  // States list memo based on country
+  const states = useMemo(() => {
+    if (!country) return [];
+    return State.getStatesOfCountry(country).map((s) => ({
+      name: s.name,
+      isoCode: s.isoCode,
+    }));
+  }, [country]);
+
+  // Cities list memo based on country and state
+  const cities = useMemo(() => {
+    if (!country || !state) return [];
+    return City.getCitiesOfState(country, state).map((c) => ({
+      name: c.name,
+    }));
+  }, [country, state]);
 
   // Profile Image State
   const [profileImage, setProfileImage] = useState("");
@@ -61,38 +82,6 @@ const ProfilePage = () => {
   const [countryError, setCountryError] = useState("");
   const [stateError, setStateError] = useState("");
   const [cityError, setCityError] = useState("");
-
-  useEffect(() => {
-    const allCountries = Country.getAllCountries().map((country) => ({
-      isoCode: country.isoCode,
-      name: country.name,
-    }));
-    setCountries(allCountries);
-  }, []);
-
-  useEffect(() => {
-    if (country) {
-      const countryStates = State.getStatesOfCountry(country).map((state) => ({
-        isoCode: state.isoCode,
-        name: state.name,
-      }));
-      setStates(countryStates);
-    } else {
-      setStates([]);
-      setCities([]);
-    }
-  }, [country]);
-
-  useEffect(() => {
-    if (country && state) {
-      const stateCities = City.getCitiesOfState(country, state).map((city) => ({
-        name: city.name,
-      }));
-      setCities(stateCities);
-    } else {
-      setCities([]);
-    }
-  }, [country, state]);
 
   // Update document title and cleanup on unmount
   useEffect(() => {
@@ -142,7 +131,9 @@ const ProfilePage = () => {
             if (data.countryname) {
               const allCountries = Country.getAllCountries();
               const foundCountry = allCountries.find(
-                (c) => c.name === data.countryname || c.isoCode === data.countryname
+                (c) =>
+                  c.name.toLowerCase() === data.countryname.toLowerCase() ||
+                  c.isoCode.toLowerCase() === data.countryname.toLowerCase()
               );
               if (foundCountry) {
                 countryIsoCode = foundCountry.isoCode;
@@ -152,7 +143,9 @@ const ProfilePage = () => {
             if (data.statename && countryIsoCode) {
               const countryStates = State.getStatesOfCountry(countryIsoCode);
               const foundState = countryStates.find(
-                (s) => s.name === data.statename || s.isoCode === data.statename
+                (s) =>
+                  s.name.toLowerCase() === data.statename.toLowerCase() ||
+                  s.isoCode.toLowerCase() === data.statename.toLowerCase()
               );
               if (foundState) {
                 stateIsoCode = foundState.isoCode;

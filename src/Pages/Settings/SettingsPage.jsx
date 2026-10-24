@@ -458,43 +458,49 @@ const SettingsPage = () => {
               {/* Settings Form Controls (Matching SavoryOps_OwnerWeb Dropdown) */}
               <div className="settings-form-grid">
                 {/* 1. Timezone Select */}
-                <Dropdown
-                  id="settings-timezone-select"
-                  label={translations.timezone}
-                  selectedValue={timezone}
-                  onValueChange={(val) => setTimezone(val)}
-                  options={TIMEZONE_OPTIONS}
-                  labelKey="label"
-                  valueKey="value"
-                  placeholder={translations.selectoption}
-                  showSearch={true}
-                />
+                <div className="form-group">
+                  <Dropdown
+                    id="settings-timezone-select"
+                    label={translations.timezone || "Time Zone"}
+                    selectedValue={timezone}
+                    onValueChange={(val) => setTimezone(val)}
+                    options={TIMEZONE_OPTIONS}
+                    labelKey="label"
+                    valueKey="value"
+                    placeholder={translations.selectoption || "Select Time Zone"}
+                    showSearch={true}
+                  />
+                </div>
 
                 {/* 2. Date Format & Time Format in One Row */}
                 <div className="settings-form-row-2col">
-                  <Dropdown
-                    id="settings-dateformat-select"
-                    label={translations.dateformat}
-                    selectedValue={dateFormat}
-                    onValueChange={(val) => setDateFormat(val)}
-                    options={DATE_FORMAT_OPTIONS}
-                    labelKey="label"
-                    valueKey="value"
-                    placeholder={translations.selectoption}
-                    showSearch={false}
-                  />
+                  <div className="form-group">
+                    <Dropdown
+                      id="settings-dateformat-select"
+                      label={translations.dateformat || "Date Format"}
+                      selectedValue={dateFormat}
+                      onValueChange={(val) => setDateFormat(val)}
+                      options={DATE_FORMAT_OPTIONS}
+                      labelKey="label"
+                      valueKey="value"
+                      placeholder={translations.selectoption || "Select Date Format"}
+                      showSearch={false}
+                    />
+                  </div>
 
-                  <Dropdown
-                    id="settings-timeformat-select"
-                    label={translations.timeformat}
-                    selectedValue={timeFormat}
-                    onValueChange={(val) => setTimeFormat(val)}
-                    options={TIME_FORMAT_OPTIONS}
-                    labelKey="label"
-                    valueKey="value"
-                    placeholder={translations.selectoption}
-                    showSearch={false}
-                  />
+                  <div className="form-group">
+                    <Dropdown
+                      id="settings-timeformat-select"
+                      label={translations.timeformat || "Time Format"}
+                      selectedValue={timeFormat}
+                      onValueChange={(val) => setTimeFormat(val)}
+                      options={TIME_FORMAT_OPTIONS}
+                      labelKey="label"
+                      valueKey="value"
+                      placeholder={translations.selectoption || "Select Time Format"}
+                      showSearch={false}
+                    />
+                  </div>
                 </div>
               </div>
 
