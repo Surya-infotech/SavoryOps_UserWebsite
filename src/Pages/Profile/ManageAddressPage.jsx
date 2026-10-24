@@ -499,9 +499,9 @@ const ManageAddressPage = () => {
                         .join(", ")}
                     </p>
                     {item.postalcode && (
-                      <div className="postal-chip">
+                      <div className="postal-chip" title={translations.postalcode}>
                         <MarkunreadMailboxOutlinedIcon fontSize="inherit" />
-                        <span>{translations.postalcode}: {item.postalcode}</span>
+                        <span>{item.postalcode}</span>
                       </div>
                     )}
                   </div>
