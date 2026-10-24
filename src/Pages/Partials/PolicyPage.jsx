@@ -180,7 +180,6 @@ const PolicyPage = () => {
         {/* Multi-Policy Navigation Tabs */}
         {activePolicies.length > 1 && (
           <div className="policy-tabs-bar no-print">
-            <span className="tabs-label">All Policies:</span>
             <div className="policy-tabs-scroll">
               {activePolicies.map((p) => {
                 const isActive = currentPolicy && (currentPolicy._id === p._id || currentPolicy.policyid === p.policyid);
