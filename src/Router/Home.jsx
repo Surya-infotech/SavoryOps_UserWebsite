@@ -7,6 +7,7 @@ import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
 import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
 import ProfilePage from "../Pages/Profile/ProfilePage.jsx";
+import ManageAddressPage from "../Pages/Profile/ManageAddressPage.jsx";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -110,11 +111,9 @@ const HomeRouter = () => {
       <Route
         path="/manage-address"
         element={
-          <SubpagePlaceholder
-            icon="📍"
-            title={translations.manageaddress}
-            subtitle={translations.addresssubtitle}
-          />
+          <ProtectedRoute>
+            <ManageAddressPage />
+          </ProtectedRoute>
         }
       />
       <Route
