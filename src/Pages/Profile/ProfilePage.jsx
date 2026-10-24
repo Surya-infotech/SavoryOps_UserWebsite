@@ -86,7 +86,7 @@ const ProfilePage = () => {
   // Update document title and cleanup on unmount
   useEffect(() => {
     if (businessDisplayName) {
-      document.title = `${translations.myaccount || "My Profile"} | ${businessDisplayName}`;
+      document.title = `${translations.myaccount} | ${businessDisplayName}`;
     }
     return () => {
       if (businessDisplayName) {
@@ -159,7 +159,7 @@ const ProfilePage = () => {
         }
       } catch (error) {
         console.error("Error fetching customer profile:", error);
-        showSnackbar(translations.servererror || "Failed to load profile details", "error");
+        showSnackbar(translations.servererror, "error");
       } finally {
         setIsLoading(false);
       }
@@ -208,12 +208,12 @@ const ProfilePage = () => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      showSnackbar("Please select a valid image file (JPG, PNG, WEBP).", "error");
+      showSnackbar(translations.selectvalidimagefile, "error");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      showSnackbar("Image size must be 5MB or less.", "error");
+      showSnackbar(translations.imagesizemax5mb, "error");
       return;
     }
 
@@ -234,23 +234,23 @@ const ProfilePage = () => {
   // Validation Helpers (Parity with SavoryOps_UserApp)
   const validateName = (name, fieldLabel) => {
     const nameRegex = /^[A-Za-z\s]+$/;
-    if (!name || !name.trim()) return `${fieldLabel} is required`;
-    if (!nameRegex.test(name.trim())) return "Only letters are allowed";
-    if (name.startsWith(" ")) return "First character cannot be a space";
+    if (!name || !name.trim()) return `${fieldLabel} ${translations.isrequired || "is required"}`;
+    if (!nameRegex.test(name.trim())) return translations.onlylettersallowed;
+    if (name.startsWith(" ")) return translations.firstcharacternotspace;
     return "";
   };
 
   const validateEmailFormat = (val) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!val || !val.trim()) return "Email address is required";
-    if (!emailRegex.test(val.trim())) return "Invalid email address format";
+    if (!val || !val.trim()) return translations.emailaddressrequired;
+    if (!emailRegex.test(val.trim())) return translations.invalidemailformat;
     return "";
   };
 
   const validatePhone = (val) => {
-    if (!val || !String(val).trim()) return "Phone number is required";
+    if (!val || !String(val).trim()) return translations.phonenumberrequired;
     const cleaned = String(val).replace(/\D/g, "");
-    if (cleaned.length < 8) return "Please enter a valid phone number";
+    if (cleaned.length < 8) return translations.invalidphoneformat;
     return "";
   };
 
@@ -298,8 +298,8 @@ const ProfilePage = () => {
     }
 
     let isValid = true;
-    const fNameErr = validateName(firstName, translations.firstname || "First name");
-    const lNameErr = validateName(lastName, translations.lastname || "Last name");
+    const fNameErr = validateName(firstName, translations.firstname);
+    const lNameErr = validateName(lastName, translations.lastname);
     const mailErr = validateEmailFormat(email);
     const phoneErr = validatePhone(mobileNumber);
 
@@ -313,35 +313,35 @@ const ProfilePage = () => {
     }
 
     if (!address.trim()) {
-      setAddressError("Delivery address is required");
+      setAddressError(translations.deliveryaddressrequired);
       isValid = false;
     } else {
       setAddressError("");
     }
 
     if (!country) {
-      setCountryError("Please select your country");
+      setCountryError(translations.pleaseselectcountry);
       isValid = false;
     } else {
       setCountryError("");
     }
 
     if (!state) {
-      setStateError("Please select your state");
+      setStateError(translations.pleaseselectstate);
       isValid = false;
     } else {
       setStateError("");
     }
 
     if (!city) {
-      setCityError("Please select your city");
+      setCityError(translations.pleaseselectcity);
       isValid = false;
     } else {
       setCityError("");
     }
 
     if (!isValid) {
-      showSnackbar("Please correct the errors in the form before saving.", "warning");
+      showSnackbar(translations.correctformerrors, "warning");
       return;
     }
 
@@ -384,7 +384,7 @@ const ProfilePage = () => {
       const data = await response.json().catch(() => null);
 
       if (response.ok) {
-        showSnackbar(data?.message || "Profile updated successfully!", "success");
+        showSnackbar(translations.profileupdatedsuccessfully, "success");
 
         if (data?.customer?.profileurl) {
           setProfileImage(data.customer.profileurl);
@@ -402,12 +402,11 @@ const ProfilePage = () => {
           })
         );
       } else {
-        const errorMsg = data?.message || "Failed to update profile";
-        showSnackbar(errorMsg, "error");
+        showSnackbar(translations.servererror, "error");
       }
     } catch (err) {
       console.error("Error updating profile:", err);
-      showSnackbar("Server error occurred while updating profile", "error");
+      showSnackbar(translations.servererror, "error");
     } finally {
       setIsUpdating(false);
     }
@@ -419,7 +418,7 @@ const ProfilePage = () => {
     return (
       <div className="profile-page-loading">
         <CircularProgress size={42} sx={{ color: "#028802" }} />
-        <p>Loading profile details...</p>
+        <p>{translations.loading}</p>
       </div>
     );
   }
@@ -431,11 +430,10 @@ const ProfilePage = () => {
         <header className="profile-page-header">
           <div className="profile-page-header-meta">
             <h1 className="profile-page-title">
-              {translations.myaccount || "My Account"}
+              {translations.myaccount}
             </h1>
             <p className="profile-page-subtitle">
-              {translations.profilesubtitle ||
-                "Manage your personal details and account preferences."}
+              {translations.profilesubtitle}
             </p>
           </div>
         </header>
@@ -477,11 +475,11 @@ const ProfilePage = () => {
               <div className="profile-header-meta">
                 <div className="profile-name-row">
                   <h2 className="profile-user-name">
-                    {firstName || lastName ? `${firstName} ${lastName}`.trim() : (translations.myaccount || "My Account")}
+                    {firstName || lastName ? `${firstName} ${lastName}`.trim() : translations.myaccount}
                   </h2>
                   <span className="profile-verified-badge">
                     <VerifiedUserOutlinedIcon fontSize="inherit" />
-                    <span>Verified Customer</span>
+                    <span>{translations.verifiedcustomer}</span>
                   </span>
                 </div>
                 {(email || mobileNumber) ? (
@@ -499,10 +497,10 @@ const ProfilePage = () => {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <CameraAltOutlinedIcon fontSize="small" />
-                    <span>Choose Photo</span>
+                    <span>{translations.choosephoto}</span>
                   </button>
                   <span className="avatar-help-note">
-                    Square JPG, PNG, or WEBP • Max 5MB
+                    {translations.choosephotohint}
                   </span>
                 </div>
               </div>
@@ -525,9 +523,9 @@ const ProfilePage = () => {
                 <span className="completion-percent">{completionPercentage}%</span>
               </div>
               <div className="completion-text">
-                <span className="completion-label">Profile Strength</span>
+                <span className="completion-label">{translations.profilestrength}</span>
                 <span className="completion-status">
-                  {completionPercentage === 100 ? "Complete" : "In Progress"}
+                  {completionPercentage === 100 ? translations.complete : translations.inprogress}
                 </span>
               </div>
             </div>
@@ -547,7 +545,7 @@ const ProfilePage = () => {
               {/* 1. First Name */}
               <div className="form-group">
                 <label className="form-label" htmlFor="profile-first-name">
-                  {translations.firstname || "First Name"} <span className="req">*</span>
+                  {translations.firstname} <span className="req">*</span>
                 </label>
                 <div className={`input-field-wrap ${firstNameError ? "has-error" : ""}`}>
                   <PersonOutlineOutlinedIcon className="field-icon" />
@@ -557,7 +555,7 @@ const ProfilePage = () => {
                     type="text"
                     className="text-input"
                     autoComplete="off"
-                    placeholder="Enter first name"
+                    placeholder={translations.enterfirstname}
                     value={firstName}
                     onChange={(e) => {
                       setFirstName(e.target.value);
@@ -565,7 +563,7 @@ const ProfilePage = () => {
                     }}
                     onBlur={() =>
                       setFirstNameError(
-                        validateName(firstName, translations.firstname || "First name")
+                        validateName(firstName, translations.firstname)
                       )
                     }
                   />
@@ -576,7 +574,7 @@ const ProfilePage = () => {
               {/* 2. Last Name */}
               <div className="form-group">
                 <label className="form-label" htmlFor="profile-last-name">
-                  {translations.lastname || "Last Name"} <span className="req">*</span>
+                  {translations.lastname} <span className="req">*</span>
                 </label>
                 <div className={`input-field-wrap ${lastNameError ? "has-error" : ""}`}>
                   <PersonOutlineOutlinedIcon className="field-icon" />
@@ -586,7 +584,7 @@ const ProfilePage = () => {
                     type="text"
                     className="text-input"
                     autoComplete="off"
-                    placeholder="Enter last name"
+                    placeholder={translations.enterlastname}
                     value={lastName}
                     onChange={(e) => {
                       setLastName(e.target.value);
@@ -594,7 +592,7 @@ const ProfilePage = () => {
                     }}
                     onBlur={() =>
                       setLastNameError(
-                        validateName(lastName, translations.lastname || "Last name")
+                        validateName(lastName, translations.lastname)
                       )
                     }
                   />
@@ -605,7 +603,7 @@ const ProfilePage = () => {
               {/* 3. Email Address */}
               <div className="form-group">
                 <label className="form-label" htmlFor="profile-email">
-                  {translations.emailid || "Email Address"} <span className="req">*</span>
+                  {translations.emailid} <span className="req">*</span>
                 </label>
                 <div className={`input-field-wrap ${emailError ? "has-error" : ""}`}>
                   <EmailOutlinedIcon className="field-icon" />
@@ -630,7 +628,7 @@ const ProfilePage = () => {
               {/* 4. Phone Number */}
               <div className="form-group">
                 <label className="form-label" htmlFor="profile-phone">
-                  {translations.phonenumber || "Phone Number"} <span className="req">*</span>
+                  {translations.phonenumber} <span className="req">*</span>
                 </label>
                 <div className={`phone-input-wrap ${mobileNumberError ? "has-error" : ""}`}>
                   <PhoneInput
@@ -647,7 +645,7 @@ const ProfilePage = () => {
                       setMobileNumber(val || "");
                       if (mobileNumberError) setMobileNumberError("");
                     }}
-                    placeholder={translations.entermobilenumber || "Enter phone number"}
+                    placeholder={translations.entermobilenumber}
                     className="custom-phone-input"
                   />
                 </div>
@@ -658,7 +656,7 @@ const ProfilePage = () => {
 
               {/* 5. Gender Selection (Full Row or Span) */}
               <div className="form-group span-full">
-                <label className="form-label">{translations.gender || "Gender"}</label>
+                <label className="form-label">{translations.gender}</label>
                 <div className="gender-options-row">
                   {["Male", "Female", "Other"].map((option) => {
                     const isSelected = gender === option;
@@ -672,7 +670,7 @@ const ProfilePage = () => {
                         <span className="chip-radio-circle">
                           {isSelected && <span className="chip-radio-inner" />}
                         </span>
-                        <span>{option}</span>
+                        <span>{translations[option.toLowerCase()] || option}</span>
                       </button>
                     );
                   })}
@@ -682,7 +680,7 @@ const ProfilePage = () => {
               {/* 6. Street Address */}
               <div className="form-group span-full">
                 <label className="form-label" htmlFor="profile-address">
-                  {translations.address || "Street Address"} <span className="req">*</span>
+                  {translations.address} <span className="req">*</span>
                 </label>
                 <div className={`textarea-field-wrap ${addressError ? "has-error" : ""}`}>
                   <HomeOutlinedIcon className="field-icon textarea-icon" />
@@ -692,7 +690,7 @@ const ProfilePage = () => {
                     autoComplete="off"
                     rows={3}
                     className="textarea-input"
-                    placeholder="Apartment, suite, street address"
+                    placeholder={translations.enterstreetaddress}
                     value={address}
                     onChange={(e) => {
                       setAddress(e.target.value);
@@ -707,14 +705,14 @@ const ProfilePage = () => {
               <div className="form-group">
                 <Dropdown
                   id="profile-country-dropdown"
-                  label={translations.country || "Country"}
+                  label={translations.country}
                   required={true}
                   options={countries}
                   labelKey="name"
                   valueKey="isoCode"
                   selectedValue={country}
                   onValueChange={handleCountryChange}
-                  placeholder={translations.countryselect || "Select Country"}
+                  placeholder={translations.countryselect}
                   showSearch={true}
                 />
                 {countryError && <span className="field-error-msg">{countryError}</span>}
@@ -724,7 +722,7 @@ const ProfilePage = () => {
               <div className="form-group">
                 <Dropdown
                   id="profile-state-dropdown"
-                  label={translations.state || "State"}
+                  label={translations.state}
                   required={true}
                   options={states}
                   labelKey="name"
@@ -732,8 +730,7 @@ const ProfilePage = () => {
                   selectedValue={state}
                   onValueChange={handleStateChange}
                   placeholder={
-                    translations.stateselect ||
-                    (country ? "Select State" : "Select Country First")
+                    country ? translations.stateselect : translations.selectcountryfirst
                   }
                   disabled={!country || states.length === 0}
                   showSearch={true}
@@ -745,7 +742,7 @@ const ProfilePage = () => {
               <div className="form-group">
                 <Dropdown
                   id="profile-city-dropdown"
-                  label={translations.city || "City"}
+                  label={translations.city}
                   required={true}
                   options={cities}
                   labelKey="name"
@@ -753,8 +750,7 @@ const ProfilePage = () => {
                   selectedValue={city}
                   onValueChange={handleCityChange}
                   placeholder={
-                    translations.cityselect ||
-                    (state ? "Select City" : "Select State First")
+                    state ? translations.cityselect : translations.selectstatefirst
                   }
                   disabled={!state || cities.length === 0}
                   showSearch={true}
@@ -772,7 +768,7 @@ const ProfilePage = () => {
                 disabled={isUpdating}
               >
                 <ArrowBackOutlinedIcon fontSize="small" />
-                <span>{translations.cancel || "Cancel"}</span>
+                <span>{translations.cancel}</span>
               </button>
 
               <button
@@ -784,12 +780,12 @@ const ProfilePage = () => {
                 {isUpdating ? (
                   <>
                     <CircularProgress size={18} color="inherit" />
-                    <span>Saving Profile...</span>
+                    <span>{translations.saving}</span>
                   </>
                 ) : (
                   <>
                     <SaveOutlinedIcon fontSize="small" />
-                    <span>{translations.savechanges || "Save Changes"}</span>
+                    <span>{translations.savechanges}</span>
                   </>
                 )}
               </button>

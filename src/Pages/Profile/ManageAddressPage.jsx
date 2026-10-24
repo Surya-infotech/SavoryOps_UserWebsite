@@ -91,7 +91,7 @@ const ManageAddressPage = () => {
 
   // Document Title
   useEffect(() => {
-    const pageTitle = translations.manageaddress || "Manage Address";
+    const pageTitle = translations.manageaddress;
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     }
