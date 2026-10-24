@@ -543,7 +543,7 @@ const ManageAddressPage = () => {
             </div>
 
             {/* Modal Form */}
-            <form onSubmit={handleSaveAddress} className="address-modal-form" noValidate>
+            <form onSubmit={handleSaveAddress} className="address-modal-form" noValidate autoComplete="off">
               {/* Address Type Chips */}
               <div className="form-group span-full">
                 <label className="form-label">
@@ -658,9 +658,14 @@ const ManageAddressPage = () => {
                   <MarkunreadMailboxOutlinedIcon className="field-icon" />
                   <input
                     id="address-postalcode"
+                    name="address_postal_code_field"
                     type="text"
                     className="text-input"
                     placeholder="Enter postal code"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
                     value={pincode}
                     onChange={(e) => {
                       setPincode(e.target.value);
