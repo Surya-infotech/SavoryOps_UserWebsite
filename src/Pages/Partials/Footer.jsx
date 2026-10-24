@@ -125,8 +125,6 @@ const Footer = () => {
             <strong className="footer-brand-highlight">SavoryOps</strong> SaaS Restaurant Suite.
           </div>
           <div className="footer-bottom-links">
-            <Link to="/about">{translations.aboutus}</Link>
-            <Link to="/contact">{translations.contact}</Link>
             <Link to="#">{translations.privacypolicy}</Link>
             <Link to="#">{translations.termsofservice}</Link>
           </div>
