@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
@@ -42,6 +43,11 @@ const LoadingSplash = ({ business }) => {
 const AppContent = () => {
   const location = useLocation();
   const isAuthPage = location.pathname.toLowerCase() === "/signin";
+
+  // Automatically scroll to the top of the page on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [location.pathname]);
 
   return (
     <div className="user-app-container">
