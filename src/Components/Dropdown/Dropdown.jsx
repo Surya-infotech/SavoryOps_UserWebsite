@@ -78,19 +78,28 @@ const Dropdown = ({
     };
   }, []);
 
-  const selectedDisplayLabel = () => {
-    if (selected != null) {
-      const found = (options || []).find((item) => {
-        const itemVal = typeof item === "object" && item !== null ? item[valueKey] : item;
-        return itemVal === selected || String(itemVal) === String(selected);
-      });
-      if (found) {
-        return typeof found === "object" && found !== null ? found[labelKey] : found;
-      }
-      return selected;
+  const isSelectedValid = selected != null && String(selected).trim() !== "";
+
+  let displayLabel = placeholder || translations.selectoption || "";
+  let isPlaceholder = true;
+
+  if (isSelectedValid) {
+    const found = (options || []).find((item) => {
+      const itemVal = typeof item === "object" && item !== null ? item[valueKey] : item;
+      return itemVal === selected || String(itemVal) === String(selected);
+    });
+
+    if (found) {
+      displayLabel = typeof found === "object" && found !== null ? found[labelKey] : found;
+      isPlaceholder = false;
+    } else if (valueKey === labelKey && selected) {
+      displayLabel = selected;
+      isPlaceholder = false;
+    } else {
+      displayLabel = placeholder || translations.selectoption || selected;
+      isPlaceholder = displayLabel === placeholder || displayLabel === translations.selectoption;
     }
-    return placeholder || translations.selectoption;
-  };
+  }
 
   return (
     <div className={`dropdown-container ${className}`.trim()}>
@@ -111,13 +120,15 @@ const Dropdown = ({
       >
         <button
           id={id}
-          className="btn dropdown-toggle dropdownbtn"
+          className={`btn dropdown-toggle dropdownbtn ${isPlaceholder ? "has-placeholder" : ""}`}
           type="button"
           onClick={handleDropdownToggle}
           aria-expanded={isDropdownOpen ? "true" : "false"}
           disabled={disabled}
         >
-          <span>{selectedDisplayLabel()}</span>
+          <span className={`dropdown-selected-label ${isPlaceholder ? "placeholder-text" : ""}`}>
+            {displayLabel}
+          </span>
           {isDropdownOpen ? (
             <KeyboardArrowUpIcon className="dropdown-icon" />
           ) : (
