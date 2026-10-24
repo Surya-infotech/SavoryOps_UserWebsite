@@ -48,7 +48,7 @@ const SettingsPage = () => {
   // Update document title and restore on unmount
   useEffect(() => {
     if (businessDisplayName) {
-      document.title = `${translations.settings || "Settings"} | ${businessDisplayName}`;
+      document.title = `${translations.settings} | ${businessDisplayName}`;
     }
   }, [translations, businessDisplayName]);
 
@@ -217,9 +217,9 @@ const SettingsPage = () => {
           })
         );
 
-        showSnackbar(translations.datetimesettingsavedsuccesfully || data?.message || "Date & time settings saved successfully.", "success");
+        showSnackbar(data?.message || translations.datetimesettingsavedsuccesfully, "success");
       } else {
-        showSnackbar(translations.servererror || data?.message || "Server error", "error");
+        showSnackbar(data?.message || translations.servererror, "error");
       }
     } catch (error) {
       console.error("Error saving datetime settings:", error);
@@ -311,9 +311,9 @@ const SettingsPage = () => {
         setTimeout(() => {
           otpInputRefs.current[0]?.focus();
         }, 150);
-        showSnackbar(translations.deleteaccountotpsent || translations.otpsentsuccessnotice || "Verification code sent to your registered phone number.", "success");
+        showSnackbar(translations.deleteaccountotpsent || translations.otpsentsuccessnotice, "success");
       } else {
-        const errorMsg = translations.failedtosendotp || data?.message;
+        const errorMsg = data?.message || translations.failedtosendotp;
         setDeleteOtpError(errorMsg);
         showSnackbar(errorMsg, "error");
       }
@@ -381,10 +381,10 @@ const SettingsPage = () => {
         );
 
         setIsDeleteModalOpen(false);
-        showSnackbar(translations.youraccountdeletedsuccessfully || "Account deleted successfully. You have been logged out.", "info");
+        showSnackbar(translations.youraccountdeletedsuccessfully, "info");
         navigate("/", { replace: true });
       } else {
-        const errorMsg = translations.invalidotp || data?.message;
+        const errorMsg = data?.message || translations.invalidotp;
         setDeleteOtpError(errorMsg);
         showSnackbar(errorMsg, "error");
         setIsDeleteModalOpen(false);
@@ -405,11 +405,10 @@ const SettingsPage = () => {
         <header className="settings-page-header">
           <div className="settings-page-header-meta">
             <h1 className="settings-page-title">
-              {translations.settings || "Settings"}
+              {translations.settings}
             </h1>
             <p className="settings-page-subtitle">
-              {translations.settingssubtitle ||
-                "Manage your regional preferences, date & time format, and account settings."}
+              {translations.settingssubtitle}
             </p>
           </div>
         </header>
@@ -469,13 +468,13 @@ const SettingsPage = () => {
                 <div className="form-group">
                   <Dropdown
                     id="settings-timezone-select"
-                    label={translations.timezone || "Time Zone"}
+                    label={translations.timezone}
                     selectedValue={timezone}
                     onValueChange={(val) => setTimezone(val)}
                     options={TIMEZONE_OPTIONS}
                     labelKey="label"
                     valueKey="value"
-                    placeholder={translations.selectoption || "Select Time Zone"}
+                    placeholder={translations.selectoption}
                     showSearch={true}
                   />
                 </div>
@@ -485,13 +484,13 @@ const SettingsPage = () => {
                   <div className="form-group">
                     <Dropdown
                       id="settings-dateformat-select"
-                      label={translations.dateformat || "Date Format"}
+                      label={translations.dateformat}
                       selectedValue={dateFormat}
                       onValueChange={(val) => setDateFormat(val)}
                       options={DATE_FORMAT_OPTIONS}
                       labelKey="label"
                       valueKey="value"
-                      placeholder={translations.selectoption || "Select Date Format"}
+                      placeholder={translations.selectoption}
                       showSearch={false}
                     />
                   </div>
@@ -499,13 +498,13 @@ const SettingsPage = () => {
                   <div className="form-group">
                     <Dropdown
                       id="settings-timeformat-select"
-                      label={translations.timeformat || "Time Format"}
+                      label={translations.timeformat}
                       selectedValue={timeFormat}
                       onValueChange={(val) => setTimeFormat(val)}
                       options={TIME_FORMAT_OPTIONS}
                       labelKey="label"
                       valueKey="value"
-                      placeholder={translations.selectoption || "Select Time Format"}
+                      placeholder={translations.selectoption}
                       showSearch={false}
                     />
                   </div>

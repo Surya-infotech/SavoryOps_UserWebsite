@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Nie udało się usunąć adresu",
   "deletedeliveryaddress": "Usunąć adres dostawy?",
   "deleteaddressconfirm": "Czy na pewno chcesz usunąć ten adres? Tej czynności nie można cofnąć.",
-  "failedtoloadaddresses": "Nie udało się załadować adresów"
+  "failedtoloadaddresses": "Nie udało się załadować adresów",
+  "isrequired": "jest wymagane",
+  "loading": "Ładowanie..."
 }

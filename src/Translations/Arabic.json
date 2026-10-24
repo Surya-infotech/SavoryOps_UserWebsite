@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "فشل في حذف العنوان",
   "deletedeliveryaddress": "حذف عنوان التوصيل؟",
   "deleteaddressconfirm": "هل أنت متأكد من رغبتك في حذف هذا العنوان؟ لا يمكن التراجع عن هذا الإجراء.",
-  "failedtoloadaddresses": "فشل في تحميل العناوين"
+  "failedtoloadaddresses": "فشل في تحميل العناوين",
+  "isrequired": "مطلوب",
+  "loading": "جارٍ التحميل..."
 }

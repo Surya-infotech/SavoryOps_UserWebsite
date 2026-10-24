@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Αποτυχία διαγραφής διεύθυνσης",
   "deletedeliveryaddress": "Διαγραφή διεύθυνσης παράδοσης;",
   "deleteaddressconfirm": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν τη διεύθυνση; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-  "failedtoloadaddresses": "Αποτυχία φόρτωσης διευθύνσεων"
+  "failedtoloadaddresses": "Αποτυχία φόρτωσης διευθύνσεων",
+  "isrequired": "είναι υποχρεωτικό",
+  "loading": "Φόρτωση..."
 }

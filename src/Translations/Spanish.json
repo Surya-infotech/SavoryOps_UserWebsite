@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Error al eliminar la dirección",
   "deletedeliveryaddress": "¿Eliminar dirección de entrega?",
   "deleteaddressconfirm": "¿Seguro que deseas eliminar esta dirección? Esta acción no se puede deshacer.",
-  "failedtoloadaddresses": "Error al cargar las direcciones"
+  "failedtoloadaddresses": "Error al cargar las direcciones",
+  "isrequired": "es obligatorio",
+  "loading": "Cargando..."
 }

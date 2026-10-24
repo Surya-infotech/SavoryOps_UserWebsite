@@ -130,12 +130,12 @@ const ManageAddressPage = () => {
       }
     } catch (err) {
       console.error("Error fetching addresses:", err);
-      showSnackbar("Failed to load delivery addresses", "error");
+      showSnackbar(translations.failedtoloadaddresses, "error");
       setAddresses([]);
     } finally {
       setLoading(false);
     }
-  }, [navigate, showSnackbar]);
+  }, [navigate, showSnackbar, translations]);
 
   useEffect(() => {
     fetchAddresses();
@@ -248,38 +248,38 @@ const ManageAddressPage = () => {
     let isValid = true;
 
     if (!streetAddress.trim()) {
-      setAddressError(translations.addressrequired || "Street address is required");
+      setAddressError(translations.addressrequired);
       isValid = false;
     } else {
       setAddressError("");
     }
 
     if (!countryName) {
-      setCountryError(translations.countryrequired || "Please select a country");
+      setCountryError(translations.countryrequired);
       isValid = false;
     } else {
       setCountryError("");
     }
 
     if (!stateName) {
-      setStateError(translations.staterequired || "Please select a state");
+      setStateError(translations.staterequired);
       isValid = false;
     } else {
       setStateError("");
     }
 
     if (!cityName) {
-      setCityError(translations.cityrequired || "Please select a city");
+      setCityError(translations.cityrequired);
       isValid = false;
     } else {
       setCityError("");
     }
 
     if (!pincode.trim()) {
-      setPincodeError(translations.pincoderequired || "Postal code is required");
+      setPincodeError(translations.pincoderequired);
       isValid = false;
     } else if (pincode.trim().length < 3) {
-      setPincodeError(translations.pincodeinvalid || "Enter a valid postal code");
+      setPincodeError(translations.pincodeinvalid);
       isValid = false;
     } else {
       setPincodeError("");
@@ -324,8 +324,8 @@ const ManageAddressPage = () => {
       if (response.ok) {
         showSnackbar(
           editingAddressId
-            ? "Address updated successfully"
-            : "Address added successfully",
+            ? translations.addressupdatedsuccessfully
+            : translations.addressaddedsuccessfully,
           "success"
         );
         setIsModalOpen(false);
@@ -333,11 +333,11 @@ const ManageAddressPage = () => {
         await fetchAddresses();
       } else {
         const errData = await response.json().catch(() => null);
-        showSnackbar(errData?.message || "Failed to save address", "error");
+        showSnackbar(errData?.message || translations.failedtosaveaddress, "error");
       }
     } catch (err) {
       console.error("Error saving address:", err);
-      showSnackbar("Server error occurred while saving address", "error");
+      showSnackbar(translations.servererror, "error");
     } finally {
       setIsSaving(false);
     }
@@ -377,17 +377,17 @@ const ManageAddressPage = () => {
       );
 
       if (response.ok) {
-        showSnackbar("Address deleted successfully", "success");
+        showSnackbar(translations.addressdeletedsuccessfully, "success");
         setDeleteModalOpen(false);
         setAddressToDelete(null);
         await fetchAddresses();
       } else {
         const errData = await response.json().catch(() => null);
-        showSnackbar(errData?.message || "Failed to delete address", "error");
+        showSnackbar(errData?.message || translations.failedtodeleteaddress, "error");
       }
     } catch (err) {
       console.error("Error deleting address:", err);
-      showSnackbar("Server error occurred while deleting address", "error");
+      showSnackbar(translations.servererror, "error");
     } finally {
       setIsDeleting(false);
     }
@@ -408,11 +408,10 @@ const ManageAddressPage = () => {
         <header className="manage-address-header">
           <div className="manage-address-header-meta">
             <h1 className="manage-address-title">
-              {translations.manageaddress || "Manage Address"}
+              {translations.manageaddress}
             </h1>
             <p className="manage-address-subtitle">
-              {translations.addresssubtitle ||
-                "Save and organize your favorite home, office, and delivery addresses for quick ordering."}
+              {translations.addresssubtitle}
             </p>
           </div>
           <button
@@ -422,7 +421,7 @@ const ManageAddressPage = () => {
             id="add-new-address-header-btn"
           >
             <AddIcon fontSize="small" />
-            <span>{translations.addaddress || "Add New Address"}</span>
+            <span>{translations.addaddress}</span>
           </button>
         </header>
 
@@ -430,7 +429,7 @@ const ManageAddressPage = () => {
         {loading ? (
           <div className="address-loading-wrap">
             <CircularProgress size={40} sx={{ color: "#028802" }} />
-            <p>Loading your delivery addresses...</p>
+            <p>{translations.loading}</p>
           </div>
         ) : addresses.length === 0 ? (
           /* Empty State */
@@ -439,11 +438,10 @@ const ManageAddressPage = () => {
               <LocationOffOutlinedIcon className="empty-icon" />
             </div>
             <h2 className="empty-title">
-              {translations.noAddresses || "No Delivery Addresses Saved"}
+              {translations.noAddresses}
             </h2>
             <p className="empty-subtitle">
-              {translations.noAddressesMessage ||
-                "Save your home, work, or other addresses for faster and smoother checkout."}
+              {translations.noAddressesMessage}
             </p>
             <button
               type="button"
@@ -451,7 +449,7 @@ const ManageAddressPage = () => {
               onClick={handleOpenAddModal}
             >
               <AddIcon fontSize="small" />
-              <span>{translations.addaddress || "Add New Address"}</span>
+              <span>{translations.addaddress}</span>
             </button>
           </div>
         ) : (
@@ -466,7 +464,7 @@ const ManageAddressPage = () => {
                     <span className={`address-type-badge ${typeKey}`}>
                       {getBadgeIcon(typeKey)}
                       <span className="type-label">
-                        {translations[typeKey] || item.addresstype || "Home"}
+                        {translations[typeKey] || item.addresstype}
                       </span>
                     </span>
 
@@ -475,8 +473,8 @@ const ManageAddressPage = () => {
                         type="button"
                         className="card-action-btn edit"
                         onClick={() => handleOpenEditModal(item)}
-                        title="Edit address"
-                        aria-label="Edit address"
+                        title={translations.editaddress}
+                        aria-label={translations.editaddress}
                       >
                         <EditOutlinedIcon fontSize="small" />
                       </button>
@@ -484,8 +482,8 @@ const ManageAddressPage = () => {
                         type="button"
                         className="card-action-btn delete"
                         onClick={() => handlePromptDelete(item)}
-                        title="Delete address"
-                        aria-label="Delete address"
+                        title={translations.delete}
+                        aria-label={translations.delete}
                       >
                         <DeleteOutlineOutlinedIcon fontSize="small" />
                       </button>
@@ -503,7 +501,7 @@ const ManageAddressPage = () => {
                     {item.postalcode && (
                       <div className="postal-chip">
                         <MarkunreadMailboxOutlinedIcon fontSize="inherit" />
-                        <span>Postal Code: {item.postalcode}</span>
+                        <span>{translations.postalcode}: {item.postalcode}</span>
                       </div>
                     )}
                   </div>
@@ -528,8 +526,8 @@ const ManageAddressPage = () => {
             <div className="modal-header">
               <h2 id="address-modal-title" className="modal-title">
                 {editingAddressId
-                  ? translations.editaddress || "Edit Address"
-                  : translations.addaddress || "Add New Address"}
+                  ? translations.editaddress
+                  : translations.addaddress}
               </h2>
               <button
                 type="button"
@@ -547,7 +545,7 @@ const ManageAddressPage = () => {
               {/* Address Type Chips */}
               <div className="form-group span-full">
                 <label className="form-label">
-                  {translations.addresstype || "Address Type"}
+                  {translations.addresstype}
                 </label>
                 <div className="address-type-selector">
                   {ADDRESS_TYPES.map((typeObj) => {
@@ -571,7 +569,7 @@ const ManageAddressPage = () => {
               {/* Street Address */}
               <div className="form-group span-full">
                 <label className="form-label" htmlFor="address-street">
-                  {translations.address || "Street Address"} <span className="req">*</span>
+                  {translations.address} <span className="req">*</span>
                 </label>
                 <div className={`textarea-field-wrap ${addressError ? "has-error" : ""}`}>
                   <HomeOutlinedIcon className="field-icon textarea-icon" />
@@ -580,7 +578,7 @@ const ManageAddressPage = () => {
                     name="modal_addr_street"
                     rows={2}
                     className="textarea-input"
-                    placeholder="House/Apartment number, street name, landmark"
+                    placeholder={translations.streetaddressplaceholder}
                     autoComplete="off"
                     value={streetAddress}
                     onChange={(e) => {
@@ -596,14 +594,14 @@ const ManageAddressPage = () => {
               <div className="form-group">
                 <Dropdown
                   id="address-country-dropdown"
-                  label={translations.country || "Country"}
+                  label={translations.country}
                   required={true}
                   options={countries}
                   labelKey="name"
                   valueKey="isoCode"
                   selectedValue={countryCode}
                   onValueChange={handleCountryChange}
-                  placeholder={translations.countryselect || "Select Country"}
+                  placeholder={translations.countryselect}
                   showSearch={true}
                 />
                 {countryError && <span className="field-error-msg">{countryError}</span>}
@@ -613,7 +611,7 @@ const ManageAddressPage = () => {
               <div className="form-group">
                 <Dropdown
                   id="address-state-dropdown"
-                  label={translations.state || "State"}
+                  label={translations.state}
                   required={true}
                   options={states}
                   labelKey="name"
@@ -621,8 +619,7 @@ const ManageAddressPage = () => {
                   selectedValue={stateCode}
                   onValueChange={handleStateChange}
                   placeholder={
-                    translations.stateselect ||
-                    (countryCode ? "Select State" : "Select Country First")
+                    countryCode ? translations.stateselect : translations.selectcountryfirst
                   }
                   disabled={!countryCode || states.length === 0}
                   showSearch={true}
@@ -634,7 +631,7 @@ const ManageAddressPage = () => {
               <div className="form-group">
                 <Dropdown
                   id="address-city-dropdown"
-                  label={translations.city || "City"}
+                  label={translations.city}
                   required={true}
                   options={cities}
                   labelKey="name"
@@ -642,8 +639,7 @@ const ManageAddressPage = () => {
                   selectedValue={cityName}
                   onValueChange={handleCityChange}
                   placeholder={
-                    translations.cityselect ||
-                    (stateCode ? "Select City" : "Select State First")
+                    stateCode ? translations.cityselect : translations.selectstatefirst
                   }
                   disabled={!stateCode || cities.length === 0}
                   showSearch={true}
@@ -654,7 +650,7 @@ const ManageAddressPage = () => {
               {/* Postal Code / Pincode */}
               <div className="form-group">
                 <label className="form-label" htmlFor="address-postalcode">
-                  {translations.postalcode || "Postal Code"} <span className="req">*</span>
+                  {translations.postalcode} <span className="req">*</span>
                 </label>
                 <div className={`input-field-wrap ${pincodeError ? "has-error" : ""}`}>
                   <MarkunreadMailboxOutlinedIcon className="field-icon" />
@@ -663,7 +659,7 @@ const ManageAddressPage = () => {
                     name="address_postal_code_field"
                     type="text"
                     className="text-input"
-                    placeholder="Enter postal code"
+                    placeholder={translations.enterpostalcode}
                     autoComplete="off"
                     value={pincode}
                     onChange={(e) => {
@@ -683,7 +679,7 @@ const ManageAddressPage = () => {
                   onClick={handleCloseModal}
                   disabled={isSaving}
                 >
-                  {translations.cancel || "Cancel"}
+                  {translations.cancel}
                 </button>
                 <button
                   type="submit"
@@ -693,13 +689,13 @@ const ManageAddressPage = () => {
                   {isSaving ? (
                     <>
                       <CircularProgress size={18} color="inherit" />
-                      <span>Saving...</span>
+                      <span>{translations.saving}</span>
                     </>
                   ) : (
                     <span>
                       {editingAddressId
-                        ? translations.updateaddress || "Update Address"
-                        : translations.saveaddress || "Save Address"}
+                        ? translations.updateaddress
+                        : translations.saveaddress}
                     </span>
                   )}
                 </button>
@@ -721,9 +717,9 @@ const ManageAddressPage = () => {
             <div className="delete-icon-box">
               <DeleteOutlineOutlinedIcon className="delete-icon" />
             </div>
-            <h3 className="delete-modal-title">Delete Delivery Address?</h3>
+            <h3 className="delete-modal-title">{translations.deletedeliveryaddress}</h3>
             <p className="delete-modal-text">
-              Are you sure you want to delete this address? This action cannot be undone.
+              {translations.deleteaddressconfirm}
             </p>
             <div className="delete-modal-actions">
               <button
@@ -732,7 +728,7 @@ const ManageAddressPage = () => {
                 onClick={handleCloseDeleteModal}
                 disabled={isDeleting}
               >
-                Cancel
+                {translations.cancel}
               </button>
               <button
                 type="button"
@@ -740,7 +736,7 @@ const ManageAddressPage = () => {
                 onClick={handleConfirmDelete}
                 disabled={isDeleting}
               >
-                {isDeleting ? "Deleting..." : "Delete"}
+                {isDeleting ? translations.deleting : translations.delete}
               </button>
             </div>
           </div>

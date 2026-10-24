@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Échec de la suppression de l'adresse",
   "deletedeliveryaddress": "Supprimer l'adresse de livraison ?",
   "deleteaddressconfirm": "Êtes-vous sûr de vouloir supprimer cette adresse ? Cette action est irréversible.",
-  "failedtoloadaddresses": "Échec du chargement des adresses"
+  "failedtoloadaddresses": "Échec du chargement des adresses",
+  "isrequired": "est requis",
+  "loading": "Chargement..."
 }

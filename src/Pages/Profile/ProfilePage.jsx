@@ -234,7 +234,7 @@ const ProfilePage = () => {
   // Validation Helpers (Parity with SavoryOps_UserApp)
   const validateName = (name, fieldLabel) => {
     const nameRegex = /^[A-Za-z\s]+$/;
-    if (!name || !name.trim()) return `${fieldLabel} ${translations.isrequired || "is required"}`;
+    if (!name || !name.trim()) return `${fieldLabel} ${translations.isrequired}`;
     if (!nameRegex.test(name.trim())) return translations.onlylettersallowed;
     if (name.startsWith(" ")) return translations.firstcharacternotspace;
     return "";

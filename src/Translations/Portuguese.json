@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Falha ao excluir endereço",
   "deletedeliveryaddress": "Excluir endereço de entrega?",
   "deleteaddressconfirm": "Tem certeza de que deseja excluir este endereço? Esta ação não pode ser desfeita.",
-  "failedtoloadaddresses": "Falha ao carregar endereços"
+  "failedtoloadaddresses": "Falha ao carregar endereços",
+  "isrequired": "é obrigatório",
+  "loading": "Carregando..."
 }

@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Не удалось удалить адрес",
   "deletedeliveryaddress": "Удалить адрес доставки?",
   "deleteaddressconfirm": "Вы уверены, что хотите удалить этот адрес? Это действие необратимо.",
-  "failedtoloadaddresses": "Не удалось загрузить адреса"
+  "failedtoloadaddresses": "Не удалось загрузить адреса",
+  "isrequired": "обязательно",
+  "loading": "Загрузка..."
 }

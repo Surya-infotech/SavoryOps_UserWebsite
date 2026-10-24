@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Fehler beim Löschen der Adresse",
   "deletedeliveryaddress": "Lieferadresse löschen?",
   "deleteaddressconfirm": "Sind Sie sicher, dass Sie diese Adresse löschen möchten? Dies kann nicht rückgängig gemacht werden.",
-  "failedtoloadaddresses": "Fehler beim Laden der Adressen"
+  "failedtoloadaddresses": "Fehler beim Laden der Adressen",
+  "isrequired": "ist erforderlich",
+  "loading": "Wird geladen..."
 }

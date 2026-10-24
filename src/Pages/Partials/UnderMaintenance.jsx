@@ -218,7 +218,7 @@ export const UnderMaintenance = () => {
           <div className="status-badge-container">
             <span className="pulsing-beacon" />
             <span className="status-badge-text">
-              {translations.systemmaintenancemode || "Scheduled Maintenance Mode"}
+              {translations.systemmaintenancemode}
             </span>
           </div>
 
@@ -248,12 +248,11 @@ export const UnderMaintenance = () => {
 
           {/* Main Headings */}
           <h1 className="maintenance-title">
-            {translations.undermaintenancetitle || "We're Brewing Something Exceptional"}
+            {translations.undermaintenancetitle}
           </h1>
 
           <p className="maintenance-description">
-            {translations.undermaintenancedesc ||
-              "Our restaurant website is temporarily offline for scheduled system updates, menu enhancements, and cloud optimizations. We apologize for the inconvenience and will be back online shortly!"}
+            {translations.undermaintenancedesc}
           </p>
 
           {/* Action Trigger Area */}
@@ -268,8 +267,8 @@ export const UnderMaintenance = () => {
               <RefreshIcon className={`refresh-btn-icon ${checking ? "spinning" : ""}`} />
               <span>
                 {checking
-                  ? (translations.checkingstatus || "Checking Status...")
-                  : (translations.checkstatusagain || "Check Availability")}
+                  ? translations.checkingstatus
+                  : translations.checkstatusagain}
               </span>
             </button>
           </div>
@@ -278,13 +277,13 @@ export const UnderMaintenance = () => {
           <div className="maintenance-meta-info">
             <span className="meta-item">
               <AccessTimeIcon className="meta-icon" />
-              <span>{translations.autocheckin || "Auto-reconnecting every 30s"}</span>
+              <span>{translations.autocheckin}</span>
             </span>
             {lastChecked && (
               <span className="meta-item">
                 <CheckCircleIcon className="meta-icon" />
                 <span>
-                  {translations.lastchecked || "Last checked"}: {formatTime(lastChecked)}
+                  {translations.lastchecked}: {formatTime(lastChecked)}
                 </span>
               </span>
             )}
@@ -294,7 +293,7 @@ export const UnderMaintenance = () => {
           {(email || (socialMedia && socialMedia.length > 0)) && (
             <div className="maintenance-contact-section">
               <div className="contact-divider">
-                <span>{translations.contactus || "Need Direct Assistance?"}</span>
+                <span>{translations.contactus}</span>
               </div>
 
               <div className="contact-buttons-row">
@@ -346,7 +345,7 @@ export const UnderMaintenance = () => {
         <p className="footer-text">
           © {new Date().getFullYear()} {businessName}.{" "}
           <span className="platform-tag">
-            {translations.savoryopsplatform || "Powered by SavoryOps Hospitality Cloud"}
+            {translations.savoryopsplatform}
           </span>
         </p>
       </footer>

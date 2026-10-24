@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Failed to delete address",
   "deletedeliveryaddress": "Delete Delivery Address?",
   "deleteaddressconfirm": "Are you sure you want to delete this address? This action cannot be undone.",
-  "failedtoloadaddresses": "Failed to load addresses"
+  "failedtoloadaddresses": "Failed to load addresses",
+  "isrequired": "is required",
+  "loading": "Loading..."
 }

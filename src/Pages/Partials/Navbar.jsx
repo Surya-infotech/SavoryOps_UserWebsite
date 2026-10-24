@@ -368,7 +368,7 @@ export const ProfileDropdown = ({ className = "" }) => {
     setIsOpen(false);
     setIsLoggedIn(false);
 
-    showSnackbar(translations.signedoutsuccessfully || "Signed out successfully", "success");
+    showSnackbar(translations.signedoutsuccessfully, "success");
 
     window.dispatchEvent(
       new CustomEvent("customerAuthChange", {
@@ -384,12 +384,12 @@ export const ProfileDropdown = ({ className = "" }) => {
     : "";
 
   const displayName = isLoggedIn
-    ? (fullName || translations.myaccount || "My Account")
-    : (translations.guestuser || "Guest User");
+    ? (fullName || translations.myaccount)
+    : translations.guestuser;
 
   const displaySubtitle = isLoggedIn
     ? (customerDetails?.phone || "")
-    : (translations.signinwithphone || "Sign in with phone");
+    : translations.signinwithphone;
 
   const [imgError, setImgError] = useState(false);
 
@@ -431,7 +431,7 @@ export const ProfileDropdown = ({ className = "" }) => {
               className="profile-menu-header clickable"
               onClick={() => setIsOpen(false)}
               id="profile-dropdown-header-btn"
-              title={translations.myaccount || "Customer Profile"}
+              title={translations.myaccount}
             >
               <div className="profile-avatar">
                 {customerDetails?.profileurl ? (

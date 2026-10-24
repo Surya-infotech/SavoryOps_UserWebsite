@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Adres verwijderen mislukt",
   "deletedeliveryaddress": "Bezorgadres verwijderen?",
   "deleteaddressconfirm": "Weet u zeker dat u dit adres wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
-  "failedtoloadaddresses": "Adressen laden mislukt"
+  "failedtoloadaddresses": "Adressen laden mislukt",
+  "isrequired": "is verplicht",
+  "loading": "Laden..."
 }

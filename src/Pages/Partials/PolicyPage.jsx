@@ -77,10 +77,10 @@ const PolicyPage = () => {
   // Update document title for policy page
   useEffect(() => {
     if (businessName) {
-      const policyTitle = currentPolicy?.title || "Policy Details";
+      const policyTitle = currentPolicy?.title || translations.termsofservice;
       document.title = `${policyTitle} | ${businessName}`;
     }
-  }, [currentPolicy, businessName]);
+  }, [currentPolicy, businessName, translations]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -108,7 +108,7 @@ const PolicyPage = () => {
     return (
       <div className="policy-page-loading">
         <CircularProgress size={36} color="success" />
-        <p>Loading policy details...</p>
+        <p>{translations.loading}</p>
       </div>
     );
   }
@@ -119,7 +119,7 @@ const PolicyPage = () => {
         {/* Page Top Header */}
         <header className="policy-page-header">
           <h1 className="policy-page-title">
-            {currentPolicy ? currentPolicy.title : "Terms & Condition"}
+            {currentPolicy ? currentPolicy.title : translations.termsofservice}
           </h1>
         </header>
 
@@ -221,10 +221,10 @@ const PolicyPage = () => {
           ) : (
             <div className="policy-not-found-state">
               <ShieldOutlinedIcon className="not-found-icon" />
-              <h2>Policy Not Found</h2>
-              <p>The policy you are looking for is currently unavailable or has been updated.</p>
+              <h2>{translations.pagenotfound}</h2>
+              <p>{translations.pagenotfoundmsg}</p>
               <Link to="/" className="policy-home-btn">
-                Return to Homepage
+                {translations.returntohome}
               </Link>
             </div>
           )}

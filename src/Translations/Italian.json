@@ -282,5 +282,7 @@
   "failedtodeleteaddress": "Impossibile eliminare l'indirizzo",
   "deletedeliveryaddress": "Eliminare l'indirizzo di consegna?",
   "deleteaddressconfirm": "Sei sicuro di voler eliminare questo indirizzo? L'azione non può essere annullata.",
-  "failedtoloadaddresses": "Impossibile caricare gli indirizzi"
+  "failedtoloadaddresses": "Impossibile caricare gli indirizzi",
+  "isrequired": "è obbligatorio",
+  "loading": "Caricamento in corso..."
 }

@@ -52,7 +52,7 @@ const SigninPage = () => {
   // Update document title for signin and restore on unmount
   useEffect(() => {
     if (brandDisplayName) {
-      document.title = `${translations.signinwithphone || "Sign In"} | ${brandDisplayName}`;
+      document.title = `${translations.signinwithphone} | ${brandDisplayName}`;
     }
   }, [brandDisplayName, translations]);
 
@@ -232,7 +232,7 @@ const SigninPage = () => {
       if (response.ok && data.token) {
         verifySuccessData = data;
       } else {
-        setOtpError(translations.invalidotp || data.message);
+        setOtpError(data.message || translations.invalidotp);
       }
     } catch (err) {
       console.error("OTP verification error:", err);
@@ -534,13 +534,13 @@ const SigninPage = () => {
           {generalPolicies.length > 0 && (
             <div className="signin-card-footer">
               <p className="terms-disclaimer">
-                {translations.bycontinuingagree || "By continuing, you agree to our"}{" "}
+                {translations.bycontinuingagree}{" "}
                 {generalPolicies.map((policy, idx) => (
                   <span key={policy._id || policy.policyid || idx}>
                     {idx > 0 && (
                       <span>
                         {idx === generalPolicies.length - 1
-                          ? ` ${translations.and || "and"} `
+                          ? ` ${translations.and} `
                           : ", "}
                       </span>
                     )}
