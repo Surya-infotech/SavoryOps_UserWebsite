@@ -120,16 +120,10 @@ const ProfilePage = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `${adminPanelBackendPath}/Website/General/GetCustomerDetails/${customerId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "x-user": "customer",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+          `${adminPanelBackendPath}/Website/General/GetCustomerDetails/${customerId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -388,16 +382,11 @@ const ProfilePage = () => {
       }
 
       const response = await fetch(
-        `${adminPanelBackendPath}/Customer/General/UpdateProfile/${customerId}`,
-        {
-          method: "PUT",
-          headers: {
-            "x-user": "customer",
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+        `${adminPanelBackendPath}/Website/General/UpdateProfile/${customerId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
+        body: formData,
+      });
 
       const data = await response.json().catch(() => null);
 
