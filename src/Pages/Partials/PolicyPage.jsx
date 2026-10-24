@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import PolicyOutlinedIcon from "@mui/icons-material/PolicyOutlined";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
@@ -76,6 +76,14 @@ const PolicyPage = () => {
 
   const businessName = business?.businessname || "";
   const logoUrl = business?.imageUrl;
+
+  // Update document title for policy page
+  useEffect(() => {
+    if (businessName) {
+      const policyTitle = currentPolicy?.title || "Policy Details";
+      document.title = `${policyTitle} | ${businessName}`;
+    }
+  }, [currentPolicy, businessName]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "";

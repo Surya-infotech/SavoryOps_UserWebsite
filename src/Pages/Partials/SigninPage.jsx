@@ -49,6 +49,13 @@ const SigninPage = () => {
   const brandDisplayName = business?.businessname;
   const brandLogoUrl = business?.imageUrl;
 
+  // Update document title for signin and restore on unmount
+  useEffect(() => {
+    if (brandDisplayName) {
+      document.title = `${translations.signinwithphone || "Sign In"} | ${brandDisplayName}`;
+    }
+  }, [brandDisplayName, translations]);
+
   // Auth flow step: "phone" | "otp" | "success"
   const [step, setStep] = useState("phone");
   const [phoneNumber, setPhoneNumber] = useState("");

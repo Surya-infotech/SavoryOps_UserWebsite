@@ -45,9 +45,11 @@ const SettingsPage = () => {
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname;
 
-  // Update document title
+  // Update document title and restore on unmount
   useEffect(() => {
-    document.title = `${translations.settings} | ${businessDisplayName}`;
+    if (businessDisplayName) {
+      document.title = `${translations.settings || "Settings"} | ${businessDisplayName}`;
+    }
   }, [translations, businessDisplayName]);
 
   // Active Vertical Tab State: "datetime" | "delete"
