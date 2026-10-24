@@ -165,6 +165,7 @@ const Dropdown = ({
           onClick={handleDropdownToggle}
           aria-expanded={isDropdownOpen ? "true" : "false"}
           disabled={disabled}
+          dir={isRtl ? "rtl" : "ltr"}
         >
           <span className={`dropdown-selected-label ${isPlaceholder ? "placeholder-text" : ""}`}>
             {displayLabel}

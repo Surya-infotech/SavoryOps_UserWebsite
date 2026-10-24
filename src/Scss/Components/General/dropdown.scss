@@ -53,6 +53,7 @@
     background-color: var(--form-input-color, #ffffff) !important;
     color: var(--text-color, #0f172a) !important;
     align-items: center !important;
+    justify-content: space-between !important;
     border: 1.5px solid var(--border-color, #e2e8f0) !important;
     border-radius: var(--radius-sm, 10px) !important;
     overflow: hidden !important;
@@ -66,8 +67,10 @@
     outline: none !important;
 
     [dir="rtl"] &,
-    body.rtl-mode & {
+    body.rtl-mode &,
+    .rtl-dropdown & {
       text-align: right !important;
+      direction: rtl !important;
     }
 
     &::after {
@@ -96,6 +99,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      flex: 1 1 auto;
+      min-width: 0;
+
+      [dir="rtl"] &,
+      body.rtl-mode &,
+      .rtl-dropdown & {
+        text-align: right !important;
+      }
 
       &.placeholder-text {
         color: #94a3b8 !important;
@@ -109,20 +120,32 @@
 
   .dropdown-icon {
     margin-left: auto !important;
+    margin-right: 0 !important;
     color: #64748b;
     font-size: 20px;
     flex-shrink: 0;
   }
 
-  [dir="rtl"] .dropdown-icon,
-  .rtl-horinav .dropdown-icon {
-    margin-left: 0 !important;
-    margin-right: auto !important;
-  }
+  /* RTL mode: Up/Down arrow on left side for Arabic */
+  [dir="rtl"] &,
+  body.rtl-mode &,
+  &.rtl-dropdown,
+  &[dir="rtl"],
+  .rtl-horinav & {
+    .dropdownbtn {
+      text-align: right !important;
+      direction: rtl !important;
+      justify-content: space-between !important;
 
-  [dir="rtl"] .dropdownbtn,
-  .rtl-horinav .dropdownbtn {
-    text-align: right;
+      .dropdown-selected-label {
+        text-align: right !important;
+      }
+    }
+
+    .dropdown-icon {
+      margin-left: 0 !important;
+      margin-right: auto !important;
+    }
   }
 
   /* Floating Dropdown Menu Panel */
