@@ -6,6 +6,7 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -36,6 +37,7 @@ const SigninPage = () => {
   const { showSnackbar } = useSnackbar();
   const { translations = {}, isRtl } = useLanguage();
   const { business } = useWebsiteStatus();
+  const [logoError, setLogoError] = useState(false);
 
   const brandDisplayName = business?.businessname;
   const brandLogoUrl = business?.imageUrl;
@@ -287,15 +289,27 @@ const SigninPage = () => {
         <div className="signin-card">
           {/* Card Header */}
           <div className="signin-card-header">
-            {/* Brand Logo and Software Name */}
-            <div className="logo-container">
-              <Link to="/" className="logo-button" title={`${brandDisplayName} Home`}>
-                <img
-                  src={brandLogoUrl}
-                  className="logo"
-                  alt={brandDisplayName}
-                />
-                <h2 className="software-name">{brandDisplayName}</h2>
+            {/* Brand Identity: Business Image & Name */}
+            <div className="brand-header-section">
+              <Link to="/" className="brand-identity-link" title={`${brandDisplayName} Home`}>
+                <div className="brand-avatar-wrapper">
+                  {brandLogoUrl && !logoError ? (
+                    <img
+                      src={brandLogoUrl}
+                      className="brand-avatar-img"
+                      alt={brandDisplayName}
+                      onError={() => setLogoError(true)}
+                    />
+                  ) : (
+                    <div className="brand-avatar-fallback">
+                      <RestaurantIcon className="fallback-icon" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="brand-meta">
+                  <h2 className="brand-name">{brandDisplayName}</h2>
+                </div>
               </Link>
             </div>
 
@@ -306,12 +320,9 @@ const SigninPage = () => {
             )}
 
             {step === "phone" && (
-              <>
-                <h1 className="auth-title">{translations.welcomekitchen}</h1>
-                <p className="auth-subtitle">
-                  {translations.signinsubtitle}
-                </p>
-              </>
+              <p className="auth-subtitle">
+                {translations.signinsubtitle}
+              </p>
             )}
 
             {step === "otp" && (
