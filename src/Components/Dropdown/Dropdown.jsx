@@ -33,19 +33,42 @@ const Dropdown = ({
 
   const { translations = {}, isRtl } = useLanguage();
 
+  const instanceId = useRef(id || `dropdown-${Math.random().toString(36).substr(2, 9)}`).current;
+
+  // Ensure only one dropdown is open at any time across the app
+  useEffect(() => {
+    const handleCloseOthers = (e) => {
+      if (e.detail?.id !== instanceId) {
+        setIsDropdownOpen(false);
+      }
+    };
+    window.addEventListener("close-other-dropdowns", handleCloseOthers);
+    return () => {
+      window.removeEventListener("close-other-dropdowns", handleCloseOthers);
+    };
+  }, [instanceId]);
+
   const handleDropdownToggle = () => {
     if (!disabled) {
-      if (!isDropdownOpen && dropdownRef.current) {
-        const rect = dropdownRef.current.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
-        if (spaceBelow < 280 && spaceAbove > spaceBelow) {
-          setOpenUpward(true);
-        } else {
-          setOpenUpward(false);
+      if (!isDropdownOpen) {
+        // Broadcast to immediately close all other dropdowns
+        window.dispatchEvent(
+          new CustomEvent("close-other-dropdowns", { detail: { id: instanceId } })
+        );
+        if (dropdownRef.current) {
+          const rect = dropdownRef.current.getBoundingClientRect();
+          const spaceBelow = window.innerHeight - rect.bottom;
+          const spaceAbove = rect.top;
+          if (spaceBelow < 280 && spaceAbove > spaceBelow) {
+            setOpenUpward(true);
+          } else {
+            setOpenUpward(false);
+          }
         }
+        setIsDropdownOpen(true);
+      } else {
+        setIsDropdownOpen(false);
       }
-      setIsDropdownOpen((prev) => !prev);
     }
   };
 
@@ -85,9 +108,11 @@ const Dropdown = ({
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, []);
 
