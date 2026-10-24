@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { useLanguage } from "../Context/useLanguage.js";
 import HomePage from "../Pages/Home/HomePage.jsx";
 import SigninPage from "../Pages/Partials/SigninPage.jsx";
+import PolicyPage from "../Pages/Partials/PolicyPage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
 import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
@@ -13,6 +14,8 @@ const HomeRouter = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SigninPage />} />
+      <Route path="/policy/:policyId" element={<PolicyPage />} />
+      <Route path="/policy" element={<PolicyPage />} />
       <Route
         path="/menu"
         element={

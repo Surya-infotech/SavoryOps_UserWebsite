@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -36,8 +36,15 @@ const SigninPage = () => {
   const location = useLocation();
   const { showSnackbar } = useSnackbar();
   const { translations = {}, isRtl } = useLanguage();
-  const { business } = useWebsiteStatus();
+  const { business, policies = [] } = useWebsiteStatus();
   const [logoError, setLogoError] = useState(false);
+
+  // Active general-type policies for this business
+  const generalPolicies = useMemo(() => {
+    return (policies || []).filter(
+      (p) => p.policyType === "general" && p.status !== false
+    );
+  }, [policies]);
 
   const brandDisplayName = business?.businessname;
   const brandLogoUrl = business?.imageUrl;
@@ -516,15 +523,34 @@ const SigninPage = () => {
             )}
           </div>
 
-          {/* Card Footer / Terms */}
-          <div className="signin-card-footer">
-            <p className="terms-disclaimer">
-              {translations.bycontinuingagree}{" "}
-              <Link to="/about">{translations.termsofhospitality}</Link>{" "}
-              {translations.and}{" "}
-              <Link to="/about">{translations.privacypolicy}</Link>.
-            </p>
-          </div>
+          {/* Card Footer / Terms (only displayed when general policy is found) */}
+          {generalPolicies.length > 0 && (
+            <div className="signin-card-footer">
+              <p className="terms-disclaimer">
+                {translations.bycontinuingagree || "By continuing, you agree to our"}{" "}
+                {generalPolicies.map((policy, idx) => (
+                  <span key={policy._id || policy.policyid || idx}>
+                    {idx > 0 && (
+                      <span>
+                        {idx === generalPolicies.length - 1
+                          ? ` ${translations.and || "and"} `
+                          : ", "}
+                      </span>
+                    )}
+                    <Link
+                      to={`/policy/${policy.policyid || policy._id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="policy-link"
+                    >
+                      {policy.title}
+                    </Link>
+                  </span>
+                ))}
+                .
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
