@@ -391,6 +391,12 @@ export const ProfileDropdown = ({ className = "" }) => {
     ? (customerDetails?.phone || "")
     : (translations.signinwithphone || "Sign in with phone");
 
+  const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [customerDetails?.profileurl]);
+
   return (
     <div
       ref={dropdownRef}
@@ -398,13 +404,22 @@ export const ProfileDropdown = ({ className = "" }) => {
     >
       <button
         type="button"
-        className={`nav-profile-btn ${isOpen ? "active" : ""}`}
+        className={`nav-profile-btn ${isOpen ? "active" : ""} ${isLoggedIn && customerDetails?.profileurl && !imgError ? "has-avatar" : ""}`}
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
-        title="Account & Profile"
+        title={displayName}
       >
-        <PersonOutlinedIcon className="nav-profile-icon" />
+        {isLoggedIn && customerDetails?.profileurl && !imgError ? (
+          <img
+            src={customerDetails.profileurl}
+            alt={displayName}
+            className="nav-profile-avatar-img"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <PersonOutlinedIcon className="nav-profile-icon" />
+        )}
       </button>
 
       {isOpen && (
