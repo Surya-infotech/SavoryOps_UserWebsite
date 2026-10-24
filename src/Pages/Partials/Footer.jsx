@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -10,9 +10,16 @@ import "../../Scss/Pages/Partials/footer.scss";
 
 const Footer = () => {
   const { translations = {} } = useLanguage();
-  const { business } = useWebsiteStatus();
+  const { business, policies = [] } = useWebsiteStatus();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+
+  // Active policies belonging to general type
+  const generalPolicies = useMemo(() => {
+    return (policies || []).filter(
+      (p) => p.status !== false && p.policyType === "general"
+    );
+  }, [policies]);
 
   const brandDisplayName = business?.businessname;
   const brandLogoUrl = business?.imageUrl;
@@ -125,8 +132,19 @@ const Footer = () => {
             <strong className="footer-brand-highlight">SavoryOps</strong> SaaS Restaurant Suite.
           </div>
           <div className="footer-bottom-links">
-            <Link to="#">{translations.privacypolicy}</Link>
-            <Link to="#">{translations.termsofservice}</Link>
+            {generalPolicies.map((policy) => {
+              const target = policy.title
+                ? `/policy/${encodeURIComponent(policy.title.toLowerCase().trim())}`
+                : `/policy/${policy.policyid || policy._id}`;
+              return (
+                <Link
+                  key={policy._id || policy.policyid || policy.title}
+                  to={target}
+                >
+                  {policy.title}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
