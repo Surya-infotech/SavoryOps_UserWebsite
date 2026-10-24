@@ -120,7 +120,7 @@ const Dropdown = ({
       >
         <button
           id={id}
-          className={`btn dropdown-toggle dropdownbtn ${isPlaceholder ? "has-placeholder" : ""}`}
+          className={`btn dropdown-toggle dropdownbtn ${isPlaceholder ? "has-placeholder" : ""} ${isDropdownOpen ? "is-open" : ""}`}
           type="button"
           onClick={handleDropdownToggle}
           aria-expanded={isDropdownOpen ? "true" : "false"}
