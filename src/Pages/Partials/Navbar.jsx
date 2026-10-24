@@ -211,6 +211,9 @@ export const LanguageDropdown = ({ className = "" }) => {
     if (!lang || !lang.name) return;
     changeLanguage(lang.name);
     setIsOpen(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("closeMobileMenu"));
+    }
   };
 
   return (
@@ -241,15 +244,6 @@ export const LanguageDropdown = ({ className = "" }) => {
                 <li
                   key={item.code}
                   className={`language-menu-item ${isSelected ? "selected" : ""}`}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleLanguageSelect(item);
-                  }}
-                  onTouchStart={(e) => {
-                    e.stopPropagation();
-                    handleLanguageSelect(item);
-                  }}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -554,18 +548,32 @@ export const ProfileDropdown = ({ className = "" }) => {
    4. Main Navbar Component
    ========================================================================== */
 const Navbar = () => {
-  const { translations = {} } = useLanguage();
+  const { translations = {}, language } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
 
-  // Close mobile drawer on route change
-  const [prevPath, setPrevPath] = useState(location.pathname);
-  if (prevPath !== location.pathname) {
-    setPrevPath(location.pathname);
+  // Close mobile drawer whenever language or route changes
+  useEffect(() => {
     setMobileMenuOpen(false);
-  }
+  }, [language, location.pathname]);
+
+  // Listen to close event and handle desktop resize
+  useEffect(() => {
+    const handleClose = () => setMobileMenuOpen(false);
+    const handleResize = () => {
+      if (window.innerWidth > 900) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("closeMobileMenu", handleClose);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("closeMobileMenu", handleClose);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // Scroll listener for elevation
   useEffect(() => {
