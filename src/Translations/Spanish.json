@@ -1,4 +1,4 @@
-﻿{
+{
   "livekitchen": "Cocina en vivo",
   "navpromo": "✨ Entrega exprés gratis en pedidos superiores a $30 • Usa el código FEAST20 para 20% de descuento",
   "helpline": "Línea de ayuda",
@@ -213,5 +213,7 @@
   "directline": "Línea de ayuda",
   "followus": "Conéctate con nosotros",
   "platform": "Todos los derechos reservados.",
-  "lastchecked": "Última comprobación"
+  "lastchecked": "Última comprobación",
+  "profilesubtitle": "Gestiona tus datos personales, dirección de entrega y preferencias.",
+  "settingssubtitle": "Gestiona tus preferencias regionales, formato de fecha y hora y ajustes."
 }

@@ -429,7 +429,15 @@ const ProfilePage = () => {
       <div className="profile-page-container">
         {/* Page Top Header */}
         <header className="profile-page-header">
-          <h1 className="profile-page-title">{translations.myaccount || "My Account"}</h1>
+          <div className="profile-page-header-meta">
+            <h1 className="profile-page-title">
+              {translations.myaccount || "My Account"}
+            </h1>
+            <p className="profile-page-subtitle">
+              {translations.profilesubtitle ||
+                "Manage your personal details, delivery address, and account preferences."}
+            </p>
+          </div>
         </header>
 
         {/* Profile Card Layout */}

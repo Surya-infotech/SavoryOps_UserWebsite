@@ -1,4 +1,4 @@
-﻿{
+{
   "livekitchen": "Live Kitchen",
   "navpromo": "✨ Free Express Delivery on orders over $30 • Use code FEAST20 for 20% OFF",
   "helpline": "Helpline",
@@ -62,6 +62,8 @@
   "contactsubtitle": "Have a question or planning a catering event? Reach out to our dedicated support team.",
   "orderssubtitle": "View, reorder, and track your active delivery orders and dining receipts.",
   "addresssubtitle": "Save and organize your favorite home, office, and delivery addresses for quick ordering.",
+  "profilesubtitle": "Manage your personal details, delivery address, and account preferences.",
+  "settingssubtitle": "Manage your regional preferences, date & time format, and account settings.",
   "reviewssubtitle": "Check your past dining reviews, dish ratings, and culinary feedback.",
   "search": "Search...",
   "norecordfound": "No record found",

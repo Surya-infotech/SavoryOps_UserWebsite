@@ -403,7 +403,15 @@ const SettingsPage = () => {
       <div className="settings-container">
         {/* Page Top Header */}
         <header className="settings-page-header">
-          <h1 className="settings-page-title">{translations.settings}</h1>
+          <div className="settings-page-header-meta">
+            <h1 className="settings-page-title">
+              {translations.settings || "Settings"}
+            </h1>
+            <p className="settings-page-subtitle">
+              {translations.settingssubtitle ||
+                "Manage your regional preferences, date & time format, and account settings."}
+            </p>
+          </div>
         </header>
 
         {/* Vertical Tabs & Content Layout */}

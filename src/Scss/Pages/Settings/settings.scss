@@ -7,9 +7,9 @@
 
 .settings-page-wrapper {
   width: 100%;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 120px);
   background: #f8fafc;
-  padding: 2.5rem 1.5rem 4rem;
+  padding: 2.5rem 1.5rem 5rem;
   display: flex;
   justify-content: center;
 }
@@ -22,14 +22,31 @@
 
 /* Page Header */
 .settings-page-header {
-  margin-bottom: 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+
+  .settings-page-header-meta {
+    flex: 1;
+    min-width: 260px;
+  }
 
   .settings-page-title {
-    font-size: 1.85rem;
+    font-size: 2rem;
     font-weight: 800;
     color: #0f172a;
-    margin: 0;
+    margin: 0 0 0.35rem;
     letter-spacing: -0.5px;
+  }
+
+  .settings-page-subtitle {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
   }
 }
 
