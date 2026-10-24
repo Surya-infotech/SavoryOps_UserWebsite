@@ -35,9 +35,6 @@ export const getWebsiteSubdomain = () => {
   if (parts.length > 1) {
     return parts[0].toLowerCase().trim();
   }
-
-  const urlParams = new URLSearchParams(window.location.search);
-  return (urlParams.get("subdomain") || "").toLowerCase().trim();
 };
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -52,6 +49,30 @@ export const WebsiteStatusProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [lastChecked, setLastChecked] = useState(null);
   const pollTimerRef = useRef(null);
+
+  // Sync document title and favicon dynamically whenever business details update
+  useEffect(() => {
+    if (business?.businessname) {
+      document.title = business.businessname;
+    }
+
+    if (business?.imageUrl) {
+      const iconLinks = document.querySelectorAll(
+        "link[rel*='icon'], link[rel='apple-touch-icon']"
+      );
+      if (iconLinks.length > 0) {
+        iconLinks.forEach((link) => {
+          link.href = business.imageUrl;
+        });
+      } else {
+        const link = document.createElement("link");
+        link.rel = "icon";
+        link.type = "image/png";
+        link.href = business.imageUrl;
+        document.head.appendChild(link);
+      }
+    }
+  }, [business]);
 
   const checkStatus = useCallback(async (isManualRefresh = false) => {
     if (isManualRefresh) setChecking(true);
