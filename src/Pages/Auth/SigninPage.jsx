@@ -55,7 +55,6 @@ const SigninPage = () => {
   // Loading & status states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
-  const [serverMessage, setServerMessage] = useState("");
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
 
   // Return destination
@@ -89,7 +88,6 @@ const SigninPage = () => {
   const handlePhoneSubmit = async (e) => {
     if (e) e.preventDefault();
     setPhoneError("");
-    setServerMessage("");
 
     if (!phoneNumber) {
       setPhoneError(translations.enterphoneerror);
@@ -116,7 +114,6 @@ const SigninPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setServerMessage(translations.otpsentsuccessnotice);
         setStep("otp");
         setResendTimer(RESEND_COOLDOWN_SECONDS);
         setOtpValues(Array(OTP_LENGTH).fill(""));
@@ -275,7 +272,6 @@ const SigninPage = () => {
   const handleBackToPhone = () => {
     setStep("phone");
     setOtpError("");
-    setServerMessage("");
   };
 
   return (
@@ -438,12 +434,6 @@ const SigninPage = () => {
             {/* STEP 2: OTP Verification Form */}
             {step === "otp" && (
               <form onSubmit={handleVerifyOtp} className="auth-form" noValidate autoComplete="off">
-                {serverMessage && (
-                  <div className="server-notice-banner">
-                    <span>{serverMessage}</span>
-                  </div>
-                )}
-
                 <div className="form-field-group">
                   <label className="form-label">{translations.enter6digitcode}</label>
                   <div className="otp-boxes-grid" onPaste={handleOtpPaste}>
