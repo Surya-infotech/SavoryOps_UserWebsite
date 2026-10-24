@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import FlagModule from "react-world-flags";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -280,6 +280,7 @@ const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
    3. ProfileDropdown Component
    ========================================================================== */
 export const ProfileDropdown = ({ className = "" }) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [customerDetails, setCustomerDetails] = useState(null);
@@ -373,6 +374,8 @@ export const ProfileDropdown = ({ className = "" }) => {
         detail: { isLoggedIn: false },
       })
     );
+
+    navigate("/");
   };
 
   const fullName = customerDetails
