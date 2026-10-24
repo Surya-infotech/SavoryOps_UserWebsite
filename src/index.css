@@ -62,6 +62,10 @@ select {
   font-family: inherit;
 }
 
+img {
+  object-fit: fill;
+}
+
 /* --- Global Scrollbar (Matching SavoryOps_OwnerWeb) --- */
 html::-webkit-scrollbar,
 body::-webkit-scrollbar,
