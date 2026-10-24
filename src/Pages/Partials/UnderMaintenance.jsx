@@ -45,6 +45,7 @@ export const WebsiteStatusProvider = ({ children }) => {
   const [checking, setChecking] = useState(false);
   const [isWebsiteEnabled, setIsWebsiteEnabled] = useState(true);
   const [business, setBusiness] = useState(null);
+  const [policies, setPolicies] = useState([]);
   const [subdomain, setSubdomain] = useState(() => getWebsiteSubdomain());
   const [error, setError] = useState(null);
   const [lastChecked, setLastChecked] = useState(null);
@@ -101,6 +102,9 @@ export const WebsiteStatusProvider = ({ children }) => {
         if (data.business) {
           setBusiness(data.business);
         }
+        if (Array.isArray(data.policies)) {
+          setPolicies(data.policies);
+        }
         setError(null);
       } else {
         setIsWebsiteEnabled(false);
@@ -144,6 +148,7 @@ export const WebsiteStatusProvider = ({ children }) => {
     checking,
     isWebsiteEnabled,
     business,
+    policies,
     subdomain,
     error,
     lastChecked,
