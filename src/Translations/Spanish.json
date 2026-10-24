@@ -1,4 +1,4 @@
-{
+﻿{
   "livekitchen": "Cocina en vivo",
   "navpromo": "✨ Entrega exprés gratis en pedidos superiores a $30 • Usa el código FEAST20 para 20% de descuento",
   "helpline": "Línea de ayuda",
@@ -70,7 +70,7 @@
   "signinsubtitle": "Inicia sesión con tu número de teléfono para rastrear pedidos, reservar mesas y obtener recompensas.",
   "verifyphonenumber": "Verificar número de teléfono",
   "sentcodesubtitle": "Hemos enviado un código de 6 dígitos a",
-  "otpsentsuccessnotice": "Se ha enviado un código de verificación a su teléfono para iniciar sesión en el sitio web de SavoryOps.",
+  "otpsentsuccessnotice": "Se ha enviado un código de verificación a su teléfono para iniciar sesión en el sitio web.",
   "edit": "Editar",
   "welcomeback": "¡Bienvenido de nuevo!",
   "redirectingkitchen": "Has iniciado sesión con éxito. Redirigiendo...",
@@ -194,7 +194,7 @@
   "delete": "Eliminar",
   "deletemyaccount": "Eliminar mi cuenta",
   "confirmaccountdeletion": "Confirmar eliminación de cuenta",
-  "confirmaccountdeletionsure": "¿Estás absolutamente seguro de que deseas eliminar tu cuenta de SavoryOps? Esto borrará permanentemente tu perfil, pedidos y reservas.",
+  "confirmaccountdeletionsure": "¿Estás absolutamente seguro de que deseas eliminar tu cuenta? Esto borrará permanentemente tu perfil, pedidos y reservas.",
   "permanentlydelete": "Eliminar permanentemente",
   "deleting": "Eliminando...",
   "failedtodeleteaccount": "Error al eliminar la cuenta. Por favor, inténtalo de nuevo.",
@@ -212,6 +212,6 @@
   "contactemail": "Soporte por correo",
   "directline": "Línea de ayuda",
   "followus": "Conéctate con nosotros",
-  "savoryopsplatform": "Desarrollado por SavoryOps Hospitality Cloud",
+  "platform": "Todos los derechos reservados.",
   "lastchecked": "Última comprobación"
 }

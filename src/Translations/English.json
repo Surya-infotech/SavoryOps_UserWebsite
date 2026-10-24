@@ -1,4 +1,4 @@
-{
+﻿{
   "livekitchen": "Live Kitchen",
   "navpromo": "✨ Free Express Delivery on orders over $30 • Use code FEAST20 for 20% OFF",
   "helpline": "Helpline",
@@ -70,7 +70,7 @@
   "signinsubtitle": "Sign in with your phone number to access order tracking, table bookings & rewards.",
   "verifyphonenumber": "Verify Phone Number",
   "sentcodesubtitle": "We've sent a 6-digit confirmation code to",
-  "otpsentsuccessnotice": "An OTP has been sent to your phone to sign in to SavoryOps Website.",
+  "otpsentsuccessnotice": "An OTP has been sent to your phone to sign in to the website.",
   "edit": "Edit",
   "welcomeback": "Welcome Back!",
   "redirectingkitchen": "You've successfully signed in. Redirecting you to the kitchen...",
@@ -194,7 +194,7 @@
   "delete": "Delete",
   "deletemyaccount": "Delete My Account",
   "confirmaccountdeletion": "Confirm Account Deletion",
-  "confirmaccountdeletionsure": "Are you absolutely sure you want to delete your SavoryOps account? This will permanently delete your customer profile, orders, and booking records.",
+  "confirmaccountdeletionsure": "Are you absolutely sure you want to delete your account? This will permanently delete your customer profile, orders, and booking records.",
   "permanentlydelete": "Permanently Delete",
   "deleting": "Deleting...",
   "failedtodeleteaccount": "Failed to delete account. Please try again.",
@@ -212,6 +212,6 @@
   "contactemail": "Email Support",
   "directline": "Helpline",
   "followus": "Connect With Us",
-  "savoryopsplatform": "Powered by SavoryOps Hospitality Cloud",
+  "platform": "All rights reserved.",
   "lastchecked": "Last checked"
 }

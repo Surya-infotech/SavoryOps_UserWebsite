@@ -164,7 +164,7 @@ export const UnderMaintenance = () => {
   const { business, subdomain, checking, recheckWebsiteStatus, lastChecked } = useWebsiteStatus();
   const { translations = {} } = useLanguage();
 
-  const businessName = business?.businessname || "SavoryOps Culinary";
+  const businessName = business?.businessname || "";
   const logoUrl = business?.imageUrl;
   const email = business?.email;
   const socialMedia = business?.socialmedia || [];
