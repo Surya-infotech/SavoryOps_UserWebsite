@@ -582,11 +582,6 @@ const ManageAddressPage = () => {
                     className="textarea-input"
                     placeholder="House/Apartment number, street name, landmark"
                     autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                    aria-autocomplete="none"
-                    data-lpignore="true"
                     value={streetAddress}
                     onChange={(e) => {
                       setStreetAddress(e.target.value);
@@ -670,12 +665,6 @@ const ManageAddressPage = () => {
                     className="text-input"
                     placeholder="Enter postal code"
                     autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                    aria-autocomplete="none"
-                    data-lpignore="true"
-                    data-form-type="other"
                     value={pincode}
                     onChange={(e) => {
                       setPincode(e.target.value);
