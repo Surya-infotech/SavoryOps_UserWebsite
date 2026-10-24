@@ -17,10 +17,16 @@
     gap: 0.5rem;
 
     .dropdown-label {
-      font-size: 0.95rem;
-      font-weight: 700;
+      font-size: 0.875rem;
+      font-weight: 600;
       color: #1e293b;
       margin: 0;
+
+      .req {
+        color: #ef4444;
+        margin-left: 2px;
+        font-weight: bold;
+      }
     }
 
     .dropdown-hint {

@@ -698,6 +698,7 @@ const ProfilePage = () => {
                 <Dropdown
                   id="profile-country-dropdown"
                   label={translations.country || "Country"}
+                  required={true}
                   options={countries}
                   labelKey="name"
                   valueKey="isoCode"
@@ -714,6 +715,7 @@ const ProfilePage = () => {
                 <Dropdown
                   id="profile-state-dropdown"
                   label={translations.state || "State"}
+                  required={true}
                   options={states}
                   labelKey="name"
                   valueKey="isoCode"
@@ -734,6 +736,7 @@ const ProfilePage = () => {
                 <Dropdown
                   id="profile-city-dropdown"
                   label={translations.city || "City"}
+                  required={true}
                   options={cities}
                   labelKey="name"
                   valueKey="name"

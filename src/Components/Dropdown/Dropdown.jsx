@@ -13,6 +13,7 @@ const Dropdown = ({
   selectedValue,
   onValueChange,
   label,
+  required = false,
   hint,
   options = [],
   labelKey = "label",
@@ -107,7 +108,7 @@ const Dropdown = ({
         <div className="dropdown-label-wrapper">
           {label && (
             <label htmlFor={id} className="dropdown-label">
-              {label}
+              {label} {required && <span className="req">*</span>}
             </label>
           )}
           {hint && <span className="dropdown-hint">{hint}</span>}
