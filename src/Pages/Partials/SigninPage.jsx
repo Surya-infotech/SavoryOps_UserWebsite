@@ -538,7 +538,7 @@ const SigninPage = () => {
                       </span>
                     )}
                     <Link
-                      to={`/policy/${policy.policyid || policy._id}`}
+                      to={`/policy/${encodeURIComponent(policy.title.toLowerCase())}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="policy-link"

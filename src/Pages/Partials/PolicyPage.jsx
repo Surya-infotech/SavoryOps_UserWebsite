@@ -28,7 +28,7 @@ const PolicyPage = () => {
     return (policies || []).filter((p) => p.status !== false);
   }, [policies]);
 
-  // Find targeted policy by ID, policyid, policyType, or title slug
+  // Find targeted policy by title, slug, policyType, ID, or policyid
   const currentPolicy = useMemo(() => {
     if (!activePolicies.length) return null;
 
@@ -38,23 +38,37 @@ const PolicyPage = () => {
       return firstGeneral || activePolicies[0];
     }
 
+    let decodedId = "";
+    try {
+      decodedId = decodeURIComponent(String(policyId)).trim().toLowerCase();
+    } catch {
+      decodedId = String(policyId).trim().toLowerCase();
+    }
     const cleanId = String(policyId).trim().toLowerCase();
 
-    // 1. Match MongoDB _id or numeric policyid
+    // 1. Direct title match (case-insensitive) e.g. "Order Cancellation Policy", "Terms & Condition"
     let found = activePolicies.find(
-      (p) => String(p._id) === cleanId || String(p.policyid) === cleanId
+      (p) => p.title?.trim().toLowerCase() === decodedId || p.title?.trim().toLowerCase() === cleanId
     );
     if (found) return found;
 
-    // 2. Match policyType (e.g. "general", "order", "table_reservation")
-    found = activePolicies.find((p) => p.policyType?.toLowerCase() === cleanId);
-    if (found) return found;
-
-    // 3. Match title slug (e.g. "terms-condition", "privacy-policy")
+    // 2. Title slug match (e.g. "terms-condition", "privacy-policy")
     found = activePolicies.find((p) => {
       const slug = p.title?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-      return slug === cleanId;
+      return slug === decodedId || slug === cleanId;
     });
+    if (found) return found;
+
+    // 3. Match policyType (e.g. "general", "order", "table_reservation")
+    found = activePolicies.find(
+      (p) => p.policyType?.toLowerCase() === decodedId || p.policyType?.toLowerCase() === cleanId
+    );
+    if (found) return found;
+
+    // 4. Fallback: match MongoDB _id or numeric policyid
+    found = activePolicies.find(
+      (p) => String(p._id) === cleanId || String(p.policyid) === cleanId
+    );
     if (found) return found;
 
     return activePolicies[0] || null;
@@ -173,7 +187,7 @@ const PolicyPage = () => {
                 return (
                   <Link
                     key={p._id || p.policyid}
-                    to={`/policy/${p.policyid || p._id}`}
+                    to={`/policy/${encodeURIComponent(p.title.toLowerCase())}`}
                     className={`policy-tab-chip ${isActive ? "active" : ""}`}
                   >
                     <PolicyOutlinedIcon fontSize="inherit" />
