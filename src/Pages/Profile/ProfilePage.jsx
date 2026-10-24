@@ -484,17 +484,13 @@ const ProfilePage = () => {
                     <span>Verified Customer</span>
                   </span>
                 </div>
-                <p className="profile-subtitle">
-                  {email || mobileNumber ? (
-                    <>
-                      {email && <span>{email}</span>}
-                      {email && mobileNumber && <span className="meta-dot">•</span>}
-                      {mobileNumber && <span>{mobileNumber}</span>}
-                    </>
-                  ) : (
-                    "Manage your personal details, delivery address, and account preferences."
-                  )}
-                </p>
+                {(email || mobileNumber) ? (
+                  <p className="profile-subtitle">
+                    {email && <span>{email}</span>}
+                    {email && mobileNumber && <span className="meta-dot">•</span>}
+                    {mobileNumber && <span>{mobileNumber}</span>}
+                  </p>
+                ) : null}
 
                 <div className="avatar-actions-row">
                   <button
