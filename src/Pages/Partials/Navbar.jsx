@@ -21,6 +21,7 @@ import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
@@ -408,16 +409,46 @@ export const ProfileDropdown = ({ className = "" }) => {
 
       {isOpen && (
         <div className="profile-dropdown-menu" role="menu">
-          {/* User Info Header */}
-          <div className="profile-menu-header">
-            <div className="profile-avatar">
-              <PersonOutlinedIcon />
+          {/* User Info Header - Clickable to open Customer Profile page */}
+          {isLoggedIn ? (
+            <Link
+              to="/profile"
+              className="profile-menu-header clickable"
+              onClick={() => setIsOpen(false)}
+              id="profile-dropdown-header-btn"
+              title={translations.myaccount || "Customer Profile"}
+            >
+              <div className="profile-avatar">
+                {customerDetails?.profileurl ? (
+                  <img
+                    src={customerDetails.profileurl}
+                    alt={displayName}
+                    className="profile-avatar-img"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <PersonOutlinedIcon />
+                )}
+              </div>
+              <div className="profile-user-details">
+                <span className="profile-name">{displayName}</span>
+                <span className="profile-subtitle">{displaySubtitle}</span>
+              </div>
+              <ChevronRightIcon className="profile-header-arrow" />
+            </Link>
+          ) : (
+            <div className="profile-menu-header">
+              <div className="profile-avatar">
+                <PersonOutlinedIcon />
+              </div>
+              <div className="profile-user-details">
+                <span className="profile-name">{displayName}</span>
+                <span className="profile-subtitle">{displaySubtitle}</span>
+              </div>
             </div>
-            <div className="profile-user-details">
-              <span className="profile-name">{displayName}</span>
-              <span className="profile-subtitle">{displaySubtitle}</span>
-            </div>
-          </div>
+          )}
 
           {isLoggedIn && (
             <>

@@ -6,6 +6,7 @@ import PolicyPage from "../Pages/Partials/PolicyPage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
 import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
+import ProfilePage from "../Pages/Profile/ProfilePage.jsx";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -95,6 +96,14 @@ const HomeRouter = () => {
         element={
           <ProtectedRoute>
             <SettingsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />
