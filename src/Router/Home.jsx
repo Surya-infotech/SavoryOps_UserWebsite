@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { useLanguage } from "../Context/useLanguage.js";
 import HomePage from "../Pages/Home/HomePage.jsx";
-import SigninPage from "../Pages/Auth/SigninPage.jsx";
+import SigninPage from "../Pages/Partials/SigninPage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
 import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
