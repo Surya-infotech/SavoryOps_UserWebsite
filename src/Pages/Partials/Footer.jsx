@@ -5,7 +5,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
+import { useWebsiteStatus } from "./UnderMaintenance.jsx";
 import "../../Scss/Pages/Partials/footer.scss";
 
 const Footer = () => {

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
+import { useWebsiteStatus } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homepromo.scss";
 
 const HomePromo = () => {

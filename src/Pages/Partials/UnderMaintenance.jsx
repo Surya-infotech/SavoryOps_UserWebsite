@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
-import { useLanguage } from "./useLanguage.js";
-import { LanguageDropdown } from "../Pages/Partials/Navbar.jsx";
+import { useLanguage } from "../../Context/useLanguage.js";
+import { LanguageDropdown } from "./Navbar.jsx";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
@@ -12,7 +12,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import "../Scss/Components/Status/undermaintenance.scss";
+import "../../Scss/Pages/Partials/undermaintenance.scss";
 
 const WebsiteStatusContext = createContext(null);
 

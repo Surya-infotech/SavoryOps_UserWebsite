@@ -10,8 +10,8 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
-import "../../Scss/Pages/Auth/signin.scss";
+import { useWebsiteStatus } from "./UnderMaintenance.jsx";
+import "../../Scss/Pages/Partials/signin.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;

@@ -2,13 +2,13 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
 import { SnackbarProvider } from "./Context/SnackbarContext.jsx";
-import { WebsiteStatusProvider, useWebsiteStatus, UnderMaintenance } from "./Context/UnderMaintenance.jsx";
+import { WebsiteStatusProvider, useWebsiteStatus, UnderMaintenance } from "./Pages/Partials/UnderMaintenance.jsx";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import Navbar from "./Pages/Partials/Navbar.jsx";
 import Footer from "./Pages/Partials/Footer.jsx";
 import HomeRouter from "./Router/Home.jsx";
 import "./App.scss";
-import "./Scss/Components/Status/undermaintenance.scss";
+import "./Scss/Pages/Partials/undermaintenance.scss";
 
 const LoadingSplash = ({ business }) => {
   const businessName = business?.businessname;

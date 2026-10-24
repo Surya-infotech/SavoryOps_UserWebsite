@@ -11,7 +11,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "../../Context/UnderMaintenance.jsx";
+import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import "../../Scss/Pages/Settings/settings.scss";
 
