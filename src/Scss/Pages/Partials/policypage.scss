@@ -187,15 +187,32 @@
       align-items: center;
       gap: 8px;
       overflow-x: auto;
-      scrollbar-width: thin;
       padding: 4px 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--secondary-color, #69e869) transparent;
 
       &::-webkit-scrollbar {
-        height: 4px;
+        height: 6px !important;
+        background: transparent !important;
       }
+
+      &::-webkit-scrollbar-button {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent !important;
+      }
+
       &::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 9999px;
+        background-color: var(--secondary-color, #69e869) !important;
+        border-radius: 10px !important;
+
+        &:hover {
+          background-color: var(--secondary-color, #69e869) !important;
+        }
       }
     }
 
