@@ -129,11 +129,9 @@ export const BranchDropdown = ({ className = "" }) => {
     if (!query) return true;
     const name = branch.branchname || "";
     const address = branch.address || "";
-    const tagline = branch.tagline || "";
     return (
       name.toLowerCase().includes(query) ||
-      address.toLowerCase().includes(query) ||
-      tagline.toLowerCase().includes(query)
+      address.toLowerCase().includes(query)
     );
   });
 
