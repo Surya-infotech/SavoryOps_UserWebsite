@@ -33,7 +33,7 @@ const HomeBanner = () => {
 
     try {
       const selectedBranchId = localStorage.getItem("selectedBranchId");
-      let url = `${adminPanelBackendPath}/Website/General/GetHomeBanners`;
+      let url = `${adminPanelBackendPath}/Website/Home/GetHomeBanners`;
       if (selectedBranchId) {
         url += `?branchId=${encodeURIComponent(selectedBranchId)}`;
       }
