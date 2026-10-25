@@ -37,37 +37,13 @@ const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.defaul
    ========================================================================== */
 export const BranchDropdown = ({ className = "" }) => {
   const { translations = {} } = useLanguage();
-  const { branches: contextBranches } = useWebsiteStatus();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [branches, setBranches] = useState(() => (Array.isArray(contextBranches) && contextBranches.length > 0 ? contextBranches : []));
-  const [selectedBranch, setSelectedBranch] = useState(() => getStoredBranch(contextBranches || []));
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(null);
   const dropdownRef = useRef(null);
 
-  // Sync branches from context whenever available
-  useEffect(() => {
-    if (Array.isArray(contextBranches) && contextBranches.length > 0) {
-      setBranches(contextBranches);
-      const current = getStoredBranch(contextBranches);
-      setSelectedBranch(current);
-      if (current) {
-        const branchId = current.id || current.branchid;
-        const branchName = current.name || current.branchname;
-        const savedId = localStorage.getItem("selectedBranchId");
-        if (!savedId || !contextBranches.some(b => String(b.id || b.branchid) === String(savedId))) {
-          localStorage.setItem("selectedBranchId", branchId);
-          localStorage.setItem("selectedBranchName", branchName);
-          window.dispatchEvent(
-            new CustomEvent("branchChange", {
-              detail: current,
-            })
-          );
-        }
-      }
-    }
-  }, [contextBranches]);
-
-  // Fetch branches directly via subdomain API if not already in context
+  // Fetch branches directly via subdomain API
   useEffect(() => {
     const fetchBranches = async () => {
       const currentSubdomain = getWebsiteSubdomain();
