@@ -289,5 +289,14 @@
   "enteryourreview": "Raccontaci dei sapori, dell'impiattamento, del servizio e dell'esperienza...",
   "submitreview": "Invia Recensione",
   "reviewsubmittedsuccess": "Grazie di cuore! La tua recensione è stata pubblicata con successo.",
-  "fillrequiredfields": "Inserisci una valutazione, il tuo nome e il testo della recensione."
+  "fillrequiredfields": "Inserisci una valutazione, il tuo nome e il testo della recensione.",
+  "preparingexperience": "Preparando la tua esperienza culinaria...",
+  "nowrittenterms": "Nessun termine scritto disponibile per questa politica per ora.",
+  "committedtotransparent": "Impegnati in un'ospitalità trasparente ed eccezionale per gli ospiti.",
+  "clearsearch": "Cancella ricerca",
+  "downloadgoogleplay": "Scarica su Google Play",
+  "scanorclickgoogleplay": "Scansiona il QR o clicca per aprire Google Play",
+  "scanqrtodownloadapp": "Scansiona il codice QR per scaricare l'app cliente",
+  "poweredby": "Offerto da",
+  "saasrestaurantsuite": "Suite SaaS per Ristoranti"
 }

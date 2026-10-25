@@ -7,11 +7,13 @@ import { WebsiteStatusProvider, useWebsiteStatus, UnderMaintenance } from "./Pag
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import Navbar from "./Pages/Partials/Navbar.jsx";
 import Footer from "./Pages/Partials/Footer.jsx";
+import { useLanguage } from "./Context/useLanguage.js";
 import HomeRouter from "./Router/Home.jsx";
 import "./App.scss";
 import "./Scss/Pages/Partials/undermaintenance.scss";
 
 const LoadingSplash = ({ business }) => {
+  const { translations = {} } = useLanguage();
   const businessName = business?.businessname;
   const businessLogo = business?.imageUrl;
 
@@ -33,7 +35,7 @@ const LoadingSplash = ({ business }) => {
           )}
         </div>
         {businessName && <h3 className="loading-title">{businessName}</h3>}
-        <p className="loading-subtitle">Preparing your culinary experience...</p>
+        <p className="loading-subtitle">{translations.preparingexperience}</p>
         <div className="loading-spinner-bar" />
       </div>
     </div>

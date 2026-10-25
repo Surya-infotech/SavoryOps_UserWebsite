@@ -182,7 +182,7 @@ const PolicyPage = () => {
                 />
               ) : (
                 <div className="policy-empty-body">
-                  <p>No written terms available for this policy yet.</p>
+                  <p>{translations.nowrittenterms}</p>
                 </div>
               )}
 
@@ -205,7 +205,7 @@ const PolicyPage = () => {
                   )}
                   <div className="brand-info">
                     <strong>{businessName}</strong>
-                    <span>Committed to transparent and exceptional guest hospitality.</span>
+                    <span>{translations.committedtotransparent}</span>
                   </div>
                 </div>
 

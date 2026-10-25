@@ -289,5 +289,14 @@
   "enteryourreview": "Расскажите о вкусе, подаче, работе персонала и общих впечатлениях...",
   "submitreview": "Отправить Отзыв",
   "reviewsubmittedsuccess": "Большое спасибо! Ваш отзыв успешно опубликован.",
-  "fillrequiredfields": "Пожалуйста, укажите оценку, имя и текст отзыва."
+  "fillrequiredfields": "Пожалуйста, укажите оценку, имя и текст отзыва.",
+  "preparingexperience": "Подготовка вашего кулинарного опыта...",
+  "nowrittenterms": "Для этой политики пока нет письменных условий.",
+  "committedtotransparent": "Стремление к прозрачному и исключительному гостеприимству.",
+  "clearsearch": "Очистить поиск",
+  "downloadgoogleplay": "Скачать в Google Play",
+  "scanorclickgoogleplay": "Отсканируйте QR или нажмите, чтобы открыть Google Play",
+  "scanqrtodownloadapp": "Отсканируйте QR-код для загрузки приложения для клиентов",
+  "poweredby": "Работает на",
+  "saasrestaurantsuite": "SaaS ресторанный комплекс"
 }

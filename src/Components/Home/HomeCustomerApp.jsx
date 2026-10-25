@@ -55,31 +55,30 @@ const HomeCustomerApp = () => {
             <div className="app-pill-badge">
               <span className="pulsing-green-dot" />
               <SmartphoneIcon fontSize="inherit" />
-              <span>{translations.customerapptag || "Official Customer App"}</span>
+              <span>{translations.customerapptag}</span>
             </div>
 
             <h2 className="app-hero-title">
-              {translations.customerapptitle || "Also You Can Use Our Customer App For Ordering"}
+              {translations.customerapptitle}
             </h2>
 
             <p className="app-hero-desc">
-              {translations.customerappdesc ||
-                `Scan tableside QR, customize toppings, track live kitchen prep in real-time, and unlock app-exclusive dining discounts.`}
+              {translations.customerappdesc}
             </p>
 
             {/* Compact Highlight Pills */}
             <div className="app-highlights-strip">
               <span className="app-highlight-pill">
                 <TableRestaurantIcon fontSize="inherit" />
-                {translations.customerappfeature1title || "Smart Tableside QR"}
+                {translations.customerappfeature1title}
               </span>
               <span className="app-highlight-pill">
                 <SoupKitchenIcon fontSize="inherit" />
-                {translations.customerappfeature2title || "Live Kitchen Tracking"}
+                {translations.customerappfeature2title}
               </span>
               <span className="app-highlight-pill">
                 <PaymentIcon fontSize="inherit" />
-                {translations.customerappfeature4title || "Contactless Pay"}
+                {translations.customerappfeature4title}
               </span>
             </div>
 
@@ -92,22 +91,22 @@ const HomeCustomerApp = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="store-button google-play-btn"
-                  title="Download SavoryOps on Google Play"
+                  title={translations.downloadgoogleplay}
                 >
                   <GooglePlayIcon className="google-play-svg-icon" />
                   <div className="store-btn-text">
                     <span className="store-btn-sub">
-                      {translations.getitongoogleplay || "GET IT ON"}
+                      {translations.getitongoogleplay}
                     </span>
                     <strong className="store-btn-main">
-                      {translations.googleplay || "Google Play"}
+                      {translations.googleplay}
                     </strong>
                   </div>
                 </a>
 
                 {/* Direct Web Order Button */}
                 <Link to="/menu" className="store-button web-order-btn">
-                  <span>{translations.quickorderweb || "Or Order on Web"}</span>
+                  <span>{translations.quickorderweb}</span>
                   <ArrowForwardIcon fontSize="small" />
                 </Link>
               </div>
@@ -118,22 +117,22 @@ const HomeCustomerApp = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="app-qr-widget"
-                title="Scan QR or click to open Google Play"
+                title={translations.scanorclickgoogleplay}
               >
                 <div className="qr-code-graphic-wrap">
                   <img
                     src="/customer-app-qr.png"
-                    alt="Scan QR Code to download Customer App"
+                    alt={translations.scanqrtodownloadapp}
                     className="qr-real-image"
                   />
                   <div className="qr-scan-laser-line" />
                 </div>
                 <div className="qr-widget-label">
                   <span className="qr-widget-title">
-                    {translations.scantodownload || "Scan QR to Install"}
+                    {translations.scantodownload}
                   </span>
                   <span className="qr-widget-hint">
-                    {translations.scantodownloaddesc || "Point camera to download"}
+                    {translations.scantodownloaddesc}
                   </span>
                 </div>
               </a>
@@ -147,7 +146,7 @@ const HomeCustomerApp = () => {
                 ))}
               </div>
               <span className="app-rating-text">
-                {translations.appratingbadge || "4.9 ★ Rated by 10,000+ Happy Diners"}
+                {translations.appratingbadge}
               </span>
             </div>
           </div>

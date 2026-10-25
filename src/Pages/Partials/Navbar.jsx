@@ -184,8 +184,8 @@ export const BranchDropdown = ({ className = "" }) => {
               <div className="branch-empty-state">
                 <p>
                   {search
-                    ? `${translations.nobranchesfound || "No branches found"} "${search}"`
-                    : (translations.nobranchesfound || "No branches available")}
+                    ? `${translations.nobranchesfound} "${search}"`
+                    : translations.nobranchesfound}
                 </p>
               </div>
             ) : (

@@ -376,7 +376,7 @@ const HomeReviews = () => {
     e.preventDefault();
     if (!newName.trim() || !newReviewText.trim() || newRating < 1) {
       setFormError(
-        translations.fillrequiredfields || "Please provide a rating, your name, and your review text."
+        translations.fillrequiredfields
       );
       return;
     }
@@ -396,22 +396,22 @@ const HomeReviews = () => {
       customerName: newName.trim(),
       avatarInitials: initials,
       avatarBg: "linear-gradient(135deg, #028802 0%, #69e869 100%)",
-      verifiedBadge: `${translations.verifieddiner || "Verified Diner"} • Web Review`,
+      verifiedBadge: `${translations.verifieddiner} • Web Review`,
       orderNo: `SO-${randomOrderNum}`,
       date: "Just now",
       diningType: newDiningType,
       diningLabel:
         newDiningType === "dine-in"
-          ? translations.dinein || "Dine-In"
+          ? translations.dinein
           : newDiningType === "delivery"
-            ? translations.delivery || "Delivery"
-            : translations.takeaway || "Takeaway",
+            ? translations.delivery
+            : translations.takeaway,
       branch: brandName,
       rating: newRating,
       sentiment: newRating >= 4 ? "Exceptional" : "Good Experience",
       headline: `${newRating}-Star Dining Experience`,
       review: newReviewText.trim(),
-      dishOrdered: newDish.trim() || translations.artisanpizzas || "Specialty Dish",
+      dishOrdered: newDish.trim() || translations.artisanpizzas,
       helpfulCount: 1,
       isUserSubmitted: true,
       ratingsBreakdown: {
@@ -473,14 +473,13 @@ const HomeReviews = () => {
         <div className="reviews-header-block">
           <div className="reviews-pill-tag">
             <SparklesIcon fontSize="inherit" />
-            <span>{translations.customerreviewstag || "Real Dining Experiences"}</span>
+            <span>{translations.customerreviewstag}</span>
           </div>
           <h2 className="reviews-main-title">
-            {translations.customerreviewstitle || "Loved by Thousands of Food Lovers"}
+            {translations.customerreviewstitle}
           </h2>
           <p className="reviews-subtitle">
-            {translations.customerreviewssubtitle ||
-              "Discover genuine dining experiences, dish ratings, and verified reviews from our valued restaurant guests."}
+            {translations.customerreviewssubtitle}
           </p>
         </div>
 
@@ -604,7 +603,7 @@ const HomeReviews = () => {
                   <div className="modal-meta-row">
                     <span>
                       <ReceiptLongIcon fontSize="inherit" />
-                      {translations.orderno || "Order"}: #{activeReviewDetails.orderNo}
+                      {translations.orderno}: #{activeReviewDetails.orderNo}
                     </span>
                     <span className="meta-separator">•</span>
                     <span>
@@ -668,12 +667,12 @@ const HomeReviews = () => {
               {/* Experience Criteria Ratings Breakdown */}
               <div className="modal-criteria-section">
                 <h5 className="section-title">
-                  {translations.ratingsbreakdown || "Experience Breakdown"}
+                  {translations.ratingsbreakdown}
                 </h5>
                 <div className="criteria-grid">
                   <div className="criteria-item">
                     <div className="criteria-label-row">
-                      <span>{translations.foodquality || "Food Taste & Quality"}</span>
+                      <span>{translations.foodquality}</span>
                       <strong>{activeReviewDetails.ratingsBreakdown.food} ★</strong>
                     </div>
                     <div className="criteria-bar-bg">
@@ -688,7 +687,7 @@ const HomeReviews = () => {
 
                   <div className="criteria-item">
                     <div className="criteria-label-row">
-                      <span>{translations.servicehospitality || "Service & Hospitality"}</span>
+                      <span>{translations.servicehospitality}</span>
                       <strong>{activeReviewDetails.ratingsBreakdown.hospitality} ★</strong>
                     </div>
                     <div className="criteria-bar-bg">
@@ -703,7 +702,7 @@ const HomeReviews = () => {
 
                   <div className="criteria-item">
                     <div className="criteria-label-row">
-                      <span>{translations.ambiance || "Ambiance & Cleanliness"}</span>
+                      <span>{translations.ambiance}</span>
                       <strong>{activeReviewDetails.ratingsBreakdown.ambiance} ★</strong>
                     </div>
                     <div className="criteria-bar-bg">
@@ -718,7 +717,7 @@ const HomeReviews = () => {
 
                   <div className="criteria-item">
                     <div className="criteria-label-row">
-                      <span>{translations.valueformoney || "Value for Money"}</span>
+                      <span>{translations.valueformoney}</span>
                       <strong>{activeReviewDetails.ratingsBreakdown.value} ★</strong>
                     </div>
                     <div className="criteria-bar-bg">
@@ -737,7 +736,7 @@ const HomeReviews = () => {
               {activeReviewDetails.itemsOrdered && activeReviewDetails.itemsOrdered.length > 0 && (
                 <div className="modal-items-section">
                   <h5 className="section-title">
-                    {translations.itemsordered || "Items in this Order"}
+                    {translations.itemsordered}
                   </h5>
                   <div className="items-list">
                     {activeReviewDetails.itemsOrdered.map((dish, idx) => (
@@ -764,7 +763,7 @@ const HomeReviews = () => {
                     <div className="response-author-col">
                       <ReplyIcon fontSize="inherit" className="reply-icon" />
                       <span className="response-title">
-                        {translations.restaurantresponse || "Official Restaurant Response"}
+                        {translations.restaurantresponse}
                       </span>
                       <span className="author-pill">
                         {activeReviewDetails.managerResponse.author}
@@ -795,7 +794,7 @@ const HomeReviews = () => {
                   <ThumbUpOutlinedIcon fontSize="inherit" />
                 )}
                 <span>
-                  {translations.helpful || "Helpful"} ({activeReviewDetails.helpfulCount})
+                  {translations.helpful} ({activeReviewDetails.helpfulCount})
                 </span>
               </button>
 
@@ -804,7 +803,7 @@ const HomeReviews = () => {
                 className="modal-done-btn"
                 onClick={() => setActiveReviewDetails(null)}
               >
-                {translations.closereview || "Close Details"}
+                {translations.closereview}
               </button>
             </div>
           </div>
@@ -830,11 +829,10 @@ const HomeReviews = () => {
             <div className="write-modal-header">
               <div>
                 <h3 id="write-review-title" className="write-modal-title">
-                  {translations.shareyourfeedback || "Share Your Dining Experience"}
+                  {translations.shareyourfeedback}
                 </h3>
                 <p className="write-modal-desc">
-                  {translations.sharefeedbacksubtitle ||
-                    "Your feedback helps our culinary team maintain top standards and craft delicious moments."}
+                  {translations.sharefeedbacksubtitle}
                 </p>
               </div>
               <button
@@ -850,7 +848,7 @@ const HomeReviews = () => {
             {submitSuccess ? (
               <div className="write-success-state">
                 <CheckCircleIcon className="success-icon" />
-                <h4>{translations.reviewsubmittedsuccess || "Thank you! Your dining review has been posted successfully."}</h4>
+                <h4>{translations.reviewsubmittedsuccess}</h4>
               </div>
             ) : (
               <form onSubmit={handleSubmitReview} className="write-review-form" noValidate>
@@ -859,7 +857,7 @@ const HomeReviews = () => {
                 {/* Rating Picker */}
                 <div className="form-rating-picker-block">
                   <label className="field-label">
-                    {translations.yourrating || "Your Overall Rating"} <span className="req">*</span>
+                    {translations.yourrating} <span className="req">*</span>
                   </label>
                   <div className="rating-interactive-stars">
                     {[1, 2, 3, 4, 5].map((val) => (
@@ -886,12 +884,12 @@ const HomeReviews = () => {
                 <div className="form-two-col-row">
                   <div className="form-field-group">
                     <label className="field-label" htmlFor="review-name">
-                      {translations.yourname || "Full Name"} <span className="req">*</span>
+                      {translations.yourname} <span className="req">*</span>
                     </label>
                     <input
                       type="text"
                       id="review-name"
-                      placeholder={translations.enteryourname || "Enter your full name"}
+                      placeholder={translations.enteryourname}
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       className="form-text-input"
@@ -901,7 +899,7 @@ const HomeReviews = () => {
 
                   <div className="form-field-group">
                     <label className="field-label" htmlFor="review-dining-type">
-                      {translations.diningtype || "Dining Channel"}
+                      {translations.diningtype}
                     </label>
                     <select
                       id="review-dining-type"
@@ -909,9 +907,9 @@ const HomeReviews = () => {
                       value={newDiningType}
                       onChange={(e) => setNewDiningType(e.target.value)}
                     >
-                      <option value="dine-in">{translations.dinein || "Dine-In (At Restaurant)"}</option>
-                      <option value="delivery">{translations.delivery || "Express Delivery"}</option>
-                      <option value="takeaway">{translations.takeaway || "Takeaway Pickup"}</option>
+                      <option value="dine-in">{translations.dinein}</option>
+                      <option value="delivery">{translations.delivery}</option>
+                      <option value="takeaway">{translations.takeaway}</option>
                     </select>
                   </div>
                 </div>
@@ -919,13 +917,13 @@ const HomeReviews = () => {
                 {/* Favorite Dish */}
                 <div className="form-field-group">
                   <label className="field-label" htmlFor="review-dish">
-                    {translations.yourfavoritedish || "Favorite Dish Ordered"}
+                    {translations.yourfavoritedish}
                   </label>
                   <input
                     type="text"
                     id="review-dish"
                     placeholder={
-                      translations.enteryourfavoritedish || "e.g., Artisan Truffle Funghi Pizza"
+                      translations.enteryourfavoritedish
                     }
                     value={newDish}
                     onChange={(e) => setNewDish(e.target.value)}
@@ -936,14 +934,13 @@ const HomeReviews = () => {
                 {/* Review Text */}
                 <div className="form-field-group">
                   <label className="field-label" htmlFor="review-text">
-                    {translations.yourreviewtext || "Your Review"} <span className="req">*</span>
+                    {translations.yourreviewtext} <span className="req">*</span>
                   </label>
                   <textarea
                     id="review-text"
                     rows={4}
                     placeholder={
-                      translations.enteryourreview ||
-                      "Tell us about the flavors, presentation, staff hospitality, and overall experience..."
+                      translations.enteryourreview
                     }
                     value={newReviewText}
                     onChange={(e) => setNewReviewText(e.target.value)}
@@ -959,10 +956,10 @@ const HomeReviews = () => {
                     className="cancel-btn"
                     onClick={() => setIsWriteModalOpen(false)}
                   >
-                    Cancel
+                    {translations.cancel}
                   </button>
                   <button type="submit" className="submit-btn" id="submit-review-action">
-                    <span>{translations.submitreview || "Submit Dining Review"}</span>
+                    <span>{translations.submitreview}</span>
                     <ArrowForwardIcon fontSize="inherit" />
                   </button>
                 </div>

@@ -209,7 +209,7 @@ const Dropdown = ({
                         setSearchTerm("");
                         searchInputRef.current?.focus();
                       }}
-                      aria-label="Clear search"
+                      aria-label={translations.clearsearch}
                     >
                       <CloseIcon className="dropdown-clear-icon" fontSize="inherit" />
                     </button>

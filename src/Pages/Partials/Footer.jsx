@@ -128,8 +128,8 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="footer-bottom-bar">
           <div>
-            © {new Date().getFullYear()} {brandDisplayName}. {translations.allrightsreserved} Powered by{" "}
-            <strong className="footer-brand-highlight">SavoryOps</strong> SaaS Restaurant Suite.
+            © {new Date().getFullYear()} {brandDisplayName}. {translations.allrightsreserved} {translations.poweredby}{" "}
+            <strong className="footer-brand-highlight">SavoryOps</strong> {translations.saasrestaurantsuite}.
           </div>
           <div className="footer-bottom-links">
             {generalPolicies.map((policy) => {
