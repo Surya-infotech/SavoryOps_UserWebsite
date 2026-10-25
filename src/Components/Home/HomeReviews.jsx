@@ -14,8 +14,6 @@ import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
-import SearchIcon from "@mui/icons-material/Search";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
@@ -251,9 +249,6 @@ const HomeReviews = () => {
 
   // State Management
   const [reviewsList, setReviewsList] = useState(INITIAL_REVIEWS_DATA);
-  const [selectedFilter, setSelectedFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("helpful");
   const [likedReviews, setLikedReviews] = useState({});
 
   // Modal Details State
@@ -336,8 +331,8 @@ const HomeReviews = () => {
         newDiningType === "dine-in"
           ? translations.dinein || "Dine-In"
           : newDiningType === "delivery"
-          ? translations.delivery || "Delivery"
-          : translations.takeaway || "Takeaway",
+            ? translations.delivery || "Delivery"
+            : translations.takeaway || "Takeaway",
       branch: brandName,
       rating: newRating,
       sentiment: newRating >= 4 ? "Exceptional" : "Good Experience",
@@ -381,45 +376,6 @@ const HomeReviews = () => {
     }, 1500);
   };
 
-  // Filter & Search Logic
-  const filteredReviews = useMemo(() => {
-    let result = [...reviewsList];
-
-    // Filter Type
-    if (selectedFilter === "5star") {
-      result = result.filter((r) => r.rating === 5);
-    } else if (selectedFilter === "dine-in") {
-      result = result.filter((r) => r.diningType === "dine-in");
-    } else if (selectedFilter === "delivery") {
-      result = result.filter((r) => r.diningType === "delivery");
-    } else if (selectedFilter === "takeaway") {
-      result = result.filter((r) => r.diningType === "takeaway");
-    }
-
-    // Search Query
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      result = result.filter(
-        (r) =>
-          r.customerName.toLowerCase().includes(q) ||
-          r.review.toLowerCase().includes(q) ||
-          r.dishOrdered.toLowerCase().includes(q) ||
-          r.headline.toLowerCase().includes(q) ||
-          r.branch.toLowerCase().includes(q)
-      );
-    }
-
-    // Sort
-    if (sortBy === "helpful") {
-      result.sort((a, b) => b.helpfulCount - a.helpfulCount);
-    } else if (sortBy === "rating") {
-      result.sort((a, b) => b.rating - a.rating);
-    } else if (sortBy === "recent") {
-      result.sort((a, b) => b.id - a.id);
-    }
-
-    return result;
-  }, [reviewsList, selectedFilter, searchQuery, sortBy]);
 
   // Overall Statistics Calculation
   const stats = useMemo(() => {
@@ -523,152 +479,53 @@ const HomeReviews = () => {
           </div>
         </div>
 
-        {/* Filter Pills, Search Bar & Sort Dropdown */}
-        <div className="reviews-filter-toolbar">
-          <div className="filter-chips-group">
-            <button
-              type="button"
-              className={`filter-chip ${selectedFilter === "all" ? "active" : ""}`}
-              onClick={() => setSelectedFilter("all")}
-            >
-              {translations.allreviews || "All Reviews"} ({reviewsList.length})
-            </button>
-            <button
-              type="button"
-              className={`filter-chip ${selectedFilter === "5star" ? "active" : ""}`}
-              onClick={() => setSelectedFilter("5star")}
-            >
-              ⭐ {translations.fivestarreviews || "5-Star Only"}
-            </button>
-            <button
-              type="button"
-              className={`filter-chip ${selectedFilter === "dine-in" ? "active" : ""}`}
-              onClick={() => setSelectedFilter("dine-in")}
-            >
-              🍽️ {translations.dinein || "Dine-In"}
-            </button>
-            <button
-              type="button"
-              className={`filter-chip ${selectedFilter === "delivery" ? "active" : ""}`}
-              onClick={() => setSelectedFilter("delivery")}
-            >
-              🛵 {translations.delivery || "Delivery"}
-            </button>
-            <button
-              type="button"
-              className={`filter-chip ${selectedFilter === "takeaway" ? "active" : ""}`}
-              onClick={() => setSelectedFilter("takeaway")}
-            >
-              🥡 {translations.takeaway || "Takeaway"}
-            </button>
-          </div>
-
-          <div className="toolbar-controls-group">
-            {/* Live Search */}
-            <div className="reviews-search-box">
-              <SearchIcon className="search-icon" fontSize="inherit" />
-              <input
-                type="text"
-                placeholder={translations.searchreviews || "Search reviews or dishes..."}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  className="clear-search-btn"
-                  onClick={() => setSearchQuery("")}
-                  aria-label="Clear search"
-                >
-                  <CloseIcon fontSize="inherit" />
-                </button>
-              )}
-            </div>
-
-            {/* Sort Dropdown */}
-            <div className="sort-dropdown-wrap">
-              <FilterListIcon className="sort-icon" fontSize="inherit" />
-              <select
-                className="sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                aria-label="Sort Reviews"
-              >
-                <option value="helpful">{translations.mosthelpful || "Most Helpful"}</option>
-                <option value="rating">{translations.highestrating || "Highest Rating"}</option>
-                <option value="recent">{translations.mostrecent || "Most Recent"}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
         {/* Reviews Cards Grid */}
-        {filteredReviews.length === 0 ? (
-          <div className="no-reviews-empty">
-            <RateReviewIcon className="empty-icon" />
-            <p className="empty-text">
-              {translations.noreviewsfound || "No reviews match your search or filter."}
-            </p>
-            <button
-              type="button"
-              className="reset-filter-btn"
-              onClick={() => {
-                setSelectedFilter("all");
-                setSearchQuery("");
-              }}
-            >
-              Reset Filters
-            </button>
-          </div>
-        ) : (
-          <div className="reviews-cards-grid">
-            {filteredReviews.map((item) => {
-              return (
-                <article
-                  key={item.id}
-                  className="review-card"
-                  id={`review-card-${item.id}`}
-                >
-                  {/* Card Header: Customer Info */}
-                  <div className="review-card-header">
-                    <div
-                      className="customer-avatar"
-                      style={{ background: item.avatarBg }}
-                    >
-                      {item.avatarInitials}
+        <div className="reviews-cards-grid">
+          {reviewsList.map((item) => {
+            return (
+              <article
+                key={item.id}
+                className="review-card"
+                id={`review-card-${item.id}`}
+              >
+                {/* Card Header: Customer Info */}
+                <div className="review-card-header">
+                  <div
+                    className="customer-avatar"
+                    style={{ background: item.avatarBg }}
+                  >
+                    {item.avatarInitials}
+                  </div>
+                  <div className="customer-text-meta">
+                    <div className="customer-name-row">
+                      <span className="customer-name" title={item.customerName}>
+                        {item.customerName}
+                      </span>
                     </div>
-                    <div className="customer-text-meta">
-                      <div className="customer-name-row">
-                        <span className="customer-name" title={item.customerName}>
-                          {item.customerName}
-                        </span>
-                      </div>
-                      <div className="customer-sub-meta">
-                        <span className="review-date">{item.date}</span>
-                        <span className="meta-dot">•</span>
-                        <span className="review-branch" title={item.branch}>
-                          {item.branch}
-                        </span>
-                      </div>
+                    <div className="customer-sub-meta">
+                      <span className="review-date">{item.date}</span>
+                      <span className="meta-dot">•</span>
+                      <span className="review-branch" title={item.branch}>
+                        {item.branch}
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  {/* Rating Stars */}
-                  <div className="review-meta-strip">
-                    <div className="rating-cluster-left">
-                      <div className="stars-cluster">{renderStars(item.rating)}</div>
-                      <span className="rating-numeric">{item.rating}.0</span>
-                    </div>
+                {/* Rating Stars */}
+                <div className="review-meta-strip">
+                  <div className="rating-cluster-left">
+                    <div className="stars-cluster">{renderStars(item.rating)}</div>
+                    <span className="rating-numeric">{item.rating}.0</span>
                   </div>
+                </div>
 
-                  {/* Body Text */}
-                  <p className="review-body-text">{item.review}</p>
-                </article>
-              );
-            })}
-          </div>
-        )}
+                {/* Body Text */}
+                <p className="review-body-text">{item.review}</p>
+              </article>
+            );
+          })}
+        </div>
       </div>
 
       {/* ========================================================================
@@ -890,9 +747,8 @@ const HomeReviews = () => {
             <div className="modal-footer">
               <button
                 type="button"
-                className={`modal-helpful-btn ${
-                  likedReviews[activeReviewDetails.id] ? "liked" : ""
-                }`}
+                className={`modal-helpful-btn ${likedReviews[activeReviewDetails.id] ? "liked" : ""
+                  }`}
                 onClick={(e) => handleToggleHelpful(activeReviewDetails.id, e)}
               >
                 {likedReviews[activeReviewDetails.id] ? (
@@ -972,9 +828,8 @@ const HomeReviews = () => {
                       <button
                         key={val}
                         type="button"
-                        className={`star-pick-btn ${
-                          (hoverRating || newRating) >= val ? "filled" : ""
-                        }`}
+                        className={`star-pick-btn ${(hoverRating || newRating) >= val ? "filled" : ""
+                          }`}
                         onMouseEnter={() => setHoverRating(val)}
                         onMouseLeave={() => setHoverRating(0)}
                         onClick={() => setNewRating(val)}
