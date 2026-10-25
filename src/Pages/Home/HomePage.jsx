@@ -3,6 +3,7 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
 import HomeDishes from "../../Components/Home/HomeDishes.jsx";
+import HomeCustomerApp from "../../Components/Home/HomeCustomerApp.jsx";
 import HomePromo from "../../Components/Home/HomePromo.jsx";
 import "../../Scss/Pages/Home/homepage.scss";
 
@@ -27,7 +28,10 @@ const HomePage = () => {
       {/* 3. Popular Menu Showcase / Dishes Section */}
       <HomeDishes />
 
-      {/* 4. Promotional Callout Strip Section */}
+      {/* 4. Customer Mobile App Showcase & Tableside Ordering Section */}
+      <HomeCustomerApp />
+
+      {/* 5. Promotional Callout Strip Section */}
       <HomePromo />
     </div>
   );
