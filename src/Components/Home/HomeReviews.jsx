@@ -16,7 +16,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import ReplyIcon from "@mui/icons-material/Reply";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -377,24 +376,6 @@ const HomeReviews = () => {
   };
 
 
-  // Overall Statistics Calculation
-  const stats = useMemo(() => {
-    const total = reviewsList.length;
-    const avg = (
-      reviewsList.reduce((acc, curr) => acc + curr.rating, 0) / (total || 1)
-    ).toFixed(1);
-    const fiveStars = reviewsList.filter((r) => r.rating === 5).length;
-    const fourStars = reviewsList.filter((r) => r.rating === 4).length;
-    const recommendationPercent = "98%";
-
-    return {
-      total,
-      avg: avg > 5 ? "5.0" : avg,
-      fiveStars,
-      fourStars,
-      recommendationPercent,
-    };
-  }, [reviewsList]);
 
   // Helper to render Star icons
   const renderStars = (ratingCount) => {
@@ -429,55 +410,6 @@ const HomeReviews = () => {
           </p>
         </div>
 
-        {/* Global Rating Score Showcase Strip */}
-        <div className="reviews-summary-card">
-          <div className="summary-left-col">
-            <div className="score-big-display">
-              <span className="big-number">4.9</span>
-              <div className="score-stars-col">
-                <div className="stars-row">{renderStars(5)}</div>
-                <span className="score-label">
-                  {translations.overallrating || "Overall Rating"} • 4.9 / 5.0
-                </span>
-              </div>
-            </div>
-            <p className="summary-trust-text">
-              <VerifiedUserIcon fontSize="inherit" className="trust-icon" />
-              <span>{translations.basedonreviews || "Based on 1,420+ authentic dining reviews"}</span>
-            </p>
-          </div>
-
-          <div className="summary-metrics-grid">
-            <div className="metric-box">
-              <span className="metric-val">98%</span>
-              <span className="metric-lbl">Recommend</span>
-            </div>
-            <div className="metric-box">
-              <span className="metric-val">4.9 ★</span>
-              <span className="metric-lbl">{translations.foodquality || "Food Taste"}</span>
-            </div>
-            <div className="metric-box">
-              <span className="metric-val">4.8 ★</span>
-              <span className="metric-lbl">{translations.servicehospitality || "Service"}</span>
-            </div>
-            <div className="metric-box">
-              <span className="metric-val">4.9 ★</span>
-              <span className="metric-lbl">{translations.deliveryspeed || "Delivery"}</span>
-            </div>
-          </div>
-
-          <div className="summary-action-col">
-            <button
-              type="button"
-              className="write-review-btn"
-              onClick={() => setIsWriteModalOpen(true)}
-              id="open-write-review-btn"
-            >
-              <RateReviewIcon fontSize="inherit" />
-              <span>{translations.writereview || "Write a Review"}</span>
-            </button>
-          </div>
-        </div>
 
         {/* Reviews Cards Grid */}
         <div className="reviews-cards-grid">
