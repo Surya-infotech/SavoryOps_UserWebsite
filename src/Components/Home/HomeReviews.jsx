@@ -1,13 +1,11 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import RateReviewIcon from "@mui/icons-material/RateReview";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";

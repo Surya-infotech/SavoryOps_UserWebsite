@@ -8,7 +8,6 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import StarIcon from "@mui/icons-material/Star";
 import SpaIcon from "@mui/icons-material/Spa";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useLanguage } from "../../Context/useLanguage.js";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homebanner.scss";
 
@@ -16,7 +15,6 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const SLIDE_DURATION = 5000; // 5 seconds per slide
 
 const HomeBanner = ({ onBannerChange }) => {
-  const { translations = {} } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [backendBanners, setBackendBanners] = useState([]);
