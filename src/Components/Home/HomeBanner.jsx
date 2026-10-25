@@ -97,6 +97,7 @@ const HomeBanner = ({ onBannerChange }) => {
       },
       featureBadge1: item.featureBadge1 || "",
       featureBadge2: item.featureBadge2 || "",
+      featureBadge3: item.featureBadge3 || "",
     }));
   }, [backendBanners]);
 
@@ -246,10 +247,12 @@ const HomeBanner = ({ onBannerChange }) => {
                         <span>{slide.featureBadge2}</span>
                       </div>
                     )}
-                    <div className="floating-pill">
-                      <SpaIcon fontSize="inherit" className="floating-pill-icon" />
-                      <span>{translations.freshfarmingredients || "100% Fresh Farm Ingredients"}</span>
-                    </div>
+                    {slide.featureBadge3 && (
+                      <div className="floating-pill">
+                        <SpaIcon fontSize="inherit" className="floating-pill-icon" />
+                        <span>{slide.featureBadge3}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
