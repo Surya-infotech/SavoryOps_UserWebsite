@@ -25,12 +25,26 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
-import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);
+
+/**
+ * Helper to retrieve stored branch or default to first available branch
+ */
+export const getStoredBranch = (branches = []) => {
+  if (!Array.isArray(branches) || branches.length === 0) return null;
+  const savedId = localStorage.getItem("selectedBranchId");
+  if (savedId) {
+    const found = branches.find(
+      (b) => String(b.id) === String(savedId) || String(b.branchid) === String(savedId)
+    );
+    if (found) return found;
+  }
+  return branches[0] || null;
+};
 
 /* ==========================================================================
    1. BranchDropdown Component
@@ -51,11 +65,7 @@ export const BranchDropdown = ({ className = "" }) => {
       try {
         const res = await fetch(`${adminPanelBackendPath}/Website/Home/GetBranches`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user": "admin",
-            "x-subdomain": currentSubdomain,
-          },
+          headers: { "Content-Type": "application/json", "x-user": "admin", "x-subdomain": currentSubdomain, },
         });
         const data = await res.json();
         if (res.ok && data.success && Array.isArray(data.branches) && data.branches.length > 0) {
@@ -175,7 +185,11 @@ export const BranchDropdown = ({ className = "" }) => {
           <div className="branch-list-scroller">
             {filteredBranches.length === 0 ? (
               <div className="branch-empty-state">
-                <p>{translations.nobranchesfound} "{search}"</p>
+                <p>
+                  {search
+                    ? `${translations.nobranchesfound || "No branches found"} "${search}"`
+                    : (translations.nobranchesfound || "No branches available")}
+                </p>
               </div>
             ) : (
               filteredBranches.map((branch) => {
