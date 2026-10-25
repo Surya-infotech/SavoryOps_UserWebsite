@@ -9,75 +9,107 @@ import StarIcon from "@mui/icons-material/Star";
 import SpaIcon from "@mui/icons-material/Spa";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homebanner.scss";
 
+const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const SLIDE_DURATION = 5000; // 5 seconds per slide
 
 const HomeBanner = () => {
   const { translations = {} } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [backendBanners, setBackendBanners] = useState([]);
+  const [, setLoading] = useState(true);
   const timerRef = useRef(null);
 
-  const bannerSlides = useMemo(
-    () => [
-      {
-        id: 1,
-        image: "/banners/banner-pizza.jpg",
-        tag: translations.woodfiredsignature,
-        tagType: "hot",
-        titlePrefix: translations.authenticstonebaked,
-        titleHighlight: translations.artisanalpizza,
-        description: translations.pizzabannerdesc,
-        primaryBtn: { text: translations.orderpizzanow, link: "/menu" },
-        secondaryBtn: { text: translations.exploreflavors, link: "/menu" },
-        highlightBadge: translations.save25today,
+  // Fetch home banners from owner database via website API
+  const fetchBanners = useCallback(async () => {
+    const currentSubdomain = getWebsiteSubdomain();
+    if (!currentSubdomain) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const selectedBranchId = localStorage.getItem("selectedBranchId");
+      let url = `${adminPanelBackendPath}/Website/General/GetHomeBanners`;
+      if (selectedBranchId) {
+        url += `?branchId=${encodeURIComponent(selectedBranchId)}`;
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "x-user": "admin", "x-subdomain": currentSubdomain, },
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success && Array.isArray(data.banners) && data.banners.length > 0) {
+        setBackendBanners(data.banners);
+      }
+    } catch (err) {
+      console.error("Error fetching home banners:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBanners();
+
+    const handleStorageChange = (e) => {
+      if (e.key === "selectedBranchId") {
+        fetchBanners();
+      }
+    };
+    const handleBranchChange = () => {
+      fetchBanners();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("branchChange", handleBranchChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("branchChange", handleBranchChange);
+    };
+  }, [fetchBanners]);
+
+  const bannerSlides = useMemo(() => {
+    return backendBanners.map((item, idx) => ({
+      id: item._id || item.bannerid || idx + 1,
+      image: item.image || "",
+      tag: item.tag || "",
+      highlightBadge: item.highlightBadge || "",
+      titlePrefix: item.titlePrefix || "",
+      titleHighlight: item.titleHighlight || "",
+      description: item.description || "",
+      primaryBtn: {
+        text: item.primaryBtnText || "",
+        link: item.primaryBtnLink || "/menu",
       },
-      {
-        id: 2,
-        image: "/banners/banner-burger.jpg",
-        tag: translations.primegourmetburger,
-        tagType: "chef",
-        titlePrefix: translations.sizzlingdoublebacon,
-        titleHighlight: translations.smashburger,
-        description: translations.burgerbannerdesc,
-        primaryBtn: { text: translations.tastethecrunch, link: "/menu" },
-        secondaryBtn: { text: translations.chefspecials, link: "/offers" },
-        highlightBadge: translations.bestseller,
+      secondaryBtn: {
+        text: item.secondaryBtnText || "",
+        link: item.secondaryBtnLink || "/menu",
       },
-      {
-        id: 3,
-        image: "/banners/banner-feast.jpg",
-        tag: translations.authenticculinaryfeast,
-        tagType: "trending",
-        titlePrefix: translations.ramenbannersubtitle,
-        titleHighlight: translations.sushibanquet,
-        description: translations.feastbannerdesc,
-        primaryBtn: { text: translations.booktable, link: "/reservation" },
-        secondaryBtn: { text: translations.ordertakeout, link: "/menu" },
-        highlightBadge: translations.finediningexperience,
-      },
-      {
-        id: 4,
-        image: "/banners/banner-dessert.jpg",
-        tag: translations.sweetindulgencebar,
-        tagType: "sweet",
-        titlePrefix: translations.dessertbannersubtitle,
-        titleHighlight: translations.craftcocktails,
-        description: translations.dessertbannerdesc,
-        primaryBtn: { text: translations.dessertanddrinks, link: "/menu" },
-        secondaryBtn: { text: translations.reserveevening, link: "/reservation" },
-        highlightBadge: translations.eveningspecial,
-      },
-    ],
-    [translations]
-  );
+      featureBadge1: item.featureBadge1 || "",
+      featureBadge2: item.featureBadge2 || "",
+    }));
+  }, [backendBanners]);
+
+  useEffect(() => {
+    if (currentSlide >= bannerSlides.length) {
+      setCurrentSlide(0);
+    }
+  }, [bannerSlides.length, currentSlide]);
 
   const nextSlide = useCallback(() => {
+    if (bannerSlides.length <= 1) return;
     setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
   }, [bannerSlides.length]);
 
   const prevSlide = useCallback(() => {
+    if (bannerSlides.length <= 1) return;
     setCurrentSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length);
   }, [bannerSlides.length]);
 
@@ -87,7 +119,7 @@ const HomeBanner = () => {
 
   // Auto advance timer
   useEffect(() => {
-    if (!isPaused) {
+    if (!isPaused && bannerSlides.length > 1) {
       timerRef.current = setInterval(() => {
         nextSlide();
       }, SLIDE_DURATION);
@@ -95,7 +127,11 @@ const HomeBanner = () => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isPaused, nextSlide, currentSlide]);
+  }, [isPaused, nextSlide, currentSlide, bannerSlides.length]);
+
+  if (bannerSlides.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -105,23 +141,27 @@ const HomeBanner = () => {
       aria-label="Featured Restaurant Banners Carousel"
     >
       {/* Navigation Arrows */}
-      <button
-        type="button"
-        className="hero-nav-arrow hero-nav-prev"
-        onClick={prevSlide}
-        aria-label="Previous Slide"
-      >
-        <ArrowBackIosNewIcon fontSize="small" />
-      </button>
+      {bannerSlides.length > 1 && (
+        <>
+          <button
+            type="button"
+            className="hero-nav-arrow hero-nav-prev"
+            onClick={prevSlide}
+            aria-label="Previous Slide"
+          >
+            <ArrowBackIosNewIcon fontSize="small" />
+          </button>
 
-      <button
-        type="button"
-        className="hero-nav-arrow hero-nav-next"
-        onClick={nextSlide}
-        aria-label="Next Slide"
-      >
-        <ArrowForwardIosIcon fontSize="small" />
-      </button>
+          <button
+            type="button"
+            className="hero-nav-arrow hero-nav-next"
+            onClick={nextSlide}
+            aria-label="Next Slide"
+          >
+            <ArrowForwardIosIcon fontSize="small" />
+          </button>
+        </>
+      )}
 
       {/* Slides Track */}
       <div className="hero-slider-track">
@@ -152,7 +192,9 @@ const HomeBanner = () => {
                   <div className="hero-badge-pill">
                     <LocalFireDepartmentIcon fontSize="small" />
                     <span>{slide.tag}</span>
-                    <span className="hero-badge-tag">{slide.highlightBadge}</span>
+                    {slide.highlightBadge && (
+                      <span className="hero-badge-tag">{slide.highlightBadge}</span>
+                    )}
                   </div>
 
                   {/* Main Headline */}
@@ -166,30 +208,38 @@ const HomeBanner = () => {
 
                   {/* Call to Actions */}
                   <div className="hero-actions-group">
-                    <Link to={slide.primaryBtn.link} className="hero-btn-primary">
-                      <span>{slide.primaryBtn.text}</span>
-                      <ArrowForwardIcon fontSize="inherit" />
-                    </Link>
+                    {slide.primaryBtn?.text && (
+                      <Link to={slide.primaryBtn.link} className="hero-btn-primary">
+                        <span>{slide.primaryBtn.text}</span>
+                        <ArrowForwardIcon fontSize="inherit" />
+                      </Link>
+                    )}
 
-                    <Link to={slide.secondaryBtn.link} className="hero-btn-secondary">
-                      <RestaurantMenuIcon fontSize="small" />
-                      <span>{slide.secondaryBtn.text}</span>
-                    </Link>
+                    {slide.secondaryBtn?.text && (
+                      <Link to={slide.secondaryBtn.link} className="hero-btn-secondary">
+                        <RestaurantMenuIcon fontSize="small" />
+                        <span>{slide.secondaryBtn.text}</span>
+                      </Link>
+                    )}
                   </div>
 
                   {/* Floating Highlights Badges */}
                   <div className="hero-floating-badges">
-                    <div className="floating-pill">
-                      <StarIcon fontSize="inherit" className="floating-pill-icon" />
-                      <span>{translations.verifieddiners}</span>
-                    </div>
-                    <div className="floating-pill">
-                      <BoltIcon fontSize="inherit" className="floating-pill-icon" />
-                      <span>{translations.doorstepdelivery}</span>
-                    </div>
+                    {slide.featureBadge1 && (
+                      <div className="floating-pill">
+                        <StarIcon fontSize="inherit" className="floating-pill-icon" />
+                        <span>{slide.featureBadge1}</span>
+                      </div>
+                    )}
+                    {slide.featureBadge2 && (
+                      <div className="floating-pill">
+                        <BoltIcon fontSize="inherit" className="floating-pill-icon" />
+                        <span>{slide.featureBadge2}</span>
+                      </div>
+                    )}
                     <div className="floating-pill">
                       <SpaIcon fontSize="inherit" className="floating-pill-icon" />
-                      <span>{translations.freshfarmingredients}</span>
+                      <span>{translations.freshfarmingredients || "100% Fresh Farm Ingredients"}</span>
                     </div>
                   </div>
                 </div>
@@ -200,22 +250,24 @@ const HomeBanner = () => {
       </div>
 
       {/* Progress Dots & Indicators */}
-      <div className="hero-indicators-container">
-        {bannerSlides.map((slide, index) => {
-          const isActive = index === currentSlide;
-          return (
-            <button
-              key={slide.id}
-              type="button"
-              className={`hero-dot-btn ${isActive ? "active" : ""}`}
-              onClick={() => goToSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            >
-              {isActive && <div className="hero-dot-progress" key={`progress-${currentSlide}`} />}
-            </button>
-          );
-        })}
-      </div>
+      {bannerSlides.length > 1 && (
+        <div className="hero-indicators-container">
+          {bannerSlides.map((slide, index) => {
+            const isActive = index === currentSlide;
+            return (
+              <button
+                key={slide.id}
+                type="button"
+                className={`hero-dot-btn ${isActive ? "active" : ""}`}
+                onClick={() => goToSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              >
+                {isActive && <div className="hero-dot-progress" key={`progress-${currentSlide}`} />}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 };
