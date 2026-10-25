@@ -6,11 +6,32 @@
 
 .features-strip {
   max-width: 1320px;
-  margin: -35px auto 0;
+  margin: 2.5rem auto 0;
   padding: 0 1.5rem;
   position: relative;
   z-index: 10;
   width: 100%;
+  transition: margin 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.has-banner {
+    margin: -35px auto 0;
+  }
+
+  &.no-banner {
+    margin: 2.5rem auto 0;
+  }
+
+  @media (max-width: 768px) {
+    margin: 1.75rem auto 0;
+
+    &.has-banner {
+      margin: -25px auto 0;
+    }
+
+    &.no-banner {
+      margin: 1.75rem auto 0;
+    }
+  }
 }
 
 .features-grid {

@@ -15,7 +15,7 @@ import "../../Scss/Components/Home/homebanner.scss";
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const SLIDE_DURATION = 5000; // 5 seconds per slide
 
-const HomeBanner = () => {
+const HomeBanner = ({ onBannerChange }) => {
   const { translations = {} } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -28,6 +28,7 @@ const HomeBanner = () => {
     const currentSubdomain = getWebsiteSubdomain();
     if (!currentSubdomain) {
       setLoading(false);
+      setBackendBanners([]);
       return;
     }
 
@@ -46,9 +47,12 @@ const HomeBanner = () => {
       const data = await response.json();
       if (response.ok && data.success && Array.isArray(data.banners) && data.banners.length > 0) {
         setBackendBanners(data.banners);
+      } else {
+        setBackendBanners([]);
       }
     } catch (err) {
       console.error("Error fetching home banners:", err);
+      setBackendBanners([]);
     } finally {
       setLoading(false);
     }
@@ -96,6 +100,12 @@ const HomeBanner = () => {
       featureBadge2: item.featureBadge2 || "",
     }));
   }, [backendBanners]);
+
+  useEffect(() => {
+    if (typeof onBannerChange === "function") {
+      onBannerChange(bannerSlides.length > 0);
+    }
+  }, [bannerSlides.length, onBannerChange]);
 
   useEffect(() => {
     if (currentSlide >= bannerSlides.length) {

@@ -5,7 +5,7 @@ import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/Home/homefeatures.scss";
 
-const HomeFeatures = () => {
+const HomeFeatures = ({ hasBanner = false }) => {
   const { translations = {} } = useLanguage();
 
   const featuresData = [
@@ -40,7 +40,7 @@ const HomeFeatures = () => {
   ];
 
   return (
-    <section className="features-strip">
+    <section className={`features-strip ${hasBanner ? "has-banner" : "no-banner"}`}>
       <div className="features-grid">
         {featuresData.map((item) => (
           <div key={item.id} className="feature-card">

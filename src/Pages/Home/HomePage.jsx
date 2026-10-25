@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
@@ -11,6 +11,7 @@ import "../../Scss/Pages/Home/homepage.scss";
 const HomePage = () => {
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname;
+  const [hasHeroBanner, setHasHeroBanner] = useState(false);
 
   useEffect(() => {
     if (businessDisplayName) {
@@ -19,12 +20,12 @@ const HomePage = () => {
   }, [businessDisplayName]);
 
   return (
-    <div className="home-page-container">
+    <div className={`home-page-container ${hasHeroBanner ? "has-hero-banner" : "no-hero-banner"}`}>
       {/* 1. Hero Banner Carousel Section */}
-      <HomeBanner />
+      <HomeBanner onBannerChange={setHasHeroBanner} />
 
       {/* 2. Value Proposition / Feature Strip Section */}
-      <HomeFeatures />
+      <HomeFeatures hasBanner={hasHeroBanner} />
 
       {/* 3. Popular Menu Showcase / Dishes Section */}
       <HomeDishes />
