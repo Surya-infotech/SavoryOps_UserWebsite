@@ -24,11 +24,12 @@ import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "./UnderMaintenance.jsx";
+import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { DEFAULT_BRANCHES, getStoredBranch } from "../../constants/branches";
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
 
+const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);
 
 /* ==========================================================================
@@ -36,11 +37,77 @@ const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.defaul
    ========================================================================== */
 export const BranchDropdown = ({ className = "" }) => {
   const { translations = {} } = useLanguage();
+  const { branches: contextBranches } = useWebsiteStatus();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const branches = DEFAULT_BRANCHES;
-  const [selectedBranch, setSelectedBranch] = useState(() => getStoredBranch(DEFAULT_BRANCHES));
+  const [branches, setBranches] = useState(() => (Array.isArray(contextBranches) && contextBranches.length > 0 ? contextBranches : []));
+  const [selectedBranch, setSelectedBranch] = useState(() => getStoredBranch(contextBranches || []));
   const dropdownRef = useRef(null);
+
+  // Sync branches from context whenever available
+  useEffect(() => {
+    if (Array.isArray(contextBranches) && contextBranches.length > 0) {
+      setBranches(contextBranches);
+      const current = getStoredBranch(contextBranches);
+      setSelectedBranch(current);
+      if (current) {
+        const branchId = current.id || current.branchid;
+        const branchName = current.name || current.branchname;
+        const savedId = localStorage.getItem("selectedBranchId");
+        if (!savedId || !contextBranches.some(b => String(b.id || b.branchid) === String(savedId))) {
+          localStorage.setItem("selectedBranchId", branchId);
+          localStorage.setItem("selectedBranchName", branchName);
+          window.dispatchEvent(
+            new CustomEvent("branchChange", {
+              detail: current,
+            })
+          );
+        }
+      }
+    }
+  }, [contextBranches]);
+
+  // Fetch branches directly via subdomain API if not already in context
+  useEffect(() => {
+    const fetchBranches = async () => {
+      const currentSubdomain = getWebsiteSubdomain();
+      if (!currentSubdomain) return;
+      try {
+        const res = await fetch(`${adminPanelBackendPath}/Website/Home/GetBranches`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "admin",
+            "x-subdomain": currentSubdomain,
+          },
+        });
+        const data = await res.json();
+        if (res.ok && data.success && Array.isArray(data.branches) && data.branches.length > 0) {
+          setBranches(data.branches);
+          const current = getStoredBranch(data.branches);
+          setSelectedBranch(current);
+          if (current) {
+            const branchId = current.id || current.branchid;
+            const branchName = current.name || current.branchname;
+            const savedId = localStorage.getItem("selectedBranchId");
+            if (!savedId || !data.branches.some(b => String(b.id || b.branchid) === String(savedId))) {
+              localStorage.setItem("selectedBranchId", branchId);
+              localStorage.setItem("selectedBranchName", branchName);
+              window.dispatchEvent(
+                new CustomEvent("branchChange", {
+                  detail: current,
+                })
+              );
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching website branches:", err);
+      }
+    };
+
+    fetchBranches();
+  }, []);
 
   // Close on outside click
   useEffect(() => {
@@ -60,12 +127,14 @@ export const BranchDropdown = ({ className = "" }) => {
 
   const handleBranchSelect = (branch) => {
     setSelectedBranch(branch);
-    localStorage.setItem("selectedBranchId", branch.id);
-    localStorage.setItem("selectedBranchName", branch.name);
+    const branchId = branch.id || branch.branchid;
+    const branchName = branch.name || branch.branchname;
+    localStorage.setItem("selectedBranchId", branchId);
+    localStorage.setItem("selectedBranchName", branchName);
     setIsOpen(false);
     setSearch("");
 
-    // Notify other components (HomePage, Reservation, etc.) about branch change
+    // Notify other components (HomePage, HomeBanner, Reservation, etc.) about branch change
     window.dispatchEvent(
       new CustomEvent("branchChange", {
         detail: branch,
@@ -134,10 +203,12 @@ export const BranchDropdown = ({ className = "" }) => {
               </div>
             ) : (
               filteredBranches.map((branch) => {
-                const isSelected = selectedBranch?.id === branch.id;
+                const isSelected =
+                  String(selectedBranch?.id) === String(branch.id) ||
+                  String(selectedBranch?.branchid) === String(branch.branchid);
                 return (
                   <div
-                    key={branch.id}
+                    key={branch.id || branch.branchid}
                     className={`branch-item-card ${isSelected ? "selected" : ""}`}
                     onClick={() => handleBranchSelect(branch)}
                     role="option"
@@ -267,7 +338,6 @@ export const LanguageDropdown = ({ className = "" }) => {
   );
 };
 
-const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 

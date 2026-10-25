@@ -39,9 +39,12 @@ export const DEFAULT_BRANCHES = [
 ];
 
 export const getStoredBranch = (branches = DEFAULT_BRANCHES) => {
+  if (!Array.isArray(branches) || branches.length === 0) return null;
   const savedId = localStorage.getItem("selectedBranchId");
   if (savedId) {
-    const found = branches.find((b) => b.id === savedId);
+    const found = branches.find(
+      (b) => String(b.id) === String(savedId) || String(b.branchid) === String(savedId)
+    );
     if (found) return found;
   }
   return branches[0];
