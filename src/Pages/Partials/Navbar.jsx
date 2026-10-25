@@ -39,7 +39,7 @@ export const getStoredBranch = (branches = []) => {
   const savedId = localStorage.getItem("selectedBranchId");
   if (savedId) {
     const found = branches.find(
-      (b) => String(b.id) === String(savedId) || String(b.branchid) === String(savedId)
+      (b) => String(b._id) === String(savedId)
     );
     if (found) return found;
   }
@@ -73,12 +73,10 @@ export const BranchDropdown = ({ className = "" }) => {
           const current = getStoredBranch(data.branches);
           setSelectedBranch(current);
           if (current) {
-            const branchId = current.id || current.branchid;
-            const branchName = current.name || current.branchname;
+            const branchId = current._id;
             const savedId = localStorage.getItem("selectedBranchId");
-            if (!savedId || !data.branches.some(b => String(b.id || b.branchid) === String(savedId))) {
+            if (!savedId || !data.branches.some(b => String(b._id) === String(savedId))) {
               localStorage.setItem("selectedBranchId", branchId);
-              localStorage.setItem("selectedBranchName", branchName);
               window.dispatchEvent(
                 new CustomEvent("branchChange", {
                   detail: current,
@@ -113,10 +111,8 @@ export const BranchDropdown = ({ className = "" }) => {
 
   const handleBranchSelect = (branch) => {
     setSelectedBranch(branch);
-    const branchId = branch.id || branch.branchid;
-    const branchName = branch.name || branch.branchname;
+    const branchId = branch._id;
     localStorage.setItem("selectedBranchId", branchId);
-    localStorage.setItem("selectedBranchName", branchName);
     setIsOpen(false);
     setSearch("");
 
@@ -131,10 +127,13 @@ export const BranchDropdown = ({ className = "" }) => {
   const filteredBranches = branches.filter((branch) => {
     const query = search.toLowerCase().trim();
     if (!query) return true;
+    const name = branch.branchname || "";
+    const address = branch.address || "";
+    const tagline = branch.tagline || "";
     return (
-      branch.name.toLowerCase().includes(query) ||
-      (branch.address && branch.address.toLowerCase().includes(query)) ||
-      (branch.tagline && branch.tagline.toLowerCase().includes(query))
+      name.toLowerCase().includes(query) ||
+      address.toLowerCase().includes(query) ||
+      tagline.toLowerCase().includes(query)
     );
   });
 
@@ -149,10 +148,10 @@ export const BranchDropdown = ({ className = "" }) => {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={selectedBranch?.name || translations.selectbranch}
+        title={selectedBranch?.branchname || translations.selectbranch}
       >
         <LocationOnIcon className="branch-icon-pin" />
-        <span className="branch-active-name">{selectedBranch?.name || translations.selectbranch}</span>
+        <span className="branch-active-name">{selectedBranch?.branchname || translations.selectbranch}</span>
         <KeyboardArrowDownIcon
           className={`branch-chevron ${isOpen ? "rotated" : ""}`}
         />
@@ -194,11 +193,11 @@ export const BranchDropdown = ({ className = "" }) => {
             ) : (
               filteredBranches.map((branch) => {
                 const isSelected =
-                  String(selectedBranch?.id) === String(branch.id) ||
-                  String(selectedBranch?.branchid) === String(branch.branchid);
+                  String(selectedBranch?._id) ===
+                  String(branch._id);
                 return (
                   <div
-                    key={branch.id || branch.branchid}
+                    key={branch._id}
                     className={`branch-item-card ${isSelected ? "selected" : ""}`}
                     onClick={() => handleBranchSelect(branch)}
                     role="option"
@@ -209,7 +208,7 @@ export const BranchDropdown = ({ className = "" }) => {
                     </div>
 
                     <div className="branch-item-details">
-                      <span className="branch-item-name">{branch.name}</span>
+                      <span className="branch-item-name">{branch.branchname}</span>
                       {branch.address && (
                         <span className="branch-item-address">{branch.address}</span>
                       )}
