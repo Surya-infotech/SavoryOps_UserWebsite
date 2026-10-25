@@ -19,227 +19,10 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import ReplyIcon from "@mui/icons-material/Reply";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "../../Pages/Partials/UnderMaintenance.jsx";
+import { useWebsiteStatus, getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homereviews.scss";
 
-// Initial Curated Guest Reviews with In-Depth Dining Details
-const INITIAL_REVIEWS_DATA = [
-  {
-    id: 1,
-    customerName: "Sophia Martinez",
-    avatarInitials: "SM",
-    avatarBg: "linear-gradient(135deg, #FF6B6B 0%, #FFE66D 100%)",
-    verifiedBadge: "Verified Tableside Diner",
-    orderNo: "SO-10842",
-    date: "Yesterday, 8:45 PM",
-    diningType: "dine-in",
-    diningLabel: "Dine-In • Table #6",
-    branch: "Downtown Heritage Bistro",
-    rating: 5,
-    sentiment: "Exquisite Flavor",
-    headline: "Hands down the best artisanal wood-fired pizza in the city!",
-    review:
-      "From the moment we walked in, the ambiance was enchanting. The pizza crust was crisp with that authentic wood-fired blistered char, and the white truffle aroma with melted burrata was pure culinary perfection. The tableside QR ordering made everything effortless and quick!",
-    dishOrdered: "Wood-Fired Truffle & Wild Funghi Pizza",
-    helpfulCount: 42,
-    ratingsBreakdown: {
-      food: 5.0,
-      hospitality: 5.0,
-      ambiance: 4.9,
-      value: 4.8,
-    },
-    itemsOrdered: [
-      { name: "Wood-Fired Truffle & Wild Funghi Pizza", qty: 1, price: "$23.00", isVeg: true },
-      { name: "Artisan Burrata & Heirloom Salad", qty: 1, price: "$14.00", isVeg: true },
-      { name: "Handcrafted Passionfruit Sparkler", qty: 2, price: "$13.00", isVeg: true },
-    ],
-    managerResponse: {
-      author: "Chef Marco • Culinary Director",
-      date: "Yesterday, 10:15 PM",
-      message:
-        "Thank you so much, Sophia! We source our black winter truffles directly from Umbria and let our sourdough ferment for 48 hours. Delighted your anniversary evening was magical with us!",
-    },
-  },
-  {
-    id: 2,
-    customerName: "Liam Henderson",
-    avatarInitials: "LH",
-    avatarBg: "linear-gradient(135deg, #4E65FF 0%, #92EFFD 100%)",
-    verifiedBadge: "Verified Express Delivery",
-    orderNo: "SO-10819",
-    date: "2 days ago, 7:15 PM",
-    diningType: "delivery",
-    diningLabel: "Express Delivery",
-    branch: "Uptown Gourmet Hub",
-    rating: 5,
-    sentiment: "Super Fast & Juicy",
-    headline: "Arrived piping hot in 20 minutes — best smash burger I've had!",
-    review:
-      "I was blown away by how crispy the edges of the smash burger were while staying super juicy inside. Even through delivery, the brioche bun stayed warm and toasted without getting soggy. Live kitchen status in the app kept me updated every step of the way.",
-    dishOrdered: "Prime Double Bacon Smash Burger",
-    helpfulCount: 31,
-    ratingsBreakdown: {
-      food: 5.0,
-      hospitality: 4.9,
-      ambiance: 5.0, // Delivery packaging
-      value: 4.9,
-    },
-    itemsOrdered: [
-      { name: "Prime Double Bacon Smash Burger", qty: 2, price: "$33.50", isVeg: false },
-      { name: "Truffle Parm Crispy French Fries", qty: 1, price: "$6.00", isVeg: true },
-      { name: "Salted Caramel Shake", qty: 1, price: "$7.50", isVeg: true },
-    ],
-    managerResponse: {
-      author: "Alex Rivera • Operations Manager",
-      date: "2 days ago, 8:00 PM",
-      message:
-        "Awesome feedback Liam! Our custom insulated packaging was engineered specifically so smash burgers arrive in restaurant-grade condition. Enjoy your next order!",
-    },
-  },
-  {
-    id: 3,
-    customerName: "Elena Rostova",
-    avatarInitials: "ER",
-    avatarBg: "linear-gradient(135deg, #F857A6 0%, #FF5858 100%)",
-    verifiedBadge: "Verified Tableside Diner",
-    orderNo: "SO-10795",
-    date: "4 days ago, 9:20 PM",
-    diningType: "dine-in",
-    diningLabel: "Dine-In • Table #12",
-    branch: "Downtown Heritage Bistro",
-    rating: 5,
-    sentiment: "Authentic Comfort",
-    headline: "Rich 18-hour simmered broth with incredible depth",
-    review:
-      "You can truly taste the dedication in the 18-hour pork broth. The chashu melted in my mouth, and the ajitsuke tamago egg was cured to a soft-boiled perfection. The waitstaff were exceptionally courteous and helped recommend the best sake pairing.",
-    dishOrdered: "Slow-Simmered Tonkotsu Ramen",
-    helpfulCount: 54,
-    ratingsBreakdown: {
-      food: 5.0,
-      hospitality: 5.0,
-      ambiance: 4.9,
-      value: 5.0,
-    },
-    itemsOrdered: [
-      { name: "Slow-Simmered Tonkotsu Ramen", qty: 2, price: "$39.00", isVeg: false },
-      { name: "Steamed Kurobuta Pork Gyoza", qty: 1, price: "$8.50", isVeg: false },
-      { name: "Matcha Ceremonial Gelato", qty: 2, price: "$11.00", isVeg: true },
-    ],
-    managerResponse: {
-      author: "Kenji Sato • Head Ramen Master",
-      date: "4 days ago, 11:00 PM",
-      message:
-        "Arigato gozaimasu Elena! Our team starts the broth at 4 AM each morning to extract that rich collagen texture. Look forward to welcoming you back for our seasonal miso special!",
-    },
-  },
-  {
-    id: 4,
-    customerName: "Marcus Sterling",
-    avatarInitials: "MS",
-    avatarBg: "linear-gradient(135deg, #11998E 0%, #38EF7D 100%)",
-    verifiedBadge: "Verified Garden Patio Diner",
-    orderNo: "SO-10760",
-    date: "5 days ago, 1:30 PM",
-    diningType: "dine-in",
-    diningLabel: "Dine-In • Garden Patio Booth",
-    branch: "Coastal Terrace & Garden",
-    rating: 5,
-    sentiment: "Fresh & Vibrant",
-    headline: "Pure San Marzano tomatoes and buffalo mozzarella bliss",
-    review:
-      "Hosted our family Sunday brunch on the open garden terrace. Every dish arrived vibrant, fragrant, and farm-fresh. The kids loved watching the open pizza oven through the viewing glass. Outstanding hospitality from server Chloe who was attentive all afternoon!",
-    dishOrdered: "Classic Neapolitan Margherita & Mocktails",
-    helpfulCount: 27,
-    ratingsBreakdown: {
-      food: 4.9,
-      hospitality: 5.0,
-      ambiance: 5.0,
-      value: 4.8,
-    },
-    itemsOrdered: [
-      { name: "Classic Neapolitan Margherita Pizza", qty: 2, price: "$37.00", isVeg: true },
-      { name: "Wild Berry Handcrafted Mocktail", qty: 3, price: "$19.50", isVeg: true },
-      { name: "Sicilian Pistachio Gelato Cup", qty: 2, price: "$12.00", isVeg: true },
-    ],
-    managerResponse: {
-      author: "Elena Vasquez • General Manager",
-      date: "5 days ago, 3:15 PM",
-      message:
-        "Thank you Marcus! Sunday brunches in the garden are our pride and joy. Chloe was thrilled to hear your kind words. See you and your family again soon!",
-    },
-  },
-  {
-    id: 5,
-    customerName: "Amina Al-Mansoor",
-    avatarInitials: "AA",
-    avatarBg: "linear-gradient(135deg, #FC466B 0%, #3F5EFB 100%)",
-    verifiedBadge: "Verified Express Takeaway",
-    orderNo: "SO-10733",
-    date: "1 week ago, 6:40 PM",
-    diningType: "takeaway",
-    diningLabel: "Takeaway Pickup",
-    branch: "Uptown Gourmet Hub",
-    rating: 5,
-    sentiment: "Unbeatable Crunch",
-    headline: "Takeaway order was ready to the minute — incredible crunch!",
-    review:
-      "Ordered ahead on the web platform and picked it up directly from the takeaway counter. It was packaged with care, completely leak-proof, and the sweet-garlic glazed wings remained unbelievably crunchy on the drive home. Top-tier culinary standards!",
-    dishOrdered: "Crispy Korean Fried Chicken & Ramen",
-    helpfulCount: 36,
-    ratingsBreakdown: {
-      food: 5.0,
-      hospitality: 4.9,
-      ambiance: 4.8,
-      value: 4.9,
-    },
-    itemsOrdered: [
-      { name: "Sweet Chili Garlic Fried Chicken (10 pcs)", qty: 1, price: "$17.50", isVeg: false },
-      { name: "Spicy Kimchi Tonkotsu Ramen", qty: 1, price: "$18.00", isVeg: false },
-      { name: "Sparkling Yuzu Citronade", qty: 2, price: "$10.00", isVeg: true },
-    ],
-    managerResponse: {
-      author: "Alex Rivera • Operations Manager",
-      date: "1 week ago, 8:15 PM",
-      message:
-        "Thank you so much Amina! Double-frying the chicken at precise temperatures ensures that signature crunch. We look forward to your next visit!",
-    },
-  },
-  {
-    id: 6,
-    customerName: "Julian Dubois",
-    avatarInitials: "JD",
-    avatarBg: "linear-gradient(135deg, #F9D423 0%, #FF4E50 100%)",
-    verifiedBadge: "Verified Tableside Diner",
-    orderNo: "SO-10688",
-    date: "1 week ago, 8:10 PM",
-    diningType: "dine-in",
-    diningLabel: "Dine-In • Table #2",
-    branch: "Downtown Heritage Bistro",
-    rating: 5,
-    sentiment: "Decadent Dessert",
-    headline: "The most authentic Italian tiramisu in the area",
-    review:
-      "We stopped in specifically for coffee and dessert after a theatre show. The mascarpone cream was light as air, layered with espresso-soaked savoiardi ladyfingers and dusting of Valrhona cocoa. Exceptional hospitality even during peak dinner rush!",
-    dishOrdered: "Tiramisu al Mascarpone & Espresso",
-    helpfulCount: 45,
-    ratingsBreakdown: {
-      food: 5.0,
-      hospitality: 4.9,
-      ambiance: 4.9,
-      value: 4.8,
-    },
-    itemsOrdered: [
-      { name: "Traditional Tiramisu al Mascarpone", qty: 2, price: "$17.00", isVeg: true },
-      { name: "Double Shot Ethiopian Espresso", qty: 2, price: "$7.50", isVeg: true },
-    ],
-    managerResponse: {
-      author: "Chef Marco • Culinary Director",
-      date: "1 week ago, 10:30 PM",
-      message:
-        "Grazie mille Julian! Our pastry team whips the mascarpone fresh twice daily. Delighted it made for a lovely post-theater treat!",
-    },
-  },
-];
+const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 const HomeReviews = () => {
   const { translations = {} } = useLanguage();
@@ -247,8 +30,57 @@ const HomeReviews = () => {
   const brandName = business?.businessname || "SavoryOps Kitchen";
 
   // State Management
-  const [reviewsList, setReviewsList] = useState(INITIAL_REVIEWS_DATA);
+  const [reviewsList, setReviewsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [likedReviews, setLikedReviews] = useState({});
+
+  // Fetch all reviews for this business from backend based on subdomain (without branch filtering)
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchReviews = async () => {
+      const currentSubdomain = getWebsiteSubdomain();
+      if (!currentSubdomain) {
+        if (isMounted) {
+          setLoading(false);
+          setReviewsList([]);
+        }
+        return;
+      }
+
+      try {
+        if (isMounted) setLoading(true);
+        const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetReviews`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "admin",
+            "x-subdomain": currentSubdomain,
+          },
+        });
+
+        const data = await response.json();
+        if (isMounted) {
+          if (response.ok && data.success && Array.isArray(data.reviews)) {
+            setReviewsList(data.reviews);
+          } else {
+            setReviewsList([]);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching website reviews:", err);
+        if (isMounted) setReviewsList([]);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchReviews();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Modal Details State
   const [activeReviewDetails, setActiveReviewDetails] = useState(null);
@@ -466,6 +298,11 @@ const HomeReviews = () => {
     return stars;
   };
 
+  // Hide reviews section if loading is complete and no reviews exist for this business
+  if (!loading && (!reviewsList || reviewsList.length === 0)) {
+    return null;
+  }
+
   return (
     <section className="home-reviews-section" id="guest-reviews">
       <div className="home-reviews-container">
@@ -509,9 +346,9 @@ const HomeReviews = () => {
             {reviewsList.map((item) => {
               return (
                 <article
-                  key={item.id}
+                  key={item.id || item._id}
                   className="review-card"
-                  id={`review-card-${item.id}`}
+                  id={`review-card-${item.id || item._id}`}
                 >
                   {/* Card Header: Customer Info */}
                   <div className="review-card-header">
@@ -528,8 +365,6 @@ const HomeReviews = () => {
                         </span>
                       </div>
                       <div className="customer-sub-meta">
-                        <span className="review-date">{item.date}</span>
-                        <span className="meta-dot">•</span>
                         <span className="review-branch" title={item.branch}>
                           {item.branch}
                         </span>
@@ -541,7 +376,7 @@ const HomeReviews = () => {
                   <div className="review-meta-strip">
                     <div className="rating-cluster-left">
                       <div className="stars-cluster">{renderStars(item.rating)}</div>
-                      <span className="rating-numeric">{item.rating}.0</span>
+                      <span className="rating-numeric">{(Number(item.rating) || 5).toFixed(1)}</span>
                     </div>
                   </div>
 
