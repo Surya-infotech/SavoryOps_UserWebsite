@@ -121,7 +121,7 @@ const SettingsPage = () => {
     setIsLoadingSettings(true);
     try {
       const response = await fetch(
-        `${adminPanelBackendPath}/Website/General/GetDateTime/${customerId}`,
+        `${adminPanelBackendPath}/Website/Setting/GetDateTime/${customerId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
@@ -194,7 +194,7 @@ const SettingsPage = () => {
       };
 
       const response = await fetch(
-        `${adminPanelBackendPath}/Website/General/EditDateTime/${customerId}`,
+        `${adminPanelBackendPath}/Website/Setting/EditDateTime/${customerId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}` },
@@ -293,7 +293,7 @@ const SettingsPage = () => {
     setIsSendingDeleteOtp(true);
     try {
       const response = await fetch(
-        `${adminPanelBackendPath}/Website/General/DeleteAccountSendOtp/${customerId}`, {
+        `${adminPanelBackendPath}/Website/Setting/DeleteAccountSendOtp/${customerId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
       });
@@ -357,7 +357,7 @@ const SettingsPage = () => {
     setIsDeleting(true);
     try {
       const response = await fetch(
-        `${adminPanelBackendPath}/Website/General/DeleteAccountVerifyAndDelete/${customerId}`, {
+        `${adminPanelBackendPath}/Website/Setting/DeleteAccountVerifyAndDelete/${customerId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
         body: JSON.stringify({ otp: cleanOtp }),
