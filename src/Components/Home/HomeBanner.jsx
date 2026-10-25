@@ -34,6 +34,10 @@ const HomeBanner = ({ onBannerChange }) => {
 
     try {
       const branchId = localStorage.getItem("selectedBranchId");
+      if (!branchId) {
+        setLoading(false);
+        return;
+      }
       const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetHomeBanners/${branchId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json", "x-user": "admin", "x-subdomain": currentSubdomain, },
