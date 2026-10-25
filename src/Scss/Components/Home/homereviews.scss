@@ -88,23 +88,121 @@
 
 
 
-/* --- Reviews Cards Grid --- */
-.reviews-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.75rem;
+/* --- Reviews Carousel Wrapper & Navigation --- */
+.reviews-carousel-wrapper {
+  position: relative;
+  width: 100%;
+}
 
-  @media (max-width: 1120px) {
-    grid-template-columns: repeat(2, 1fr);
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInNavBtn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  svg {
+    font-size: 1.5rem;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    background: #028802;
+    color: #ffffff;
+    border-color: #028802;
+    box-shadow: 0 6px 20px rgba(2, 136, 2, 0.3);
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.96);
+  }
+
+  &.prev-btn {
+    left: -18px;
+  }
+
+  &.next-btn {
+    right: -18px;
+  }
+
+  @media (max-width: 992px) {
+    &.prev-btn {
+      left: -8px;
+    }
+    &.next-btn {
+      right: -8px;
+    }
   }
 
   @media (max-width: 680px) {
-    grid-template-columns: 1fr;
+    display: none;
   }
+}
+
+@keyframes fadeInNavBtn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* --- Reviews Cards Horizontal Track (Single Row) --- */
+.reviews-cards-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.75rem 0.25rem 1rem;
+  margin: -0.75rem -0.25rem -0.5rem;
+  align-items: stretch;
+  cursor: grab;
+
+  &.is-dragging {
+    cursor: grabbing;
+    user-select: none;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+
+  /* Hide scrollbar across all browsers while keeping scroll functionality */
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* --- Individual Review Card --- */
 .review-card {
+  flex: 0 0 calc((100% - 2 * 1.5rem) / 3);
+  min-width: 340px;
+  max-width: 440px;
+  scroll-snap-align: start;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
@@ -118,9 +216,20 @@
   cursor: default;
 
   &:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     border-color: rgba(2, 136, 2, 0.25);
     box-shadow: 0 12px 28px -4px rgba(2, 136, 2, 0.08);
+  }
+
+  @media (max-width: 1120px) {
+    flex: 0 0 calc((100% - 1.25rem) / 2);
+    min-width: 320px;
+  }
+
+  @media (max-width: 680px) {
+    flex: 0 0 84vw;
+    min-width: 270px;
+    padding: 1.35rem;
   }
 
   > * {

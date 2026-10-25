@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -15,6 +15,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import ReplyIcon from "@mui/icons-material/Reply";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
@@ -264,6 +266,80 @@ const HomeReviews = () => {
   const [formError, setFormError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  // Horizontal Carousel Scrolling & Dragging
+  const scrollTrackRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartXRef = useRef(0);
+  const dragScrollLeftRef = useRef(0);
+
+  const checkScrollState = () => {
+    const el = scrollTrackRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    const maxScrollLeft = scrollWidth - clientWidth;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < maxScrollLeft - 10);
+  };
+
+  useEffect(() => {
+    checkScrollState();
+    const track = scrollTrackRef.current;
+    if (!track) return;
+
+    const onScroll = () => checkScrollState();
+    const onResize = () => checkScrollState();
+
+    track.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+
+    const timer1 = setTimeout(checkScrollState, 150);
+    const timer2 = setTimeout(checkScrollState, 500);
+
+    return () => {
+      track.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [reviewsList]);
+
+  const handleScroll = (direction) => {
+    const el = scrollTrackRef.current;
+    if (!el) return;
+    const clientWidth = el.clientWidth;
+    const scrollAmount = clientWidth * 0.85;
+
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+
+    // Check periodically during and after smooth scroll completes
+    setTimeout(checkScrollState, 100);
+    setTimeout(checkScrollState, 250);
+    setTimeout(checkScrollState, 450);
+  };
+
+  const handleMouseDown = (e) => {
+    if (e.button !== 0 || !scrollTrackRef.current) return;
+    setIsDragging(true);
+    dragStartXRef.current = e.pageX;
+    dragScrollLeftRef.current = scrollTrackRef.current.scrollLeft;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !scrollTrackRef.current) return;
+    e.preventDefault();
+    const deltaX = e.pageX - dragStartXRef.current;
+    scrollTrackRef.current.scrollLeft = dragScrollLeftRef.current - deltaX;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+  };
+
   // Prevent background scrolling when modal is open
   useEffect(() => {
     if (activeReviewDetails || isWriteModalOpen) {
@@ -411,52 +487,84 @@ const HomeReviews = () => {
         </div>
 
 
-        {/* Reviews Cards Grid */}
-        <div className="reviews-cards-grid">
-          {reviewsList.map((item) => {
-            return (
-              <article
-                key={item.id}
-                className="review-card"
-                id={`review-card-${item.id}`}
-              >
-                {/* Card Header: Customer Info */}
-                <div className="review-card-header">
-                  <div
-                    className="customer-avatar"
-                    style={{ background: item.avatarBg }}
-                  >
-                    {item.avatarInitials}
-                  </div>
-                  <div className="customer-text-meta">
-                    <div className="customer-name-row">
-                      <span className="customer-name" title={item.customerName}>
-                        {item.customerName}
-                      </span>
-                    </div>
-                    <div className="customer-sub-meta">
-                      <span className="review-date">{item.date}</span>
-                      <span className="meta-dot">•</span>
-                      <span className="review-branch" title={item.branch}>
-                        {item.branch}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+        {/* Reviews Horizontal Carousel */}
+        <div className="reviews-carousel-wrapper">
+          {canScrollLeft && (
+            <button
+              type="button"
+              className="carousel-nav-btn prev-btn"
+              onClick={() => handleScroll("left")}
+              aria-label="Previous reviews"
+            >
+              <ChevronLeftIcon />
+            </button>
+          )}
 
-                {/* Rating Stars */}
-                <div className="review-meta-strip">
-                  <div className="rating-cluster-left">
-                    <div className="stars-cluster">{renderStars(item.rating)}</div>
-                    <span className="rating-numeric">{item.rating}.0</span>
+          <div
+            className={`reviews-cards-grid ${isDragging ? "is-dragging" : ""}`}
+            ref={scrollTrackRef}
+            onScroll={checkScrollState}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUpOrLeave}
+            onMouseLeave={handleMouseUpOrLeave}
+          >
+            {reviewsList.map((item) => {
+              return (
+                <article
+                  key={item.id}
+                  className="review-card"
+                  id={`review-card-${item.id}`}
+                >
+                  {/* Card Header: Customer Info */}
+                  <div className="review-card-header">
+                    <div
+                      className="customer-avatar"
+                      style={{ background: item.avatarBg }}
+                    >
+                      {item.avatarInitials}
+                    </div>
+                    <div className="customer-text-meta">
+                      <div className="customer-name-row">
+                        <span className="customer-name" title={item.customerName}>
+                          {item.customerName}
+                        </span>
+                      </div>
+                      <div className="customer-sub-meta">
+                        <span className="review-date">{item.date}</span>
+                        <span className="meta-dot">•</span>
+                        <span className="review-branch" title={item.branch}>
+                          {item.branch}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                {/* Body Text */}
-                <p className="review-body-text">{item.review}</p>
-              </article>
-            );
-          })}
+                  {/* Rating Stars */}
+                  <div className="review-meta-strip">
+                    <div className="rating-cluster-left">
+                      <div className="stars-cluster">{renderStars(item.rating)}</div>
+                      <span className="rating-numeric">{item.rating}.0</span>
+                    </div>
+                  </div>
+
+                  {/* Body Text */}
+                  <p className="review-body-text">{item.review}</p>
+                </article>
+              );
+            })}
+          </div>
+
+          {canScrollRight && (
+            <button
+              type="button"
+              className="carousel-nav-btn next-btn"
+              onClick={() => handleScroll("right")}
+              aria-label="Next reviews"
+            >
+              <ChevronRightIcon />
+            </button>
+          )}
         </div>
       </div>
 
