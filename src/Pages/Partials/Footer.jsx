@@ -12,7 +12,7 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "./UnderMaintenance.jsx";
+import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import "../../Scss/Pages/Partials/footer.scss";
 
 const getSocialIcon = (platform = "") => {
@@ -28,10 +28,14 @@ const getSocialIcon = (platform = "") => {
 };
 
 const Footer = () => {
+  const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
   const { translations = {} } = useLanguage();
   const { business, policies = [] } = useWebsiteStatus();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribeMessage, setSubscribeMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(() => {
     if (typeof window !== "undefined" && window.__selectedBranch) {
       return window.__selectedBranch;
@@ -84,12 +88,57 @@ const Footer = () => {
   const brandDisplayName = business?.businessname;
   const brandLogoUrl = business?.imageUrl;
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (email.trim()) {
+    if (!email.trim() || subscribing) return;
+
+    const currentSubdomain = getWebsiteSubdomain();
+    if (!currentSubdomain) return;
+
+    setSubscribing(true);
+    setSubscribeMessage("");
+
+    try {
+      const response = await fetch(`${adminPanelBackendPath}/Website/General/SubscribeNewsletter`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "admin",
+          "x-subdomain": currentSubdomain,
+        },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setSubscribed(true);
+        setIsSuccess(true);
+        setSubscribeMessage(data.message || translations.thankyousubscribing || "Thank you for subscribing to our newsletter!");
+        setEmail("");
+        setTimeout(() => {
+          setSubscribed(false);
+          setSubscribeMessage("");
+        }, 5000);
+      } else {
+        setSubscribed(true);
+        setIsSuccess(false);
+        setSubscribeMessage(data.message || "Failed to subscribe. Please try again.");
+        setTimeout(() => {
+          setSubscribed(false);
+          setSubscribeMessage("");
+        }, 5000);
+      }
+    } catch (err) {
+      console.error("Error subscribing to newsletter:", err);
       setSubscribed(true);
-      setTimeout(() => setSubscribed(false), 4000);
-      setEmail("");
+      setIsSuccess(false);
+      setSubscribeMessage("Network error. Please try again.");
+      setTimeout(() => {
+        setSubscribed(false);
+        setSubscribeMessage("");
+      }, 5000);
+    } finally {
+      setSubscribing(false);
     }
   };
 
@@ -197,16 +246,17 @@ const Footer = () => {
                 className="footer-newsletter-input"
                 placeholder={translations.enteryouremail}
                 required
+                disabled={subscribing}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <button type="submit" className="footer-newsletter-btn">
-                {translations.join}
+              <button type="submit" className="footer-newsletter-btn" disabled={subscribing}>
+                {subscribing ? "..." : (translations.join || "Join")}
               </button>
             </form>
             {subscribed && (
-              <span className="footer-subscribed-msg">
-                {translations.thankyousubscribing}
+              <span className={`footer-subscribed-msg ${isSuccess ? "success" : "error"}`}>
+                {subscribeMessage}
               </span>
             )}
           </div>
