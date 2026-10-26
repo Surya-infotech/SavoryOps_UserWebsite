@@ -117,15 +117,17 @@ const PolicyPage = () => {
   return (
     <div className={`policy-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       <div className="policy-container">
-        {/* Page Top Header */}
-        <header className="policy-page-header">
+        {/* Header Block with Breadcrumbs */}
+        <div className="policy-page-header-block">
           <Breadcrumbs
             currentPage={currentPolicy ? currentPolicy.title : translations.termsofservice || "Policy"}
           />
-          <h1 className="policy-page-title">
-            {currentPolicy ? currentPolicy.title : translations.termsofservice}
-          </h1>
-        </header>
+          <header className="policy-page-header">
+            <h1 className="policy-page-title">
+              {currentPolicy ? currentPolicy.title : translations.termsofservice}
+            </h1>
+          </header>
+        </div>
 
         {/* Hero Header */}
         <header className="policy-hero-header">
