@@ -1,48 +1,101 @@
+import { useState, useEffect, useMemo } from "react";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import SpaIcon from "@mui/icons-material/Spa";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
-import { useLanguage } from "../../Context/useLanguage.js";
+import StarIcon from "@mui/icons-material/Star";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import LocalCafeIcon from "@mui/icons-material/LocalCafe";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import { useWebsiteStatus, getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homefeatures.scss";
 
-const HomeFeatures = ({ hasBanner = false }) => {
-  const { translations = {} } = useLanguage();
+const ICON_MAP = {
+  delivery: DeliveryDiningIcon,
+  organic: SpaIcon,
+  chef: RestaurantMenuIcon,
+  table: TableRestaurantIcon,
+  star: StarIcon,
+  clock: AccessTimeIcon,
+  shield: VerifiedIcon,
+  discount: LocalOfferIcon,
+  coffee: LocalCafeIcon,
+  sparkles: AutoAwesomeIcon,
+};
 
-  const featuresData = [
-    {
-      id: 1,
-      icon: <DeliveryDiningIcon fontSize="inherit" />,
-      iconClass: "feature-icon-green",
-      title: translations.fastdeliverytitle,
-      desc: translations.fastdeliverydesc,
-    },
-    {
-      id: 2,
-      icon: <SpaIcon fontSize="inherit" />,
-      iconClass: "feature-icon-amber",
-      title: translations.organicfreshtitle,
-      desc: translations.organicfreshdesc,
-    },
-    {
-      id: 3,
-      icon: <RestaurantMenuIcon fontSize="inherit" />,
-      iconClass: "feature-icon-purple",
-      title: translations.mastercheftitle,
-      desc: translations.masterchefdesc,
-    },
-    {
-      id: 4,
-      icon: <TableRestaurantIcon fontSize="inherit" />,
-      iconClass: "feature-icon-rose",
-      title: translations.instantbookingtitle,
-      desc: translations.instantbookingdesc,
-    },
-  ];
+const renderFeatureIcon = (iconKey) => {
+  const IconComp = ICON_MAP[iconKey] || DeliveryDiningIcon;
+  return <IconComp fontSize="inherit" />;
+};
+
+const HomeFeatures = ({ hasBanner = false }) => {
+  const { features: contextFeatures } = useWebsiteStatus();
+  const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+
+  const [featuresList, setFeaturesList] = useState(() =>
+    Array.isArray(contextFeatures) && contextFeatures.length > 0 ? contextFeatures : []
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchFeatures = async () => {
+      const currentSubdomain = getWebsiteSubdomain();
+      if (!currentSubdomain) return;
+
+      try {
+        const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetFeatures`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "admin",
+            "x-subdomain": currentSubdomain,
+          },
+        });
+
+        const data = await response.json();
+        if (isMounted && response.ok && data.success && Array.isArray(data.features) && data.features.length > 0) {
+          setFeaturesList(data.features);
+        }
+      } catch (err) {
+        console.error("Error fetching website features:", err);
+      }
+    };
+
+    fetchFeatures();
+    return () => {
+      isMounted = false;
+    };
+  }, [adminPanelBackendPath]);
+
+  useEffect(() => {
+    if (Array.isArray(contextFeatures) && contextFeatures.length > 0) {
+      setFeaturesList(contextFeatures);
+    }
+  }, [contextFeatures]);
+
+  const displayFeatures = useMemo(() => {
+    if (!Array.isArray(featuresList)) return [];
+    return featuresList
+      .filter((item) => (item?.title && item.title.trim()) || (item?.desc && item.desc.trim()))
+      .map((item, idx) => ({
+        id: item.id || item._id || idx + 1,
+        title: item.title || "",
+        desc: item.desc || "",
+        icon: renderFeatureIcon(item.icon),
+        iconClass: item.iconClass || "feature-icon-green",
+      }));
+  }, [featuresList]);
+
+  if (displayFeatures.length === 0) {
+    return null;
+  }
 
   return (
     <section className={`features-strip ${hasBanner ? "has-banner" : "no-banner"}`}>
       <div className="features-grid">
-        {featuresData.map((item) => (
+        {displayFeatures.map((item) => (
           <div key={item.id} className="feature-card">
             <div className={`feature-icon-wrapper ${item.iconClass}`}>
               {item.icon}
