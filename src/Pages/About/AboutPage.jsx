@@ -367,9 +367,6 @@ const AboutPage = () => {
                   <TableRestaurantIcon fontSize="small" />
                   <span>Book A Table</span>
                 </Link>
-                <Link to="/" className="btn btn-ghost cta-btn">
-                  <span>Return to Home</span>
-                </Link>
               </div>
             </div>
           </div>
