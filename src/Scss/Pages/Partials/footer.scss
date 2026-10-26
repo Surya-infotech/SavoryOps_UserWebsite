@@ -78,6 +78,41 @@
   }
 }
 
+.footer-socials-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.footer-social-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 1.15rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    background: #028802;
+    border-color: #028802;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(2, 136, 2, 0.4);
+  }
+
+  svg {
+    font-size: 1.15rem;
+  }
+}
+
 .footer-subscribed-msg {
   color: #69e869;
   font-size: 0.85rem;

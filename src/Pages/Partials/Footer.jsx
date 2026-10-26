@@ -3,9 +3,29 @@ import { Link } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import PinterestIcon from "@mui/icons-material/Pinterest";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import LanguageIcon from "@mui/icons-material/Language";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
 import "../../Scss/Pages/Partials/footer.scss";
+
+const getSocialIcon = (platform = "") => {
+  const p = platform.toLowerCase();
+  if (p.includes("insta")) return <InstagramIcon fontSize="inherit" />;
+  if (p.includes("face")) return <FacebookIcon fontSize="inherit" />;
+  if (p.includes("twit") || p === "x") return <TwitterIcon fontSize="inherit" />;
+  if (p.includes("you")) return <YouTubeIcon fontSize="inherit" />;
+  if (p.includes("link")) return <LinkedInIcon fontSize="inherit" />;
+  if (p.includes("pin")) return <PinterestIcon fontSize="inherit" />;
+  if (p.includes("what")) return <WhatsAppIcon fontSize="inherit" />;
+  return <LanguageIcon fontSize="inherit" />;
+};
 
 const Footer = () => {
   const { translations = {} } = useLanguage();
@@ -67,6 +87,31 @@ const Footer = () => {
                 </div>
               )}
             </div>
+
+            {Array.isArray(business?.socialmedia) && business.socialmedia.length > 0 && (
+              <div className="footer-socials-row">
+                {business.socialmedia.map((item, idx) => {
+                  const url = item.url
+                    ? item.url.startsWith("http")
+                      ? item.url
+                      : `https://${item.url}`
+                    : "#";
+                  return (
+                    <a
+                      key={item._id || idx}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="footer-social-btn"
+                      title={item.platform || "Social Profile"}
+                      aria-label={item.platform || "Social Profile"}
+                    >
+                      {getSocialIcon(item.platform)}
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Quick Links */}
