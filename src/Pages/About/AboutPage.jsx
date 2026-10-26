@@ -24,36 +24,7 @@ import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintena
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import "../../Scss/Pages/About/aboutpage.scss";
 
-const DEFAULT_PILLARS = [
-  {
-    id: 1,
-    title: "Seasonal Fresh Ingredients",
-    text: "We partner with responsible growers, organic orchards, and daily fisheries to guarantee pristine freshness and vibrant flavors in every bite.",
-    icon: "organic",
-    colorClass: "green",
-  },
-  {
-    id: 2,
-    title: "Master Chef Craftsmanship",
-    text: "Our culinary team combines time-honored artisanal recipes with progressive cooking techniques to deliver unforgettable dining experiences.",
-    icon: "chef",
-    colorClass: "purple",
-  },
-  {
-    id: 3,
-    title: "Uncompromising Quality",
-    text: "From hygiene and safety standards to flawless plating, we adhere to stringent standards to ensure pure dining satisfaction.",
-    icon: "shield",
-    colorClass: "amber",
-  },
-  {
-    id: 4,
-    title: "Seamless Hospitality",
-    text: "Enjoy contactless online reservations, fast tableside dining, and attentive guest service tailored to every celebration.",
-    icon: "table",
-    colorClass: "rose",
-  },
-];
+
 
 const getPillarIcon = (iconKey) => {
   switch (iconKey) {
@@ -193,55 +164,50 @@ const AboutPage = () => {
 
   const branchPhone = selectedBranch?.phone || "";
 
-  // Dynamic About Us Data with graceful fallbacks
-  const heroBadge = aboutUsSetting?.heroBadge || translations.aboutourkitchen || "Culinary Story & Heritage";
-  const heroTitle = aboutUsSetting?.heroTitle || translations.experiencediningat || "Experience Dining at";
-  const heroHighlight = aboutUsSetting?.heroHighlight || businessName;
-  const heroLead =
-    aboutUsSetting?.heroLead ||
-    businessAbout ||
-    translations.aboutsubtitle ||
-    "Passionate chefs, farm-fresh local produce, and centuries-old culinary traditions reimagined for modern gastronomy.";
+  // Dynamic About Us Data - Pure Dynamic (No default mock/dummy data)
+  const heroBadge = (aboutUsSetting?.heroBadge || "").trim();
+  const heroTitle = (aboutUsSetting?.heroTitle || "").trim();
+  const heroHighlight = (aboutUsSetting?.heroHighlight || "").trim();
+  const heroLead = (aboutUsSetting?.heroLead || businessAbout || "").trim();
 
   const heroBadges = useMemo(() => {
-    if (Array.isArray(aboutUsSetting?.heroBadges) && aboutUsSetting.heroBadges.some(Boolean)) {
-      return aboutUsSetting.heroBadges.filter(Boolean);
-    }
-    return [
-      "Farm-to-Table Fresh",
-      "100% Handcrafted",
-      "Express Tableside Service",
-    ];
+    if (!Array.isArray(aboutUsSetting?.heroBadges)) return [];
+    return aboutUsSetting.heroBadges
+      .map((b) => (typeof b === "string" ? b.trim() : ""))
+      .filter(Boolean);
   }, [aboutUsSetting]);
 
-  const valuesSubtitle = aboutUsSetting?.valuesSubtitle || "OUR VALUES";
-  const valuesTitle = aboutUsSetting?.valuesTitle || "Why Dine With Us";
-  const valuesDesc =
-    aboutUsSetting?.valuesDesc ||
-    "Every dish is thoughtfully designed with premium ingredients, masterful culinary craft, and an unwavering commitment to hospitality.";
+  const valuesSubtitle = (aboutUsSetting?.valuesSubtitle || "").trim();
+  const valuesTitle = (aboutUsSetting?.valuesTitle || "").trim();
+  const valuesDesc = (aboutUsSetting?.valuesDesc || "").trim();
 
   const pillarsList = useMemo(() => {
-    if (Array.isArray(aboutUsSetting?.pillars) && aboutUsSetting.pillars.some((p) => p.title || p.text)) {
-      return aboutUsSetting.pillars.map((p, idx) => ({
+    if (!Array.isArray(aboutUsSetting?.pillars)) return [];
+    return aboutUsSetting.pillars
+      .filter((p) => (p?.title && p.title.trim()) || (p?.text && p.text.trim()))
+      .map((p, idx) => ({
         id: p.id || idx + 1,
-        title: p.title || DEFAULT_PILLARS[idx]?.title || "Culinary Craft",
-        text: p.text || DEFAULT_PILLARS[idx]?.text || "",
-        icon: p.icon || DEFAULT_PILLARS[idx]?.icon || "organic",
-        colorClass: p.colorClass || DEFAULT_PILLARS[idx]?.colorClass || "green",
+        title: (p.title || "").trim(),
+        text: (p.text || "").trim(),
+        icon: p.icon || "organic",
+        colorClass: p.colorClass || "green",
       }));
-    }
-    return DEFAULT_PILLARS;
   }, [aboutUsSetting]);
 
-  const storyQuote = aboutUsSetting?.storyQuote || businessAbout;
-  const storyAuthor = aboutUsSetting?.storyAuthor || (businessName ? `— Culinary Team, ${businessName}` : "");
+  const hasPillarsSection = Boolean(
+    valuesSubtitle || valuesTitle || valuesDesc || pillarsList.length > 0
+  );
 
-  const ctaTitle = aboutUsSetting?.ctaTitle || "Ready to Taste the Craft?";
-  const ctaDesc =
-    aboutUsSetting?.ctaDesc ||
-    "Explore our full culinary menu or reserve a table for an unforgettable dining experience today.";
-  const ctaMenuBtnText = aboutUsSetting?.ctaMenuBtnText || "Explore Menu";
-  const ctaBookingBtnText = aboutUsSetting?.ctaBookingBtnText || "Book A Table";
+  const storyQuote = (aboutUsSetting?.storyQuote || "").trim();
+  const storyAuthor = (aboutUsSetting?.storyAuthor || "").trim();
+
+  const ctaTitle = (aboutUsSetting?.ctaTitle || "").trim();
+  const ctaDesc = (aboutUsSetting?.ctaDesc || "").trim();
+  const ctaMenuBtnText = (aboutUsSetting?.ctaMenuBtnText || "").trim();
+  const ctaBookingBtnText = (aboutUsSetting?.ctaBookingBtnText || "").trim();
+  const hasCtaSection = Boolean(
+    ctaTitle || ctaDesc || ctaMenuBtnText || ctaBookingBtnText
+  );
 
   return (
     <div className="about-page-wrapper">
@@ -255,34 +221,55 @@ const AboutPage = () => {
 
           <div className="about-hero-grid">
             <div className="about-hero-text">
-              <div className="about-brand-tag">
-                <RestaurantIcon className="tag-icon" />
-                <span>{heroBadge}</span>
-              </div>
+              {heroBadge && (
+                <div className="about-brand-tag">
+                  <RestaurantIcon className="tag-icon" />
+                  <span>{heroBadge}</span>
+                </div>
+              )}
 
               <h1 className="about-title">
-                {heroTitle}
-                <span className="about-title-highlight"> {heroHighlight}</span>
+                {heroTitle ? (
+                  <>
+                    {heroTitle}
+                    {heroHighlight && (
+                      <span className="about-title-highlight"> {heroHighlight}</span>
+                    )}
+                  </>
+                ) : heroHighlight ? (
+                  <span className="about-title-highlight">{heroHighlight}</span>
+                ) : (
+                  <>
+                    {translations.aboutus || "About"}{" "}
+                    {businessName && (
+                      <span className="about-title-highlight">{businessName}</span>
+                    )}
+                  </>
+                )}
               </h1>
 
-              <p className="about-lead">
-                {heroLead}
-              </p>
+              {heroLead && (
+                <p className="about-lead">
+                  {heroLead}
+                </p>
+              )}
 
-              <div className="about-hero-badges">
-                {heroBadges.map((badge, bIdx) => (
-                  <div key={bIdx} className="hero-badge-pill">
-                    {bIdx === 0 ? (
-                      <VerifiedIcon className="badge-pill-icon" />
-                    ) : bIdx === 1 ? (
-                      <SpaIcon className="badge-pill-icon" />
-                    ) : (
-                      <AccessTimeIcon className="badge-pill-icon" />
-                    )}
-                    <span>{badge}</span>
-                  </div>
-                ))}
-              </div>
+              {heroBadges.length > 0 && (
+                <div className="about-hero-badges">
+                  {heroBadges.map((badge, bIdx) => (
+                    <div key={bIdx} className="hero-badge-pill">
+                      {bIdx === 0 ? (
+                        <VerifiedIcon className="badge-pill-icon" />
+                      ) : bIdx === 1 ? (
+                        <SpaIcon className="badge-pill-icon" />
+                      ) : (
+                        <AccessTimeIcon className="badge-pill-icon" />
+                      )}
+                      <span>{badge}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Hero Image Showcase */}
@@ -313,27 +300,33 @@ const AboutPage = () => {
       </section>
 
       {/* 2. Philosophy & Core Pillars */}
-      <section className="about-pillars-section">
-        <div className="section-container">
-          <div className="section-header">
-            <span className="section-subtitle">{valuesSubtitle}</span>
-            <h2 className="section-title">{valuesTitle}</h2>
-            <p className="section-desc">{valuesDesc}</p>
-          </div>
-
-          <div className="pillars-grid">
-            {pillarsList.map((pillar) => (
-              <div key={pillar.id} className="pillar-card">
-                <div className={`pillar-icon-box ${pillar.colorClass || "green"}`}>
-                  {getPillarIcon(pillar.icon)}
-                </div>
-                <h3 className="pillar-title">{pillar.title}</h3>
-                <p className="pillar-text">{pillar.text}</p>
+      {hasPillarsSection && (
+        <section className="about-pillars-section">
+          <div className="section-container">
+            {(valuesSubtitle || valuesTitle || valuesDesc) && (
+              <div className="section-header">
+                {valuesSubtitle && <span className="section-subtitle">{valuesSubtitle}</span>}
+                {valuesTitle && <h2 className="section-title">{valuesTitle}</h2>}
+                {valuesDesc && <p className="section-desc">{valuesDesc}</p>}
               </div>
-            ))}
+            )}
+
+            {pillarsList.length > 0 && (
+              <div className="pillars-grid">
+                {pillarsList.map((pillar) => (
+                  <div key={pillar.id} className="pillar-card">
+                    <div className={`pillar-icon-box ${pillar.colorClass || "green"}`}>
+                      {getPillarIcon(pillar.icon)}
+                    </div>
+                    {pillar.title && <h3 className="pillar-title">{pillar.title}</h3>}
+                    {pillar.text && <p className="pillar-text">{pillar.text}</p>}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 3. Detailed Business Information & Active Branch */}
       <section className="about-details-section">
@@ -464,29 +457,35 @@ const AboutPage = () => {
       </section>
 
       {/* 4. Action CTA Strip */}
-      <section className="about-cta-section">
-        <div className="section-container">
-          <div className="about-cta-banner">
-            <div className="cta-content">
-              <h2 className="cta-title">{ctaTitle}</h2>
-              <p className="cta-desc">
-                {ctaDesc}
-              </p>
-              <div className="cta-buttons">
-                <Link to="/menu" className="btn btn-primary cta-btn">
-                  <MenuBookIcon fontSize="small" />
-                  <span>{ctaMenuBtnText}</span>
-                  <ArrowForwardIcon fontSize="small" />
-                </Link>
-                <Link to="/reservation" className="btn btn-outline cta-btn">
-                  <TableRestaurantIcon fontSize="small" />
-                  <span>{ctaBookingBtnText}</span>
-                </Link>
+      {hasCtaSection && (
+        <section className="about-cta-section">
+          <div className="section-container">
+            <div className="about-cta-banner">
+              <div className="cta-content">
+                {ctaTitle && <h2 className="cta-title">{ctaTitle}</h2>}
+                {ctaDesc && <p className="cta-desc">{ctaDesc}</p>}
+                {(ctaMenuBtnText || ctaBookingBtnText) && (
+                  <div className="cta-buttons">
+                    {ctaMenuBtnText && (
+                      <Link to="/menu" className="btn btn-primary cta-btn">
+                        <MenuBookIcon fontSize="small" />
+                        <span>{ctaMenuBtnText}</span>
+                        <ArrowForwardIcon fontSize="small" />
+                      </Link>
+                    )}
+                    {ctaBookingBtnText && (
+                      <Link to="/reservation" className="btn btn-outline cta-btn">
+                        <TableRestaurantIcon fontSize="small" />
+                        <span>{ctaBookingBtnText}</span>
+                      </Link>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 };
