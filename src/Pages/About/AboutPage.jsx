@@ -20,9 +20,57 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LanguageIcon from "@mui/icons-material/Language";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
+import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import "../../Scss/Pages/About/aboutpage.scss";
+
+const DEFAULT_PILLARS = [
+  {
+    id: 1,
+    title: "Seasonal Fresh Ingredients",
+    text: "We partner with responsible growers, organic orchards, and daily fisheries to guarantee pristine freshness and vibrant flavors in every bite.",
+    icon: "organic",
+    colorClass: "green",
+  },
+  {
+    id: 2,
+    title: "Master Chef Craftsmanship",
+    text: "Our culinary team combines time-honored artisanal recipes with progressive cooking techniques to deliver unforgettable dining experiences.",
+    icon: "chef",
+    colorClass: "purple",
+  },
+  {
+    id: 3,
+    title: "Uncompromising Quality",
+    text: "From hygiene and safety standards to flawless plating, we adhere to stringent standards to ensure pure dining satisfaction.",
+    icon: "shield",
+    colorClass: "amber",
+  },
+  {
+    id: 4,
+    title: "Seamless Hospitality",
+    text: "Enjoy contactless online reservations, fast tableside dining, and attentive guest service tailored to every celebration.",
+    icon: "table",
+    colorClass: "rose",
+  },
+];
+
+const getPillarIcon = (iconKey) => {
+  switch (iconKey) {
+    case "organic":
+      return <SpaIcon fontSize="inherit" />;
+    case "chef":
+      return <RestaurantIcon fontSize="inherit" />;
+    case "shield":
+      return <VerifiedIcon fontSize="inherit" />;
+    case "table":
+      return <TableRestaurantIcon fontSize="inherit" />;
+    case "clock":
+      return <AccessTimeIcon fontSize="inherit" />;
+    default:
+      return <SpaIcon fontSize="inherit" />;
+  }
+};
 
 const getSocialIcon = (platform = "") => {
   const p = platform.toLowerCase();
@@ -37,8 +85,61 @@ const getSocialIcon = (platform = "") => {
 };
 
 const AboutPage = () => {
+  const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
   const { translations = {} } = useLanguage();
-  const { business, subdomain } = useWebsiteStatus();
+  const { business: contextBusiness, subdomain: contextSubdomain } = useWebsiteStatus();
+
+  const [aboutUsSetting, setAboutUsSetting] = useState(null);
+  const [apiBusiness, setApiBusiness] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch about us setting directly from the backend API for this page
+  useEffect(() => {
+    let isMounted = true;
+    const fetchAboutData = async () => {
+      const currentSubdomain = getWebsiteSubdomain() || contextSubdomain;
+      if (!currentSubdomain) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${adminPanelBackendPath}/Website/General/GetAboutUsSetting`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "admin",
+            "x-subdomain": currentSubdomain,
+          },
+        });
+
+        const data = await response.json();
+        if (isMounted && response.ok && data.success) {
+          if (data.aboutus) {
+            setAboutUsSetting(data.aboutus);
+          }
+          if (data.business) {
+            setApiBusiness(data.business);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching about us data:", err);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchAboutData();
+    return () => {
+      isMounted = false;
+    };
+  }, [adminPanelBackendPath, contextSubdomain]);
+
+  const business = apiBusiness || contextBusiness;
+  const subdomain = contextSubdomain || getWebsiteSubdomain();
 
   const businessName = business?.businessname || "Our Restaurant";
   const businessLogo = business?.imageUrl;
@@ -92,6 +193,56 @@ const AboutPage = () => {
 
   const branchPhone = selectedBranch?.phone || "";
 
+  // Dynamic About Us Data with graceful fallbacks
+  const heroBadge = aboutUsSetting?.heroBadge || translations.aboutourkitchen || "Culinary Story & Heritage";
+  const heroTitle = aboutUsSetting?.heroTitle || translations.experiencediningat || "Experience Dining at";
+  const heroHighlight = aboutUsSetting?.heroHighlight || businessName;
+  const heroLead =
+    aboutUsSetting?.heroLead ||
+    businessAbout ||
+    translations.aboutsubtitle ||
+    "Passionate chefs, farm-fresh local produce, and centuries-old culinary traditions reimagined for modern gastronomy.";
+
+  const heroBadges = useMemo(() => {
+    if (Array.isArray(aboutUsSetting?.heroBadges) && aboutUsSetting.heroBadges.some(Boolean)) {
+      return aboutUsSetting.heroBadges.filter(Boolean);
+    }
+    return [
+      "Farm-to-Table Fresh",
+      "100% Handcrafted",
+      "Express Tableside Service",
+    ];
+  }, [aboutUsSetting]);
+
+  const valuesSubtitle = aboutUsSetting?.valuesSubtitle || "OUR VALUES";
+  const valuesTitle = aboutUsSetting?.valuesTitle || "Why Dine With Us";
+  const valuesDesc =
+    aboutUsSetting?.valuesDesc ||
+    "Every dish is thoughtfully designed with premium ingredients, masterful culinary craft, and an unwavering commitment to hospitality.";
+
+  const pillarsList = useMemo(() => {
+    if (Array.isArray(aboutUsSetting?.pillars) && aboutUsSetting.pillars.some((p) => p.title || p.text)) {
+      return aboutUsSetting.pillars.map((p, idx) => ({
+        id: p.id || idx + 1,
+        title: p.title || DEFAULT_PILLARS[idx]?.title || "Culinary Craft",
+        text: p.text || DEFAULT_PILLARS[idx]?.text || "",
+        icon: p.icon || DEFAULT_PILLARS[idx]?.icon || "organic",
+        colorClass: p.colorClass || DEFAULT_PILLARS[idx]?.colorClass || "green",
+      }));
+    }
+    return DEFAULT_PILLARS;
+  }, [aboutUsSetting]);
+
+  const storyQuote = aboutUsSetting?.storyQuote || businessAbout;
+  const storyAuthor = aboutUsSetting?.storyAuthor || (businessName ? `— Culinary Team, ${businessName}` : "");
+
+  const ctaTitle = aboutUsSetting?.ctaTitle || "Ready to Taste the Craft?";
+  const ctaDesc =
+    aboutUsSetting?.ctaDesc ||
+    "Explore our full culinary menu or reserve a table for an unforgettable dining experience today.";
+  const ctaMenuBtnText = aboutUsSetting?.ctaMenuBtnText || "Explore Menu";
+  const ctaBookingBtnText = aboutUsSetting?.ctaBookingBtnText || "Book A Table";
+
   return (
     <div className="about-page-wrapper">
       {/* 1. Hero Banner Section */}
@@ -106,33 +257,31 @@ const AboutPage = () => {
             <div className="about-hero-text">
               <div className="about-brand-tag">
                 <RestaurantIcon className="tag-icon" />
-                <span>{translations.aboutourkitchen || "Culinary Story & Heritage"}</span>
+                <span>{heroBadge}</span>
               </div>
 
               <h1 className="about-title">
-                {translations.experiencediningat || "Experience Dining at"}
-                <span className="about-title-highlight"> {businessName}</span>
+                {heroTitle}
+                <span className="about-title-highlight"> {heroHighlight}</span>
               </h1>
 
               <p className="about-lead">
-                {businessAbout ||
-                  translations.aboutsubtitle ||
-                  "Passionate chefs, farm-fresh local produce, and centuries-old culinary traditions reimagined for modern gastronomy."}
+                {heroLead}
               </p>
 
               <div className="about-hero-badges">
-                <div className="hero-badge-pill">
-                  <VerifiedIcon className="badge-pill-icon" />
-                  <span>Farm-to-Table Fresh</span>
-                </div>
-                <div className="hero-badge-pill">
-                  <SpaIcon className="badge-pill-icon" />
-                  <span>100% Handcrafted</span>
-                </div>
-                <div className="hero-badge-pill">
-                  <AccessTimeIcon className="badge-pill-icon" />
-                  <span>Express Tableside Service</span>
-                </div>
+                {heroBadges.map((badge, bIdx) => (
+                  <div key={bIdx} className="hero-badge-pill">
+                    {bIdx === 0 ? (
+                      <VerifiedIcon className="badge-pill-icon" />
+                    ) : bIdx === 1 ? (
+                      <SpaIcon className="badge-pill-icon" />
+                    ) : (
+                      <AccessTimeIcon className="badge-pill-icon" />
+                    )}
+                    <span>{badge}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -167,53 +316,21 @@ const AboutPage = () => {
       <section className="about-pillars-section">
         <div className="section-container">
           <div className="section-header">
-            <span className="section-subtitle">OUR VALUES</span>
-            <h2 className="section-title">Why Dine With Us</h2>
-            <p className="section-desc">
-              Every dish is thoughtfully designed with premium ingredients, masterful culinary craft, and an unwavering commitment to hospitality.
-            </p>
+            <span className="section-subtitle">{valuesSubtitle}</span>
+            <h2 className="section-title">{valuesTitle}</h2>
+            <p className="section-desc">{valuesDesc}</p>
           </div>
 
           <div className="pillars-grid">
-            <div className="pillar-card">
-              <div className="pillar-icon-box green">
-                <SpaIcon fontSize="inherit" />
+            {pillarsList.map((pillar) => (
+              <div key={pillar.id} className="pillar-card">
+                <div className={`pillar-icon-box ${pillar.colorClass || "green"}`}>
+                  {getPillarIcon(pillar.icon)}
+                </div>
+                <h3 className="pillar-title">{pillar.title}</h3>
+                <p className="pillar-text">{pillar.text}</p>
               </div>
-              <h3 className="pillar-title">Seasonal Fresh Ingredients</h3>
-              <p className="pillar-text">
-                We partner with responsible growers, organic orchards, and daily fisheries to guarantee pristine freshness and vibrant flavors in every bite.
-              </p>
-            </div>
-
-            <div className="pillar-card">
-              <div className="pillar-icon-box purple">
-                <RestaurantIcon fontSize="inherit" />
-              </div>
-              <h3 className="pillar-title">Master Chef Craftsmanship</h3>
-              <p className="pillar-text">
-                Our culinary team combines time-honored artisanal recipes with progressive cooking techniques to deliver unforgettable dining experiences.
-              </p>
-            </div>
-
-            <div className="pillar-card">
-              <div className="pillar-icon-box amber">
-                <VerifiedIcon fontSize="inherit" />
-              </div>
-              <h3 className="pillar-title">Uncompromising Quality</h3>
-              <p className="pillar-text">
-                From hygiene and safety standards to flawless plating, we adhere to stringent standards to ensure pure dining satisfaction.
-              </p>
-            </div>
-
-            <div className="pillar-card">
-              <div className="pillar-icon-box rose">
-                <TableRestaurantIcon fontSize="inherit" />
-              </div>
-              <h3 className="pillar-title">Seamless Hospitality</h3>
-              <p className="pillar-text">
-                Enjoy contactless online reservations, fast tableside dining, and attentive guest service tailored to every celebration.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -237,14 +354,16 @@ const AboutPage = () => {
                 </div>
               </div>
 
-              {businessAbout && (
+              {storyQuote && (
                 <div className="story-quote-card">
                   <p className="story-quote-text">
-                    "{businessAbout}"
+                    "{storyQuote}"
                   </p>
-                  <span className="story-quote-author">
-                    — Culinary Team, {businessName}
-                  </span>
+                  {storyAuthor && (
+                    <span className="story-quote-author">
+                      {storyAuthor.startsWith("—") ? storyAuthor : `— ${storyAuthor}`}
+                    </span>
+                  )}
                 </div>
               )}
 
@@ -349,19 +468,19 @@ const AboutPage = () => {
         <div className="section-container">
           <div className="about-cta-banner">
             <div className="cta-content">
-              <h2 className="cta-title">Ready to Taste the Craft?</h2>
+              <h2 className="cta-title">{ctaTitle}</h2>
               <p className="cta-desc">
-                Explore our full culinary menu or reserve a table for an unforgettable dining experience today.
+                {ctaDesc}
               </p>
               <div className="cta-buttons">
                 <Link to="/menu" className="btn btn-primary cta-btn">
                   <MenuBookIcon fontSize="small" />
-                  <span>Explore Menu</span>
+                  <span>{ctaMenuBtnText}</span>
                   <ArrowForwardIcon fontSize="small" />
                 </Link>
                 <Link to="/reservation" className="btn btn-outline cta-btn">
                   <TableRestaurantIcon fontSize="small" />
-                  <span>Book A Table</span>
+                  <span>{ctaBookingBtnText}</span>
                 </Link>
               </div>
             </div>
