@@ -1,9 +1,16 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CloseIcon from "@mui/icons-material/Close";
+import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
+import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homedishes.scss";
+
+const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 /**
  * Standard Veg/Non-Veg FSSAI-compliant diet badge
@@ -14,8 +21,8 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
   return (
     <span
       className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? translations.purevegetarian : translations.nonvegetarian}
-      aria-label={isVeg ? translations.purevegetarian : translations.nonvegetarian}
+      title={isVeg ? (translations.purevegetarian || "Pure Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
+      aria-label={isVeg ? (translations.purevegetarian || "Pure Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
     >
       {isVeg ? (
         <svg
@@ -46,187 +53,556 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
   );
 };
 
+/**
+ * Returns an appropriate emoji for a category based on its name
+ */
+const getCategoryIcon = (categoryName = "") => {
+  const lower = categoryName.toLowerCase();
+  if (lower.includes("pizza")) return "🍕";
+  if (lower.includes("burger") || lower.includes("sandwich")) return "🍔";
+  if (lower.includes("starter") || lower.includes("appetizer") || lower.includes("salad")) return "🥗";
+  if (lower.includes("main") || lower.includes("steak") || lower.includes("chef")) return "🥩";
+  if (lower.includes("pasta") || lower.includes("noodle") || lower.includes("ramen")) return "🍜";
+  if (lower.includes("dessert") || lower.includes("cake") || lower.includes("sweet") || lower.includes("gelato")) return "🍰";
+  if (lower.includes("drink") || lower.includes("beverage") || lower.includes("cocktail") || lower.includes("mocktail")) return "🍹";
+  if (lower.includes("seafood") || lower.includes("fish") || lower.includes("shrimp") || lower.includes("calamari")) return "🦐";
+  if (lower.includes("breakfast") || lower.includes("brunch") || lower.includes("egg")) return "🍳";
+  if (lower.includes("taco") || lower.includes("mexican") || lower.includes("wrap")) return "🌮";
+  if (lower.includes("sushi") || lower.includes("asian")) return "🍣";
+  return "🍽️";
+};
+
 const HomeDishes = () => {
   const { translations = {} } = useLanguage();
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedMenu, setSelectedMenu] = useState("all");
   const [addedItems, setAddedItems] = useState({});
+  const [selectedItemModal, setSelectedItemModal] = useState(null);
+  const [modalQuantity, setModalQuantity] = useState(1);
 
-  const categories = useMemo(
-    () => [
-      { id: "all", label: translations.allspecialties },
-      { id: "pizza", label: `🍕 ${translations.artisanpizzas}` },
-      { id: "burgers", label: `🍔 ${translations.smashburgers}` },
-      { id: "asian", label: `🍜 ${translations.ramenbowls}` },
-      { id: "dessert", label: `🍰 ${translations.dessertsgelato}` },
-    ],
-    [translations]
-  );
+  // Raw API data
+  const [rawCategories, setRawCategories] = useState([]);
+  const [rawDealsBundles, setRawDealsBundles] = useState([]);
+  const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("$");
 
-  const sampleDishes = useMemo(
-    () => [
-      {
-        id: 1,
-        category: "pizza",
-        menuname: translations.artisanpizzas,
-        title: translations.dishmargherita,
-        desc: translations.dishmargheritadesc,
-        price: "$18.50",
-        image: "/banners/banner-pizza.jpg",
-        isVeg: true,
-      },
-      {
-        id: 2,
-        category: "pizza",
-        menuname: translations.artisanpizzas,
-        title: translations.dishtruffle,
-        desc: translations.dishtruffledesc,
-        price: "$23.00",
-        image: "/banners/banner-pizza.jpg",
-        isVeg: false,
-      },
-      {
-        id: 3,
-        category: "burgers",
-        menuname: translations.smashburgers,
-        title: translations.dishdoublecheddar,
-        desc: translations.dishdoublecheddardesc,
-        price: "$16.75",
-        image: "/banners/banner-burger.jpg",
-        isVeg: false,
-      },
-      {
-        id: 4,
-        category: "burgers",
-        menuname: translations.smashburgers,
-        title: translations.dishsmokybbq,
-        desc: translations.dishsmokybbqdesc,
-        price: "$17.50",
-        image: "/banners/banner-burger.jpg",
-        isVeg: false,
-      },
-      {
-        id: 5,
-        category: "asian",
-        menuname: translations.ramenbowls,
-        title: translations.dishtonkotsu,
-        desc: translations.dishtonkotsudesc,
-        price: "$19.25",
-        image: "/banners/banner-feast.jpg",
-        isVeg: false,
-      },
-      {
-        id: 6,
-        category: "asian",
-        menuname: translations.ramenbowls,
-        title: translations.dishsashimi,
-        desc: translations.dishsashimidesc,
-        price: "$26.00",
-        image: "/banners/banner-feast.jpg",
-        isVeg: false,
-      },
-      {
-        id: 7,
-        category: "dessert",
-        menuname: translations.dessertsgelato,
-        title: translations.dishchoccake,
-        desc: translations.dishchoccakedesc,
-        price: "$11.50",
-        image: "/banners/banner-dessert.jpg",
-        isVeg: true,
-      },
-      {
-        id: 8,
-        category: "dessert",
-        menuname: translations.handcraftedmocktails,
-        title: translations.dishmocktail,
-        desc: translations.dishmocktaildesc,
-        price: "$8.50",
-        image: "/banners/banner-dessert.jpg",
-        isVeg: true,
-      },
-    ],
-    [translations]
-  );
+  // Fetch Menu, Category, Item, and Deal data from website endpoint
+  const fetchMenuData = useCallback(async (branchIdParam) => {
+    const currentSubdomain = getWebsiteSubdomain();
+    if (!currentSubdomain) {
+      setLoading(false);
+      return;
+    }
 
-  const handleAddToCart = (id) => {
+    const branchId =
+      branchIdParam ||
+      localStorage.getItem("selectedBranchId") ||
+      (typeof window !== "undefined" && window.__selectedBranch?._id);
+
+    if (!branchId) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetItemcategory/${branchId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "admin",
+          "x-subdomain": currentSubdomain,
+        },
+      });
+
+      if (!response.ok) {
+        setRawCategories([]);
+        setRawDealsBundles([]);
+        return;
+      }
+
+      const data = await response.json();
+      const categories = Array.isArray(data.itemCategories) ? data.itemCategories : [];
+      const bundles = Array.isArray(data.dealsBundles) ? data.dealsBundles : [];
+
+      setRawCategories(categories);
+      setRawDealsBundles(bundles);
+
+      // Extract currency symbol from first item or deal
+      let symbol = "$";
+      for (const cat of categories) {
+        for (const mg of cat.menuGroups || []) {
+          for (const item of mg.itemDetails || []) {
+            if (item.currencysymbol) {
+              symbol = item.currencysymbol;
+              break;
+            }
+          }
+        }
+      }
+      setBranchCurrencySymbol(symbol);
+    } catch (err) {
+      console.error("Error fetching menu details for website:", err);
+      setRawCategories([]);
+      setRawDealsBundles([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Listen for branch selection changes across the website
+  useEffect(() => {
+    fetchMenuData();
+
+    const handleBranchChange = (e) => {
+      if (e?.detail?._id) {
+        fetchMenuData(e.detail._id);
+      } else {
+        fetchMenuData();
+      }
+    };
+
+    window.addEventListener("branchChange", handleBranchChange);
+
+    // If navbar is already mounted, request the current branch
+    window.dispatchEvent(new CustomEvent("requestBranch"));
+
+    return () => {
+      window.removeEventListener("branchChange", handleBranchChange);
+    };
+  }, [fetchMenuData]);
+
+  // Extract all flat items across all categories and menu groups
+  const allDishes = useMemo(() => {
+    const list = [];
+    rawCategories.forEach((cat) => {
+      (cat.menuGroups || []).forEach((mg) => {
+        const menuDetails = mg.menuDetails || {};
+        (mg.itemDetails || []).forEach((item) => {
+          list.push({
+            id: String(item.itemid),
+            itemid: item.itemid,
+            categoryid: cat.itemcategoryid,
+            categoryname: cat.itemcategoryname,
+            menuid: menuDetails.menuid,
+            menuname: menuDetails.menuname || "",
+            title: item.itemname,
+            desc: item.description || "",
+            price: item.price != null ? item.price : 0,
+            currency: item.currency || "",
+            currencysymbol: item.currencysymbol || branchCurrencySymbol || "$",
+            image: item.imageUrl || "/banners/banner-feast.jpg",
+            isVeg: (item.itemtype || "").toLowerCase().includes("veg") && !(item.itemtype || "").toLowerCase().includes("non"),
+            preparationtime: item.preparationtime,
+            addons: item.addons || [],
+            isDeal: false,
+          });
+        });
+      });
+    });
+    return list;
+  }, [rawCategories, branchCurrencySymbol]);
+
+  // Extract unique menus for sub-filter
+  const uniqueMenus = useMemo(() => {
+    const map = new Map();
+    allDishes.forEach((d) => {
+      if (d.menuid && d.menuname) {
+        map.set(d.menuid, d.menuname);
+      }
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [allDishes]);
+
+  // Format deals and bundles (combos and unlimited)
+  const formattedDeals = useMemo(() => {
+    return rawDealsBundles.map((b) => ({
+      id: `deal-${b.dealsbundlesid}`,
+      dealsbundlesid: b.dealsbundlesid,
+      categoryid: "deals",
+      categoryname: b.bundletype === "combo" ? (translations.combomeal || "Combo Meal") : (translations.unlimitedmeal || "Unlimited Feast"),
+      bundletype: (b.bundletype || "combo").toLowerCase(),
+      title: b.dealsbundlesname,
+      desc: b.description || (Array.isArray(b.items) ? b.items.map((it) => it.itemname || it.name).join(" • ") : ""),
+      price: b.price != null ? b.price : 0,
+      currency: b.currency || "",
+      currencysymbol: b.currencysymbol || branchCurrencySymbol || "$",
+      image: b.imageUrl || "/banners/banner-feast.jpg",
+      isVeg: (b.itemtype || "").toLowerCase().includes("veg") && !(b.itemtype || "").toLowerCase().includes("non"),
+      preparationtime: b.preparationtime,
+      items: b.items || [],
+      addons: b.addons || [],
+      isDeal: true,
+    }));
+  }, [rawDealsBundles, branchCurrencySymbol, translations]);
+
+  // Dynamic category pills
+  const categories = useMemo(() => {
+    const tabs = [
+      {
+        id: "all",
+        label: translations.allspecialties || "All Specialties",
+        icon: "🍽️",
+        count: allDishes.length + formattedDeals.length,
+      },
+    ];
+
+    rawCategories.forEach((cat) => {
+      let count = 0;
+      (cat.menuGroups || []).forEach((mg) => {
+        count += (mg.itemDetails || []).length;
+      });
+      tabs.push({
+        id: String(cat.itemcategoryid),
+        label: cat.itemcategoryname,
+        icon: getCategoryIcon(cat.itemcategoryname),
+        count,
+      });
+    });
+
+    if (formattedDeals.length > 0) {
+      const comboCount = formattedDeals.filter((d) => d.bundletype === "combo").length;
+      const unlimitedCount = formattedDeals.filter((d) => d.bundletype === "unlimited").length;
+
+      if (comboCount > 0) {
+        tabs.push({
+          id: "combos",
+          label: translations.combomeals || "Combo Deals",
+          icon: "🍱",
+          count: comboCount,
+        });
+      }
+      if (unlimitedCount > 0) {
+        tabs.push({
+          id: "unlimited",
+          label: translations.unlimitedfeasts || "Unlimited Feasts",
+          icon: "♾️",
+          count: unlimitedCount,
+        });
+      }
+    }
+
+    return tabs;
+  }, [allDishes.length, formattedDeals, rawCategories, translations]);
+
+  // Filtered dishes and deals based on active tabs
+  const displayedItems = useMemo(() => {
+    let items = [];
+
+    if (selectedCategory === "all") {
+      items = [...formattedDeals, ...allDishes];
+    } else if (selectedCategory === "combos") {
+      items = formattedDeals.filter((d) => d.bundletype === "combo");
+    } else if (selectedCategory === "unlimited") {
+      items = formattedDeals.filter((d) => d.bundletype === "unlimited");
+    } else {
+      items = allDishes.filter((d) => String(d.categoryid) === String(selectedCategory));
+    }
+
+    // Apply menu sub-filter if selected
+    if (selectedMenu !== "all") {
+      items = items.filter((it) => it.isDeal || String(it.menuid) === String(selectedMenu));
+    }
+
+    return items;
+  }, [selectedCategory, selectedMenu, formattedDeals, allDishes]);
+
+  const handleAddToCart = (e, item) => {
+    e.stopPropagation();
     setAddedItems((prev) => ({
       ...prev,
-      [id]: (prev[id] || 0) + 1,
+      [item.id]: (prev[item.id] || 0) + 1,
     }));
   };
 
-  const filteredDishes =
-    selectedCategory === "all"
-      ? sampleDishes
-      : sampleDishes.filter((d) => d.category === selectedCategory);
+  const handleCardClick = (item) => {
+    setSelectedItemModal(item);
+    setModalQuantity(addedItems[item.id] || 1);
+  };
+
+  const handleConfirmModalAdd = () => {
+    if (selectedItemModal) {
+      setAddedItems((prev) => ({
+        ...prev,
+        [selectedItemModal.id]: modalQuantity,
+      }));
+      setSelectedItemModal(null);
+    }
+  };
 
   return (
     <section className="dishes-showcase-section">
+      {/* Section Header */}
       <div className="section-header-block">
         <span className="section-pill-tag">
           <RestaurantMenuIcon fontSize="inherit" />
-          {translations.curatedmenu}
+          {translations.curatedmenu || "Curated Menu"}
         </span>
-        <h2 className="section-main-title">{translations.mostlovedspecialties}</h2>
+        <h2 className="section-main-title">{translations.mostlovedspecialties || "Most Loved Specialties"}</h2>
         <p className="section-subtitle">
-          {translations.mostlovedsubtitle}
+          {translations.mostlovedsubtitle || "Crafted with culinary expertise and the finest ingredients. Explore our dishes cooked to perfection."}
         </p>
       </div>
 
-      {/* Category Filters */}
-      <div className="category-tabs-row">
-        {categories.map((cat) => (
+      {/* Dynamic Category Tabs */}
+      {!loading && categories.length > 1 && (
+        <div className="category-tabs-row">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              type="button"
+              className={`category-tab-btn ${selectedCategory === cat.id ? "active" : ""}`}
+              onClick={() => {
+                setSelectedCategory(cat.id);
+                setSelectedMenu("all");
+              }}
+            >
+              <span>{cat.icon}</span>
+              <span>{cat.label}</span>
+              {cat.count > 0 && <span className="category-count-badge">{cat.count}</span>}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Menu Sub-filters (if multiple menus exist in this branch) */}
+      {!loading && uniqueMenus.length > 1 && selectedCategory === "all" && (
+        <div className="menu-subfilters-row">
           <button
-            key={cat.id}
             type="button"
-            className={`category-tab-btn ${selectedCategory === cat.id ? "active" : ""}`}
-            onClick={() => setSelectedCategory(cat.id)}
+            className={`menu-chip ${selectedMenu === "all" ? "active" : ""}`}
+            onClick={() => setSelectedMenu("all")}
           >
-            {cat.label}
+            {translations.allmenus || "All Menus"}
           </button>
-        ))}
-      </div>
+          {uniqueMenus.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              className={`menu-chip ${selectedMenu === m.id ? "active" : ""}`}
+              onClick={() => setSelectedMenu(m.id)}
+            >
+              {m.name}
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Dishes Grid */}
-      <div className="dishes-grid">
-        {filteredDishes.map((dish) => {
-          const count = addedItems[dish.id] || 0;
-          return (
-            <div key={dish.id} className="dish-card">
-              <div className="dish-img-box">
-                <img src={dish.image} alt={dish.title} className="dish-img" loading="lazy" />
-                <span className="dish-tag-badge">{dish.menuname}</span>
-                <DietIndicator isVeg={dish.isVeg} />
-              </div>
-
-              <div className="dish-content">
-                <h3 className="dish-title" title={dish.title}>
-                  {dish.title}
-                </h3>
-                <p className="dish-desc" title={dish.desc}>
-                  {dish.desc}
-                </p>
-
-                <div className="dish-footer-row">
-                  <div className="dish-price-group">
-                    <span className="dish-price">{dish.price}</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    className={`dish-add-btn ${count > 0 ? "added" : ""}`}
-                    onClick={() => handleAddToCart(dish.id)}
-                    aria-label={translations.addtocart}
-                    title={count > 0 ? `${translations.added} (${count})` : translations.addtocart}
-                  >
-                    {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
-                  </button>
-                </div>
+      {/* Dishes & Deals Grid */}
+      {loading ? (
+        <div className="dishes-grid">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+            <div key={n} className="dish-skeleton-card">
+              <div className="skeleton-img" />
+              <div className="skeleton-body">
+                <div className="skeleton-line title" />
+                <div className="skeleton-line desc1" />
+                <div className="skeleton-line desc2" />
+                <div className="skeleton-line footer" />
               </div>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      ) : displayedItems.length > 0 ? (
+        <div className="dishes-grid">
+          {displayedItems.map((dish) => {
+            const count = addedItems[dish.id] || 0;
+            const priceFormatted = `${dish.currencysymbol || "$"}${dish.price != null ? Number(dish.price).toFixed(2) : "0.00"}`;
+
+            return (
+              <div
+                key={dish.id}
+                className={`dish-card ${dish.isDeal ? "deal-card" : ""}`}
+                onClick={() => handleCardClick(dish)}
+              >
+                <div className="dish-img-box">
+                  <img
+                    src={dish.image}
+                    alt={dish.title}
+                    className="dish-img"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/banners/banner-feast.jpg";
+                    }}
+                  />
+                  {dish.isDeal ? (
+                    <span className="deal-ribbon-badge">
+                      {dish.bundletype === "combo" ? "COMBO" : "UNLIMITED"}
+                    </span>
+                  ) : (
+                    dish.categoryname && <span className="dish-tag-badge">{dish.categoryname}</span>
+                  )}
+
+                  {dish.preparationtime && (
+                    <span className="dish-prep-time">
+                      <AccessTimeIcon fontSize="inherit" />
+                      {dish.preparationtime} min
+                    </span>
+                  )}
+
+                  <DietIndicator isVeg={dish.isVeg} />
+                </div>
+
+                <div className="dish-content">
+                  <h3 className="dish-title" title={dish.title}>
+                    {dish.title}
+                  </h3>
+                  <p className="dish-desc" title={dish.desc}>
+                    {dish.desc || (dish.menuname ? `${translations.servedin || "From"} ${dish.menuname}` : "")}
+                  </p>
+
+                  {dish.addons && dish.addons.length > 0 && (
+                    <span className="dish-addons-chip">
+                      <LayersOutlinedIcon fontSize="inherit" />
+                      +{dish.addons.length} {translations.addons || "Addons"}
+                    </span>
+                  )}
+
+                  <div className="dish-footer-row">
+                    <div className="dish-price-group">
+                      <span className="dish-price">{priceFormatted}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={`dish-add-btn ${count > 0 ? "added" : ""}`}
+                      onClick={(e) => handleAddToCart(e, dish)}
+                      aria-label={translations.addtocart || "Add to cart"}
+                      title={count > 0 ? `${translations.added || "Added"} (${count})` : translations.addtocart || "Add to cart"}
+                    >
+                      {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="dishes-empty-state">
+          <FastfoodOutlinedIcon className="empty-icon" />
+          <h4>{translations.nodishesfound || "No Dishes Found"}</h4>
+          <p>{translations.nodishesinbranch || "There are no dishes or specialties available for this branch category at the moment."}</p>
+        </div>
+      )}
+
+      {/* Interactive Item & Bundle Detail Modal */}
+      {selectedItemModal && (
+        <div className="dish-modal-overlay" onClick={() => setSelectedItemModal(null)}>
+          <div className="dish-modal-container" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="dish-modal-close-btn"
+              onClick={() => setSelectedItemModal(null)}
+              aria-label="Close"
+            >
+              <CloseIcon fontSize="small" />
+            </button>
+
+            <div className="dish-modal-hero">
+              <img
+                src={selectedItemModal.image}
+                alt={selectedItemModal.title}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/banners/banner-feast.jpg";
+                }}
+              />
+              <DietIndicator isVeg={selectedItemModal.isVeg} />
+            </div>
+
+            <div className="dish-modal-body">
+              <div className="dish-modal-header">
+                <div>
+                  <h3 className="dish-modal-title">{selectedItemModal.title}</h3>
+                  <div className="dish-modal-tags">
+                    {selectedItemModal.categoryname && (
+                      <span className="tag-badge">{selectedItemModal.categoryname}</span>
+                    )}
+                    {selectedItemModal.menuname && (
+                      <span className="tag-badge">{selectedItemModal.menuname}</span>
+                    )}
+                    {selectedItemModal.preparationtime && (
+                      <span className="tag-badge">⏱ {selectedItemModal.preparationtime} mins</span>
+                    )}
+                  </div>
+                </div>
+
+                <span className="dish-modal-price">
+                  {selectedItemModal.currencysymbol || "$"}
+                  {selectedItemModal.price != null ? Number(selectedItemModal.price).toFixed(2) : "0.00"}
+                </span>
+              </div>
+
+              {selectedItemModal.desc && (
+                <p className="dish-modal-desc">{selectedItemModal.desc}</p>
+              )}
+
+              {/* Addons List */}
+              {selectedItemModal.addons && selectedItemModal.addons.length > 0 && (
+                <div className="dish-modal-addons-box">
+                  <h5>{translations.availableaddons || "Available Addons & Customizations"}</h5>
+                  <div className="addons-list">
+                    {selectedItemModal.addons.map((addon) => (
+                      <div key={addon.addonid || addon._id} className="addon-item-row">
+                        <span>{addon.addonname}</span>
+                        <span className="addon-price">
+                          +{addon.currencysymbol || selectedItemModal.currencysymbol || "$"}
+                          {Number(addon.price || 0).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Items included in Deals/Bundles */}
+              {selectedItemModal.isDeal && selectedItemModal.items && selectedItemModal.items.length > 0 && (
+                <div className="dish-modal-addons-box">
+                  <h5>{translations.includeditems || "Included in this Feast"}</h5>
+                  <div className="addons-list">
+                    {selectedItemModal.items.map((it, idx) => (
+                      <div key={it.itemid || idx} className="addon-item-row">
+                        <span>• {it.itemname || it.name}</span>
+                        {it.quantity && <span className="addon-price">x{it.quantity}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Modal Footer with Quantity Counter */}
+              <div className="dish-modal-footer">
+                <div className="quantity-counter">
+                  <button
+                    type="button"
+                    onClick={() => setModalQuantity((q) => Math.max(1, q - 1))}
+                  >
+                    -
+                  </button>
+                  <span>{modalQuantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => setModalQuantity((q) => q + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  className="confirm-add-btn"
+                  onClick={handleConfirmModalAdd}
+                >
+                  {translations.addtocart || "Add to Cart"} • {selectedItemModal.currencysymbol || "$"}
+                  {(Number(selectedItemModal.price || 0) * modalQuantity).toFixed(2)}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
