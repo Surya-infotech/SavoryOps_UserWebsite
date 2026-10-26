@@ -8,6 +8,7 @@ import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
 import ProfilePage from "../Pages/Profile/ProfilePage.jsx";
 import ManageAddressPage from "../Pages/Profile/ManageAddressPage.jsx";
+import AboutPage from "../Pages/About/AboutPage.jsx";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -62,16 +63,7 @@ const HomeRouter = () => {
           />
         }
       />
-      <Route
-        path="/about"
-        element={
-          <SubpagePlaceholder
-            icon="🌿"
-            title={translations.aboutkitchen}
-            subtitle={translations.aboutsubtitle}
-          />
-        }
-      />
+      <Route path="/about" element={<AboutPage />} />
       <Route
         path="/contact"
         element={

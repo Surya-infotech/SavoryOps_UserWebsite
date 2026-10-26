@@ -1,0 +1,702 @@
+/* ==========================================================================
+   SavoryOps User Website - About Us Page Styles (SCSS)
+   ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
+
+.about-page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.section-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ==========================================================================
+   1. Hero Section
+   ========================================================================== */
+.about-hero-section {
+  position: relative;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 2.5rem 0 3.5rem;
+}
+
+.about-hero-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.about-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 1.75rem;
+  color: #64748b;
+
+  .breadcrumb-link {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #028802;
+    }
+  }
+
+  .breadcrumb-sep {
+    color: #cbd5e1;
+  }
+
+  .breadcrumb-current {
+    color: #0f172a;
+    font-weight: 600;
+  }
+}
+
+.about-hero-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.about-hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.about-brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(2, 136, 2, 0.08);
+  color: #028802;
+  border: 1px solid rgba(2, 136, 2, 0.2);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  width: fit-content;
+
+  .tag-icon {
+    font-size: 1rem;
+  }
+}
+
+.about-title {
+  font-size: 2.85rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+
+  .about-title-highlight {
+    color: #028802;
+    background: linear-gradient(135deg, #028802 0%, #16a34a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.about-lead {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: #475569;
+  max-width: 620px;
+}
+
+.about-hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 0.5rem;
+
+  .hero-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+
+    .badge-pill-icon {
+      font-size: 1.1rem;
+      color: #028802;
+    }
+  }
+}
+
+.about-hero-media {
+  position: relative;
+
+  .media-frame {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12);
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  .about-hero-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+
+    .placeholder-icon {
+      font-size: 5rem;
+    }
+  }
+
+  .media-overlay-card {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1.25rem;
+    right: 1.25rem;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    color: #ffffff;
+
+    .overlay-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #69e869;
+      margin-bottom: 4px;
+
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #69e869;
+        box-shadow: 0 0 8px #69e869;
+      }
+    }
+
+    .overlay-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+  }
+}
+
+/* ==========================================================================
+   2. Pillars & Values Section
+   ========================================================================== */
+.about-pillars-section {
+  padding: 4.5rem 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 3.5rem;
+
+  .section-subtitle {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #028802;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .section-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+
+  .section-desc {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #64748b;
+  }
+}
+
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+.pillar-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    transform: translateY(-6px);
+    background: #ffffff;
+    box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
+    border-color: rgba(2, 136, 2, 0.3);
+  }
+
+  .pillar-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
+
+    &.green {
+      background: rgba(2, 136, 2, 0.1);
+      color: #028802;
+    }
+    &.purple {
+      background: rgba(139, 92, 246, 0.12);
+      color: #7c3aed;
+    }
+    &.amber {
+      background: rgba(245, 158, 11, 0.14);
+      color: #d97706;
+    }
+    &.rose {
+      background: rgba(244, 63, 94, 0.12);
+      color: #e11d48;
+    }
+  }
+
+  .pillar-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+  }
+
+  .pillar-text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+/* ==========================================================================
+   3. Details & Active Branch Section
+   ========================================================================== */
+.about-details-section {
+  padding: 4.5rem 0;
+}
+
+.details-card-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2.5rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 2.75rem 2.5rem;
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
+}
+
+.details-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.brand-overview-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .brand-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+  }
+
+  .brand-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+  }
+
+  .brand-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+}
+
+.story-quote-card {
+  background: linear-gradient(135deg, rgba(2, 136, 2, 0.04) 0%, rgba(240, 253, 244, 0.7) 100%);
+  border-left: 4px solid #028802;
+  border-radius: 0 16px 16px 0;
+  padding: 1.5rem 1.75rem;
+
+  .story-quote-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #1e293b;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .story-quote-author {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #028802;
+  }
+}
+
+.about-social-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .social-block-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #334155;
+  }
+
+  .social-links-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .about-social-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 12px;
+    color: #334155;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+
+    .chip-icon-wrap {
+      display: flex;
+      align-items: center;
+      font-size: 1.15rem;
+      color: #028802;
+    }
+
+    &:hover {
+      background: #028802;
+      border-color: #028802;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(2, 136, 2, 0.25);
+
+      .chip-icon-wrap {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+/* Right Column Contact Card */
+.details-right-col {
+  .contact-info-card {
+    background: #0f172a;
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 2.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 100%;
+  }
+
+  .contact-card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+
+    .contact-kicker {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #69e869;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .contact-branch-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+    }
+  }
+
+  .contact-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contact-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    .row-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #69e869;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .row-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .row-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #94a3b8;
+        letter-spacing: 0.04em;
+      }
+
+      .row-value {
+        font-size: 0.95rem;
+        line-height: 1.45;
+        color: #f1f5f9;
+        font-weight: 500;
+      }
+
+      .row-link {
+        font-size: 0.95rem;
+        color: #69e869;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+
+        &:hover {
+          color: #a7f3d0;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .branch-helper-note {
+    margin-top: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #94a3b8;
+
+    .helper-icon {
+      font-size: 1.1rem;
+      color: #69e869;
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* ==========================================================================
+   4. Call to Action Strip
+   ========================================================================== */
+.about-cta-section {
+  padding: 2rem 0 5rem;
+}
+
+.about-cta-banner {
+  background: linear-gradient(135deg, #028802 0%, #015f01 100%);
+  border-radius: 24px;
+  padding: 3.5rem 2.5rem;
+  color: #ffffff;
+  text-align: center;
+  box-shadow: 0 20px 40px -10px rgba(2, 136, 2, 0.35);
+
+  .cta-title {
+    font-size: 2.35rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  .cta-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  .cta-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.85rem 1.75rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+
+      &.btn-primary {
+        background: #ffffff;
+        color: #028802;
+        border: none;
+
+        &:hover {
+          background: #f0fdf4;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+      }
+
+      &.btn-outline {
+        background: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(8px);
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.25);
+          transform: translateY(-2px);
+        }
+      }
+
+      &.btn-ghost {
+        background: transparent;
+        color: rgba(255, 255, 255, 0.85);
+        border: none;
+
+        &:hover {
+          color: #ffffff;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .about-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .details-card-container {
+    grid-template-columns: 1fr;
+  }
+
+  .about-title {
+    font-size: 2.35rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .pillars-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-title {
+    font-size: 1.85rem;
+  }
+
+  .details-card-container {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .about-cta-banner {
+    padding: 2.5rem 1.5rem;
+
+    .cta-title {
+      font-size: 1.75rem;
+    }
+  }
+}
