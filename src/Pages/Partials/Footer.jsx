@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
@@ -67,10 +66,6 @@ const Footer = () => {
                   </a>
                 </div>
               )}
-              <div className="footer-contact-item">
-                <AccessTimeIcon fontSize="small" />
-                <span>{translations.workinghours}</span>
-              </div>
             </div>
           </div>
 
