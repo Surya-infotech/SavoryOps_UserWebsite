@@ -74,15 +74,16 @@ export const BranchDropdown = ({ className = "" }) => {
           setSelectedBranch(current);
           if (current) {
             const branchId = current._id;
+            window.__selectedBranch = current;
             const savedId = localStorage.getItem("selectedBranchId");
             if (!savedId || !data.branches.some(b => String(b._id) === String(savedId))) {
               localStorage.setItem("selectedBranchId", branchId);
-              window.dispatchEvent(
-                new CustomEvent("branchChange", {
-                  detail: current,
-                })
-              );
             }
+            window.dispatchEvent(
+              new CustomEvent("branchChange", {
+                detail: current,
+              })
+            );
           }
         }
       } catch (err) {
@@ -92,6 +93,25 @@ export const BranchDropdown = ({ className = "" }) => {
 
     fetchBranches();
   }, []);
+
+  // Allow sibling components (like Footer) to request current branch without refetching API
+  useEffect(() => {
+    const handleRequestBranch = () => {
+      const active = selectedBranch || window.__selectedBranch;
+      if (active) {
+        window.dispatchEvent(
+          new CustomEvent("branchChange", {
+            detail: active,
+          })
+        );
+      }
+    };
+
+    window.addEventListener("requestBranch", handleRequestBranch);
+    return () => {
+      window.removeEventListener("requestBranch", handleRequestBranch);
+    };
+  }, [selectedBranch]);
 
   // Close on outside click
   useEffect(() => {
@@ -113,10 +133,11 @@ export const BranchDropdown = ({ className = "" }) => {
     setSelectedBranch(branch);
     const branchId = branch._id;
     localStorage.setItem("selectedBranchId", branchId);
+    window.__selectedBranch = branch;
     setIsOpen(false);
     setSearch("");
 
-    // Notify other components (HomePage, HomeBanner, Reservation, etc.) about branch change
+    // Notify other components (HomePage, HomeBanner, Reservation, Footer, etc.) about branch change
     window.dispatchEvent(
       new CustomEvent("branchChange", {
         detail: branch,

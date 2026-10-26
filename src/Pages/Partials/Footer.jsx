@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -32,6 +32,47 @@ const Footer = () => {
   const { business, policies = [] } = useWebsiteStatus();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState(() => {
+    if (typeof window !== "undefined" && window.__selectedBranch) {
+      return window.__selectedBranch;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.__selectedBranch) {
+      setSelectedBranch(window.__selectedBranch);
+    }
+
+    const handleBranchChange = (e) => {
+      if (e?.detail) {
+        setSelectedBranch(e.detail);
+      }
+    };
+
+    window.addEventListener("branchChange", handleBranchChange);
+
+    // Request current branch from Navbar if already loaded
+    window.dispatchEvent(new CustomEvent("requestBranch"));
+
+    return () => {
+      window.removeEventListener("branchChange", handleBranchChange);
+    };
+  }, []);
+
+  const displayAddress = useMemo(() => {
+    if (!selectedBranch) return "";
+    const parts = [
+      selectedBranch.address,
+      selectedBranch.cityname,
+      selectedBranch.statename,
+      selectedBranch.postalcode,
+      selectedBranch.countryname,
+    ].filter(Boolean);
+    return parts.join(", ") || selectedBranch.address || "";
+  }, [selectedBranch]);
+
+  const displayPhone = selectedBranch?.phone || "";
 
   // Active policies belonging to general type
   const generalPolicies = useMemo(() => {
@@ -70,14 +111,20 @@ const Footer = () => {
               {business?.aboutus || translations.footerbrandtext}
             </p>
             <div className="footer-contact-items">
-              <div className="footer-contact-item">
-                <LocationOnIcon fontSize="small" />
-                <span>{translations.addressdistrict}</span>
-              </div>
-              <div className="footer-contact-item">
-                <PhoneIcon fontSize="small" />
-                <span>+1 (800) 555-FOOD (3663)</span>
-              </div>
+              {displayAddress && (
+                <div className="footer-contact-item">
+                  <LocationOnIcon fontSize="small" />
+                  <span>{displayAddress}</span>
+                </div>
+              )}
+              {displayPhone && (
+                <div className="footer-contact-item">
+                  <PhoneIcon fontSize="small" />
+                  <a href={`tel:${displayPhone}`} style={{ color: "inherit", textDecoration: "none" }}>
+                    {displayPhone}
+                  </a>
+                </div>
+              )}
               {business?.email && (
                 <div className="footer-contact-item">
                   <EmailOutlinedIcon fontSize="small" />
