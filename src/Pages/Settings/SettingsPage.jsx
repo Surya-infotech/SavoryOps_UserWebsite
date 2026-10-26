@@ -13,6 +13,7 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
+import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import "../../Scss/Pages/Settings/settings.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -403,6 +404,7 @@ const SettingsPage = () => {
       <div className="settings-container">
         {/* Page Top Header */}
         <header className="settings-page-header">
+          <Breadcrumbs currentPage={translations.settings || "Settings"} />
           <div className="settings-page-header-meta">
             <h1 className="settings-page-title">
               {translations.settings}

@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Reusable Breadcrumbs Styling
+   ========================================================================== */
+
+.app-breadcrumbs {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-bottom: 1.25rem;
+
+  .breadcrumbs-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+  }
+
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+
+    &.is-current {
+      .breadcrumb-text {
+        color: #0f172a;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .breadcrumb-separator {
+    color: #cbd5e1;
+    user-select: none;
+    font-size: 0.8125rem;
+  }
+
+  .breadcrumb-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+
+    .breadcrumb-home-icon {
+      font-size: 1.05rem;
+      color: #94a3b8;
+      transition: color 0.15s ease;
+    }
+
+    &:hover {
+      color: #028802;
+
+      .breadcrumb-home-icon {
+        color: #028802;
+      }
+    }
+  }
+
+  .breadcrumb-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #0f172a;
+    font-weight: 600;
+
+    .breadcrumb-home-icon {
+      font-size: 1.05rem;
+      color: #64748b;
+    }
+  }
+
+  /* Optional Pill Variant */
+  &.app-breadcrumbs--pill {
+    display: inline-flex;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    width: fit-content;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  /* RTL Support */
+  &.is-rtl {
+    direction: rtl;
+
+    .breadcrumb-separator {
+      transform: scaleX(-1);
+    }
+  }
+}

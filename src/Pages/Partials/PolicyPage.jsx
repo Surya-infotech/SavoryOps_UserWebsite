@@ -7,6 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
+import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import "../../Scss/Pages/Partials/policypage.scss";
 
 const POLICY_TYPE_LABELS = {
@@ -118,6 +119,9 @@ const PolicyPage = () => {
       <div className="policy-container">
         {/* Page Top Header */}
         <header className="policy-page-header">
+          <Breadcrumbs
+            currentPage={currentPolicy ? currentPolicy.title : translations.termsofservice || "Policy"}
+          />
           <h1 className="policy-page-title">
             {currentPolicy ? currentPolicy.title : translations.termsofservice}
           </h1>

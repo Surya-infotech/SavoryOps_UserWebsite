@@ -21,6 +21,7 @@ import LanguageIcon from "@mui/icons-material/Language";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
+import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import "../../Scss/Pages/About/aboutpage.scss";
 
 const getSocialIcon = (platform = "") => {
@@ -96,15 +97,10 @@ const AboutPage = () => {
       {/* 1. Hero Banner Section */}
       <section className="about-hero-section">
         <div className="about-hero-inner">
-          <div className="about-breadcrumbs">
-            <Link to="/" className="breadcrumb-link">
-              {translations.returntohome || "Home"}
-            </Link>
-            <span className="breadcrumb-sep">/</span>
-            <span className="breadcrumb-current">
-              {translations.aboutus || "About Us"}
-            </span>
-          </div>
+          <Breadcrumbs
+            currentPage={translations.aboutus || "About Us"}
+            className="about-breadcrumbs-wrapper"
+          />
 
           <div className="about-hero-grid">
             <div className="about-hero-text">

@@ -15,6 +15,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { Country, State, City } from "country-state-city";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
+import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import "../../Scss/Pages/Profile/profile.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -428,6 +429,7 @@ const ProfilePage = () => {
       <div className="profile-page-container">
         {/* Page Top Header */}
         <header className="profile-page-header">
+          <Breadcrumbs currentPage={translations.myaccount || "My Account"} />
           <div className="profile-page-header-meta">
             <h1 className="profile-page-title">
               {translations.myaccount}
