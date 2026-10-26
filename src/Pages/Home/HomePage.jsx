@@ -5,7 +5,6 @@ import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
 import HomeDishes from "../../Components/Home/HomeDishes.jsx";
 import HomeCustomerApp from "../../Components/Home/HomeCustomerApp.jsx";
 import HomeReviews from "../../Components/Home/HomeReviews.jsx";
-import HomePromo from "../../Components/Home/HomePromo.jsx";
 import "../../Scss/Pages/Home/homepage.scss";
 
 const HomePage = () => {
@@ -35,9 +34,6 @@ const HomePage = () => {
 
       {/* 5. Customer Dining Reviews & Testimonials Section */}
       <HomeReviews />
-
-      {/* 6. Promotional Callout Strip Section */}
-      <HomePromo />
     </div>
   );
 };
