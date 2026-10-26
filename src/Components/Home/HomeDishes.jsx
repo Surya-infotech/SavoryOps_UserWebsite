@@ -4,7 +4,6 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
-import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homedishes.scss";
@@ -20,8 +19,8 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
   return (
     <span
       className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? (translations.purevegetarian || "Pure Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
-      aria-label={isVeg ? (translations.purevegetarian || "Pure Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
+      title={isVeg ? (translations.purevegetarian || "Veg") : (translations.nonvegetarian || "Non-Veg")}
+      aria-label={isVeg ? (translations.purevegetarian || "Veg") : (translations.nonvegetarian || "Non-Veg")}
     >
       {isVeg ? (
         <svg
@@ -52,25 +51,6 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
   );
 };
 
-/**
- * Returns an appropriate emoji for a category based on its name
- */
-const getCategoryIcon = (categoryName = "") => {
-  const lower = categoryName.toLowerCase();
-  if (lower.includes("pizza")) return "🍕";
-  if (lower.includes("burger") || lower.includes("sandwich")) return "🍔";
-  if (lower.includes("starter") || lower.includes("appetizer") || lower.includes("salad")) return "🥗";
-  if (lower.includes("main") || lower.includes("steak") || lower.includes("chef")) return "🥩";
-  if (lower.includes("pasta") || lower.includes("noodle") || lower.includes("ramen")) return "🍜";
-  if (lower.includes("dessert") || lower.includes("cake") || lower.includes("sweet") || lower.includes("gelato")) return "🍰";
-  if (lower.includes("drink") || lower.includes("beverage") || lower.includes("cocktail") || lower.includes("mocktail")) return "🍹";
-  if (lower.includes("seafood") || lower.includes("fish") || lower.includes("shrimp") || lower.includes("calamari")) return "🦐";
-  if (lower.includes("breakfast") || lower.includes("brunch") || lower.includes("egg")) return "🍳";
-  if (lower.includes("taco") || lower.includes("mexican") || lower.includes("wrap")) return "🌮";
-  if (lower.includes("sushi") || lower.includes("asian")) return "🍣";
-  return "🍽️";
-};
-
 const HomeDishes = () => {
   const { translations = {} } = useLanguage();
   const [loading, setLoading] = useState(true);
@@ -80,10 +60,10 @@ const HomeDishes = () => {
   const [selectedItemModal, setSelectedItemModal] = useState(null);
   const [modalQuantity, setModalQuantity] = useState(1);
 
-  // Raw API data
+  // Raw API data from owner database
   const [rawCategories, setRawCategories] = useState([]);
   const [rawDealsBundles, setRawDealsBundles] = useState([]);
-  const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("$");
+  const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("");
 
   // Fetch Menu, Category, Item, and Deal data from website endpoint
   const fetchMenuData = useCallback(async (branchIdParam) => {
@@ -128,7 +108,7 @@ const HomeDishes = () => {
       setRawDealsBundles(bundles);
 
       // Extract currency symbol from first item or deal
-      let symbol = "$";
+      let symbol = "";
       for (const cat of categories) {
         for (const mg of cat.menuGroups || []) {
           for (const item of mg.itemDetails || []) {
@@ -137,7 +117,9 @@ const HomeDishes = () => {
               break;
             }
           }
+          if (symbol) break;
         }
+        if (symbol) break;
       }
       setBranchCurrencySymbol(symbol);
     } catch (err) {
@@ -171,27 +153,34 @@ const HomeDishes = () => {
     };
   }, [fetchMenuData]);
 
-  // Extract all flat items across all categories and menu groups
+  // Extract all flat items across all categories and menu groups without any default data
   const allDishes = useMemo(() => {
     const list = [];
     rawCategories.forEach((cat) => {
       (cat.menuGroups || []).forEach((mg) => {
         const menuDetails = mg.menuDetails || {};
         (mg.itemDetails || []).forEach((item) => {
+          const rawItemType = (item.itemtype || "").trim().toLowerCase();
+          const hasDiet = Boolean(rawItemType);
+          const isVeg = hasDiet && rawItemType === "veg";
+          const isNonVeg = hasDiet && rawItemType.includes("non");
+
           list.push({
             id: String(item.itemid),
             itemid: item.itemid,
             categoryid: cat.itemcategoryid,
-            categoryname: cat.itemcategoryname,
+            categoryname: cat.itemcategoryname || "",
             menuid: menuDetails.menuid,
             menuname: menuDetails.menuname || "",
-            title: item.itemname,
+            title: item.itemname || "",
             desc: item.description || "",
             price: item.price != null ? item.price : 0,
             currency: item.currency || "",
-            currencysymbol: item.currencysymbol || branchCurrencySymbol || "$",
-            image: item.imageUrl || "/banners/banner-feast.jpg",
-            isVeg: (item.itemtype || "").toLowerCase().includes("veg") && !(item.itemtype || "").toLowerCase().includes("non"),
+            currencysymbol: item.currencysymbol || branchCurrencySymbol || "",
+            image: item.imageUrl || "",
+            hasDiet,
+            isVeg,
+            isNonVeg,
             preparationtime: item.preparationtime,
             addons: item.addons || [],
             isDeal: false,
@@ -213,35 +202,44 @@ const HomeDishes = () => {
     return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
   }, [allDishes]);
 
-  // Format deals and bundles (combos and unlimited)
   const formattedDeals = useMemo(() => {
-    return rawDealsBundles.map((b) => ({
-      id: `deal-${b.dealsbundlesid}`,
-      dealsbundlesid: b.dealsbundlesid,
-      categoryid: "deals",
-      categoryname: b.bundletype === "combo" ? (translations.combomeal || "Combo Meal") : (translations.unlimitedmeal || "Unlimited Feast"),
-      bundletype: (b.bundletype || "combo").toLowerCase(),
-      title: b.dealsbundlesname,
-      desc: b.description || (Array.isArray(b.items) ? b.items.map((it) => it.itemname || it.name).join(" • ") : ""),
-      price: b.price != null ? b.price : 0,
-      currency: b.currency || "",
-      currencysymbol: b.currencysymbol || branchCurrencySymbol || "$",
-      image: b.imageUrl || "/banners/banner-feast.jpg",
-      isVeg: (b.itemtype || "").toLowerCase().includes("veg") && !(b.itemtype || "").toLowerCase().includes("non"),
-      preparationtime: b.preparationtime,
-      items: b.items || [],
-      addons: b.addons || [],
-      isDeal: true,
-    }));
+    return rawDealsBundles.map((b) => {
+      const rawItemType = (b.itemtype || "").trim().toLowerCase();
+      const hasDiet = Boolean(rawItemType);
+      const isVeg = hasDiet && rawItemType === "veg";
+      const isNonVeg = hasDiet && rawItemType.includes("non");
+      const bundleTypeLower = (b.bundletype || "").toLowerCase();
+
+      return {
+        id: `deal-${b.dealsbundlesid}`,
+        dealsbundlesid: b.dealsbundlesid,
+        categoryid: "deals",
+        categoryname: bundleTypeLower === "combo" ? (translations.combomeals || "Combo") : bundleTypeLower === "unlimited" ? (translations.unlimitedmeals || "Unlimited") : "",
+        bundletype: bundleTypeLower,
+        title: b.dealsbundlesname || "",
+        desc: b.description || "",
+        price: b.price != null ? b.price : 0,
+        currency: b.currency || "",
+        currencysymbol: b.currencysymbol || branchCurrencySymbol || "",
+        image: b.imageUrl || "",
+        hasDiet,
+        isVeg,
+        isNonVeg,
+        preparationtime: b.preparationtime,
+        items: b.items || [],
+        addons: b.addons || [],
+        isDeal: true,
+      };
+    });
   }, [rawDealsBundles, branchCurrencySymbol, translations]);
 
-  // Dynamic category pills
+  // Dynamic category pills strictly from backend
   const categories = useMemo(() => {
     const tabs = [
       {
         id: "all",
-        label: translations.allspecialties || "All Specialties",
-        icon: "🍽️",
+        label: translations.all || "All",
+        image: null,
         count: allDishes.length + formattedDeals.length,
       },
     ];
@@ -253,8 +251,8 @@ const HomeDishes = () => {
       });
       tabs.push({
         id: String(cat.itemcategoryid),
-        label: cat.itemcategoryname,
-        icon: getCategoryIcon(cat.itemcategoryname),
+        label: cat.itemcategoryname || "",
+        image: cat.imageUrl || null,
         count,
       });
     });
@@ -266,16 +264,16 @@ const HomeDishes = () => {
       if (comboCount > 0) {
         tabs.push({
           id: "combos",
-          label: translations.combomeals || "Combo Deals",
-          icon: "🍱",
+          label: translations.combomeals || "Combos",
+          image: null,
           count: comboCount,
         });
       }
       if (unlimitedCount > 0) {
         tabs.push({
           id: "unlimited",
-          label: translations.unlimitedfeasts || "Unlimited Feasts",
-          icon: "♾️",
+          label: translations.unlimitedmeals || "Unlimited",
+          image: null,
           count: unlimitedCount,
         });
       }
@@ -329,18 +327,16 @@ const HomeDishes = () => {
     }
   };
 
+  // If loading is finished and there are zero dishes or categories in the owner database, do not render section
+  if (!loading && allDishes.length === 0 && formattedDeals.length === 0) {
+    return null;
+  }
+
   return (
     <section className="dishes-showcase-section">
       {/* Section Header */}
       <div className="section-header-block">
-        <span className="section-pill-tag">
-          <RestaurantMenuIcon fontSize="inherit" />
-          {translations.curatedmenu || "Curated Menu"}
-        </span>
-        <h2 className="section-main-title">{translations.mostlovedspecialties || "Most Loved Specialties"}</h2>
-        <p className="section-subtitle">
-          {translations.mostlovedsubtitle || "Crafted with culinary expertise and the finest ingredients. Explore our dishes cooked to perfection."}
-        </p>
+        <h2 className="section-main-title">{translations.menu || "Menu"}</h2>
       </div>
 
       {/* Dynamic Category Tabs */}
@@ -356,7 +352,9 @@ const HomeDishes = () => {
                 setSelectedMenu("all");
               }}
             >
-              <span>{cat.icon}</span>
+              {cat.image && (
+                <img src={cat.image} alt={cat.label} className="category-tab-icon-img" />
+              )}
               <span>{cat.label}</span>
               {cat.count > 0 && <span className="category-count-badge">{cat.count}</span>}
             </button>
@@ -390,7 +388,7 @@ const HomeDishes = () => {
       {/* Dishes & Deals Grid */}
       {loading ? (
         <div className="dishes-grid">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+          {[1, 2, 3, 4].map((n) => (
             <div key={n} className="dish-skeleton-card">
               <div className="skeleton-img" />
               <div className="skeleton-body">
@@ -406,7 +404,7 @@ const HomeDishes = () => {
         <div className="dishes-grid">
           {displayedItems.map((dish) => {
             const count = addedItems[dish.id] || 0;
-            const priceFormatted = `${dish.currencysymbol || "$"}${dish.price != null ? Number(dish.price).toFixed(2) : "0.00"}`;
+            const priceFormatted = `${dish.currencysymbol || ""}${dish.price != null ? Number(dish.price).toFixed(2) : ""}`;
 
             return (
               <div
@@ -415,41 +413,52 @@ const HomeDishes = () => {
                 onClick={() => handleCardClick(dish)}
               >
                 <div className="dish-img-box">
-                  <img
-                    src={dish.image}
-                    alt={dish.title}
-                    className="dish-img"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/banners/banner-feast.jpg";
-                    }}
-                  />
+                  {dish.image ? (
+                    <img
+                      src={dish.image}
+                      alt={dish.title}
+                      className="dish-img"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <RestaurantMenuIcon className="dish-no-img-icon" />
+                  )}
+
                   {dish.isDeal ? (
-                    <span className="deal-ribbon-badge">
-                      {dish.bundletype === "combo" ? "COMBO" : "UNLIMITED"}
-                    </span>
+                    dish.bundletype ? (
+                      <span className="deal-ribbon-badge">
+                        {dish.bundletype.toUpperCase()}
+                      </span>
+                    ) : null
                   ) : (
                     dish.categoryname && <span className="dish-tag-badge">{dish.categoryname}</span>
                   )}
 
-                  {dish.preparationtime && (
+                  {dish.preparationtime && Number(dish.preparationtime) > 0 && (
                     <span className="dish-prep-time">
                       <AccessTimeIcon fontSize="inherit" />
                       {dish.preparationtime} min
                     </span>
                   )}
 
-                  <DietIndicator isVeg={dish.isVeg} />
+                  {dish.hasDiet && (dish.isVeg || dish.isNonVeg) && (
+                    <DietIndicator isVeg={dish.isVeg} />
+                  )}
                 </div>
 
                 <div className="dish-content">
                   <h3 className="dish-title" title={dish.title}>
                     {dish.title}
                   </h3>
-                  <p className="dish-desc" title={dish.desc}>
-                    {dish.desc || (dish.menuname ? `${translations.servedin || "From"} ${dish.menuname}` : "")}
-                  </p>
+
+                  {dish.desc && (
+                    <p className="dish-desc" title={dish.desc}>
+                      {dish.desc}
+                    </p>
+                  )}
 
                   <div className="dish-footer-row">
                     <div className="dish-price-group">
@@ -460,8 +469,8 @@ const HomeDishes = () => {
                       type="button"
                       className={`dish-add-btn ${count > 0 ? "added" : ""}`}
                       onClick={(e) => handleAddToCart(e, dish)}
-                      aria-label={translations.addtocart || "Add to cart"}
-                      title={count > 0 ? `${translations.added || "Added"} (${count})` : translations.addtocart || "Add to cart"}
+                      aria-label={translations.addtocart || "Add"}
+                      title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add")}
                     >
                       {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
                     </button>
@@ -471,13 +480,7 @@ const HomeDishes = () => {
             );
           })}
         </div>
-      ) : (
-        <div className="dishes-empty-state">
-          <FastfoodOutlinedIcon className="empty-icon" />
-          <h4>{translations.nodishesfound || "No Dishes Found"}</h4>
-          <p>{translations.nodishesinbranch || "There are no dishes or specialties available for this branch category at the moment."}</p>
-        </div>
-      )}
+      ) : null}
 
       {/* Interactive Item & Bundle Detail Modal */}
       {selectedItemModal && (
@@ -492,17 +495,20 @@ const HomeDishes = () => {
               <CloseIcon fontSize="small" />
             </button>
 
-            <div className="dish-modal-hero">
-              <img
-                src={selectedItemModal.image}
-                alt={selectedItemModal.title}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/banners/banner-feast.jpg";
-                }}
-              />
-              <DietIndicator isVeg={selectedItemModal.isVeg} />
-            </div>
+            {selectedItemModal.image && (
+              <div className="dish-modal-hero">
+                <img
+                  src={selectedItemModal.image}
+                  alt={selectedItemModal.title}
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                  }}
+                />
+                {selectedItemModal.hasDiet && (selectedItemModal.isVeg || selectedItemModal.isNonVeg) && (
+                  <DietIndicator isVeg={selectedItemModal.isVeg} />
+                )}
+              </div>
+            )}
 
             <div className="dish-modal-body">
               <div className="dish-modal-header">
@@ -515,15 +521,15 @@ const HomeDishes = () => {
                     {selectedItemModal.menuname && (
                       <span className="tag-badge">{selectedItemModal.menuname}</span>
                     )}
-                    {selectedItemModal.preparationtime && (
+                    {selectedItemModal.preparationtime && Number(selectedItemModal.preparationtime) > 0 && (
                       <span className="tag-badge">⏱ {selectedItemModal.preparationtime} mins</span>
                     )}
                   </div>
                 </div>
 
                 <span className="dish-modal-price">
-                  {selectedItemModal.currencysymbol || "$"}
-                  {selectedItemModal.price != null ? Number(selectedItemModal.price).toFixed(2) : "0.00"}
+                  {selectedItemModal.currencysymbol || ""}
+                  {selectedItemModal.price != null ? Number(selectedItemModal.price).toFixed(2) : ""}
                 </span>
               </div>
 
@@ -534,13 +540,13 @@ const HomeDishes = () => {
               {/* Addons List */}
               {selectedItemModal.addons && selectedItemModal.addons.length > 0 && (
                 <div className="dish-modal-addons-box">
-                  <h5>{translations.availableaddons || "Available Addons & Customizations"}</h5>
+                  <h5>{translations.addons || "Addons"}</h5>
                   <div className="addons-list">
                     {selectedItemModal.addons.map((addon) => (
                       <div key={addon.addonid || addon._id} className="addon-item-row">
                         <span>{addon.addonname}</span>
                         <span className="addon-price">
-                          +{addon.currencysymbol || selectedItemModal.currencysymbol || "$"}
+                          +{addon.currencysymbol || selectedItemModal.currencysymbol || ""}
                           {Number(addon.price || 0).toFixed(2)}
                         </span>
                       </div>
@@ -552,7 +558,7 @@ const HomeDishes = () => {
               {/* Items included in Deals/Bundles */}
               {selectedItemModal.isDeal && selectedItemModal.items && selectedItemModal.items.length > 0 && (
                 <div className="dish-modal-addons-box">
-                  <h5>{translations.includeditems || "Included in this Feast"}</h5>
+                  <h5>{translations.includeditems || "Included Items"}</h5>
                   <div className="addons-list">
                     {selectedItemModal.items.map((it, idx) => (
                       <div key={it.itemid || idx} className="addon-item-row">
@@ -587,7 +593,7 @@ const HomeDishes = () => {
                   className="confirm-add-btn"
                   onClick={handleConfirmModalAdd}
                 >
-                  {translations.addtocart || "Add to Cart"} • {selectedItemModal.currencysymbol || "$"}
+                  {translations.addtocart || "Add to Cart"} • {selectedItemModal.currencysymbol || ""}
                   {(Number(selectedItemModal.price || 0) * modalQuantity).toFixed(2)}
                 </button>
               </div>

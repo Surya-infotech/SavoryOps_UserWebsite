@@ -72,6 +72,14 @@
   align-items: center;
   gap: 8px;
 
+  .category-tab-icon-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
   .category-count-badge {
     background: #f1f5f9;
     color: #64748b;
