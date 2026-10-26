@@ -155,7 +155,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 410px;
+  height: 400px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
   cursor: pointer;
@@ -302,22 +302,8 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 0.65rem;
-  flex-shrink: 0;
-}
-
-.dish-addons-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.725rem;
-  font-weight: 600;
-  color: #028802;
-  background: rgba(2, 136, 2, 0.08);
-  padding: 2px 8px;
-  border-radius: 4px;
-  width: fit-content;
   margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .dish-footer-row {
@@ -372,7 +358,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 18px;
   overflow: hidden;
-  height: 410px;
+  height: 400px;
   display: flex;
   flex-direction: column;
 

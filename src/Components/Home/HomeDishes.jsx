@@ -5,7 +5,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
-import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homedishes.scss";
@@ -451,13 +450,6 @@ const HomeDishes = () => {
                   <p className="dish-desc" title={dish.desc}>
                     {dish.desc || (dish.menuname ? `${translations.servedin || "From"} ${dish.menuname}` : "")}
                   </p>
-
-                  {dish.addons && dish.addons.length > 0 && (
-                    <span className="dish-addons-chip">
-                      <LayersOutlinedIcon fontSize="inherit" />
-                      +{dish.addons.length} {translations.addons || "Addons"}
-                    </span>
-                  )}
 
                   <div className="dish-footer-row">
                     <div className="dish-price-group">
