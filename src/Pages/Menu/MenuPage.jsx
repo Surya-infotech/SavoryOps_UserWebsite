@@ -500,7 +500,6 @@ const MenuPage = () => {
                   aria-label={`${dish.title} ${translations.addons || "Add-ons"}`}
                 >
                   <AddIcon className="addon-btn-icon" />
-                  <span>{translations.addons || "Addon"}</span>
                 </button>
               )}
 
