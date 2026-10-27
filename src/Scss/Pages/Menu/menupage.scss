@@ -1,13 +1,14 @@
 /* ==========================================================================
    SavoryOps User Website - Menu Page Styles (SCSS)
+   Unified One-List Row-Wise Grid Layout
    ========================================================================== */
 
 @use "../../Customize/var.scss" as var;
 
 .menu-page-wrapper {
   width: 100%;
-  min-height: 80vh;
-  padding-bottom: 5rem;
+  min-height: 85vh;
+  padding-bottom: 6rem;
   background-color: #f8fafc;
 
   .menu-page-top-bar {
@@ -23,241 +24,21 @@
   }
 }
 
-/* --- Section Shared Headers --- */
-.section-header-block {
-  text-align: center;
-  max-width: 680px;
-  margin: 0 auto 2rem;
-}
-
-.section-pill-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 16px;
-  border-radius: 9999px;
-  background: rgba(2, 136, 2, 0.1);
-  color: #028802;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-
-  &.combo-tag {
-    background: rgba(245, 158, 11, 0.12);
-    color: #d97706;
-    border: 1px solid rgba(245, 158, 11, 0.25);
-  }
-
-  &.unlimited-tag {
-    background: rgba(16, 185, 129, 0.12);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.25);
-  }
-}
-
-.section-main-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
-}
-
-.section-subtitle {
-  font-size: 1rem;
-  color: #64748b;
-  line-height: 1.6;
-}
-
-/* --- Category Filter & Dishes Section --- */
-.dishes-showcase-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
-  margin-top: 2.5rem;
-}
-
-.dishes-showcase-section {
+.menu-main-content-container {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0 1.5rem;
-  width: 100%;
+  padding: 2.5rem 1.5rem 0;
 }
 
-/* --- Grouped Category Sections --- */
-.menu-categories-container {
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
-}
-
-.menu-category-group {
-  scroll-margin-top: 165px;
-}
-
-.category-group-header {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-bottom: 1.75rem;
-}
-
-.category-group-info {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.category-group-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.category-group-title {
-  font-size: 1.55rem;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.015em;
-  margin: 0;
-}
-
-.category-group-count-badge {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  color: #64748b;
-  background: #f1f5f9;
-  padding: 3px 10px;
-  border-radius: 9999px;
-}
-
-.category-group-divider {
-  flex: 1;
-  height: 1.5px;
-  background: linear-gradient(90deg, #e2e8f0 0%, rgba(226, 232, 240, 0.25) 100%);
-}
-
-/* Dishes Grid */
+/* --- Row-Wise Grid of Dishes (No Horizontal Scrolling) --- */
 .dishes-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
-}
-
-/* Horizontal Scroll Container & Track */
-.horizontal-scroll-container {
-  position: relative;
   width: 100%;
 }
 
-.horizontal-scroll-track {
-  display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  padding: 0.5rem 0 1.25rem;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .dish-card {
-    flex: 0 0 calc((100% - 4.5rem) / 4);
-    width: calc((100% - 4.5rem) / 4);
-    min-width: 0;
-    scroll-snap-align: start;
-  }
-}
-
-.scroll-arrow-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1.5px solid #e2e8f0;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #0f172a;
-  z-index: 10;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-
-  &.left {
-    left: -20px;
-  }
-
-  &.right {
-    right: -20px;
-  }
-
-  &:hover:not(.disabled) {
-    background: #0f172a;
-    color: #ffffff;
-    border-color: #0f172a;
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active:not(.disabled) {
-    transform: translateY(-50%) scale(0.95);
-  }
-
-  &.disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-    pointer-events: none;
-    box-shadow: none;
-    border-color: #e2e8f0;
-    color: #94a3b8;
-    background: rgba(255, 255, 255, 0.7);
-  }
-}
-
-.combo-meals-section {
-  .scroll-arrow-btn:hover:not(.disabled) {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    border-color: #d97706;
-    color: #ffffff;
-    box-shadow: 0 10px 25px rgba(217, 119, 6, 0.35);
-  }
-}
-
-.unlimited-meals-section {
-  .scroll-arrow-btn:hover:not(.disabled) {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-color: #059669;
-    color: #ffffff;
-    box-shadow: 0 10px 25px rgba(5, 150, 105, 0.35);
-  }
-}
-
-.a-la-carte-section {
-  .scroll-arrow-btn:hover:not(.disabled) {
-    background: #028802;
-    border-color: #028802;
-    color: #ffffff;
-    box-shadow: 0 10px 25px rgba(2, 136, 2, 0.35);
-  }
-}
-
-/* Dish Card */
+/* --- Dish Card Styles --- */
 .dish-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -386,6 +167,7 @@
   z-index: 2;
 }
 
+/* Pure CSS Veg & Non-Veg Badge (No SVG) */
 .dish-diet-badge {
   position: absolute;
   top: 12px;
@@ -600,32 +382,25 @@
 }
 
 /* Empty State */
-.dishes-empty-state {
+.no-dishes-state {
   text-align: center;
-  padding: 4rem 1.5rem;
+  padding: 4.5rem 1.5rem;
   background: #ffffff;
   border: 1px dashed #cbd5e1;
-  border-radius: 18px;
-  max-width: 650px;
-  margin: 1rem auto;
+  border-radius: 20px;
+  grid-column: 1 / -1;
 
-  .empty-icon {
-    font-size: 3.5rem;
+  .no-dishes-icon {
+    font-size: 3.5rem !important;
     color: #94a3b8;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   h4 {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: #0f172a;
     margin-bottom: 0.5rem;
-  }
-
-  p {
-    color: #64748b;
-    font-size: 0.925rem;
-    margin: 0;
   }
 }
 
@@ -929,83 +704,23 @@
   }
 }
 
-.no-dishes-state {
-  text-align: center;
-  padding: 3.5rem 1rem;
-  color: #94a3b8;
-  grid-column: 1 / -1;
-
-  .no-dishes-icon {
-    font-size: 3rem;
-    color: #cbd5e1;
-    margin-bottom: 0.75rem;
-  }
-
-  p {
-    font-size: 1rem;
-    font-weight: 500;
-  }
-}
-
-/* Responsive */
-@media (max-width: 1180px) {
-  .horizontal-scroll-track {
+/* Responsive Grid Breakpoints */
+@media (max-width: 1200px) {
+  .dishes-grid {
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
-    .dish-card {
-      flex: 0 0 calc((100% - 2.5rem) / 3);
-      width: calc((100% - 2.5rem) / 3);
-    }
   }
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 860px) {
   .dishes-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .category-group-title {
-    font-size: 1.3rem;
-  }
-  .menu-categories-container {
-    gap: 3rem;
-  }
-  .horizontal-scroll-track {
     gap: 1rem;
-    .dish-card {
-      flex: 0 0 calc((100% - 1rem) / 2);
-      width: calc((100% - 1rem) / 2);
-    }
-  }
-}
-
-@media (max-width: 640px) {
-  .dishes-grid {
-    grid-template-columns: 1fr;
-  }
-  .section-main-title {
-    font-size: 1.75rem;
   }
 }
 
 @media (max-width: 540px) {
-  .horizontal-scroll-track {
-    gap: 0.85rem;
-    .dish-card {
-      flex: 0 0 85%;
-      width: 85%;
-    }
-  }
-  .scroll-arrow-btn {
-    width: 38px;
-    height: 38px;
-    top: 50%;
-    &.left {
-      left: -10px;
-    }
-    &.right {
-      right: -10px;
-    }
+  .dishes-grid {
+    grid-template-columns: 1fr;
   }
 }

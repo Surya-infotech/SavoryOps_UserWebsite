@@ -1,11 +1,9 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
@@ -14,7 +12,7 @@ import "../../Scss/Pages/Menu/menupage.scss";
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 /**
- * Standard Veg/Non-Veg FSSAI-compliant diet badge
+ * Standard Veg/Non-Veg FSSAI-compliant diet badge using pure CSS (No SVG)
  */
 export const DietIndicator = ({ isVeg, className = "" }) => {
   const { translations = {} } = useLanguage();
@@ -29,95 +27,6 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
         <span className="diet-dot" />
       </span>
     </span>
-  );
-};
-
-/**
- * Smooth horizontal scroll container with left and right navigation buttons
- */
-const HorizontalScrollRow = ({ children, className = "" }) => {
-  const rowRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-  const [hasOverflow, setHasOverflow] = useState(() =>
-    Array.isArray(children) ? children.length > 3 : true
-  );
-
-  const checkScroll = useCallback(() => {
-    const el = rowRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    const overflow = scrollWidth > clientWidth + 4;
-    setHasOverflow(overflow);
-    setCanScrollLeft(scrollLeft > 6);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
-  }, []);
-
-  useEffect(() => {
-    const el = rowRef.current;
-    if (!el) return;
-    checkScroll();
-
-    el.addEventListener("scroll", checkScroll, { passive: true });
-    window.addEventListener("resize", checkScroll);
-
-    const timer = setTimeout(checkScroll, 250);
-
-    return () => {
-      el.removeEventListener("scroll", checkScroll);
-      window.removeEventListener("resize", checkScroll);
-      clearTimeout(timer);
-    };
-  }, [checkScroll, children]);
-
-  const handleScroll = (direction) => {
-    const el = rowRef.current;
-    if (!el) return;
-    const firstCard = el.querySelector(".dish-card");
-    let cardStep = 310;
-    if (firstCard) {
-      const nextCard = firstCard.nextElementSibling;
-      const computedGap = nextCard
-        ? nextCard.offsetLeft - (firstCard.offsetLeft + firstCard.offsetWidth)
-        : 24;
-      cardStep = firstCard.offsetWidth + Math.max(0, computedGap);
-    }
-    el.scrollBy({
-      left: direction === "left" ? -cardStep : cardStep,
-      behavior: "smooth",
-    });
-  };
-
-  return (
-    <div className={`horizontal-scroll-container ${className}`}>
-      {hasOverflow && (
-        <button
-          type="button"
-          className={`scroll-arrow-btn left ${!canScrollLeft ? "disabled" : ""}`}
-          onClick={() => handleScroll("left")}
-          aria-label="Scroll left"
-          disabled={!canScrollLeft}
-        >
-          <ChevronLeftIcon />
-        </button>
-      )}
-
-      <div className="horizontal-scroll-track" ref={rowRef}>
-        {children}
-      </div>
-
-      {hasOverflow && (
-        <button
-          type="button"
-          className={`scroll-arrow-btn right ${!canScrollRight ? "disabled" : ""}`}
-          onClick={() => handleScroll("right")}
-          aria-label="Scroll right"
-          disabled={!canScrollRight}
-        >
-          <ChevronRightIcon />
-        </button>
-      )}
-    </div>
   );
 };
 
@@ -164,7 +73,11 @@ const MenuPage = () => {
     try {
       const response = await fetch(`${adminPanelBackendPath}/Website/Menu/GetItemcategory/${branchId}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json", "x-user": "admin", "x-subdomain": currentSubdomain, },
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "admin",
+          "x-subdomain": currentSubdomain,
+        },
       });
 
       if (!response.ok) {
@@ -257,6 +170,7 @@ const MenuPage = () => {
             preparationtime: item.preparationtime,
             addons: item.addons || [],
             isDeal: false,
+            filterType: String(cat.itemcategoryid),
           });
         });
       });
@@ -296,6 +210,7 @@ const MenuPage = () => {
         items: b.items || [],
         addons: b.addons || [],
         isDeal: true,
+        filterType: bundleTypeLower === "combo" ? "combos" : "unlimited",
       };
     });
   }, [rawDealsBundles, branchCurrencySymbol, translations]);
@@ -308,22 +223,10 @@ const MenuPage = () => {
     return formattedDeals.filter((d) => d.bundletype === "unlimited");
   }, [formattedDeals]);
 
-  // Group dishes by Category
-  const categorizedSections = useMemo(() => {
-    return rawCategories
-      .map((cat) => {
-        const catId = String(cat.itemcategoryid);
-        const dishes = allDishes.filter((d) => String(d.categoryid) === catId);
-
-        return {
-          id: catId,
-          name: cat.itemcategoryname || "",
-          image: cat.imageUrl || null,
-          dishes,
-        };
-      })
-      .filter((section) => section.dishes.length > 0);
-  }, [rawCategories, allDishes]);
+  // Unified list of all items across combos, unlimited, and standard dishes
+  const allCombinedItems = useMemo(() => {
+    return [...comboMeals, ...unlimitedMeals, ...allDishes];
+  }, [comboMeals, unlimitedMeals, allDishes]);
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
@@ -448,111 +351,33 @@ const MenuPage = () => {
         </div>
       </div>
 
-      {/* Main Dishes Showcase */}
-      {(loading || allDishes.length > 0 || formattedDeals.length > 0) && (
-        <div className="dishes-showcase-container">
-          {/* 1. Dedicated Combo Meals Section */}
-          {comboMeals.length > 0 && (
-            <section className="dishes-showcase-section combo-meals-section" id="combo-meals">
-              <div className="section-header-block">
-                <span className="section-pill-tag combo-tag">
-                  🍱 {translations.combopill || "Curated Combos"}
-                </span>
-                <h2 className="section-main-title">{translations.combomeals || "Combo Meals"}</h2>
-                <p className="section-subtitle">
-                  {translations.combosubtitle || "Specially crafted value bundles and paired delights for the ultimate culinary feast."}
-                </p>
-              </div>
-
-              <HorizontalScrollRow className="combo-scroll-row">
-                {comboMeals.map((dish) => renderDishCard(dish))}
-              </HorizontalScrollRow>
-            </section>
-          )}
-
-          {/* 2. Dedicated Unlimited Meals Section */}
-          {unlimitedMeals.length > 0 && (
-            <section className="dishes-showcase-section unlimited-meals-section" id="unlimited-meals">
-              <div className="section-header-block">
-                <span className="section-pill-tag unlimited-tag">
-                  ♾️ {translations.unlimitedpill || "All You Can Eat"}
-                </span>
-                <h2 className="section-main-title">{translations.unlimitedmeals || "Unlimited Meals"}</h2>
-                <p className="section-subtitle">
-                  {translations.unlimitedsubtitle || "Endless gourmet servings prepared fresh to order for complete dining indulgence."}
-                </p>
-              </div>
-
-              <HorizontalScrollRow className="unlimited-scroll-row">
-                {unlimitedMeals.map((dish) => renderDishCard(dish))}
-              </HorizontalScrollRow>
-            </section>
-          )}
-
-          {/* 3. Dedicated A La Carte Menu Section Grouped by Categories */}
-          {(loading || allDishes.length > 0) && (
-            <section className="dishes-showcase-section a-la-carte-section" id="menu">
-              <div className="section-header-block">
-                <span className="section-pill-tag">
-                  🍽️ {translations.culinarymenu || "A La Carte"}
-                </span>
-                <h2 className="section-main-title">{translations.menu || "Menu"}</h2>
-                <p className="section-subtitle">
-                  {translations.menusubtitle || "Browse through our wide selection of artisan dishes made with farm-fresh ingredients."}
-                </p>
-              </div>
-
-              {loading ? (
-                <div className="dishes-grid">
-                  {[1, 2, 3, 4].map((n) => (
-                    <div key={n} className="dish-skeleton-card">
-                      <div className="skeleton-img" />
-                      <div className="skeleton-body">
-                        <div className="skeleton-line title" />
-                        <div className="skeleton-line desc1" />
-                        <div className="skeleton-line desc2" />
-                        <div className="skeleton-line footer" />
-                      </div>
-                    </div>
-                  ))}
+      <div className="menu-main-content-container">
+        {/* Unified Item List in Row-Wise Grid (No Horizontal Scroll) */}
+        {loading ? (
+          <div className="dishes-grid">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+              <div key={n} className="dish-skeleton-card">
+                <div className="skeleton-img" />
+                <div className="skeleton-body">
+                  <div className="skeleton-line title" />
+                  <div className="skeleton-line desc1" />
+                  <div className="skeleton-line desc2" />
+                  <div className="skeleton-line footer" />
                 </div>
-              ) : categorizedSections.length > 0 ? (
-                <div className="menu-categories-container">
-                  {categorizedSections.map((section) => (
-                    <div
-                      key={section.id}
-                      id={`category-section-${section.id}`}
-                      className="menu-category-group"
-                    >
-                      <div className="category-group-header">
-                        <div className="category-group-info">
-                          {section.image && (
-                            <img
-                              src={section.image}
-                              alt={section.name}
-                              className="category-group-icon"
-                            />
-                          )}
-                          <h3 className="category-group-title">{section.name}</h3>
-                        </div>
-                      </div>
-
-                      <HorizontalScrollRow className="category-dishes-scroll-row">
-                        {section.dishes.map((dish) => renderDishCard(dish))}
-                      </HorizontalScrollRow>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="no-dishes-state">
-                  <RestaurantMenuIcon className="no-dishes-icon" />
-                  <p>{translations.nodishesfound || "No dishes available in this selection."}</p>
-                </div>
-              )}
-            </section>
-          )}
-        </div>
-      )}
+              </div>
+            ))}
+          </div>
+        ) : allCombinedItems.length > 0 ? (
+          <div className="dishes-grid">
+            {allCombinedItems.map((dish) => renderDishCard(dish))}
+          </div>
+        ) : (
+          <div className="no-dishes-state">
+            <RestaurantMenuIcon className="no-dishes-icon" />
+            <h4>{translations.nodishesfound || "No dishes found"}</h4>
+          </div>
+        )}
+      </div>
 
       {/* Interactive Item & Bundle Detail Modal */}
       {selectedItemModal && (
