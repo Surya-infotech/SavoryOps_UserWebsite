@@ -418,7 +418,7 @@ const ProfilePage = () => {
   return (
     <div className={`profile-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       {/* Site-wide Unified Breadcrumbs */}
-      <Breadcrumbs currentPage={translations.myaccount || "My Account"} />
+      <Breadcrumbs currentPage={translations.myaccount} />
 
       <div className="profile-page-container">
         {/* Header Block */}

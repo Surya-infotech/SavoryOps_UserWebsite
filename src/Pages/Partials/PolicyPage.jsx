@@ -118,7 +118,7 @@ const PolicyPage = () => {
     <div className={`policy-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       {/* Site-wide Unified Breadcrumbs */}
       <Breadcrumbs
-        currentPage={currentPolicy ? currentPolicy.title : translations.termsofservice || "Policy"}
+        currentPage={currentPolicy ? currentPolicy.title : translations.termsofservice}
       />
 
       <div className="policy-container">

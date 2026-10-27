@@ -34,7 +34,7 @@ const Breadcrumbs = ({
 
   // If items array is not passed, generate standard Home -> currentPage
   const breadcrumbList = items || [
-    { label: translations.home || "Home", path: "/" },
+    { label: translations.home, path: "/" },
     ...(currentPage ? [{ label: currentPage }] : []),
   ];
 

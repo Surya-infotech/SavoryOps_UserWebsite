@@ -113,7 +113,7 @@ const Footer = () => {
       if (response.ok && data.success) {
         setSubscribed(true);
         setIsSuccess(true);
-        setSubscribeMessage(data.message || translations.thankyousubscribing || "Thank you for subscribing to our newsletter!");
+        setSubscribeMessage(data.message || translations.thankyousubscribing);
         setEmail("");
         setTimeout(() => {
           setSubscribed(false);
@@ -251,7 +251,7 @@ const Footer = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
               <button type="submit" className="footer-newsletter-btn" disabled={subscribing}>
-                {subscribing ? "..." : (translations.join || "Join")}
+                {subscribing ? "..." : translations.join}
               </button>
             </form>
             {subscribed && (

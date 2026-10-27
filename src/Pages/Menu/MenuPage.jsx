@@ -21,8 +21,8 @@ const DietIndicator = ({ isVeg, className = "" }) => {
   return (
     <span
       className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? (translations.purevegetarian || "Veg") : (translations.nonvegetarian || "Non-Veg")}
-      aria-label={isVeg ? (translations.purevegetarian || "Veg") : (translations.nonvegetarian || "Non-Veg")}
+      title={isVeg ? translations.veg : translations.nonveg}
+      aria-label={isVeg ? translations.veg : translations.nonveg}
     >
       <span className="diet-box">
         <span className="diet-dot" />
@@ -46,7 +46,7 @@ const MenuPage = () => {
 
   useEffect(() => {
     if (businessDisplayName) {
-      document.title = `${translations.menu || "Menu"} | ${businessDisplayName}`;
+      document.title = `${translations.menu} | ${businessDisplayName}`;
     }
   }, [businessDisplayName, translations]);
 
@@ -191,9 +191,9 @@ const MenuPage = () => {
         categoryid: "deals",
         categoryname:
           bundleTypeLower === "combo"
-            ? (translations.combomeals || "Combo")
+            ? translations.combos
             : bundleTypeLower === "unlimited"
-              ? (translations.unlimitedmeals || "Unlimited")
+              ? translations.unlimitedmeals
               : "",
         bundletype: bundleTypeLower,
         title: b.dealsbundlesname || "",
@@ -246,7 +246,7 @@ const MenuPage = () => {
   // Options for custom Dropdown component
   const menuOptions = useMemo(() => {
     return [
-      { id: "all", name: translations.allmenus || "All Menus" },
+      { id: "all", name: translations.allmenus },
       ...availableMenus,
     ];
   }, [availableMenus, translations]);
@@ -257,14 +257,14 @@ const MenuPage = () => {
     if (comboMeals.length > 0) {
       list.push({
         id: "combo",
-        name: translations.combomeals || "Combos",
+        name: translations.combos,
         count: comboMeals.length,
       });
     }
     if (unlimitedMeals.length > 0) {
       list.push({
         id: "unlimited",
-        name: translations.unlimitedmeals || "Unlimited",
+        name: translations.unlimitedmeals,
         count: unlimitedMeals.length,
       });
     }
@@ -445,7 +445,7 @@ const MenuPage = () => {
           {dish.isDeal ? (
             dish.bundletype ? (
               <span className={`deal-ribbon-badge ${dish.bundletype}`}>
-                {dish.bundletype === "combo" ? (translations.combo || "COMBO") : (translations.unlimited || "UNLIMITED")}
+                {dish.bundletype === "combo" ? translations.combo : translations.unlimited}
               </span>
             ) : null
           ) : (
@@ -455,7 +455,7 @@ const MenuPage = () => {
           {dish.preparationtime && Number(dish.preparationtime) > 0 && (
             <span className="dish-prep-time">
               <AccessTimeIcon fontSize="inherit" />
-              {dish.preparationtime} min
+              {dish.preparationtime} {translations.min}
             </span>
           )}
 
@@ -478,7 +478,7 @@ const MenuPage = () => {
           {dish.isDeal && dish.items && dish.items.length > 0 && (
             <div className="deal-items-preview-row">
               <span className="deal-items-pill">
-                🍽️ {dish.items.length} {dish.items.length === 1 ? (translations.itemincluded || "item included") : (translations.itemsincluded || "items included")}
+                🍽️ {dish.items.length} {dish.items.length === 1 ? translations.itemincluded : translations.itemsincluded}
               </span>
             </div>
           )}
@@ -495,8 +495,8 @@ const MenuPage = () => {
                   type="button"
                   className="dish-addon-btn"
                   onClick={(e) => handleOpenAddonModal(e, dish)}
-                  title={`${translations.addons || "Add-ons"} - ${dish.title}`}
-                  aria-label={`${dish.title} ${translations.addons || "Add-ons"}`}
+                  title={`${translations.addons} - ${dish.title}`}
+                  aria-label={`${dish.title} ${translations.addons}`}
                 >
                   <AddIcon className="addon-btn-icon" />
                 </button>
@@ -507,8 +507,8 @@ const MenuPage = () => {
                   type="button"
                   className={`dish-add-btn ${count > 0 ? "added" : ""}`}
                   onClick={(e) => handleAddToCart(e, dish)}
-                  aria-label={translations.addtocart || "Add to Cart"}
-                  title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add to Cart")}
+                  aria-label={translations.addtocart}
+                  title={count > 0 ? `${translations.added} (${count})` : translations.addtocart}
                 >
                   <ShoppingCartOutlinedIcon fontSize="small" />
                   {count > 0 && <span className="dish-btn-count-badge">{count}</span>}
@@ -524,7 +524,7 @@ const MenuPage = () => {
   return (
     <div className="menu-page-wrapper">
       {/* Site-wide Unified Breadcrumbs */}
-      <Breadcrumbs currentPage={translations.menu || "Menu"} />
+      <Breadcrumbs currentPage={translations.menu} />
 
       <div className="menu-main-content-container">
         {/* --- Modern Interactive Filters (Menu, Item Category, Veg / Non-Veg) --- */}
@@ -542,7 +542,7 @@ const MenuPage = () => {
                       valueKey="id"
                       selectedValue={selectedMenu}
                       onValueChange={(val) => setSelectedMenu(val || "all")}
-                      placeholder={translations.allmenus || "All Menus"}
+                      placeholder={translations.allmenus}
                       showSearch={true}
                       className="menu-page-dropdown"
                     />
@@ -558,7 +558,7 @@ const MenuPage = () => {
                     className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
                     onClick={() => setSelectedDiet("all")}
                   >
-                    <span>{translations.all || "All"}</span>
+                    <span>{translations.all}</span>
                   </button>
                   <button
                     type="button"
@@ -568,7 +568,7 @@ const MenuPage = () => {
                     <span className="diet-box">
                       <span className="diet-dot" />
                     </span>
-                    <span>{translations.purevegetarian || "Veg"}</span>
+                    <span>{translations.veg}</span>
                   </button>
                   <button
                     type="button"
@@ -578,7 +578,7 @@ const MenuPage = () => {
                     <span className="diet-box">
                       <span className="diet-dot" />
                     </span>
-                    <span>{translations.nonvegetarian || "Non-Veg"}</span>
+                    <span>{translations.nonveg}</span>
                   </button>
                 </div>
               </div>
@@ -588,8 +588,8 @@ const MenuPage = () => {
                 <span className="filter-results-badge">
                   {filteredItems.length}{" "}
                   {filteredItems.length === 1
-                    ? (translations.dish || "item")
-                    : (translations.dishes || "items")}
+                    ? translations.dish
+                    : translations.dishes}
                 </span>
                 {isFilterActive && (
                   <button
@@ -599,7 +599,7 @@ const MenuPage = () => {
                     title="Clear all filters"
                   >
                     <CloseIcon fontSize="small" />
-                    <span>{translations.clear || "Clear"}</span>
+                    <span>{translations.clear}</span>
                   </button>
                 )}
               </div>
@@ -619,7 +619,7 @@ const MenuPage = () => {
                   className={`category-pill-btn ${selectedCategory === "all" ? "active" : ""}`}
                   onClick={() => setSelectedCategory("all")}
                 >
-                  <span>{translations.allcategories || "All Categories"}</span>
+                  <span>{translations.allcategories}</span>
                   <span className="pill-badge">{allCombinedItems.length}</span>
                 </button>
                 {availableCategories.map((cat) => (
@@ -664,22 +664,22 @@ const MenuPage = () => {
             <div className="filter-empty-icon-wrap">
               <RestaurantMenuIcon />
             </div>
-            <h3>{translations.nomatchingitems || "No dishes found"}</h3>
-            <p>{translations.tryadjustingfilters || "Try adjusting your menu, category, or diet filters to see more dishes."}</p>
+            <h3>{translations.nomatchingitems}</h3>
+            <p>{translations.tryadjustingfilters}</p>
             {isFilterActive && (
               <button
                 type="button"
                 className="reset-filter-btn"
                 onClick={handleClearFilters}
               >
-                {translations.resetfilters || "Reset All Filters"}
+                {translations.resetfilters}
               </button>
             )}
           </div>
         ) : (
           <div className="no-dishes-state">
             <RestaurantMenuIcon className="no-dishes-icon" />
-            <h4>{translations.nodishesfound || "No dishes found"}</h4>
+            <h4>{translations.nodishesfound}</h4>
           </div>
         )}
       </div>
@@ -692,7 +692,7 @@ const MenuPage = () => {
               type="button"
               className="dish-modal-close-btn"
               onClick={() => setSelectedItemModal(null)}
-              aria-label="Close"
+              aria-label={translations.close}
             >
               <CloseIcon fontSize="small" />
             </button>
@@ -730,7 +730,7 @@ const MenuPage = () => {
                       <span className="tag-badge">{selectedItemModal.menuname}</span>
                     )}
                     {selectedItemModal.preparationtime && Number(selectedItemModal.preparationtime) > 0 && (
-                      <span className="tag-badge">⏱ {selectedItemModal.preparationtime} mins</span>
+                      <span className="tag-badge">⏱ {selectedItemModal.preparationtime} {translations.min}</span>
                     )}
                   </div>
                 </div>
@@ -748,7 +748,7 @@ const MenuPage = () => {
               {/* Interactive Addons List */}
               {selectedItemModal.addons && selectedItemModal.addons.length > 0 && (
                 <div className="dish-modal-addons-box">
-                  <h5>{translations.addons || "Customizable Add-ons"}</h5>
+                  <h5>{translations.customizableaddons}</h5>
                   <div className="addons-list">
                     {selectedItemModal.addons.map((addon) => {
                       const addonKey = addon.addonid || addon._id;
@@ -781,7 +781,7 @@ const MenuPage = () => {
               {/* Items included in Deals/Bundles */}
               {selectedItemModal.isDeal && selectedItemModal.items && selectedItemModal.items.length > 0 && (
                 <div className="dish-modal-addons-box">
-                  <h5>{translations.includeditems || "Included Items"}</h5>
+                  <h5>{translations.includeditems}</h5>
                   <div className="addons-list">
                     {selectedItemModal.items.map((it, idx) => (
                       <div key={it.itemid || idx} className="addon-item-row">
@@ -817,7 +817,7 @@ const MenuPage = () => {
                     className="confirm-add-btn"
                     onClick={handleConfirmModalAdd}
                   >
-                    {translations.addtocart || "Add to Cart"} • {selectedItemModal.currencysymbol || ""}
+                    {translations.addtocart} • {selectedItemModal.currencysymbol || ""}
                     {selectedItemGrandTotal.toFixed(2)}
                   </button>
                 </div>
@@ -858,7 +858,7 @@ const MenuPage = () => {
                   </span>
                   {addonModalItem.preparationtime && Number(addonModalItem.preparationtime) > 0 && (
                     <span className="addon-prep-time">
-                      <AccessTimeIcon fontSize="inherit" /> {addonModalItem.preparationtime} min
+                      <AccessTimeIcon fontSize="inherit" /> {addonModalItem.preparationtime} {translations.min}
                     </span>
                   )}
                 </div>
@@ -878,7 +878,7 @@ const MenuPage = () => {
                 type="button"
                 className="addon-modal-close-btn"
                 onClick={() => setAddonModalItem(null)}
-                aria-label="Close"
+                aria-label={translations.close}
               >
                 <CloseIcon />
               </button>
@@ -893,10 +893,10 @@ const MenuPage = () => {
             <div className="addon-selection-section">
               <div className="addon-section-title-wrap">
                 <h4 className="addon-section-title">
-                  {translations.addons || "Customizable Add-ons"}
+                  {translations.customizableaddons}
                 </h4>
                 <span className="addon-section-subtitle">
-                  {translations.optional || "Select any add-ons"}
+                  {translations.selectanyaddons}
                 </span>
               </div>
 
@@ -935,7 +935,7 @@ const MenuPage = () => {
                   type="button"
                   onClick={() => setAddonQuantity((q) => Math.max(1, q - 1))}
                   disabled={addonQuantity <= 1}
-                  aria-label="Decrease quantity"
+                  aria-label={translations.decreasequantity}
                 >
                   -
                 </button>
@@ -943,7 +943,7 @@ const MenuPage = () => {
                 <button
                   type="button"
                   onClick={() => setAddonQuantity((q) => q + 1)}
-                  aria-label="Increase quantity"
+                  aria-label={translations.increasequantity}
                 >
                   +
                 </button>
@@ -954,7 +954,7 @@ const MenuPage = () => {
                 className="addon-add-cart-btn"
                 onClick={handleConfirmAddonModal}
               >
-                <span>{translations.addtocart || "Add to Cart"}</span>
+                <span>{translations.addtocart}</span>
                 <span className="addon-btn-separator">•</span>
                 <span className="addon-total-price">
                   {addonModalItem.currencysymbol || "$"}

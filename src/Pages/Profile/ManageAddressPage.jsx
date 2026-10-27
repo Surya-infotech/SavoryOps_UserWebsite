@@ -407,9 +407,9 @@ const ManageAddressPage = () => {
       {/* Site-wide Unified Breadcrumbs */}
       <Breadcrumbs
         items={[
-          { label: translations.home || "Home", path: "/" },
-          { label: translations.myaccount || "My Account", path: "/profile" },
-          { label: translations.manageaddress || "Manage Addresses" },
+          { label: translations.home, path: "/" },
+          { label: translations.myaccount, path: "/profile" },
+          { label: translations.manageaddress },
         ]}
       />
 

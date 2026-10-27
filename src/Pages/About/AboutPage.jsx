@@ -120,7 +120,7 @@ const AboutPage = () => {
 
   useEffect(() => {
     if (businessName) {
-      document.title = `${translations.aboutus || "About Us"} | ${businessName}`;
+      document.title = `${translations.aboutus} | ${businessName}`;
     }
   }, [businessName, translations]);
 
@@ -207,7 +207,7 @@ const AboutPage = () => {
       {/* 1. Hero Banner Section */}
       <section className="about-hero-section">
         {/* Site-wide Unified Breadcrumbs */}
-        <Breadcrumbs currentPage={translations.aboutus || "About Us"} />
+        <Breadcrumbs currentPage={translations.aboutus} />
 
         <div className="about-hero-inner">
           <div className="about-hero-grid">
@@ -231,7 +231,7 @@ const AboutPage = () => {
                   <span className="about-title-highlight">{heroHighlight}</span>
                 ) : (
                   <>
-                    {translations.aboutus || "About"}{" "}
+                    {translations.aboutus}{" "}
                     {businessName && (
                       <span className="about-title-highlight">{businessName}</span>
                     )}
