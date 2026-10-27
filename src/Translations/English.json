@@ -298,5 +298,15 @@
   "scanorclickgoogleplay": "Scan QR or click to open Google Play",
   "scanqrtodownloadapp": "Scan QR Code to download Customer App",
   "poweredby": "Powered by",
-  "saasrestaurantsuite": "SaaS Restaurant Suite"
+  "saasrestaurantsuite": "SaaS Restaurant Suite",
+  "combomeals": "Combo Meals",
+  "combopill": "Curated Combos",
+  "combosubtitle": "Specially crafted value bundles and paired delights for the ultimate culinary feast.",
+  "unlimitedmeals": "Unlimited Meals",
+  "unlimitedpill": "All You Can Eat",
+  "unlimitedsubtitle": "Endless gourmet servings prepared fresh to order for complete dining indulgence.",
+  "culinarymenu": "A La Carte",
+  "itemsincluded": "items included",
+  "itemincluded": "item included",
+  "nodishesfound": "No dishes available in this selection."
 }

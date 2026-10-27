@@ -233,14 +233,22 @@ const HomeDishes = () => {
     });
   }, [rawDealsBundles, branchCurrencySymbol, translations]);
 
-  // Dynamic category pills strictly from backend
+  const comboMeals = useMemo(() => {
+    return formattedDeals.filter((d) => d.bundletype === "combo");
+  }, [formattedDeals]);
+
+  const unlimitedMeals = useMemo(() => {
+    return formattedDeals.filter((d) => d.bundletype === "unlimited");
+  }, [formattedDeals]);
+
+  // Dynamic category pills strictly for regular a la carte menu
   const categories = useMemo(() => {
     const tabs = [
       {
         id: "all",
         label: translations.all || "All",
         image: null,
-        count: allDishes.length + formattedDeals.length,
+        count: allDishes.length,
       },
     ];
 
@@ -257,52 +265,26 @@ const HomeDishes = () => {
       });
     });
 
-    if (formattedDeals.length > 0) {
-      const comboCount = formattedDeals.filter((d) => d.bundletype === "combo").length;
-      const unlimitedCount = formattedDeals.filter((d) => d.bundletype === "unlimited").length;
-
-      if (comboCount > 0) {
-        tabs.push({
-          id: "combos",
-          label: translations.combomeals || "Combos",
-          image: null,
-          count: comboCount,
-        });
-      }
-      if (unlimitedCount > 0) {
-        tabs.push({
-          id: "unlimited",
-          label: translations.unlimitedmeals || "Unlimited",
-          image: null,
-          count: unlimitedCount,
-        });
-      }
-    }
-
     return tabs;
-  }, [allDishes.length, formattedDeals, rawCategories, translations]);
+  }, [allDishes.length, rawCategories, translations]);
 
-  // Filtered dishes and deals based on active tabs
-  const displayedItems = useMemo(() => {
+  // Filtered dishes based on active category & menu tabs
+  const displayedDishes = useMemo(() => {
     let items = [];
 
     if (selectedCategory === "all") {
-      items = [...formattedDeals, ...allDishes];
-    } else if (selectedCategory === "combos") {
-      items = formattedDeals.filter((d) => d.bundletype === "combo");
-    } else if (selectedCategory === "unlimited") {
-      items = formattedDeals.filter((d) => d.bundletype === "unlimited");
+      items = allDishes;
     } else {
       items = allDishes.filter((d) => String(d.categoryid) === String(selectedCategory));
     }
 
     // Apply menu sub-filter if selected
     if (selectedMenu !== "all") {
-      items = items.filter((it) => it.isDeal || String(it.menuid) === String(selectedMenu));
+      items = items.filter((it) => String(it.menuid) === String(selectedMenu));
     }
 
     return items;
-  }, [selectedCategory, selectedMenu, formattedDeals, allDishes]);
+  }, [selectedCategory, selectedMenu, allDishes]);
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
@@ -327,160 +309,226 @@ const HomeDishes = () => {
     }
   };
 
-  // If loading is finished and there are zero dishes or categories in the owner database, do not render section
+  // Reusable card renderer for dishes, combos, and unlimited meals
+  const renderDishCard = (dish) => {
+    const count = addedItems[dish.id] || 0;
+    const priceFormatted = `${dish.currencysymbol || ""}${dish.price != null ? Number(dish.price).toFixed(2) : ""}`;
+    const isCombo = dish.isDeal && dish.bundletype === "combo";
+    const isUnlimited = dish.isDeal && dish.bundletype === "unlimited";
+
+    return (
+      <div
+        key={dish.id}
+        className={`dish-card ${dish.isDeal ? "deal-card" : ""} ${isCombo ? "combo-card" : ""} ${isUnlimited ? "unlimited-card" : ""}`}
+        onClick={() => handleCardClick(dish)}
+      >
+        <div className="dish-img-box">
+          {dish.image ? (
+            <img
+              src={dish.image}
+              alt={dish.title}
+              className="dish-img"
+              loading="lazy"
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
+            />
+          ) : (
+            <RestaurantMenuIcon className="dish-no-img-icon" />
+          )}
+
+          {dish.isDeal ? (
+            dish.bundletype ? (
+              <span className={`deal-ribbon-badge ${dish.bundletype}`}>
+                {dish.bundletype === "combo" ? (translations.combo || "COMBO") : (translations.unlimited || "UNLIMITED")}
+              </span>
+            ) : null
+          ) : (
+            dish.categoryname && <span className="dish-tag-badge">{dish.categoryname}</span>
+          )}
+
+          {dish.preparationtime && Number(dish.preparationtime) > 0 && (
+            <span className="dish-prep-time">
+              <AccessTimeIcon fontSize="inherit" />
+              {dish.preparationtime} min
+            </span>
+          )}
+
+          {dish.hasDiet && (dish.isVeg || dish.isNonVeg) && (
+            <DietIndicator isVeg={dish.isVeg} />
+          )}
+        </div>
+
+        <div className="dish-content">
+          <h3 className="dish-title" title={dish.title}>
+            {dish.title}
+          </h3>
+
+          {dish.desc && (
+            <p className="dish-desc" title={dish.desc}>
+              {dish.desc}
+            </p>
+          )}
+
+          {dish.isDeal && dish.items && dish.items.length > 0 && (
+            <div className="deal-items-preview-row">
+              <span className="deal-items-pill">
+                🍽️ {dish.items.length} {dish.items.length === 1 ? (translations.itemincluded || "item included") : (translations.itemsincluded || "items included")}
+              </span>
+            </div>
+          )}
+
+          <div className="dish-footer-row">
+            <div className="dish-price-group">
+              <span className="dish-price">{priceFormatted}</span>
+            </div>
+
+            <button
+              type="button"
+              className={`dish-add-btn ${count > 0 ? "added" : ""}`}
+              onClick={(e) => handleAddToCart(e, dish)}
+              aria-label={translations.addtocart || "Add"}
+              title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add")}
+            >
+              {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // If loading is finished and there are zero dishes and zero deals in the owner database, do not render section
   if (!loading && allDishes.length === 0 && formattedDeals.length === 0) {
     return null;
   }
 
   return (
-    <section className="dishes-showcase-section">
-      {/* Section Header */}
-      <div className="section-header-block">
-        <h2 className="section-main-title">{translations.menu || "Menu"}</h2>
-      </div>
+    <div className="dishes-showcase-container">
+      {/* 1. Dedicated Combo Meals Section */}
+      {comboMeals.length > 0 && (
+        <section className="dishes-showcase-section combo-meals-section" id="combo-meals">
+          <div className="section-header-block">
+            <span className="section-pill-tag combo-tag">
+              🍱 {translations.combopill || "Curated Combos"}
+            </span>
+            <h2 className="section-main-title">{translations.combomeals || "Combo Meals"}</h2>
+            <p className="section-subtitle">
+              {translations.combosubtitle || "Specially crafted value bundles and paired delights for the ultimate culinary feast."}
+            </p>
+          </div>
 
-      {/* Dynamic Category Tabs */}
-      {!loading && categories.length > 1 && (
-        <div className="category-tabs-row">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              className={`category-tab-btn ${selectedCategory === cat.id ? "active" : ""}`}
-              onClick={() => {
-                setSelectedCategory(cat.id);
-                setSelectedMenu("all");
-              }}
-            >
-              {cat.image && (
-                <img src={cat.image} alt={cat.label} className="category-tab-icon-img" />
-              )}
-              <span>{cat.label}</span>
-              {cat.count > 0 && <span className="category-count-badge">{cat.count}</span>}
-            </button>
-          ))}
-        </div>
+          <div className="dishes-grid">
+            {comboMeals.map((dish) => renderDishCard(dish))}
+          </div>
+        </section>
       )}
 
-      {/* Menu Sub-filters (if multiple menus exist in this branch) */}
-      {!loading && uniqueMenus.length > 1 && selectedCategory === "all" && (
-        <div className="menu-subfilters-row">
-          <button
-            type="button"
-            className={`menu-chip ${selectedMenu === "all" ? "active" : ""}`}
-            onClick={() => setSelectedMenu("all")}
-          >
-            {translations.allmenus || "All Menus"}
-          </button>
-          {uniqueMenus.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              className={`menu-chip ${selectedMenu === m.id ? "active" : ""}`}
-              onClick={() => setSelectedMenu(m.id)}
-            >
-              {m.name}
-            </button>
-          ))}
-        </div>
+      {/* 2. Dedicated Unlimited Meals Section */}
+      {unlimitedMeals.length > 0 && (
+        <section className="dishes-showcase-section unlimited-meals-section" id="unlimited-meals">
+          <div className="section-header-block">
+            <span className="section-pill-tag unlimited-tag">
+              ♾️ {translations.unlimitedpill || "All You Can Eat"}
+            </span>
+            <h2 className="section-main-title">{translations.unlimitedmeals || "Unlimited Meals"}</h2>
+            <p className="section-subtitle">
+              {translations.unlimitedsubtitle || "Endless gourmet servings prepared fresh to order for complete dining indulgence."}
+            </p>
+          </div>
+
+          <div className="dishes-grid">
+            {unlimitedMeals.map((dish) => renderDishCard(dish))}
+          </div>
+        </section>
       )}
 
-      {/* Dishes & Deals Grid */}
-      {loading ? (
-        <div className="dishes-grid">
-          {[1, 2, 3, 4].map((n) => (
-            <div key={n} className="dish-skeleton-card">
-              <div className="skeleton-img" />
-              <div className="skeleton-body">
-                <div className="skeleton-line title" />
-                <div className="skeleton-line desc1" />
-                <div className="skeleton-line desc2" />
-                <div className="skeleton-line footer" />
-              </div>
+      {/* 3. Dedicated A La Carte Menu Section */}
+      {(loading || allDishes.length > 0) && (
+        <section className="dishes-showcase-section a-la-carte-section" id="menu">
+          <div className="section-header-block">
+            <span className="section-pill-tag">
+              🍽️ {translations.culinarymenu || "A La Carte"}
+            </span>
+            <h2 className="section-main-title">{translations.menu || "Menu"}</h2>
+            <p className="section-subtitle">
+              {translations.menusubtitle || "Browse through our wide selection of artisan dishes made with farm-fresh ingredients."}
+            </p>
+          </div>
+
+          {/* Dynamic Category Tabs */}
+          {!loading && categories.length > 1 && (
+            <div className="category-tabs-row">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`category-tab-btn ${selectedCategory === cat.id ? "active" : ""}`}
+                  onClick={() => {
+                    setSelectedCategory(cat.id);
+                    setSelectedMenu("all");
+                  }}
+                >
+                  {cat.image && (
+                    <img src={cat.image} alt={cat.label} className="category-tab-icon-img" />
+                  )}
+                  <span>{cat.label}</span>
+                  {cat.count > 0 && <span className="category-count-badge">{cat.count}</span>}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : displayedItems.length > 0 ? (
-        <div className="dishes-grid">
-          {displayedItems.map((dish) => {
-            const count = addedItems[dish.id] || 0;
-            const priceFormatted = `${dish.currencysymbol || ""}${dish.price != null ? Number(dish.price).toFixed(2) : ""}`;
+          )}
 
-            return (
-              <div
-                key={dish.id}
-                className={`dish-card ${dish.isDeal ? "deal-card" : ""}`}
-                onClick={() => handleCardClick(dish)}
+          {/* Menu Sub-filters (if multiple menus exist in this branch) */}
+          {!loading && uniqueMenus.length > 1 && selectedCategory === "all" && (
+            <div className="menu-subfilters-row">
+              <button
+                type="button"
+                className={`menu-chip ${selectedMenu === "all" ? "active" : ""}`}
+                onClick={() => setSelectedMenu("all")}
               >
-                <div className="dish-img-box">
-                  {dish.image ? (
-                    <img
-                      src={dish.image}
-                      alt={dish.title}
-                      className="dish-img"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                      }}
-                    />
-                  ) : (
-                    <RestaurantMenuIcon className="dish-no-img-icon" />
-                  )}
+                {translations.allmenus || "All Menus"}
+              </button>
+              {uniqueMenus.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  className={`menu-chip ${selectedMenu === m.id ? "active" : ""}`}
+                  onClick={() => setSelectedMenu(m.id)}
+                >
+                  {m.name}
+                </button>
+              ))}
+            </div>
+          )}
 
-                  {dish.isDeal ? (
-                    dish.bundletype ? (
-                      <span className="deal-ribbon-badge">
-                        {dish.bundletype.toUpperCase()}
-                      </span>
-                    ) : null
-                  ) : (
-                    dish.categoryname && <span className="dish-tag-badge">{dish.categoryname}</span>
-                  )}
-
-                  {dish.preparationtime && Number(dish.preparationtime) > 0 && (
-                    <span className="dish-prep-time">
-                      <AccessTimeIcon fontSize="inherit" />
-                      {dish.preparationtime} min
-                    </span>
-                  )}
-
-                  {dish.hasDiet && (dish.isVeg || dish.isNonVeg) && (
-                    <DietIndicator isVeg={dish.isVeg} />
-                  )}
-                </div>
-
-                <div className="dish-content">
-                  <h3 className="dish-title" title={dish.title}>
-                    {dish.title}
-                  </h3>
-
-                  {dish.desc && (
-                    <p className="dish-desc" title={dish.desc}>
-                      {dish.desc}
-                    </p>
-                  )}
-
-                  <div className="dish-footer-row">
-                    <div className="dish-price-group">
-                      <span className="dish-price">{priceFormatted}</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      className={`dish-add-btn ${count > 0 ? "added" : ""}`}
-                      onClick={(e) => handleAddToCart(e, dish)}
-                      aria-label={translations.addtocart || "Add"}
-                      title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add")}
-                    >
-                      {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
-                    </button>
+          {/* Dishes Grid */}
+          {loading ? (
+            <div className="dishes-grid">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="dish-skeleton-card">
+                  <div className="skeleton-img" />
+                  <div className="skeleton-body">
+                    <div className="skeleton-line title" />
+                    <div className="skeleton-line desc1" />
+                    <div className="skeleton-line desc2" />
+                    <div className="skeleton-line footer" />
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
+              ))}
+            </div>
+          ) : displayedDishes.length > 0 ? (
+            <div className="dishes-grid">
+              {displayedDishes.map((dish) => renderDishCard(dish))}
+            </div>
+          ) : (
+            <div className="no-dishes-state">
+              <RestaurantMenuIcon className="no-dishes-icon" />
+              <p>{translations.nodishesfound || "No dishes available in this selection."}</p>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Interactive Item & Bundle Detail Modal */}
       {selectedItemModal && (
@@ -607,7 +655,7 @@ const HomeDishes = () => {
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 
