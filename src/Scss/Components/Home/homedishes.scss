@@ -346,7 +346,7 @@
   overflow-y: hidden;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
-  padding: 0.5rem 0.25rem 1.25rem;
+  padding: 0.5rem 0 1.25rem;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -354,22 +354,25 @@
   }
 
   .dish-card {
-    flex: 0 0 295px;
-    width: 295px;
+    flex: 0 0 calc((100% - 4.5rem) / 4);
+    width: calc((100% - 4.5rem) / 4);
+    min-width: 0;
     scroll-snap-align: start;
   }
 }
 
 .scroll-arrow-btn {
   position: absolute;
-  top: 50%;
+  top: 100px;
   transform: translateY(-50%);
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1.5px solid #e2e8f0;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -379,11 +382,11 @@
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
   &.left {
-    left: -22px;
+    left: 12px;
   }
 
   &.right {
-    right: -22px;
+    right: 12px;
   }
 
   &:hover {
@@ -1078,13 +1081,12 @@
 }
 
 /* Responsive */
-@media (max-width: 1360px) {
-  .scroll-arrow-btn {
-    &.left {
-      left: 6px;
-    }
-    &.right {
-      right: 6px;
+@media (max-width: 1180px) {
+  .horizontal-scroll-track {
+    gap: 1.25rem;
+    .dish-card {
+      flex: 0 0 calc((100% - 2.5rem) / 3);
+      width: calc((100% - 2.5rem) / 3);
     }
   }
 }
@@ -1118,6 +1120,13 @@
   .menu-categories-container {
     gap: 3.5rem;
   }
+  .horizontal-scroll-track {
+    gap: 1rem;
+    .dish-card {
+      flex: 0 0 calc((100% - 1rem) / 2);
+      width: calc((100% - 1rem) / 2);
+    }
+  }
 }
 
 @media (max-width: 640px) {
@@ -1127,21 +1136,25 @@
   .section-main-title {
     font-size: 1.75rem;
   }
+}
+
+@media (max-width: 540px) {
   .horizontal-scroll-track {
-    gap: 1rem;
+    gap: 0.85rem;
     .dish-card {
-      flex: 0 0 270px;
-      width: 270px;
+      flex: 0 0 85%;
+      width: 85%;
     }
   }
   .scroll-arrow-btn {
     width: 38px;
     height: 38px;
+    top: 90px;
     &.left {
-      left: 2px;
+      left: 8px;
     }
     &.right {
-      right: 2px;
+      right: 8px;
     }
   }
 }

@@ -90,9 +90,17 @@ const HorizontalScrollRow = ({ children, className = "" }) => {
   const handleScroll = (direction) => {
     const el = rowRef.current;
     if (!el) return;
-    const scrollAmount = Math.max(310, Math.floor(el.clientWidth * 0.7));
+    const firstCard = el.querySelector(".dish-card");
+    let cardStep = 310;
+    if (firstCard) {
+      const nextCard = firstCard.nextElementSibling;
+      const computedGap = nextCard
+        ? nextCard.offsetLeft - (firstCard.offsetLeft + firstCard.offsetWidth)
+        : 24;
+      cardStep = firstCard.offsetWidth + Math.max(0, computedGap);
+    }
     el.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
+      left: direction === "left" ? -cardStep : cardStep,
       behavior: "smooth",
     });
   };
