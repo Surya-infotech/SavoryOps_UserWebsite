@@ -344,14 +344,10 @@ const MenuPage = () => {
 
   return (
     <div className="menu-page-wrapper">
-      {/* Top Bar with Breadcrumbs */}
-      <div className="menu-page-top-bar">
-        <div className="menu-page-container">
-          <Breadcrumbs currentPage={translations.menu || "Menu"} />
-        </div>
-      </div>
-
       <div className="menu-main-content-container">
+        {/* Breadcrumbs Navigation */}
+        <Breadcrumbs currentPage={translations.menu || "Menu"} />
+
         {/* Unified Item List in Row-Wise Grid (No Horizontal Scroll) */}
         {loading ? (
           <div className="dishes-grid">
