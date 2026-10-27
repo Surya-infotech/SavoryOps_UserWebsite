@@ -742,6 +742,43 @@ const Navbar = () => {
   const brandDisplayName = business?.businessname;
   const brandLogoUrl = business?.imageUrl;
 
+  const [announcement, setAnnouncement] = useState({
+    showAnnouncement: true,
+    announcementText: "",
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchAnnouncement = async () => {
+      const currentSubdomain = getWebsiteSubdomain();
+      if (!currentSubdomain) return;
+      try {
+        const res = await fetch(`${adminPanelBackendPath}/Website/General/GetAnnouncement`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "admin",
+            "x-subdomain": currentSubdomain,
+          },
+        });
+        const data = await res.json();
+        if (isMounted && res.ok && data.success && data.announcement) {
+          setAnnouncement({
+            showAnnouncement: data.announcement.showAnnouncement !== undefined ? Boolean(data.announcement.showAnnouncement) : true,
+            announcementText: data.announcement.announcementText || "",
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching announcement setting:", err);
+      }
+    };
+
+    fetchAnnouncement();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -753,28 +790,32 @@ const Navbar = () => {
     <>
       <header className={`savory-navbar-wrapper ${isScrolled ? "scrolled" : ""}`}>
         {/* --- Top Utility Bar --- */}
-        <div className="nav-top-bar">
-          <div className="nav-top-inner">
-            <div className="nav-top-left">
-              <span className="top-badge">
-                <span className="live-dot"></span>
-                {translations.livekitchen}
-              </span>
-              <span className="nav-top-text">
-                {translations.navpromo}
-              </span>
-            </div>
-
-            {displayPhone && (
-              <div className="nav-top-right">
-                <a href={`tel:${displayPhone}`} className="top-contact-link">
-                  <PhoneInTalkIcon />
-                  <span>{displayPhone}</span>
-                </a>
+        {(announcement.showAnnouncement || displayPhone) && (
+          <div className="nav-top-bar">
+            <div className="nav-top-inner">
+              <div className="nav-top-left">
+                <span className="top-badge">
+                  <span className="live-dot"></span>
+                  {translations.livekitchen}
+                </span>
+                {announcement.showAnnouncement && (
+                  <span className="nav-top-text">
+                    {announcement.announcementText}
+                  </span>
+                )}
               </div>
-            )}
+
+              {displayPhone && (
+                <div className="nav-top-right">
+                  <a href={`tel:${displayPhone}`} className="top-contact-link">
+                    <PhoneInTalkIcon />
+                    <span>{displayPhone}</span>
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* --- Main Navigation Bar --- */}
         <nav className="nav-main">
