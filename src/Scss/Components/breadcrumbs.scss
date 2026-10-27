@@ -1,13 +1,30 @@
 /* ==========================================================================
-   Reusable Breadcrumbs Styling
+   SavoryOps User Website - Reusable Modern Breadcrumbs
+   Modern Pill Badge Design with Sleek Chevrons & Interactive Micro-Animations
    ========================================================================== */
 
 .app-breadcrumbs {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.4;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+  width: fit-content;
+
+  /* Pill Variant (Standard across pages) */
+  &.app-breadcrumbs--pill {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    }
+  }
 
   .breadcrumbs-list {
     display: flex;
@@ -16,27 +33,37 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 0.5rem;
+    gap: 0.3rem;
   }
 
   .breadcrumb-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem;
     color: #64748b;
 
     &.is-current {
       .breadcrumb-text {
         color: #0f172a;
-        font-weight: 600;
+        font-weight: 700;
+        letter-spacing: -0.1px;
       }
     }
   }
 
   .breadcrumb-separator {
-    color: #cbd5e1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
     user-select: none;
-    font-size: 0.8125rem;
+    line-height: 1;
+
+    .breadcrumb-separator-icon {
+      font-size: 1rem;
+      color: #94a3b8;
+      transition: color 0.15s ease;
+    }
   }
 
   .breadcrumb-link {
@@ -44,20 +71,25 @@
     align-items: center;
     gap: 0.35rem;
     color: #64748b;
+    font-weight: 500;
     text-decoration: none;
-    transition: color 0.15s ease, transform 0.15s ease;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 
     .breadcrumb-home-icon {
       font-size: 1.05rem;
-      color: #94a3b8;
-      transition: color 0.15s ease;
+      color: #64748b;
+      transition: color 0.18s ease, transform 0.18s ease;
     }
 
     &:hover {
       color: #028802;
+      background-color: rgba(2, 136, 2, 0.06);
 
       .breadcrumb-home-icon {
         color: #028802;
+        transform: translateY(-1px);
       }
     }
   }
@@ -67,7 +99,8 @@
     align-items: center;
     gap: 0.35rem;
     color: #0f172a;
-    font-weight: 600;
+    font-weight: 700;
+    padding: 0.2rem 0.4rem;
 
     .breadcrumb-home-icon {
       font-size: 1.05rem;
@@ -75,15 +108,13 @@
     }
   }
 
-  /* Optional Pill Variant */
-  &.app-breadcrumbs--pill {
-    display: inline-flex;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 0.35rem 0.85rem;
-    border-radius: 9999px;
-    width: fit-content;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  /* Inline Variant (if explicitly passed) */
+  &.app-breadcrumbs--inline {
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
   }
 
   /* RTL Support */

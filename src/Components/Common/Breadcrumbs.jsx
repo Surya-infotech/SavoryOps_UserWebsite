@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/breadcrumbs.scss";
 
@@ -23,8 +24,8 @@ const Breadcrumbs = ({
   items,
   currentPage,
   showHomeIcon = true,
-  separator = "/",
-  variant = "inline", // "inline" | "pill"
+  separator = null,
+  variant = "pill", // "pill" (default) | "inline"
   className = "",
 }) => {
   const { translations = {}, isRtl } = useLanguage();
@@ -52,7 +53,9 @@ const Breadcrumbs = ({
             >
               {index > 0 && (
                 <span className="breadcrumb-separator" aria-hidden="true">
-                  {separator}
+                  {separator || (
+                    <ChevronRightIcon className="breadcrumb-separator-icon" />
+                  )}
                 </span>
               )}
 

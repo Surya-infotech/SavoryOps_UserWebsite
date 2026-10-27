@@ -33,33 +33,8 @@
   padding: 0 1.5rem;
 }
 
-.about-breadcrumbs,
 .about-breadcrumbs-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  margin-bottom: 1.75rem;
-  color: #64748b;
-
-  .breadcrumb-link {
-    color: #64748b;
-    text-decoration: none;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #028802;
-    }
-  }
-
-  .breadcrumb-sep {
-    color: #cbd5e1;
-  }
-
-  .breadcrumb-current {
-    color: #0f172a;
-    font-weight: 600;
-  }
+  margin-bottom: 1.5rem;
 }
 
 .about-hero-grid {
