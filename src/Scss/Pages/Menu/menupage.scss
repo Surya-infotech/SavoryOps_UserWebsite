@@ -18,6 +18,324 @@
   padding: 0 1.5rem;
 }
 
+/* --- Modern Menu Filters Card (Menu, Item Category, Veg / Non-Veg) --- */
+.menu-filters-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 1.15rem 1.4rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 18px -4px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: box-shadow 0.2s ease;
+
+  .menu-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .filter-item-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+
+    .filter-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #334155;
+      user-select: none;
+
+      .filter-label-icon {
+        font-size: 1.15rem;
+        color: #028802;
+      }
+    }
+  }
+
+  /* 1. Menu Select Dropdown */
+  .select-dropdown-container {
+    position: relative;
+    min-width: 210px;
+
+    .filter-select-input {
+      appearance: none;
+      -webkit-appearance: none;
+      background: #f8fafc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat calc(100% - 12px) center;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 0.45rem 2.2rem 0.45rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0f172a;
+      width: 100%;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #028802;
+        background-color: #ffffff;
+      }
+
+      &:focus {
+        border-color: #028802;
+        box-shadow: 0 0 0 3px rgba(2, 136, 2, 0.12);
+        background-color: #ffffff;
+      }
+    }
+  }
+
+  /* 2. Diet Segmented Group (All / Veg / Non-Veg) */
+  .diet-segmented-group {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 9999px;
+    gap: 3px;
+
+    .diet-segment-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      background: transparent;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+      .diet-box {
+        width: 13px;
+        height: 13px;
+        border-radius: 3px;
+        background: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        border: 1.5px solid #2e7d32;
+
+        .diet-dot {
+          width: 5.5px;
+          height: 5.5px;
+          border-radius: 50%;
+          background: #2e7d32;
+        }
+      }
+
+      &.diet-nonveg .diet-box {
+        border-color: #c62828;
+        .diet-dot {
+          background: #c62828;
+        }
+      }
+
+      &:hover:not(.active) {
+        color: #0f172a;
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      &.active {
+        background: #ffffff;
+        color: #0f172a;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+
+        &.diet-veg {
+          color: #028802;
+          background: #f0fdf4;
+          border: 1px solid rgba(2, 136, 2, 0.2);
+          box-shadow: 0 2px 6px rgba(2, 136, 2, 0.12);
+        }
+
+        &.diet-nonveg {
+          color: #dc2626;
+          background: #fef2f2;
+          border: 1px solid rgba(220, 38, 38, 0.2);
+          box-shadow: 0 2px 6px rgba(220, 38, 38, 0.12);
+        }
+      }
+    }
+  }
+
+  /* Actions wrap */
+  .filter-actions-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
+
+    .filter-results-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748b;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+    }
+
+    .filter-clear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #dc2626;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 9999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.785rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #dc2626;
+        color: #ffffff;
+        border-color: #dc2626;
+      }
+    }
+  }
+
+  /* 3. Category Pills Bar */
+  .menu-category-pills-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.15rem 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      font-size: 0.825rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      padding: 0.45rem 0.95rem;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+      .pill-badge {
+        font-size: 0.725rem;
+        font-weight: 700;
+        background: #e2e8f0;
+        color: #64748b;
+        padding: 1px 6px;
+        border-radius: 9999px;
+        transition: all 0.2s ease;
+      }
+
+      &:hover:not(.active) {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        color: #028802;
+        transform: translateY(-1px);
+      }
+
+      &.active {
+        background: #028802;
+        border-color: #028802;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+
+        .pill-badge {
+          background: rgba(255, 255, 255, 0.25);
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+/* Empty filter results state */
+.menu-filter-empty-state {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  max-width: 500px;
+  margin: 2rem auto;
+
+  .filter-empty-icon-wrap {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+
+    svg {
+      font-size: 2rem;
+    }
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+    max-width: 360px;
+  }
+
+  .reset-filter-btn {
+    margin-top: 0.5rem;
+    background: #028802;
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(2, 136, 2, 0.2);
+
+    &:hover {
+      background: #026b02;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(2, 136, 2, 0.3);
+    }
+  }
+}
+
 /* --- Row-Wise Grid of Dishes (No Horizontal Scrolling) --- */
 .dishes-grid {
   display: grid;

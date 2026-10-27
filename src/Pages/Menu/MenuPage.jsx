@@ -228,6 +228,98 @@ const MenuPage = () => {
     return [...comboMeals, ...unlimitedMeals, ...allDishes];
   }, [comboMeals, unlimitedMeals, allDishes]);
 
+  // Filter States: Menu, Item Category, Veg / Non-Veg
+  const [selectedMenu, setSelectedMenu] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedDiet, setSelectedDiet] = useState("all"); // "all" | "veg" | "nonveg"
+
+  // Dynamically extract unique available Menus
+  const availableMenus = useMemo(() => {
+    const map = new Map();
+    allDishes.forEach((d) => {
+      if (d.menuid && d.menuname) {
+        map.set(String(d.menuid), d.menuname);
+      }
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [allDishes]);
+
+  // Dynamically extract unique available Categories with item counts
+  const availableCategories = useMemo(() => {
+    const list = [];
+    if (comboMeals.length > 0) {
+      list.push({
+        id: "combo",
+        name: translations.combomeals || "Combos",
+        count: comboMeals.length,
+      });
+    }
+    if (unlimitedMeals.length > 0) {
+      list.push({
+        id: "unlimited",
+        name: translations.unlimitedmeals || "Unlimited",
+        count: unlimitedMeals.length,
+      });
+    }
+    rawCategories.forEach((cat) => {
+      const catId = String(cat.itemcategoryid);
+      const count = allDishes.filter((d) => String(d.categoryid) === catId).length;
+      list.push({
+        id: catId,
+        name: cat.itemcategoryname || "Category",
+        count,
+      });
+    });
+    return list;
+  }, [rawCategories, comboMeals.length, unlimitedMeals.length, allDishes, translations]);
+
+  // Filter items based on selected Menu, Item Category, and Diet (Veg/Non-Veg)
+  const filteredItems = useMemo(() => {
+    return allCombinedItems.filter((item) => {
+      // 1. Menu Filter
+      if (selectedMenu !== "all") {
+        if (item.isDeal) {
+          if (selectedCategory !== "combo" && selectedCategory !== "unlimited") {
+            return false;
+          }
+        } else if (String(item.menuid) !== String(selectedMenu)) {
+          return false;
+        }
+      }
+
+      // 2. Category Filter
+      if (selectedCategory !== "all") {
+        if (selectedCategory === "combo") {
+          if (!item.isDeal || item.bundletype !== "combo") return false;
+        } else if (selectedCategory === "unlimited") {
+          if (!item.isDeal || item.bundletype !== "unlimited") return false;
+        } else {
+          if (item.isDeal || String(item.categoryid) !== String(selectedCategory)) {
+            return false;
+          }
+        }
+      }
+
+      // 3. Diet Filter (Veg / Non-Veg)
+      if (selectedDiet === "veg") {
+        if (!item.isVeg) return false;
+      } else if (selectedDiet === "nonveg") {
+        if (!item.isNonVeg) return false;
+      }
+
+      return true;
+    });
+  }, [allCombinedItems, selectedMenu, selectedCategory, selectedDiet]);
+
+  const isFilterActive =
+    selectedMenu !== "all" || selectedCategory !== "all" || selectedDiet !== "all";
+
+  const handleClearFilters = () => {
+    setSelectedMenu("all");
+    setSelectedCategory("all");
+    setSelectedDiet("all");
+  };
+
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
     setAddedItems((prev) => ({
@@ -348,6 +440,127 @@ const MenuPage = () => {
       <Breadcrumbs currentPage={translations.menu || "Menu"} />
 
       <div className="menu-main-content-container">
+        {/* --- Modern Interactive Filters (Menu, Item Category, Veg / Non-Veg) --- */}
+        {!loading && allCombinedItems.length > 0 && (
+          <div className="menu-filters-wrapper">
+            <div className="menu-filter-bar">
+              {/* 1. Menu Filter Dropdown */}
+              {availableMenus.length > 0 && (
+                <div className="filter-item-wrap menu-dropdown-wrap">
+                  <label htmlFor="menu-filter-select" className="filter-label">
+                    <RestaurantMenuIcon className="filter-label-icon" />
+                    <span>{translations.menu || "Menu"}:</span>
+                  </label>
+                  <div className="select-dropdown-container">
+                    <select
+                      id="menu-filter-select"
+                      className="filter-select-input"
+                      value={selectedMenu}
+                      onChange={(e) => setSelectedMenu(e.target.value)}
+                    >
+                      <option value="all">{translations.allmenus || "All Menus"}</option>
+                      {availableMenus.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {/* 2. Diet Filter (Veg / Non-Veg) Segmented Group */}
+              <div className="filter-item-wrap diet-toggle-wrap">
+                <span className="filter-label">
+                  <span>{translations.diet || "Diet"}:</span>
+                </span>
+                <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
+                  <button
+                    type="button"
+                    className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
+                    onClick={() => setSelectedDiet("all")}
+                  >
+                    <span>{translations.all || "All"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
+                    onClick={() => setSelectedDiet("veg")}
+                  >
+                    <span className="diet-box">
+                      <span className="diet-dot" />
+                    </span>
+                    <span>{translations.purevegetarian || "Veg"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
+                    onClick={() => setSelectedDiet("nonveg")}
+                  >
+                    <span className="diet-box">
+                      <span className="diet-dot" />
+                    </span>
+                    <span>{translations.nonvegetarian || "Non-Veg"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Filter Count & Reset Action */}
+              <div className="filter-actions-wrap">
+                <span className="filter-results-badge">
+                  {filteredItems.length}{" "}
+                  {filteredItems.length === 1
+                    ? (translations.dish || "item")
+                    : (translations.dishes || "items")}
+                </span>
+                {isFilterActive && (
+                  <button
+                    type="button"
+                    className="filter-clear-btn"
+                    onClick={handleClearFilters}
+                    title="Clear all filters"
+                  >
+                    <CloseIcon fontSize="small" />
+                    <span>{translations.clear || "Clear"}</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* 3. Item Category Filter Pills Row */}
+            {availableCategories.length > 0 && (
+              <div
+                className="menu-category-pills-bar"
+                role="tablist"
+                aria-label="Item Categories"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedCategory === "all"}
+                  className={`category-pill-btn ${selectedCategory === "all" ? "active" : ""}`}
+                  onClick={() => setSelectedCategory("all")}
+                >
+                  <span>{translations.allcategories || "All Categories"}</span>
+                  <span className="pill-badge">{allCombinedItems.length}</span>
+                </button>
+                {availableCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={selectedCategory === cat.id}
+                    className={`category-pill-btn ${selectedCategory === cat.id ? "active" : ""}`}
+                    onClick={() => setSelectedCategory(cat.id)}
+                  >
+                    <span>{cat.name}</span>
+                    {cat.count != null && <span className="pill-badge">{cat.count}</span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Unified Item List in Row-Wise Grid (No Horizontal Scroll) */}
         {loading ? (
@@ -364,9 +577,26 @@ const MenuPage = () => {
               </div>
             ))}
           </div>
-        ) : allCombinedItems.length > 0 ? (
+        ) : filteredItems.length > 0 ? (
           <div className="dishes-grid">
-            {allCombinedItems.map((dish) => renderDishCard(dish))}
+            {filteredItems.map((dish) => renderDishCard(dish))}
+          </div>
+        ) : allCombinedItems.length > 0 ? (
+          <div className="menu-filter-empty-state">
+            <div className="filter-empty-icon-wrap">
+              <RestaurantMenuIcon />
+            </div>
+            <h3>{translations.nomatchingitems || "No dishes found"}</h3>
+            <p>{translations.tryadjustingfilters || "Try adjusting your menu, category, or diet filters to see more dishes."}</p>
+            {isFilterActive && (
+              <button
+                type="button"
+                className="reset-filter-btn"
+                onClick={handleClearFilters}
+              >
+                {translations.resetfilters || "Reset All Filters"}
+              </button>
+            )}
           </div>
         ) : (
           <div className="no-dishes-state">
