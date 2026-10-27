@@ -67,8 +67,7 @@
   /* 1. Menu Custom Searchable Dropdown */
   .menu-custom-dropdown-container {
     position: relative;
-    min-width: 220px;
-    max-width: 280px;
+    width: 260px;
 
     .dropdown-container {
       width: 100%;
@@ -78,37 +77,12 @@
       width: 100%;
     }
 
-    .dropdownbtn {
-      padding: 8px 14px !important;
-      font-size: 0.85rem !important;
-      font-weight: 600 !important;
-      border-radius: 10px !important;
-      border: 1.5px solid #cbd5e1 !important;
-      background-color: #f8fafc !important;
-      min-height: 40px !important;
-      box-sizing: border-box !important;
-
-      &:hover:not(:disabled) {
-        border-color: #028802 !important;
-        background-color: #ffffff !important;
-      }
-
-      &.is-open {
-        border-color: #028802 !important;
-        background-color: #ffffff !important;
-        box-shadow: 0 0 0 0.2rem rgba(2, 136, 2, 0.18) !important;
-      }
-    }
-
     .dropdown-menu-panel,
     .dropdownul {
-      min-width: 260px !important;
-      border-radius: 14px !important;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12), 0 4px 10px rgba(15, 23, 42, 0.06) !important;
-      border: 1px solid #e2e8f0 !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
       z-index: 1060 !important;
-      overflow: hidden !important;
-      top: calc(100% + 6px) !important;
     }
   }
 
