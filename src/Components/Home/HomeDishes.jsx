@@ -1,9 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homedishes.scss";
@@ -48,6 +50,78 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
         </svg>
       )}
     </span>
+  );
+};
+
+/**
+ * Smooth horizontal scroll container with left and right navigation buttons
+ */
+const HorizontalScrollRow = ({ children, className = "" }) => {
+  const rowRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 6);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
+  }, []);
+
+  useEffect(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    checkScroll();
+
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
+
+    const timer = setTimeout(checkScroll, 250);
+
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+      clearTimeout(timer);
+    };
+  }, [checkScroll, children]);
+
+  const handleScroll = (direction) => {
+    const el = rowRef.current;
+    if (!el) return;
+    const scrollAmount = Math.max(310, Math.floor(el.clientWidth * 0.7));
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className={`horizontal-scroll-container ${className}`}>
+      <button
+        type="button"
+        className={`scroll-arrow-btn left ${!canScrollLeft ? "disabled" : ""}`}
+        onClick={() => handleScroll("left")}
+        aria-label="Scroll left"
+        disabled={!canScrollLeft}
+      >
+        <ChevronLeftIcon />
+      </button>
+
+      <div className="horizontal-scroll-track" ref={rowRef}>
+        {children}
+      </div>
+
+      <button
+        type="button"
+        className={`scroll-arrow-btn right ${!canScrollRight ? "disabled" : ""}`}
+        onClick={() => handleScroll("right")}
+        aria-label="Scroll right"
+        disabled={!canScrollRight}
+      >
+        <ChevronRightIcon />
+      </button>
+    </div>
   );
 };
 
@@ -418,9 +492,9 @@ const HomeDishes = () => {
             </p>
           </div>
 
-          <div className="dishes-grid">
+          <HorizontalScrollRow className="combo-scroll-row">
             {comboMeals.map((dish) => renderDishCard(dish))}
-          </div>
+          </HorizontalScrollRow>
         </section>
       )}
 
@@ -437,9 +511,9 @@ const HomeDishes = () => {
             </p>
           </div>
 
-          <div className="dishes-grid">
+          <HorizontalScrollRow className="unlimited-scroll-row">
             {unlimitedMeals.map((dish) => renderDishCard(dish))}
-          </div>
+          </HorizontalScrollRow>
         </section>
       )}
 
