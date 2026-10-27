@@ -1,0 +1,28 @@
+/* ==========================================================================
+   SavoryOps User Website - Menu Page Styles (SCSS)
+   ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
+
+.menu-page-wrapper {
+  width: 100%;
+  min-height: 80vh;
+  padding-bottom: 5rem;
+  background-color: #f8fafc;
+
+  .menu-page-top-bar {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    padding: 1.25rem 0;
+  }
+
+  .menu-page-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .dishes-showcase-container {
+    margin-top: 2rem;
+  }
+}

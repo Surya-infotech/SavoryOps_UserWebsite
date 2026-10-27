@@ -9,6 +9,7 @@ import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
 import ProfilePage from "../Pages/Profile/ProfilePage.jsx";
 import ManageAddressPage from "../Pages/Profile/ManageAddressPage.jsx";
 import AboutPage from "../Pages/About/AboutPage.jsx";
+import MenuPage from "../Pages/Menu/MenuPage.jsx";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -33,16 +34,7 @@ const HomeRouter = () => {
       <Route path="/signin" element={<SigninPage />} />
       <Route path="/policy/:policyId" element={<PolicyPage />} />
       <Route path="/policy" element={<PolicyPage />} />
-      <Route
-        path="/menu"
-        element={
-          <SubpagePlaceholder
-            icon="🍕"
-            title={translations.fullculinarymenu}
-            subtitle={translations.menusubtitle}
-          />
-        }
-      />
+      <Route path="/menu" element={<MenuPage />} />
       <Route
         path="/offers"
         element={
