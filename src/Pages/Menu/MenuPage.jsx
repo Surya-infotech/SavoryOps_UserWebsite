@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -16,7 +15,7 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 /**
  * Standard Veg/Non-Veg FSSAI-compliant diet badge using pure CSS (No SVG)
  */
-export const DietIndicator = ({ isVeg, className = "" }) => {
+const DietIndicator = ({ isVeg, className = "" }) => {
   const { translations = {} } = useLanguage();
 
   return (

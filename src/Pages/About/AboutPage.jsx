@@ -62,7 +62,6 @@ const AboutPage = () => {
 
   const [aboutUsSetting, setAboutUsSetting] = useState(null);
   const [apiBusiness, setApiBusiness] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch about us setting directly from the backend API for this page
   useEffect(() => {
@@ -70,12 +69,10 @@ const AboutPage = () => {
     const fetchAboutData = async () => {
       const currentSubdomain = getWebsiteSubdomain() || contextSubdomain;
       if (!currentSubdomain) {
-        setIsLoading(false);
         return;
       }
 
       try {
-        setIsLoading(true);
         const response = await fetch(`${adminPanelBackendPath}/Website/General/GetAboutUsSetting`, {
           method: "GET",
           headers: {
@@ -96,10 +93,6 @@ const AboutPage = () => {
         }
       } catch (err) {
         console.error("Error fetching about us data:", err);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
       }
     };
 

@@ -223,15 +223,6 @@ const ProfilePage = () => {
     setPreviewImage(previewUrl);
   };
 
-  const handleRemoveImage = () => {
-    setSelectedImageFile(null);
-    setPreviewImage("");
-    setProfileImage("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
   // Validation Helpers (Parity with SavoryOps_UserApp)
   const validateName = (name, fieldLabel) => {
     const nameRegex = /^[A-Za-z\s]+$/;

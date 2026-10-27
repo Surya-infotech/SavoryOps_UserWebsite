@@ -34,7 +34,7 @@ const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.defaul
 /**
  * Helper to retrieve stored branch or default to first available branch
  */
-export const getStoredBranch = (branches = []) => {
+const getStoredBranch = (branches = []) => {
   if (!Array.isArray(branches) || branches.length === 0) return null;
   const savedId = localStorage.getItem("selectedBranchId");
   if (savedId) {
@@ -49,7 +49,7 @@ export const getStoredBranch = (branches = []) => {
 /* ==========================================================================
    1. BranchDropdown Component
    ========================================================================== */
-export const BranchDropdown = ({ className = "", onBranchChange }) => {
+const BranchDropdown = ({ className = "", onBranchChange }) => {
   const { translations = {} } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
