@@ -25,31 +25,9 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
       title={isVeg ? (translations.purevegetarian || "Veg") : (translations.nonvegetarian || "Non-Veg")}
       aria-label={isVeg ? (translations.purevegetarian || "Veg") : (translations.nonvegetarian || "Non-Veg")}
     >
-      {isVeg ? (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="diet-svg"
-        >
-          <rect x="1" y="1" width="14" height="14" rx="3" stroke="#2e7d32" strokeWidth="1.8" fill="#ffffff" />
-          <circle cx="8" cy="8" r="3.75" fill="#2e7d32" />
-        </svg>
-      ) : (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="diet-svg"
-        >
-          <rect x="1" y="1" width="14" height="14" rx="3" stroke="#c62828" strokeWidth="1.8" fill="#ffffff" />
-          <circle cx="8" cy="8" r="3.75" fill="#c62828" />
-        </svg>
-      )}
+      <span className="diet-box">
+        <span className="diet-dot" />
+      </span>
     </span>
   );
 };
