@@ -344,9 +344,10 @@ const MenuPage = () => {
 
   return (
     <div className="menu-page-wrapper">
+      {/* Site-wide Unified Breadcrumbs */}
+      <Breadcrumbs currentPage={translations.menu || "Menu"} />
+
       <div className="menu-main-content-container">
-        {/* Breadcrumbs Navigation */}
-        <Breadcrumbs currentPage={translations.menu || "Menu"} />
 
         {/* Unified Item List in Row-Wise Grid (No Horizontal Scroll) */}
         {loading ? (

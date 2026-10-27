@@ -404,16 +404,16 @@ const ManageAddressPage = () => {
 
   return (
     <div className={`manage-address-wrapper ${isRtl ? "is-rtl" : ""}`}>
-      <div className="manage-address-container">
-        {/* Breadcrumb Navigation */}
-        <Breadcrumbs
-          items={[
-            { label: translations.home || "Home", path: "/" },
-            { label: translations.myaccount || "My Account", path: "/profile" },
-            { label: translations.manageaddress || "Manage Addresses" },
-          ]}
-        />
+      {/* Site-wide Unified Breadcrumbs */}
+      <Breadcrumbs
+        items={[
+          { label: translations.home || "Home", path: "/" },
+          { label: translations.myaccount || "My Account", path: "/profile" },
+          { label: translations.manageaddress || "Manage Addresses" },
+        ]}
+      />
 
+      <div className="manage-address-container">
         {/* Page Top Header */}
         <header className="manage-address-header">
           <div className="manage-address-header-meta">

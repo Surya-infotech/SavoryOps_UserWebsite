@@ -401,10 +401,10 @@ const SettingsPage = () => {
 
   return (
     <div className="settings-page-wrapper">
-      <div className="settings-container">
-        {/* Breadcrumb Navigation */}
-        <Breadcrumbs currentPage={translations.settings || "Settings"} />
+      {/* Site-wide Unified Breadcrumbs */}
+      <Breadcrumbs currentPage={translations.settings || "Settings"} />
 
+      <div className="settings-container">
         {/* Page Top Header */}
         <header className="settings-page-header">
           <div className="settings-page-header-meta">

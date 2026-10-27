@@ -9,15 +9,17 @@
   width: 100%;
   min-height: calc(100vh - 120px);
   background: #f8fafc;
-  padding: 2.5rem 1.5rem 5rem;
+  padding: 0 0 5rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .settings-container {
   max-width: 1140px;
   width: 100%;
   margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
 /* Page Header */

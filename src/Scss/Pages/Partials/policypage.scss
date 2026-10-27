@@ -9,13 +9,14 @@
   background: radial-gradient(circle at 10% 15%, rgba(2, 136, 2, 0.04) 0%, transparent 45%),
               radial-gradient(circle at 90% 85%, rgba(105, 232, 105, 0.06) 0%, transparent 50%),
               #f8fafc;
-  padding: 36px 20px 80px;
+  padding: 0 0 80px;
   color: #1e293b;
   font-family: inherit;
 
   .policy-container {
     max-width: 920px;
     margin: 0 auto;
+    padding: 0 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 24px;

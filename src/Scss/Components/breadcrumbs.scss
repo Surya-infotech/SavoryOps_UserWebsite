@@ -3,12 +3,27 @@
    Modern Pill Badge Design with Sleek Chevrons & Interactive Micro-Animations
    ========================================================================== */
 
+/* Universal Breadcrumbs Container across ALL pages - Strict Placement Parity */
+.site-breadcrumb-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+
+  &.is-rtl {
+    direction: rtl;
+  }
+}
+
 .app-breadcrumbs {
   display: inline-flex;
   align-items: center;
   font-size: 0.8125rem;
   line-height: 1.4;
-  margin-bottom: 1.25rem;
+  margin: 0;
   width: fit-content;
 
   /* Pill Variant (Standard across pages) */

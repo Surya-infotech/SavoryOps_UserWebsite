@@ -213,12 +213,10 @@ const AboutPage = () => {
     <div className="about-page-wrapper">
       {/* 1. Hero Banner Section */}
       <section className="about-hero-section">
-        <div className="about-hero-inner">
-          <Breadcrumbs
-            currentPage={translations.aboutus || "About Us"}
-            className="about-breadcrumbs-wrapper"
-          />
+        {/* Site-wide Unified Breadcrumbs */}
+        <Breadcrumbs currentPage={translations.aboutus || "About Us"} />
 
+        <div className="about-hero-inner">
           <div className="about-hero-grid">
             <div className="about-hero-text">
               {heroBadge && (

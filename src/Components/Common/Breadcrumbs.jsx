@@ -27,6 +27,8 @@ const Breadcrumbs = ({
   separator = null,
   variant = "pill", // "pill" (default) | "inline"
   className = "",
+  containerClassName = "",
+  noContainer = false,
 }) => {
   const { translations = {}, isRtl } = useLanguage();
 
@@ -36,7 +38,7 @@ const Breadcrumbs = ({
     ...(currentPage ? [{ label: currentPage }] : []),
   ];
 
-  return (
+  const breadcrumbsNav = (
     <nav
       className={`app-breadcrumbs app-breadcrumbs--${variant} ${isRtl ? "is-rtl" : ""} ${className}`}
       aria-label="Breadcrumb"
@@ -79,6 +81,18 @@ const Breadcrumbs = ({
         })}
       </ol>
     </nav>
+  );
+
+  if (noContainer) {
+    return breadcrumbsNav;
+  }
+
+  return (
+    <div
+      className={`site-breadcrumb-container ${isRtl ? "is-rtl" : ""} ${containerClassName}`}
+    >
+      {breadcrumbsNav}
+    </div>
   );
 };
 
