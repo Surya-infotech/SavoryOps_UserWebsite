@@ -184,13 +184,9 @@ const MenuPage = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetItemcategory/${branchId}`, {
+      const response = await fetch(`${adminPanelBackendPath}/Website/Menu/GetItemcategory/${branchId}`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user": "admin",
-          "x-subdomain": currentSubdomain,
-        },
+        headers: { "Content-Type": "application/json", "x-user": "admin", "x-subdomain": currentSubdomain, },
       });
 
       if (!response.ok) {
@@ -306,8 +302,8 @@ const MenuPage = () => {
           bundleTypeLower === "combo"
             ? (translations.combomeals || "Combo")
             : bundleTypeLower === "unlimited"
-            ? (translations.unlimitedmeals || "Unlimited")
-            : "",
+              ? (translations.unlimitedmeals || "Unlimited")
+              : "",
         bundletype: bundleTypeLower,
         title: b.dealsbundlesname || "",
         desc: b.description || "",
