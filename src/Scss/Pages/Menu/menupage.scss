@@ -587,6 +587,45 @@
   color: #028802;
 }
 
+.dish-card-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.dish-addon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1.5px solid #028802;
+  background: #f0fdf4;
+  color: #028802;
+  font-size: 0.76rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+
+  .addon-btn-icon {
+    font-size: 0.95rem;
+  }
+
+  &:hover {
+    background: #028802;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
 .dish-add-btn {
   background: #028802;
   color: #ffffff;
@@ -909,7 +948,33 @@
       justify-content: space-between;
       font-size: 0.875rem;
       color: #334155;
-      padding: 4px 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.18s ease;
+
+      &.is-selected {
+        background: #f0fdf4;
+        border-color: #028802;
+        box-shadow: 0 2px 6px rgba(2, 136, 2, 0.1);
+      }
+
+      .addon-check-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .addon-checkbox-input {
+        accent-color: #028802;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
 
       .addon-price {
         font-weight: 700;
@@ -972,6 +1037,312 @@
       &:hover {
         background: #026b02;
         transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   Dedicated Add-on Selection Popup Modal
+   ========================================================================== */
+.addon-modal-overlay {
+  z-index: 1200;
+}
+
+.addon-modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 92%;
+  max-width: 460px;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 90vh;
+
+  .addon-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 1.25rem 1.4rem;
+    border-bottom: 1px solid #f1f5f9;
+    position: relative;
+
+    .addon-header-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .addon-header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.35rem;
+
+      .addon-header-diet {
+        position: static;
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+
+    .addon-modal-item-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.35;
+      letter-spacing: -0.3px;
+    }
+
+    .addon-modal-price-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .addon-base-price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #028802;
+    }
+
+    .addon-prep-time {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .addon-modal-thumb-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid #e2e8f0;
+
+      .addon-modal-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .addon-modal-close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #64748b;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .addon-modal-desc {
+    padding: 0.75rem 1.4rem 0.25rem;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .addon-selection-section {
+    padding: 1rem 1.4rem;
+    overflow-y: auto;
+    flex: 1;
+
+    .addon-section-title-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+
+      .addon-section-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .addon-section-subtitle {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: 500;
+      }
+    }
+
+    .addon-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .addon-option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0.7rem 0.9rem;
+      border-radius: 12px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+
+      &:hover {
+        border-color: #cbd5e1;
+        background: #ffffff;
+      }
+
+      &.is-selected {
+        background: #f0fdf4;
+        border-color: #028802;
+        box-shadow: 0 2px 8px rgba(2, 136, 2, 0.12);
+
+        .addon-option-name {
+          color: #0f172a;
+          font-weight: 700;
+        }
+
+        .addon-option-price {
+          color: #028802;
+        }
+      }
+
+      .addon-option-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .addon-option-checkbox {
+        accent-color: #028802;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .addon-option-name {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #334155;
+        line-height: 1.35;
+      }
+
+      .addon-option-price {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #64748b;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .addon-modal-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1.4rem;
+    border-top: 1px solid #f1f5f9;
+    background: #ffffff;
+
+    .addon-quantity-control {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+      background: #f8fafc;
+
+      button {
+        background: transparent;
+        border: none;
+        width: 36px;
+        height: 38px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #334155;
+        cursor: pointer;
+        transition: background 0.15s;
+
+        &:hover:not(:disabled) {
+          background: #e2e8f0;
+          color: #0f172a;
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+
+      .addon-qty-val {
+        padding: 0 10px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+        min-width: 24px;
+        text-align: center;
+      }
+    }
+
+    .addon-add-cart-btn {
+      flex: 1;
+      height: 42px;
+      background: linear-gradient(135deg, #028802 0%, #026b02 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 9999px;
+      padding: 0 1.25rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(2, 136, 2, 0.28);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: linear-gradient(135deg, #029902 0%, #027a02 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(2, 136, 2, 0.35);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      .addon-btn-separator {
+        opacity: 0.6;
+      }
+
+      .addon-total-price {
+        font-weight: 800;
       }
     }
   }
