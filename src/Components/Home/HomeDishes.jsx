@@ -6,7 +6,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homedishes.scss";
@@ -146,10 +145,6 @@ const HorizontalScrollRow = ({ children, className = "" }) => {
 const HomeDishes = () => {
   const { translations = {} } = useLanguage();
   const [loading, setLoading] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("all");
-  const [activeSectionId, setActiveSectionId] = useState("");
-  const [menuDropdownOpen, setMenuDropdownOpen] = useState(false);
-  const menuDropdownRef = useRef(null);
   const [addedItems, setAddedItems] = useState({});
   const [selectedItemModal, setSelectedItemModal] = useState(null);
   const [modalQuantity, setModalQuantity] = useState(1);
@@ -285,17 +280,6 @@ const HomeDishes = () => {
     return list;
   }, [rawCategories, branchCurrencySymbol]);
 
-  // Extract unique menus for dining menu filter
-  const uniqueMenus = useMemo(() => {
-    const map = new Map();
-    allDishes.forEach((d) => {
-      if (d.menuid && d.menuname) {
-        map.set(d.menuid, d.menuname);
-      }
-    });
-    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
-  }, [allDishes]);
-
   const formattedDeals = useMemo(() => {
     return rawDealsBundles.map((b) => {
       const rawItemType = (b.itemtype || b.itemType || "").trim().toLowerCase();
@@ -335,16 +319,12 @@ const HomeDishes = () => {
     return formattedDeals.filter((d) => d.bundletype === "unlimited");
   }, [formattedDeals]);
 
-  // Option 3: Group dishes by their Category
+  // Group dishes by their Category
   const categorizedSections = useMemo(() => {
     return rawCategories
       .map((cat) => {
         const catId = String(cat.itemcategoryid);
-        const dishes = allDishes.filter((d) => {
-          if (String(d.categoryid) !== catId) return false;
-          if (selectedMenu !== "all" && String(d.menuid) !== String(selectedMenu)) return false;
-          return true;
-        });
+        const dishes = allDishes.filter((d) => String(d.categoryid) === catId);
 
         return {
           id: catId,
@@ -354,68 +334,7 @@ const HomeDishes = () => {
         };
       })
       .filter((section) => section.dishes.length > 0);
-  }, [rawCategories, allDishes, selectedMenu]);
-
-  // Close menu dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuDropdownRef.current && !menuDropdownRef.current.contains(e.target)) {
-        setMenuDropdownOpen(false);
-      }
-    };
-    if (menuDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuDropdownOpen]);
-
-  // Set default active section
-  useEffect(() => {
-    if (categorizedSections.length > 0) {
-      if (!categorizedSections.some((sec) => sec.id === activeSectionId)) {
-        setActiveSectionId(categorizedSections[0].id);
-      }
-    } else {
-      setActiveSectionId("");
-    }
-  }, [categorizedSections, activeSectionId]);
-
-  // Observe active section on scroll
-  useEffect(() => {
-    if (typeof window === "undefined" || categorizedSections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const secId = entry.target.id.replace("category-section-", "");
-            setActiveSectionId(secId);
-          }
-        });
-      },
-      {
-        rootMargin: "-120px 0px -65% 0px",
-        threshold: 0,
-      }
-    );
-
-    categorizedSections.forEach((sec) => {
-      const el = document.getElementById(`category-section-${sec.id}`);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, [categorizedSections]);
-
-  const handleScrollToSection = (sectionId) => {
-    const el = document.getElementById(`category-section-${sectionId}`);
-    if (el) {
-      const yOffset = -150; // Offset for sticky navbar + sticky quick-jump bar
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: "smooth" });
-      setActiveSectionId(sectionId);
-    }
-  };
+  }, [rawCategories, allDishes]);
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
@@ -588,90 +507,6 @@ const HomeDishes = () => {
               {translations.menusubtitle || "Browse through our wide selection of artisan dishes made with farm-fresh ingredients."}
             </p>
           </div>
-
-          {/* Sticky Quick-Jump Navigation Bar */}
-          {!loading && categorizedSections.length > 0 && (
-            <div className="sticky-quick-jump-wrapper">
-              <div className="sticky-quick-jump-inner">
-                {/* Horizontal Quick-Jump Category Pills */}
-                <div className="quick-jump-pills-track">
-                  {categorizedSections.map((section) => {
-                    const isActive = activeSectionId === section.id;
-                    return (
-                      <button
-                        key={section.id}
-                        type="button"
-                        className={`quick-jump-pill ${isActive ? "active" : ""}`}
-                        onClick={() => handleScrollToSection(section.id)}
-                      >
-                        {section.image && (
-                          <img
-                            src={section.image}
-                            alt={section.name}
-                            className="quick-jump-img"
-                          />
-                        )}
-                        <span className="quick-jump-label">{section.name}</span>
-                        <span className="quick-jump-badge">{section.dishes.length}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Compact Dining Menu Filter Dropdown */}
-                {uniqueMenus.length > 1 && (
-                  <div className="menu-filter-dropdown-wrapper" ref={menuDropdownRef}>
-                    <button
-                      type="button"
-                      className={`menu-filter-dropdown-btn ${selectedMenu !== "all" ? "has-filter" : ""}`}
-                      onClick={() => setMenuDropdownOpen((prev) => !prev)}
-                      aria-label="Filter by Dining Menu"
-                    >
-                      <RestaurantMenuIcon className="menu-filter-icon" />
-                      <span className="menu-filter-current-label">
-                        {selectedMenu === "all"
-                          ? (translations.allmenus || "All Menus")
-                          : (uniqueMenus.find((m) => m.id === selectedMenu)?.name || translations.allmenus || "All Menus")}
-                      </span>
-                      <KeyboardArrowDownIcon
-                        className={`menu-filter-arrow ${menuDropdownOpen ? "open" : ""}`}
-                      />
-                    </button>
-
-                    {menuDropdownOpen && (
-                      <div className="menu-filter-dropdown-menu">
-                        <button
-                          type="button"
-                          className={`menu-filter-option ${selectedMenu === "all" ? "active" : ""}`}
-                          onClick={() => {
-                            setSelectedMenu("all");
-                            setMenuDropdownOpen(false);
-                          }}
-                        >
-                          <span>{translations.allmenus || "All Menus"}</span>
-                          {selectedMenu === "all" && <CheckCircleIcon fontSize="inherit" />}
-                        </button>
-                        {uniqueMenus.map((m) => (
-                          <button
-                            key={m.id}
-                            type="button"
-                            className={`menu-filter-option ${selectedMenu === m.id ? "active" : ""}`}
-                            onClick={() => {
-                              setSelectedMenu(m.id);
-                              setMenuDropdownOpen(false);
-                            }}
-                          >
-                            <span>{m.name}</span>
-                            {selectedMenu === m.id && <CheckCircleIcon fontSize="inherit" />}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Dishes Grouped by Category */}
           {loading ? (
