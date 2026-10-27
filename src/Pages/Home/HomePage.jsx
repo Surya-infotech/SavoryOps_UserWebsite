@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
-import HomeDishes from "../../Components/Home/HomeDishes.jsx";
 import HomeCustomerApp from "../../Components/Home/HomeCustomerApp.jsx";
 import HomeReviews from "../../Components/Home/HomeReviews.jsx";
 import "../../Scss/Pages/Home/homepage.scss";
@@ -26,13 +25,10 @@ const HomePage = () => {
       {/* 2. Value Proposition / Feature Strip Section */}
       <HomeFeatures hasBanner={hasHeroBanner} />
 
-      {/* 3. Popular Menu Showcase / Dishes Section */}
-      <HomeDishes />
-
-      {/* 4. Customer Mobile App Showcase & Tableside Ordering Section */}
+      {/* 3. Customer Mobile App Showcase & Tableside Ordering Section */}
       <HomeCustomerApp />
 
-      {/* 5. Customer Dining Reviews & Testimonials Section */}
+      {/* 4. Customer Dining Reviews & Testimonials Section */}
       <HomeReviews />
     </div>
   );
