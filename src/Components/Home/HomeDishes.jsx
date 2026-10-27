@@ -707,11 +707,7 @@ const HomeDishes = () => {
                         />
                       )}
                       <h3 className="category-group-title">{section.name}</h3>
-                      <span className="category-group-count-badge">
-                        {section.dishes.length} {section.dishes.length === 1 ? (translations.item || "item") : (translations.items || "items")}
-                      </span>
                     </div>
-                    <div className="category-group-divider" />
                   </div>
 
                   {/* Dishes Horizontal Scroll Row */}
