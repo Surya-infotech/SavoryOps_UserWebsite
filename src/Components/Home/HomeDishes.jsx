@@ -160,10 +160,10 @@ const HomeDishes = () => {
       (cat.menuGroups || []).forEach((mg) => {
         const menuDetails = mg.menuDetails || {};
         (mg.itemDetails || []).forEach((item) => {
-          const rawItemType = (item.itemtype || "").trim().toLowerCase();
-          const hasDiet = Boolean(rawItemType);
-          const isVeg = hasDiet && rawItemType === "veg";
-          const isNonVeg = hasDiet && rawItemType.includes("non");
+          const rawItemType = (item.itemtype || item.itemType || "").trim().toLowerCase();
+          const isNonVeg = rawItemType.includes("non") || rawItemType.includes("egg");
+          const isVeg = !isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan");
+          const hasDiet = isVeg || isNonVeg;
 
           list.push({
             id: String(item.itemid),
@@ -204,10 +204,10 @@ const HomeDishes = () => {
 
   const formattedDeals = useMemo(() => {
     return rawDealsBundles.map((b) => {
-      const rawItemType = (b.itemtype || "").trim().toLowerCase();
-      const hasDiet = Boolean(rawItemType);
-      const isVeg = hasDiet && rawItemType === "veg";
-      const isNonVeg = hasDiet && rawItemType.includes("non");
+      const rawItemType = (b.itemtype || b.itemType || "").trim().toLowerCase();
+      const isNonVeg = rawItemType.includes("non") || rawItemType.includes("egg");
+      const isVeg = !isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan");
+      const hasDiet = isVeg || isNonVeg;
       const bundleTypeLower = (b.bundletype || "").toLowerCase();
 
       return {
@@ -495,7 +495,7 @@ const HomeDishes = () => {
               <CloseIcon fontSize="small" />
             </button>
 
-            {selectedItemModal.image && (
+            {selectedItemModal.image ? (
               <div className="dish-modal-hero">
                 <img
                   src={selectedItemModal.image}
@@ -505,9 +505,15 @@ const HomeDishes = () => {
                   }}
                 />
                 {selectedItemModal.hasDiet && (selectedItemModal.isVeg || selectedItemModal.isNonVeg) && (
-                  <DietIndicator isVeg={selectedItemModal.isVeg} />
+                  <DietIndicator isVeg={selectedItemModal.isVeg} className="dish-modal-diet-badge" />
                 )}
               </div>
+            ) : (
+              selectedItemModal.hasDiet && (selectedItemModal.isVeg || selectedItemModal.isNonVeg) && (
+                <div className="dish-modal-no-img-diet">
+                  <DietIndicator isVeg={selectedItemModal.isVeg} className="dish-modal-diet-badge" />
+                </div>
+              )
             )}
 
             <div className="dish-modal-body">
