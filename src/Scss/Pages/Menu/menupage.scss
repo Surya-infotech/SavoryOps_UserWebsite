@@ -640,6 +640,7 @@
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
   flex-shrink: 0;
+  position: relative;
 
   &:hover {
     background: #026b02;
@@ -649,6 +650,27 @@
 
   &.added {
     background: #026b02;
+  }
+
+  .dish-btn-count-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 0.675rem;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    line-height: 1;
+    z-index: 2;
   }
 }
 

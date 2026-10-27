@@ -4,6 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
@@ -508,10 +509,11 @@ const MenuPage = () => {
                   type="button"
                   className={`dish-add-btn ${count > 0 ? "added" : ""}`}
                   onClick={(e) => handleAddToCart(e, dish)}
-                  aria-label={translations.addtocart || "Add"}
-                  title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add")}
+                  aria-label={translations.addtocart || "Add to Cart"}
+                  title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add to Cart")}
                 >
-                  {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
+                  <ShoppingCartOutlinedIcon fontSize="small" />
+                  {count > 0 && <span className="dish-btn-count-badge">{count}</span>}
                 </button>
               )}
             </div>
