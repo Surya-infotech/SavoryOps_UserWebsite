@@ -49,12 +49,17 @@ export const getStoredBranch = (branches = []) => {
 /* ==========================================================================
    1. BranchDropdown Component
    ========================================================================== */
-export const BranchDropdown = ({ className = "" }) => {
+export const BranchDropdown = ({ className = "", onBranchChange }) => {
   const { translations = {} } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [selectedBranch, setSelectedBranch] = useState(() => {
+    if (typeof window !== "undefined" && window.__selectedBranch) {
+      return window.__selectedBranch;
+    }
+    return null;
+  });
   const dropdownRef = useRef(null);
 
   // Fetch branches directly via subdomain API
@@ -79,6 +84,9 @@ export const BranchDropdown = ({ className = "" }) => {
             if (!savedId || !data.branches.some(b => String(b._id) === String(savedId))) {
               localStorage.setItem("selectedBranchId", branchId);
             }
+            if (typeof onBranchChange === "function") {
+              onBranchChange(current);
+            }
             window.dispatchEvent(
               new CustomEvent("branchChange", {
                 detail: current,
@@ -92,6 +100,20 @@ export const BranchDropdown = ({ className = "" }) => {
     };
 
     fetchBranches();
+  }, [onBranchChange]);
+
+  // Keep state synchronized if branch changes elsewhere
+  useEffect(() => {
+    const handleBranchChange = (e) => {
+      if (e?.detail) {
+        setSelectedBranch(e.detail);
+      }
+    };
+
+    window.addEventListener("branchChange", handleBranchChange);
+    return () => {
+      window.removeEventListener("branchChange", handleBranchChange);
+    };
   }, []);
 
   // Allow sibling components (like Footer) to request current branch without refetching API
@@ -136,6 +158,10 @@ export const BranchDropdown = ({ className = "" }) => {
     window.__selectedBranch = branch;
     setIsOpen(false);
     setSearch("");
+
+    if (typeof onBranchChange === "function") {
+      onBranchChange(branch);
+    }
 
     // Notify other components (HomePage, HomeBanner, Reservation, Footer, etc.) about branch change
     window.dispatchEvent(
@@ -632,6 +658,34 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
 
+  const [selectedBranch, setSelectedBranch] = useState(() => {
+    if (typeof window !== "undefined" && window.__selectedBranch) {
+      return window.__selectedBranch;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.__selectedBranch) {
+      setSelectedBranch(window.__selectedBranch);
+    }
+
+    const handleBranchChange = (e) => {
+      if (e?.detail) {
+        setSelectedBranch(e.detail);
+      }
+    };
+
+    window.addEventListener("branchChange", handleBranchChange);
+    window.dispatchEvent(new CustomEvent("requestBranch"));
+
+    return () => {
+      window.removeEventListener("branchChange", handleBranchChange);
+    };
+  }, []);
+
+  const displayPhone = selectedBranch?.phone || "";
+
   // Close mobile drawer whenever language or route changes
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -711,12 +765,14 @@ const Navbar = () => {
               </span>
             </div>
 
-            <div className="nav-top-right">
-              <a href="tel:+18005553663" className="top-contact-link">
-                <PhoneInTalkIcon />
-                <span>+1 (800) 555-FOOD</span>
-              </a>
-            </div>
+            {displayPhone && (
+              <div className="nav-top-right">
+                <a href={`tel:${displayPhone}`} className="top-contact-link">
+                  <PhoneInTalkIcon />
+                  <span>{displayPhone}</span>
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
@@ -736,7 +792,7 @@ const Navbar = () => {
               <Link to="/" className="nav-brand-name-link">
                 <span className="nav-brand-name">{brandDisplayName}</span>
               </Link>
-              <BranchDropdown />
+              <BranchDropdown onBranchChange={setSelectedBranch} />
             </div>
           </div>
 
@@ -832,7 +888,7 @@ const Navbar = () => {
                 {/* Mobile Branch Selector */}
                 <div className="mobile-branch-section">
                   <span className="mobile-section-label">{translations.selectbranch}</span>
-                  <BranchDropdown className="mobile-branch-dropdown" />
+                  <BranchDropdown className="mobile-branch-dropdown" onBranchChange={setSelectedBranch} />
                 </div>
 
                 <form className="mobile-search-box" onSubmit={handleSearchSubmit} autoComplete="off">
@@ -884,12 +940,14 @@ const Navbar = () => {
                   <TableRestaurantIcon fontSize="small" />
                   <span>{translations.booktable}</span>
                 </Link>
-                <a
-                  href="tel:+18005553663"
-                  className="mobile-helpline-link"
-                >
-                  📞 {translations.helpline}: +1 (800) 555-FOOD
-                </a>
+                {displayPhone && (
+                  <a
+                    href={`tel:${displayPhone}`}
+                    className="mobile-helpline-link"
+                  >
+                    📞 {translations.helpline}: {displayPhone}
+                  </a>
+                )}
               </div>
             </div>
           </>,
