@@ -61,11 +61,16 @@ const HorizontalScrollRow = ({ children, className = "" }) => {
   const rowRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [hasOverflow, setHasOverflow] = useState(() =>
+    Array.isArray(children) ? children.length > 3 : true
+  );
 
   const checkScroll = useCallback(() => {
     const el = rowRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
+    const overflow = scrollWidth > clientWidth + 4;
+    setHasOverflow(overflow);
     setCanScrollLeft(scrollLeft > 6);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
   }, []);
@@ -107,29 +112,33 @@ const HorizontalScrollRow = ({ children, className = "" }) => {
 
   return (
     <div className={`horizontal-scroll-container ${className}`}>
-      <button
-        type="button"
-        className={`scroll-arrow-btn left ${!canScrollLeft ? "disabled" : ""}`}
-        onClick={() => handleScroll("left")}
-        aria-label="Scroll left"
-        disabled={!canScrollLeft}
-      >
-        <ChevronLeftIcon />
-      </button>
+      {hasOverflow && (
+        <button
+          type="button"
+          className={`scroll-arrow-btn left ${!canScrollLeft ? "disabled" : ""}`}
+          onClick={() => handleScroll("left")}
+          aria-label="Scroll left"
+          disabled={!canScrollLeft}
+        >
+          <ChevronLeftIcon />
+        </button>
+      )}
 
       <div className="horizontal-scroll-track" ref={rowRef}>
         {children}
       </div>
 
-      <button
-        type="button"
-        className={`scroll-arrow-btn right ${!canScrollRight ? "disabled" : ""}`}
-        onClick={() => handleScroll("right")}
-        aria-label="Scroll right"
-        disabled={!canScrollRight}
-      >
-        <ChevronRightIcon />
-      </button>
+      {hasOverflow && (
+        <button
+          type="button"
+          className={`scroll-arrow-btn right ${!canScrollRight ? "disabled" : ""}`}
+          onClick={() => handleScroll("right")}
+          aria-label="Scroll right"
+          disabled={!canScrollRight}
+        >
+          <ChevronRightIcon />
+        </button>
+      )}
     </div>
   );
 };
