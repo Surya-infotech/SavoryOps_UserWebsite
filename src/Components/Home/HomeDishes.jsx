@@ -514,15 +514,17 @@ const HomeDishes = () => {
               <span className="dish-price">{priceFormatted}</span>
             </div>
 
-            <button
-              type="button"
-              className={`dish-add-btn ${count > 0 ? "added" : ""}`}
-              onClick={(e) => handleAddToCart(e, dish)}
-              aria-label={translations.addtocart || "Add"}
-              title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add")}
-            >
-              {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
-            </button>
+            {!isCombo && !isUnlimited && (
+              <button
+                type="button"
+                className={`dish-add-btn ${count > 0 ? "added" : ""}`}
+                onClick={(e) => handleAddToCart(e, dish)}
+                aria-label={translations.addtocart || "Add"}
+                title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add")}
+              >
+                {count > 0 ? <CheckCircleIcon fontSize="small" /> : <AddIcon fontSize="small" />}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -823,32 +825,34 @@ const HomeDishes = () => {
               )}
 
               {/* Modal Footer with Quantity Counter */}
-              <div className="dish-modal-footer">
-                <div className="quantity-counter">
+              {!(selectedItemModal.bundletype === "combo" || selectedItemModal.bundletype === "unlimited" || selectedItemModal.isDeal) && (
+                <div className="dish-modal-footer">
+                  <div className="quantity-counter">
+                    <button
+                      type="button"
+                      onClick={() => setModalQuantity((q) => Math.max(1, q - 1))}
+                    >
+                      -
+                    </button>
+                    <span>{modalQuantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => setModalQuantity((q) => q + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+
                   <button
                     type="button"
-                    onClick={() => setModalQuantity((q) => Math.max(1, q - 1))}
+                    className="confirm-add-btn"
+                    onClick={handleConfirmModalAdd}
                   >
-                    -
-                  </button>
-                  <span>{modalQuantity}</span>
-                  <button
-                    type="button"
-                    onClick={() => setModalQuantity((q) => q + 1)}
-                  >
-                    +
+                    {translations.addtocart || "Add to Cart"} • {selectedItemModal.currencysymbol || ""}
+                    {(Number(selectedItemModal.price || 0) * modalQuantity).toFixed(2)}
                   </button>
                 </div>
-
-                <button
-                  type="button"
-                  className="confirm-add-btn"
-                  onClick={handleConfirmModalAdd}
-                >
-                  {translations.addtocart || "Add to Cart"} • {selectedItemModal.currencysymbol || ""}
-                  {(Number(selectedItemModal.price || 0) * modalQuantity).toFixed(2)}
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </div>
