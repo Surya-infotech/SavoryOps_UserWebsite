@@ -489,8 +489,8 @@ const MenuPage = () => {
             </div>
 
             <div className="dish-card-actions">
-              {/* Addon Button when addon details are found */}
-              {dish.addons && dish.addons.length > 0 && (
+              {/* Addon Button when addon details are found (hidden on combo and unlimited cards) */}
+              {!isCombo && !isUnlimited && !dish.isDeal && dish.addons && dish.addons.length > 0 && (
                 <button
                   type="button"
                   className="dish-addon-btn"
