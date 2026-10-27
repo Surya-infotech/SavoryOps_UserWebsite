@@ -228,38 +228,18 @@
     }
   }
 
-  /* 3. Category Pills Bar */
+  /* 3. Category Pills Bar (Wraps to next line, no horizontal scroll) */
   .menu-category-pills-bar {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    overflow-x: auto;
-    padding: 0.25rem 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    cursor: grab;
-    user-select: none;
-    -webkit-user-select: none;
-    scroll-behavior: smooth;
-
-    &.is-dragging {
-      cursor: grabbing;
-      scroll-behavior: auto;
-
-      .category-pill-btn {
-        cursor: grabbing;
-      }
-    }
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    flex-wrap: wrap;
+    gap: 0.55rem 0.65rem;
+    padding: 0.2rem 0 0;
 
     .category-pill-btn {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      flex-shrink: 0;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       color: #475569;

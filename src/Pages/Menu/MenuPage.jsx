@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -328,73 +328,6 @@ const MenuPage = () => {
     setSelectedDiet("all");
   };
 
-  // Mouse drag and mouse wheel scrolling for Category Pills
-  const categoryBarRef = useRef(null);
-  const isDraggingRef = useRef(false);
-  const dragStartXRef = useRef(0);
-  const dragScrollLeftRef = useRef(0);
-  const hasDraggedRef = useRef(false);
-  const [isCategoryDragging, setIsCategoryDragging] = useState(false);
-
-  const handleCategoryMouseDown = (e) => {
-    if (e.button !== 0 || !categoryBarRef.current) return;
-    isDraggingRef.current = true;
-    hasDraggedRef.current = false;
-    dragStartXRef.current = e.pageX;
-    dragScrollLeftRef.current = categoryBarRef.current.scrollLeft;
-    setIsCategoryDragging(true);
-  };
-
-  const handleCategoryMouseMove = (e) => {
-    if (!isDraggingRef.current || !categoryBarRef.current) return;
-    const deltaX = e.pageX - dragStartXRef.current;
-    if (Math.abs(deltaX) > 4) {
-      hasDraggedRef.current = true;
-      e.preventDefault();
-      categoryBarRef.current.scrollLeft = dragScrollLeftRef.current - deltaX;
-    }
-  };
-
-  const handleCategoryMouseUp = useCallback(() => {
-    if (isDraggingRef.current) {
-      isDraggingRef.current = false;
-      setIsCategoryDragging(false);
-    }
-  }, []);
-
-  // Window mouseup listener to cancel drag if released anywhere outside the bar
-  useEffect(() => {
-    const handleGlobalMouseUp = () => {
-      if (isDraggingRef.current) {
-        isDraggingRef.current = false;
-        setIsCategoryDragging(false);
-      }
-    };
-    window.addEventListener("mouseup", handleGlobalMouseUp);
-    return () => {
-      window.removeEventListener("mouseup", handleGlobalMouseUp);
-    };
-  }, []);
-
-  // Mouse wheel horizontal scroll handler (translates vertical mouse wheel delta to horizontal scroll)
-  useEffect(() => {
-    const bar = categoryBarRef.current;
-    if (!bar) return;
-
-    const handleWheel = (e) => {
-      if (bar.scrollWidth > bar.clientWidth) {
-        if (e.deltaY !== 0) {
-          e.preventDefault();
-          bar.scrollLeft += e.deltaY;
-        }
-      }
-    };
-
-    bar.addEventListener("wheel", handleWheel, { passive: false });
-    return () => {
-      bar.removeEventListener("wheel", handleWheel);
-    };
-  }, [availableCategories]);
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
@@ -594,29 +527,19 @@ const MenuPage = () => {
               </div>
             </div>
 
-            {/* 3. Item Category Filter Pills Row (Mouse Wheel & Drag Scrollable) */}
+            {/* 3. Item Category Filter Pills (Wraps across lines, no horizontal scroll) */}
             {availableCategories.length > 0 && (
               <div
-                ref={categoryBarRef}
-                className={`menu-category-pills-bar ${isCategoryDragging ? "is-dragging" : ""}`}
+                className="menu-category-pills-bar"
                 role="tablist"
                 aria-label="Item Categories"
-                onMouseDown={handleCategoryMouseDown}
-                onMouseMove={handleCategoryMouseMove}
-                onMouseLeave={handleCategoryMouseUp}
               >
                 <button
                   type="button"
                   role="tab"
                   aria-selected={selectedCategory === "all"}
                   className={`category-pill-btn ${selectedCategory === "all" ? "active" : ""}`}
-                  onClick={(e) => {
-                    if (hasDraggedRef.current) {
-                      e.preventDefault();
-                      return;
-                    }
-                    setSelectedCategory("all");
-                  }}
+                  onClick={() => setSelectedCategory("all")}
                 >
                   <span>{translations.allcategories || "All Categories"}</span>
                   <span className="pill-badge">{allCombinedItems.length}</span>
@@ -628,13 +551,7 @@ const MenuPage = () => {
                     role="tab"
                     aria-selected={selectedCategory === cat.id}
                     className={`category-pill-btn ${selectedCategory === cat.id ? "active" : ""}`}
-                    onClick={(e) => {
-                      if (hasDraggedRef.current) {
-                        e.preventDefault();
-                        return;
-                      }
-                      setSelectedCategory(cat.id);
-                    }}
+                    onClick={() => setSelectedCategory(cat.id)}
                   >
                     <span>{cat.name}</span>
                     {cat.count != null && <span className="pill-badge">{cat.count}</span>}
