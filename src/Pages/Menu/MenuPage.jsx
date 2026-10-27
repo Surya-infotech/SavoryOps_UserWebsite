@@ -1,5 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -7,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import "../../Scss/Pages/Menu/menupage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -244,6 +244,14 @@ const MenuPage = () => {
     return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
   }, [allDishes]);
 
+  // Options for custom Dropdown component
+  const menuOptions = useMemo(() => {
+    return [
+      { id: "all", name: translations.allmenus || "All Menus" },
+      ...availableMenus,
+    ];
+  }, [availableMenus, translations]);
+
   // Dynamically extract unique available Categories with item counts
   const availableCategories = useMemo(() => {
     const list = [];
@@ -319,6 +327,74 @@ const MenuPage = () => {
     setSelectedCategory("all");
     setSelectedDiet("all");
   };
+
+  // Mouse drag and mouse wheel scrolling for Category Pills
+  const categoryBarRef = useRef(null);
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragScrollLeftRef = useRef(0);
+  const hasDraggedRef = useRef(false);
+  const [isCategoryDragging, setIsCategoryDragging] = useState(false);
+
+  const handleCategoryMouseDown = (e) => {
+    if (e.button !== 0 || !categoryBarRef.current) return;
+    isDraggingRef.current = true;
+    hasDraggedRef.current = false;
+    dragStartXRef.current = e.pageX;
+    dragScrollLeftRef.current = categoryBarRef.current.scrollLeft;
+    setIsCategoryDragging(true);
+  };
+
+  const handleCategoryMouseMove = (e) => {
+    if (!isDraggingRef.current || !categoryBarRef.current) return;
+    const deltaX = e.pageX - dragStartXRef.current;
+    if (Math.abs(deltaX) > 4) {
+      hasDraggedRef.current = true;
+      e.preventDefault();
+      categoryBarRef.current.scrollLeft = dragScrollLeftRef.current - deltaX;
+    }
+  };
+
+  const handleCategoryMouseUp = useCallback(() => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false;
+      setIsCategoryDragging(false);
+    }
+  }, []);
+
+  // Window mouseup listener to cancel drag if released anywhere outside the bar
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false;
+        setIsCategoryDragging(false);
+      }
+    };
+    window.addEventListener("mouseup", handleGlobalMouseUp);
+    return () => {
+      window.removeEventListener("mouseup", handleGlobalMouseUp);
+    };
+  }, []);
+
+  // Mouse wheel horizontal scroll handler (translates vertical mouse wheel delta to horizontal scroll)
+  useEffect(() => {
+    const bar = categoryBarRef.current;
+    if (!bar) return;
+
+    const handleWheel = (e) => {
+      if (bar.scrollWidth > bar.clientWidth) {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          bar.scrollLeft += e.deltaY;
+        }
+      }
+    };
+
+    bar.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      bar.removeEventListener("wheel", handleWheel);
+    };
+  }, [availableCategories]);
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
@@ -444,36 +520,27 @@ const MenuPage = () => {
         {!loading && allCombinedItems.length > 0 && (
           <div className="menu-filters-wrapper">
             <div className="menu-filter-bar">
-              {/* 1. Menu Filter Dropdown */}
+              {/* 1. Menu Filter Dropdown (Custom Searchable Dropdown) */}
               {availableMenus.length > 0 && (
                 <div className="filter-item-wrap menu-dropdown-wrap">
-                  <label htmlFor="menu-filter-select" className="filter-label">
-                    <RestaurantMenuIcon className="filter-label-icon" />
-                    <span>{translations.menu || "Menu"}:</span>
-                  </label>
-                  <div className="select-dropdown-container">
-                    <select
-                      id="menu-filter-select"
-                      className="filter-select-input"
-                      value={selectedMenu}
-                      onChange={(e) => setSelectedMenu(e.target.value)}
-                    >
-                      <option value="all">{translations.allmenus || "All Menus"}</option>
-                      {availableMenus.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          {m.name}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="menu-custom-dropdown-container">
+                    <Dropdown
+                      id="menu-filter-dropdown"
+                      options={menuOptions}
+                      labelKey="name"
+                      valueKey="id"
+                      selectedValue={selectedMenu}
+                      onValueChange={(val) => setSelectedMenu(val || "all")}
+                      placeholder={translations.allmenus || "All Menus"}
+                      showSearch={true}
+                      className="menu-page-dropdown"
+                    />
                   </div>
                 </div>
               )}
 
               {/* 2. Diet Filter (Veg / Non-Veg) Segmented Group */}
               <div className="filter-item-wrap diet-toggle-wrap">
-                <span className="filter-label">
-                  <span>{translations.diet || "Diet"}:</span>
-                </span>
                 <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
                   <button
                     type="button"
@@ -527,19 +594,29 @@ const MenuPage = () => {
               </div>
             </div>
 
-            {/* 3. Item Category Filter Pills Row */}
+            {/* 3. Item Category Filter Pills Row (Mouse Wheel & Drag Scrollable) */}
             {availableCategories.length > 0 && (
               <div
-                className="menu-category-pills-bar"
+                ref={categoryBarRef}
+                className={`menu-category-pills-bar ${isCategoryDragging ? "is-dragging" : ""}`}
                 role="tablist"
                 aria-label="Item Categories"
+                onMouseDown={handleCategoryMouseDown}
+                onMouseMove={handleCategoryMouseMove}
+                onMouseLeave={handleCategoryMouseUp}
               >
                 <button
                   type="button"
                   role="tab"
                   aria-selected={selectedCategory === "all"}
                   className={`category-pill-btn ${selectedCategory === "all" ? "active" : ""}`}
-                  onClick={() => setSelectedCategory("all")}
+                  onClick={(e) => {
+                    if (hasDraggedRef.current) {
+                      e.preventDefault();
+                      return;
+                    }
+                    setSelectedCategory("all");
+                  }}
                 >
                   <span>{translations.allcategories || "All Categories"}</span>
                   <span className="pill-badge">{allCombinedItems.length}</span>
@@ -551,7 +628,13 @@ const MenuPage = () => {
                     role="tab"
                     aria-selected={selectedCategory === cat.id}
                     className={`category-pill-btn ${selectedCategory === cat.id ? "active" : ""}`}
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={(e) => {
+                      if (hasDraggedRef.current) {
+                        e.preventDefault();
+                        return;
+                      }
+                      setSelectedCategory(cat.id);
+                    }}
                   >
                     <span>{cat.name}</span>
                     {cat.count != null && <span className="pill-badge">{cat.count}</span>}
