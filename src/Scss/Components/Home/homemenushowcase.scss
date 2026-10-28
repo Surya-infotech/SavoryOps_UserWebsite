@@ -5,14 +5,15 @@
 
 .home-menu-showcase-section {
   max-width: 1320px;
-  margin: 2.75rem auto 0;
+  /* Equal spacing matching the exact gap between section lists (3.5rem row margin + 1.35rem track padding) */
+  margin: 4.85rem auto 0;
   padding: 0 1.5rem;
   width: 100%;
   position: relative;
   box-sizing: border-box;
 
   @media (max-width: 768px) {
-    margin: 2rem auto 0;
+    margin: 3.85rem auto 0;
     padding: 0 1rem;
   }
 }
