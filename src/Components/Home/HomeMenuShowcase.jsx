@@ -309,15 +309,21 @@ const HomeMenuShowcase = () => {
         return;
       }
 
-      const branchId =
-        localStorage.getItem("selectedBranchId") ||
-        (typeof window !== "undefined" && window.__selectedBranch?._id);
+      // Strictly get stored branchId from localStorage
+      const branchId = localStorage.getItem("selectedBranchId");
+
+      // Without Branch ID in localStorage, data must NOT be fetched or displayed
+      if (!branchId) {
+        if (isMounted) {
+          setDynamicShowcases([]);
+          setLoadingShowcases(false);
+        }
+        return;
+      }
 
       try {
         if (isMounted) setLoadingShowcases(true);
-        const endpoint = branchId
-          ? `${adminPanelBackendPath}/Website/Home/GetShowcases/${branchId}`
-          : `${adminPanelBackendPath}/Website/Home/GetShowcases`;
+        const endpoint = `${adminPanelBackendPath}/Website/Home/GetShowcases/${branchId}`;
 
         const response = await fetch(endpoint, {
           method: "GET",
@@ -346,12 +352,15 @@ const HomeMenuShowcase = () => {
 
     fetchShowcases();
 
-    const handleBranchChange = () => fetchShowcases();
-    window.addEventListener("selectedBranchChanged", handleBranchChange);
+    const handleBranchChange = () => {
+      fetchShowcases();
+    };
+
+    window.addEventListener("branchChange", handleBranchChange);
 
     return () => {
       isMounted = false;
-      window.removeEventListener("selectedBranchChanged", handleBranchChange);
+      window.removeEventListener("branchChange", handleBranchChange);
     };
   }, []);
 
