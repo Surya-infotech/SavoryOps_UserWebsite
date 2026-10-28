@@ -886,6 +886,28 @@
     border-radius: 14px;
     padding: 1rem;
 
+    .dish-modal-addons-title-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+
+      h5 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .addons-subtitle {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: 500;
+      }
+    }
+
     h5 {
       font-size: 0.9rem;
       font-weight: 700;
