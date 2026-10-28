@@ -470,32 +470,35 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onAddToCart }) => {
             <span>View All</span>
             <ArrowForwardIcon fontSize="inherit" />
           </Link>
-
-          <div className="carousel-nav-buttons">
-            <button
-              type="button"
-              className="nav-arrow-btn"
-              onClick={() => handleScroll("left")}
-              disabled={!canScrollLeft}
-              aria-label={`Scroll ${section.title} left`}
-            >
-              <ChevronLeftIcon fontSize="small" />
-            </button>
-            <button
-              type="button"
-              className="nav-arrow-btn"
-              onClick={() => handleScroll("right")}
-              disabled={!canScrollRight}
-              aria-label={`Scroll ${section.title} right`}
-            >
-              <ChevronRightIcon fontSize="small" />
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Horizontal Carousel Track */}
+      {/* Horizontal Carousel Track with Floating Side Navigation Buttons */}
       <div className="carousel-track-wrapper">
+        {/* Floating Left Arrow Button */}
+        <button
+          type="button"
+          className="carousel-side-arrow-btn left"
+          onClick={() => handleScroll("left")}
+          disabled={!canScrollLeft}
+          aria-label={`Scroll ${section.title} left`}
+          title="Scroll left"
+        >
+          <ChevronLeftIcon />
+        </button>
+
+        {/* Floating Right Arrow Button */}
+        <button
+          type="button"
+          className="carousel-side-arrow-btn right"
+          onClick={() => handleScroll("right")}
+          disabled={!canScrollRight}
+          aria-label={`Scroll ${section.title} right`}
+          title="Scroll right"
+        >
+          <ChevronRightIcon />
+        </button>
+
         <div
           className="carousel-scroll-track"
           ref={trackRef}
@@ -507,11 +510,12 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onAddToCart }) => {
           {section.items.map((dish) => {
             const count = cartCounts[dish.id] || 0;
             const priceFormatted = `${dish.currencySymbol}${dish.price.toFixed(2)}`;
+            const isCombo = dish.isDeal;
 
             return (
               <div
                 key={dish.id}
-                className={`showcase-dish-card ${dish.isDeal ? "deal-card" : ""}`}
+                className={`dish-card showcase-dish-card ${dish.isDeal ? "deal-card combo-card" : ""}`}
                 onClick={() => onCardClick(dish)}
                 tabIndex={0}
                 role="button"
@@ -523,17 +527,17 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onAddToCart }) => {
                   }
                 }}
               >
-                {/* Image Box */}
-                <div className="dish-card-img-wrap">
-                  <div className="dish-card-placeholder">
-                    <RestaurantMenuIcon className="dish-card-fallback-icon" />
+                {/* 1. Image Box (200px height - Exact Menu Page Spec) */}
+                <div className="dish-img-box">
+                  <div className="dish-img-placeholder">
+                    <RestaurantMenuIcon className="dish-no-img-icon" />
                   </div>
 
                   {dish.image && (
                     <img
                       src={dish.image}
                       alt={dish.title}
-                      className="dish-card-img"
+                      className="dish-img"
                       loading="lazy"
                       onError={(e) => {
                         e.target.style.display = "none";
@@ -541,66 +545,78 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onAddToCart }) => {
                     />
                   )}
 
-                  {dish.tag && (
-                    <span className={`dish-card-tag ${dish.isDeal ? "deal" : ""}`}>
-                      {dish.tag}
+                  {isCombo ? (
+                    <span className="deal-ribbon-badge combo">
+                      Combo
                     </span>
+                  ) : (
+                    dish.tag && <span className="dish-tag-badge">{dish.tag}</span>
                   )}
 
                   {dish.prepTime && (
-                    <span className="dish-card-prep-time">
+                    <span className="dish-prep-time">
                       <AccessTimeIcon fontSize="inherit" />
                       {dish.prepTime}
                     </span>
                   )}
 
                   <DietIndicator isVeg={dish.isVeg} />
-
-                  <span className="dish-quick-view-hint">Quick View</span>
                 </div>
 
-                {/* Card Body */}
-                <div className="dish-card-body">
-                  <h4 className="dish-card-title" title={dish.title}>
+                {/* 2. Dish Content Body */}
+                <div className="dish-content">
+                  <h3 className="dish-title" title={dish.title}>
                     {dish.title}
-                  </h4>
+                  </h3>
 
-                  <p className="dish-card-desc" title={dish.desc}>
-                    {dish.desc}
-                  </p>
+                  {dish.desc && (
+                    <p className="dish-desc" title={dish.desc}>
+                      {dish.desc}
+                    </p>
+                  )}
 
                   {dish.isDeal && dish.includedCount && (
-                    <div className="dish-card-items-preview">
-                      <span className="items-count-pill">
+                    <div className="deal-items-preview-row">
+                      <span className="deal-items-pill">
                         🍽️ {dish.includedCount} dishes included
                       </span>
                     </div>
                   )}
 
-                  <div className="dish-card-footer">
-                    <div className="dish-card-price-wrap">
-                      <span className="dish-card-price">{priceFormatted}</span>
-                      {dish.addons && dish.addons.length > 0 && (
-                        <span className="dish-customizable-tag">Customizable</span>
-                      )}
+                  <div className="dish-footer-row">
+                    <div className="dish-price-group">
+                      <span className="dish-price">{priceFormatted}</span>
                     </div>
 
-                    <button
-                      type="button"
-                      className={`dish-card-action-btn ${count > 0 ? "added" : ""}`}
-                      onClick={(e) => onAddToCart(e, dish)}
-                      title={count > 0 ? `Added (${count})` : "Add to order"}
-                      aria-label={`Add ${dish.title} to order`}
-                    >
-                      {count > 0 ? (
-                        <>
-                          <ShoppingCartOutlinedIcon fontSize="small" />
-                          <span className="btn-count-bubble">{count}</span>
-                        </>
-                      ) : (
-                        <AddIcon fontSize="small" />
+                    <div className="dish-card-actions">
+                      {/* Addon Button when customizable addons exist */}
+                      {dish.addons && dish.addons.length > 0 && (
+                        <button
+                          type="button"
+                          className="dish-addon-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onCardClick(dish);
+                          }}
+                          title={`Add-ons - ${dish.title}`}
+                          aria-label={`${dish.title} Add-ons`}
+                        >
+                          <AddIcon className="addon-btn-icon" />
+                        </button>
                       )}
-                    </button>
+
+                      {/* Direct Add to Cart Button */}
+                      <button
+                        type="button"
+                        className={`dish-add-btn ${count > 0 ? "added" : ""}`}
+                        onClick={(e) => onAddToCart(e, dish)}
+                        aria-label="Add to cart"
+                        title={count > 0 ? `Added (${count})` : "Add to cart"}
+                      >
+                        <ShoppingCartOutlinedIcon fontSize="small" />
+                        {count > 0 && <span className="dish-btn-count-badge">{count}</span>}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
