@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -96,78 +96,76 @@ const HomeReviews = () => {
   const [formError, setFormError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Horizontal Carousel Scrolling & Dragging
+  // Horizontal Carousel Scrolling & Dragging (Exact Parity with Menu Showcase)
   const scrollTrackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStartXRef = useRef(0);
-  const dragScrollLeftRef = useRef(0);
 
-  const checkScrollState = () => {
+  // Drag-to-scroll state
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+
+  const updateScrollButtons = useCallback(() => {
     const el = scrollTrackRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    const maxScrollLeft = scrollWidth - clientWidth;
+    const maxScroll = scrollWidth - clientWidth;
     setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < maxScrollLeft - 10);
-  };
+    setCanScrollRight(scrollLeft < maxScroll - 10);
+  }, []);
 
   useEffect(() => {
-    checkScrollState();
     const track = scrollTrackRef.current;
     if (!track) return;
 
-    const onScroll = () => checkScrollState();
-    const onResize = () => checkScrollState();
+    updateScrollButtons();
+    track.addEventListener("scroll", updateScrollButtons, { passive: true });
+    window.addEventListener("resize", updateScrollButtons);
 
-    track.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
-
-    const timer1 = setTimeout(checkScrollState, 150);
-    const timer2 = setTimeout(checkScrollState, 500);
+    const timer1 = setTimeout(updateScrollButtons, 150);
+    const timer2 = setTimeout(updateScrollButtons, 500);
 
     return () => {
-      track.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
+      track.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [reviewsList]);
+  }, [reviewsList, updateScrollButtons]);
 
   const handleScroll = (direction) => {
     const el = scrollTrackRef.current;
     if (!el) return;
-    const clientWidth = el.clientWidth;
-    const scrollAmount = clientWidth * 0.85;
-
+    const scrollStep = Math.max(320, el.clientWidth * 0.75);
     el.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
+      left: direction === "left" ? -scrollStep : scrollStep,
       behavior: "smooth",
     });
-
-    // Check periodically during and after smooth scroll completes
-    setTimeout(checkScrollState, 100);
-    setTimeout(checkScrollState, 250);
-    setTimeout(checkScrollState, 450);
+    setTimeout(updateScrollButtons, 350);
   };
 
+  // Mouse drag handlers for track (instant, smooth, no re-render lag)
   const handleMouseDown = (e) => {
     if (e.button !== 0 || !scrollTrackRef.current) return;
-    setIsDragging(true);
-    dragStartXRef.current = e.pageX;
-    dragScrollLeftRef.current = scrollTrackRef.current.scrollLeft;
+    isDraggingRef.current = true;
+    scrollTrackRef.current.classList.add("is-dragging");
+    startXRef.current = e.pageX - scrollTrackRef.current.offsetLeft;
+    scrollLeftRef.current = scrollTrackRef.current.scrollLeft;
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging || !scrollTrackRef.current) return;
+    if (!isDraggingRef.current || !scrollTrackRef.current) return;
     e.preventDefault();
-    const deltaX = e.pageX - dragStartXRef.current;
-    scrollTrackRef.current.scrollLeft = dragScrollLeftRef.current - deltaX;
+    const x = e.pageX - scrollTrackRef.current.offsetLeft;
+    const walk = (x - startXRef.current) * 1.25;
+    scrollTrackRef.current.scrollLeft = scrollLeftRef.current - walk;
   };
 
   const handleMouseUpOrLeave = () => {
-    setIsDragging(false);
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    scrollTrackRef.current?.classList.remove("is-dragging");
   };
 
   // Prevent background scrolling when modal is open
@@ -323,7 +321,7 @@ const HomeReviews = () => {
         </div>
 
         {/* Reviews Horizontal Carousel with Floating Left and Right Side Buttons (Same as Menu Showcase) */}
-        <div className="reviews-carousel-wrapper">
+        <div className="carousel-track-wrapper reviews-carousel-wrapper">
           {/* Floating Left Arrow Button */}
           <button
             type="button"
@@ -349,9 +347,9 @@ const HomeReviews = () => {
           </button>
 
           <div
-            className={`reviews-cards-grid ${isDragging ? "is-dragging" : ""}`}
+            className="carousel-scroll-track reviews-cards-grid"
             ref={scrollTrackRef}
-            onScroll={checkScrollState}
+            onScroll={updateScrollButtons}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUpOrLeave}

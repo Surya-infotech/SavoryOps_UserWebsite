@@ -100,7 +100,7 @@
   position: relative;
   width: 100%;
 
-  /* Floating Side Navigation Buttons (Beside the Cards) */
+  /* Floating Side Navigation Buttons (Exact Same as Menu Showcase) */
   .carousel-side-arrow-btn {
     position: absolute;
     top: 50%;
@@ -179,22 +179,23 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  gap: 1.5rem;
+  gap: 1.25rem;
   overflow-x: auto;
-  overflow-y: hidden;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding: 0.75rem 0.25rem 1rem;
-  margin: -0.75rem -0.25rem -0.5rem;
+  padding: 0.65rem 0.25rem 1.35rem;
+  margin: 0 -0.25rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  user-select: none;
   align-items: stretch;
   cursor: grab;
 
   &.is-dragging {
+    scroll-behavior: auto;
     cursor: grabbing;
     user-select: none;
     scroll-snap-type: none;
-    scroll-behavior: auto;
   }
 
   /* Hide scrollbar across all browsers while keeping scroll functionality */
@@ -203,15 +204,12 @@
     width: 0;
     height: 0;
   }
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
 }
 
 /* --- Individual Review Card --- */
 .review-card {
-  flex: 0 0 calc((100% - 2 * 1.5rem) / 3);
-  min-width: 340px;
+  flex: 0 0 calc((100% - 2 * 1.25rem) / 3);
+  min-width: 320px;
   max-width: 440px;
   scroll-snap-align: start;
   background: #ffffff;
