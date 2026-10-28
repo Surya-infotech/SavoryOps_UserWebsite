@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
+import HomeMenuShowcase from "../../Components/Home/HomeMenuShowcase.jsx";
 import HomeCustomerApp from "../../Components/Home/HomeCustomerApp.jsx";
 import HomeReviews from "../../Components/Home/HomeReviews.jsx";
 import "../../Scss/Pages/Home/homepage.scss";
@@ -25,10 +26,13 @@ const HomePage = () => {
       {/* 2. Value Proposition / Feature Strip Section */}
       <HomeFeatures hasBanner={hasHeroBanner} />
 
-      {/* 3. Customer Mobile App Showcase & Tableside Ordering Section */}
+      {/* 3. Section-Wise Menu Showcase (Curated Horizontal Carousels) */}
+      <HomeMenuShowcase />
+
+      {/* 4. Customer Mobile App Showcase & Tableside Ordering Section */}
       <HomeCustomerApp />
 
-      {/* 4. Customer Dining Reviews & Testimonials Section */}
+      {/* 5. Customer Dining Reviews & Testimonials Section */}
       <HomeReviews />
     </div>
   );
