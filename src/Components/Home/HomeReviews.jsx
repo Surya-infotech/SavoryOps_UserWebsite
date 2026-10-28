@@ -137,12 +137,34 @@ const HomeReviews = () => {
   const handleScroll = (direction) => {
     const el = scrollTrackRef.current;
     if (!el) return;
-    const scrollStep = Math.max(320, el.clientWidth * 0.75);
-    el.scrollBy({
-      left: direction === "left" ? -scrollStep : scrollStep,
+
+    const cards = el.querySelectorAll(".review-card");
+    if (!cards || cards.length === 0) return;
+
+    const firstCard = cards[0];
+    const cardWidth = firstCard.getBoundingClientRect().width;
+    const gap = parseFloat(window.getComputedStyle(el).gap) || 20;
+    const cardStep = cardWidth + gap;
+
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const currentScroll = el.scrollLeft;
+
+    // Calculate current aligned card index
+    const currentIndex = Math.round(currentScroll / cardStep);
+    let targetIndex = direction === "left" ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0) targetIndex = 0;
+
+    let targetScroll = targetIndex * cardStep;
+    if (targetScroll > maxScroll) targetScroll = maxScroll;
+    if (targetScroll < 0) targetScroll = 0;
+
+    el.scrollTo({
+      left: targetScroll,
       behavior: "smooth",
     });
+
     setTimeout(updateScrollButtons, 350);
+    setTimeout(updateScrollButtons, 500);
   };
 
   // Mouse drag handlers for track (instant, smooth, no re-render lag)
@@ -165,7 +187,29 @@ const HomeReviews = () => {
   const handleMouseUpOrLeave = () => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-    scrollTrackRef.current?.classList.remove("is-dragging");
+    const el = scrollTrackRef.current;
+    if (!el) return;
+    el.classList.remove("is-dragging");
+
+    // Snap to nearest clean card boundary so cards never get stuck halfway
+    const firstCard = el.querySelector(".review-card");
+    if (firstCard) {
+      const cardWidth = firstCard.getBoundingClientRect().width;
+      const gap = parseFloat(window.getComputedStyle(el).gap) || 20;
+      const cardStep = cardWidth + gap;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const targetIndex = Math.round(el.scrollLeft / cardStep);
+      let targetScroll = targetIndex * cardStep;
+      if (targetScroll > maxScroll) targetScroll = maxScroll;
+      if (targetScroll < 0) targetScroll = 0;
+
+      el.scrollTo({
+        left: targetScroll,
+        behavior: "smooth",
+      });
+    }
+
+    setTimeout(updateScrollButtons, 350);
   };
 
   // Prevent background scrolling when modal is open
