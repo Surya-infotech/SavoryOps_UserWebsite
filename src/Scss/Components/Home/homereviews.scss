@@ -34,14 +34,9 @@
   z-index: 1;
 }
 
-/* --- Section Header Block (Matches Menu Showcase Layout: Left-Aligned Info & Right-Aligned Controls) --- */
+/* --- Section Header Block (Left-Aligned Info) --- */
 .reviews-header-block {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.5rem;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
 
   .reviews-header-info {
     display: flex;
@@ -95,76 +90,88 @@
     }
   }
 
-  .reviews-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    flex-shrink: 0;
-    margin-bottom: 0.25rem;
-
-    .carousel-nav-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      .carousel-nav-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: #ffffff;
-        border: 1.5px solid #e2e8f0;
-        color: #0f172a;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
-
-        svg {
-          font-size: 1.4rem;
-          transition: transform 0.2s ease;
-        }
-
-        &:hover:not(:disabled) {
-          background: #028802;
-          color: #ffffff;
-          border-color: #028802;
-          box-shadow: 0 6px 18px rgba(2, 136, 2, 0.28);
-          transform: translateY(-2px);
-        }
-
-        &:active:not(:disabled) {
-          transform: translateY(0);
-        }
-
-        &:disabled {
-          opacity: 0.38;
-          cursor: not-allowed;
-          background: #f8fafc;
-          border-color: #e2e8f0;
-          color: #94a3b8;
-          box-shadow: none;
-          transform: none;
-        }
-      }
-    }
-  }
-
   @media (max-width: 680px) {
     margin-bottom: 1.5rem;
-
-    .reviews-header-actions {
-      width: 100%;
-      justify-content: flex-end;
-    }
   }
 }
 
-/* --- Reviews Carousel Wrapper & Navigation --- */
+/* --- Reviews Carousel Track Wrapper with Floating Side Arrows (Same as Menu Showcase) --- */
 .reviews-carousel-wrapper {
   position: relative;
   width: 100%;
+
+  /* Floating Side Navigation Buttons (Beside the Cards) */
+  .carousel-side-arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.16), 0 2px 6px rgba(15, 23, 42, 0.08);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+
+    svg {
+      font-size: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+
+    &.left {
+      left: -20px;
+    }
+
+    &.right {
+      right: -20px;
+    }
+
+    &:hover:not(:disabled) {
+      background: #028802;
+      border-color: #028802;
+      color: #ffffff;
+      transform: translateY(-50%) scale(1.12);
+      box-shadow: 0 8px 26px rgba(2, 136, 2, 0.38);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    @media (max-width: 1360px) {
+      &.left {
+        left: -10px;
+      }
+      &.right {
+        right: -10px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: 38px;
+      height: 38px;
+
+      &.left {
+        left: 2px;
+      }
+      &.right {
+        right: 2px;
+      }
+    }
+  }
 }
 
 /* --- Reviews Cards Horizontal Track (Single Row) --- */

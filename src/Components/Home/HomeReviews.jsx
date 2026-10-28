@@ -306,7 +306,7 @@ const HomeReviews = () => {
   return (
     <section className="home-reviews-section" id="guest-reviews">
       <div className="home-reviews-container">
-        {/* Section Header: Left-aligned info matching Menu Showcase layout with Right-aligned Carousel Controls */}
+        {/* Section Header: Left-aligned info matching other sections */}
         <div className="reviews-header-block">
           <div className="reviews-header-info">
             <div className="reviews-pill-tag">
@@ -320,35 +320,34 @@ const HomeReviews = () => {
               {translations.customerreviewssubtitle}
             </p>
           </div>
-
-          <div className="reviews-header-actions">
-            <div className="carousel-nav-controls">
-              <button
-                type="button"
-                className="carousel-nav-btn prev-btn"
-                onClick={() => handleScroll("left")}
-                disabled={!canScrollLeft}
-                aria-label="Previous reviews"
-                title="Previous reviews"
-              >
-                <ChevronLeftIcon />
-              </button>
-              <button
-                type="button"
-                className="carousel-nav-btn next-btn"
-                onClick={() => handleScroll("right")}
-                disabled={!canScrollRight}
-                aria-label="Next reviews"
-                title="Next reviews"
-              >
-                <ChevronRightIcon />
-              </button>
-            </div>
-          </div>
         </div>
 
-        {/* Reviews Horizontal Carousel */}
+        {/* Reviews Horizontal Carousel with Floating Left and Right Side Buttons (Same as Menu Showcase) */}
         <div className="reviews-carousel-wrapper">
+          {/* Floating Left Arrow Button */}
+          <button
+            type="button"
+            className="carousel-side-arrow-btn left"
+            onClick={() => handleScroll("left")}
+            disabled={!canScrollLeft}
+            aria-label="Scroll reviews left"
+            title="Scroll left"
+          >
+            <ChevronLeftIcon />
+          </button>
+
+          {/* Floating Right Arrow Button */}
+          <button
+            type="button"
+            className="carousel-side-arrow-btn right"
+            onClick={() => handleScroll("right")}
+            disabled={!canScrollRight}
+            aria-label="Scroll reviews right"
+            title="Scroll right"
+          >
+            <ChevronRightIcon />
+          </button>
+
           <div
             className={`reviews-cards-grid ${isDragging ? "is-dragging" : ""}`}
             ref={scrollTrackRef}
