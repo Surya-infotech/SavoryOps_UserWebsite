@@ -8,7 +8,6 @@ import AddIcon from "@mui/icons-material/Add";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -766,21 +765,6 @@ const HomeMenuShowcase = () => {
 
   return (
     <section className="home-menu-showcase-section" aria-label="Curated Menu Showcase">
-      {/* --- Master Section Header --- */}
-      <div className="showcase-master-header">
-        <span className="showcase-pill-badge">
-          <AutoAwesomeIcon className="pill-icon" />
-          <span>Curated Dining Experience</span>
-        </span>
-        <h2 className="showcase-main-title">
-          Explore Our <span className="highlight-text">Culinary Creations</span>
-        </h2>
-        <p className="showcase-main-subtitle">
-          Discover section-by-section handcrafted recipes, stone-oven pizzas, chef-curated combos,
-          and botanical desserts prepared fresh by our culinary artisans.
-        </p>
-      </div>
-
       {/* --- Section-Wise Horizontal Carousels --- */}
       <div className="showcase-sections-list">
         {DEFAULT_MENU_SECTIONS.map((section) => (
@@ -793,17 +777,6 @@ const HomeMenuShowcase = () => {
             onAddToCart={handleAddToCart}
           />
         ))}
-      </div>
-
-      {/* --- Section Bottom CTA Callout --- */}
-      <div className="showcase-master-footer">
-        <Link to="/menu" className="explore-full-menu-btn">
-          <span>Explore Complete Menu & Order Online</span>
-          <ArrowForwardIcon className="btn-arrow-icon" fontSize="small" />
-        </Link>
-        <span className="footer-sub-note">
-          100+ gourmet dishes, custom dietary filters, and direct delivery to your table.
-        </span>
       </div>
 
       {/* --- 1. Item Details Popup Modal (Exact Parity with Menu Page) --- */}
