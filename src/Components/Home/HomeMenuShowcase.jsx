@@ -9,6 +9,7 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 
@@ -460,11 +461,12 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
       <div className="carousel-row-header">
         <div className="header-info-wrap">
           {section.tag && (
-            <span className={`row-tag-badge ${section.tagColor || ""}`}>
-              {section.icon} {section.tag}
-            </span>
+            <div className={`row-tag-badge ${section.tagColor || ""}`}>
+              <SparklesIcon className="pill-icon" />
+              <span>{section.tag}</span>
+            </div>
           )}
-          <h3 className="row-title">{section.title}</h3>
+          <h2 className="row-title">{section.title}</h2>
           {section.subtitle && <p className="row-subtitle">{section.subtitle}</p>}
         </div>
 

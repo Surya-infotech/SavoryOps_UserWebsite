@@ -306,34 +306,49 @@ const HomeReviews = () => {
   return (
     <section className="home-reviews-section" id="guest-reviews">
       <div className="home-reviews-container">
-        {/* Section Header */}
+        {/* Section Header: Left-aligned info matching Menu Showcase layout with Right-aligned Carousel Controls */}
         <div className="reviews-header-block">
-          <div className="reviews-pill-tag">
-            <SparklesIcon fontSize="inherit" />
-            <span>{translations.customerreviewstag}</span>
+          <div className="reviews-header-info">
+            <div className="reviews-pill-tag">
+              <SparklesIcon fontSize="inherit" />
+              <span>{translations.customerreviewstag}</span>
+            </div>
+            <h2 className="reviews-main-title">
+              {translations.customerreviewstitle}
+            </h2>
+            <p className="reviews-subtitle">
+              {translations.customerreviewssubtitle}
+            </p>
           </div>
-          <h2 className="reviews-main-title">
-            {translations.customerreviewstitle}
-          </h2>
-          <p className="reviews-subtitle">
-            {translations.customerreviewssubtitle}
-          </p>
-        </div>
 
+          <div className="reviews-header-actions">
+            <div className="carousel-nav-controls">
+              <button
+                type="button"
+                className="carousel-nav-btn prev-btn"
+                onClick={() => handleScroll("left")}
+                disabled={!canScrollLeft}
+                aria-label="Previous reviews"
+                title="Previous reviews"
+              >
+                <ChevronLeftIcon />
+              </button>
+              <button
+                type="button"
+                className="carousel-nav-btn next-btn"
+                onClick={() => handleScroll("right")}
+                disabled={!canScrollRight}
+                aria-label="Next reviews"
+                title="Next reviews"
+              >
+                <ChevronRightIcon />
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Reviews Horizontal Carousel */}
         <div className="reviews-carousel-wrapper">
-          {canScrollLeft && (
-            <button
-              type="button"
-              className="carousel-nav-btn prev-btn"
-              onClick={() => handleScroll("left")}
-              aria-label="Previous reviews"
-            >
-              <ChevronLeftIcon />
-            </button>
-          )}
-
           <div
             className={`reviews-cards-grid ${isDragging ? "is-dragging" : ""}`}
             ref={scrollTrackRef}
@@ -386,17 +401,6 @@ const HomeReviews = () => {
               );
             })}
           </div>
-
-          {canScrollRight && (
-            <button
-              type="button"
-              className="carousel-nav-btn next-btn"
-              onClick={() => handleScroll("right")}
-              aria-label="Next reviews"
-            >
-              <ChevronRightIcon />
-            </button>
-          )}
         </div>
       </div>
 
