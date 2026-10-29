@@ -44,6 +44,7 @@ export const DEFAULT_MENU_SECTIONS = [];
  * Individual Horizontal Carousel Row Component
  */
 const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAddToCart }) => {
+  const { translations = {} } = useLanguage();
   const navigate = useNavigate();
   const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -258,6 +259,12 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
             })
           ) : (
             (section.itemDetails || section.comboDetails || section.unlimitedDetails || section.items || []).map((rawDish) => {
+              const bundleTypeLower = (rawDish.bundletype || (section.type === "combo" ? "combo" : section.type === "unlimited" ? "unlimited" : "")).toLowerCase();
+              const isDeal = Boolean(rawDish.bundletype || rawDish.dealsbundlesid || rawDish.isDeal || section.type === "combo" || section.type === "unlimited");
+              const isCombo = isDeal && (bundleTypeLower === "combo" || section.type === "combo" || (!bundleTypeLower && section.type !== "unlimited"));
+              const isUnlimited = isDeal && (bundleTypeLower === "unlimited" || section.type === "unlimited");
+              const isComboOrUnlimited = isCombo || isUnlimited || isDeal;
+
               const dish = {
                 ...rawDish,
                 id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.id,
@@ -267,20 +274,19 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                 isVeg: rawDish.itemtype ? rawDish.itemtype === "Veg" : Boolean(rawDish.isVeg),
                 prepTime: rawDish.preparationtime ? `${rawDish.preparationtime} min` : (rawDish.prepTime || ""),
                 tag: rawDish.itemcategoryname || rawDish.tag || "",
-                isDeal: Boolean(rawDish.bundletype || rawDish.dealsbundlesid || rawDish.isDeal),
+                isDeal: isDeal,
+                bundletype: isUnlimited ? "unlimited" : isCombo ? "combo" : bundleTypeLower,
+                items: rawDish.items || [],
                 includedItems: Array.isArray(rawDish.items) ? rawDish.items.map((i) => i.itemname || i) : (rawDish.includedItems || []),
                 includedCount: Array.isArray(rawDish.items) ? rawDish.items.length : (rawDish.includedCount || 0),
               };
               const count = cartCounts[dish.id] || 0;
               const priceFormatted = `${dish.currencySymbol || ""}${dish.price !== undefined && dish.price !== null ? Number(dish.price).toFixed(2) : "0.00"}`;
-              const isCombo = dish.isDeal && (dish.bundletype === "combo" || !dish.bundletype);
-              const isUnlimited = dish.isDeal && dish.bundletype === "unlimited";
-              const isComboOrUnlimited = isCombo || isUnlimited || dish.isDeal;
 
               return (
                 <div
                   key={dish.id}
-                  className={`dish-card showcase-dish-card ${dish.isDeal ? "deal-card combo-card" : ""}`}
+                  className={`dish-card showcase-dish-card ${isDeal ? "deal-card" : ""} ${isCombo ? "combo-card" : ""} ${isUnlimited ? "unlimited-card" : ""}`}
                   onClick={() => onCardClick(dish)}
                   tabIndex={0}
                   role="button"
@@ -310,10 +316,16 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                       />
                     )}
 
-                    {isCombo ? (
-                      <span className="deal-ribbon-badge combo">
-                        Combo
-                      </span>
+                    {isDeal ? (
+                      isUnlimited ? (
+                        <span className="deal-ribbon-badge unlimited">
+                          {translations.unlimited || "UNLIMITED"}
+                        </span>
+                      ) : (
+                        <span className="deal-ribbon-badge combo">
+                          {translations.combo || "COMBO"}
+                        </span>
+                      )
                     ) : (
                       dish.tag && <span className="dish-tag-badge">{dish.tag}</span>
                     )}
@@ -340,10 +352,10 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                       </p>
                     )}
 
-                    {dish.isDeal && dish.includedCount && (
+                    {isDeal && dish.includedCount > 0 && (
                       <div className="deal-items-preview-row">
                         <span className="deal-items-pill">
-                          🍽️ {dish.includedCount} dishes included
+                          🍽️ {dish.includedCount} {dish.includedCount === 1 ? (translations.itemincluded || "item included") : (translations.itemsincluded || "items included")}
                         </span>
                       </div>
                     )}
@@ -662,14 +674,22 @@ const HomeMenuShowcase = () => {
                     {selectedDishModal.title}
                   </h3>
                   <div className="dish-modal-tags">
-                    {selectedDishModal.tag && (
-                      <span className="tag-badge">{selectedDishModal.tag}</span>
+                    {selectedDishModal.isDeal ? (
+                      <span className="tag-badge">
+                        {selectedDishModal.bundletype === "unlimited"
+                          ? (translations.unlimited || "UNLIMITED")
+                          : (translations.combo || "COMBO")}
+                      </span>
+                    ) : (
+                      selectedDishModal.tag && (
+                        <span className="tag-badge">{selectedDishModal.tag}</span>
+                      )
                     )}
                     {selectedDishModal.prepTime && (
                       <span className="tag-badge">⏱ {selectedDishModal.prepTime}</span>
                     )}
                     <span className="tag-badge">
-                      {selectedDishModal.isVeg ? "Vegetarian" : "Non-Vegetarian"}
+                      {selectedDishModal.isVeg ? (translations.vegetarian || "Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
                     </span>
                   </div>
                 </div>
@@ -685,10 +705,10 @@ const HomeMenuShowcase = () => {
               )}
 
               {/* Combo Included Items */}
-              {selectedDishModal.isDeal && selectedDishModal.includedItems && (
+              {selectedDishModal.isDeal && selectedDishModal.includedItems && selectedDishModal.includedItems.length > 0 && (
                 <div className="dish-modal-addons-box">
                   <div className="dish-modal-addons-title-wrap">
-                    <h5>Dishes Included in this Feast</h5>
+                    <h5>{translations.includeditems || "INCLUDED ITEMS"}</h5>
                   </div>
                   <div className="addons-list">
                     {selectedDishModal.includedItems.map((item, idx) => (
