@@ -163,11 +163,11 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
         >
-          {section.items.map((rawDish) => {
+          {(section.itemDetails || section.menuDetails || section.categoryDetails || section.comboDetails || section.unlimitedDetails || section.items || []).map((rawDish) => {
             const dish = {
               ...rawDish,
-              id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.id,
-              title: rawDish.itemname || rawDish.dealsbundlesname || rawDish.title || "",
+              id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.menuid ?? rawDish.itemcategoryid ?? rawDish.id,
+              title: rawDish.itemname || rawDish.dealsbundlesname || rawDish.menuname || rawDish.itemcategoryname || rawDish.title || "",
               desc: rawDish.description || rawDish.desc || "",
               image: rawDish.imageUrl || rawDish.image || "",
               isVeg: rawDish.itemtype ? rawDish.itemtype === "Veg" : Boolean(rawDish.isVeg),
