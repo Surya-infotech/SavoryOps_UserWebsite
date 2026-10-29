@@ -745,38 +745,67 @@ const MenuPage = () => {
                 <p className="dish-modal-desc">{selectedItemModal.desc}</p>
               )}
 
-              {/* Interactive Addons List */}
-              {selectedItemModal.addons && selectedItemModal.addons.length > 0 && (
-                <div className="dish-modal-addons-box">
-                  <h5>{translations.customizableaddons}</h5>
-                  <div className="addons-list">
-                    {selectedItemModal.addons.map((addon) => {
-                      const addonKey = addon.addonid || addon._id;
-                      const isChecked = selectedAddonIds.includes(addonKey);
-                      return (
-                        <label
-                          key={addonKey}
-                          className={`addon-item-row ${isChecked ? "is-selected" : ""}`}
-                        >
-                          <div className="addon-check-label">
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={() => toggleAddon(addonKey)}
-                              className="addon-checkbox-input"
-                            />
-                            <span>{addon.addonname}</span>
-                          </div>
-                          <span className="addon-price">
-                            +{addon.currencysymbol || selectedItemModal.currencysymbol || ""}
-                            {Number(addon.price || 0).toFixed(2)}
-                          </span>
-                        </label>
-                      );
-                    })}
+              {/* Addons List (non-selectable for combo and bundle deals) */}
+              {selectedItemModal.addons && selectedItemModal.addons.length > 0 && (() => {
+                const isComboItem =
+                  selectedItemModal.bundletype === "combo" ||
+                  selectedItemModal.bundletype === "unlimited" ||
+                  selectedItemModal.isDeal;
+
+                return (
+                  <div className="dish-modal-addons-box">
+                    <h5>
+                      {isComboItem
+                        ? (translations.addons || "Add-ons")
+                        : translations.customizableaddons}
+                    </h5>
+                    <div className="addons-list">
+                      {selectedItemModal.addons.map((addon) => {
+                        const addonKey = addon.addonid || addon._id;
+
+                        if (isComboItem) {
+                          return (
+                            <div
+                              key={addonKey}
+                              className="addon-item-row not-selectable"
+                            >
+                              <div className="addon-check-label">
+                                <span>• {addon.addonname}</span>
+                              </div>
+                              <span className="addon-price">
+                                +{addon.currencysymbol || selectedItemModal.currencysymbol || ""}
+                                {Number(addon.price || 0).toFixed(2)}
+                              </span>
+                            </div>
+                          );
+                        }
+
+                        const isChecked = selectedAddonIds.includes(addonKey);
+                        return (
+                          <label
+                            key={addonKey}
+                            className={`addon-item-row ${isChecked ? "is-selected" : ""}`}
+                          >
+                            <div className="addon-check-label">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => toggleAddon(addonKey)}
+                                className="addon-checkbox-input"
+                              />
+                              <span>{addon.addonname}</span>
+                            </div>
+                            <span className="addon-price">
+                              +{addon.currencysymbol || selectedItemModal.currencysymbol || ""}
+                              {Number(addon.price || 0).toFixed(2)}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
 
               {/* Items included in Deals/Bundles */}
               {selectedItemModal.isDeal && selectedItemModal.items && selectedItemModal.items.length > 0 && (

@@ -293,6 +293,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
  * Main Home Menu Showcase Section Component
  */
 const HomeMenuShowcase = () => {
+  const { translations = {} } = useLanguage();
   const { showSnackbar } = useSnackbar();
 
   // Local cart count state
@@ -598,41 +599,66 @@ const HomeMenuShowcase = () => {
                 </div>
               )}
 
-              {/* Customizable Addons List */}
-              {selectedDishModal.addons && selectedDishModal.addons.length > 0 && (
-                <div className="dish-modal-addons-box">
-                  <div className="dish-modal-addons-title-wrap">
-                    <h5>Customizable Add-ons</h5>
-                    <span className="addons-subtitle">Optional enhancements</span>
+              {/* Customizable Addons List (non-selectable for combo and bundle deals) */}
+              {selectedDishModal.addons && selectedDishModal.addons.length > 0 && (() => {
+                const isComboItem =
+                  selectedDishModal.bundletype === "combo" ||
+                  selectedDishModal.bundletype === "unlimited" ||
+                  selectedDishModal.isDeal;
+
+                return (
+                  <div className="dish-modal-addons-box">
+                    <div className="dish-modal-addons-title-wrap">
+                      <h5>{isComboItem ? (translations?.addons || "Add-ons") : "Customizable Add-ons"}</h5>
+                      {!isComboItem && <span className="addons-subtitle">Optional enhancements</span>}
+                    </div>
+                    <div className="addons-list">
+                      {selectedDishModal.addons.map((addon) => {
+                        const addonKey = addon.addonid || addon._id || addon.id;
+
+                        if (isComboItem) {
+                          return (
+                            <div
+                              key={addonKey}
+                              className="addon-item-row not-selectable"
+                            >
+                              <div className="addon-check-label">
+                                <span>• {addon.addonname || addon.name}</span>
+                              </div>
+                              <span className="addon-price">
+                                +{selectedDishModal.currencySymbol || "$"}
+                                {Number(addon.price || 0).toFixed(2)}
+                              </span>
+                            </div>
+                          );
+                        }
+
+                        const isChecked = selectedAddonIds.includes(addonKey);
+                        return (
+                          <label
+                            key={addonKey}
+                            className={`addon-item-row ${isChecked ? "is-selected" : ""}`}
+                          >
+                            <div className="addon-check-label">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => toggleModalAddon(addonKey)}
+                                className="addon-checkbox-input"
+                              />
+                              <span>{addon.addonname || addon.name}</span>
+                            </div>
+                            <span className="addon-price">
+                              +{selectedDishModal.currencySymbol || "$"}
+                              {Number(addon.price || 0).toFixed(2)}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="addons-list">
-                    {selectedDishModal.addons.map((addon) => {
-                      const addonKey = addon.addonid || addon._id || addon.id;
-                      const isChecked = selectedAddonIds.includes(addonKey);
-                      return (
-                        <label
-                          key={addonKey}
-                          className={`addon-item-row ${isChecked ? "is-selected" : ""}`}
-                        >
-                          <div className="addon-check-label">
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={() => toggleModalAddon(addonKey)}
-                              className="addon-checkbox-input"
-                            />
-                            <span>{addon.addonname || addon.name}</span>
-                          </div>
-                          <span className="addon-price">
-                            +{selectedDishModal.currencySymbol || "$"}
-                            {Number(addon.price || 0).toFixed(2)}
-                          </span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+                );
+              })()}
 
               {/* Modal Footer with Quantity Counter (hidden on combo and unlimited items - exact MenuPage parity) */}
               {!(
