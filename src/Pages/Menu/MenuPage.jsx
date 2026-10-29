@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -228,9 +229,17 @@ const MenuPage = () => {
   }, [comboMeals, unlimitedMeals, allDishes]);
 
   // Filter States: Menu, Item Category, Veg / Non-Veg
-  const [selectedMenu, setSelectedMenu] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchParams] = useSearchParams();
+  const [selectedMenu, setSelectedMenu] = useState(() => searchParams.get("menu") || "all");
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") || "all");
   const [selectedDiet, setSelectedDiet] = useState("all"); // "all" | "veg" | "nonveg"
+
+  useEffect(() => {
+    const m = searchParams.get("menu");
+    const c = searchParams.get("category");
+    if (m) setSelectedMenu(m);
+    if (c) setSelectedCategory(c);
+  }, [searchParams]);
 
   // Dynamically extract unique available Menus
   const availableMenus = useMemo(() => {

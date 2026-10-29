@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -6,6 +7,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import CategoryIcon from "@mui/icons-material/Category";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -41,6 +44,7 @@ export const DEFAULT_MENU_SECTIONS = [];
  * Individual Horizontal Carousel Row Component
  */
 const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAddToCart }) => {
+  const navigate = useNavigate();
   const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -154,135 +158,235 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
         >
-          {(section.itemDetails || section.menuDetails || section.categoryDetails || section.comboDetails || section.unlimitedDetails || section.items || []).map((rawDish) => {
-            const dish = {
-              ...rawDish,
-              id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.menuid ?? rawDish.itemcategoryid ?? rawDish.id,
-              title: rawDish.itemname || rawDish.dealsbundlesname || rawDish.menuname || rawDish.itemcategoryname || rawDish.title || "",
-              desc: rawDish.description || rawDish.desc || "",
-              image: rawDish.imageUrl || rawDish.image || "",
-              isVeg: rawDish.itemtype ? rawDish.itemtype === "Veg" : Boolean(rawDish.isVeg),
-              prepTime: rawDish.preparationtime ? `${rawDish.preparationtime} min` : (rawDish.prepTime || ""),
-              tag: rawDish.itemcategoryname || rawDish.tag || "",
-              isDeal: Boolean(rawDish.bundletype || rawDish.dealsbundlesid || rawDish.isDeal),
-              includedItems: Array.isArray(rawDish.items) ? rawDish.items.map((i) => i.itemname || i) : (rawDish.includedItems || []),
-              includedCount: Array.isArray(rawDish.items) ? rawDish.items.length : (rawDish.includedCount || 0),
-            };
-            const count = cartCounts[dish.id] || 0;
-            const priceFormatted = `${dish.currencySymbol || ""}${dish.price !== undefined && dish.price !== null ? Number(dish.price).toFixed(2) : "0.00"}`;
-            const isCombo = dish.isDeal && (dish.bundletype === "combo" || !dish.bundletype);
-            const isUnlimited = dish.isDeal && dish.bundletype === "unlimited";
-            const isComboOrUnlimited = isCombo || isUnlimited || dish.isDeal;
+          {section.type === "menu" ? (
+            (section.menuDetails || section.items || []).map((menuItem, idx) => {
+              const menuId = menuItem.menuid || menuItem.id || idx;
+              const menuName = menuItem.menuname || menuItem.title || menuItem.name || "Menu";
+              const imageUrl = menuItem.imageUrl || menuItem.image || "";
 
-            return (
-              <div
-                key={dish.id}
-                className={`dish-card showcase-dish-card ${dish.isDeal ? "deal-card combo-card" : ""}`}
-                onClick={() => onCardClick(dish)}
-                tabIndex={0}
-                role="button"
-                aria-label={`View details for ${dish.title}`}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    onCardClick(dish);
-                  }
-                }}
-              >
-                {/* 1. Image Box (200px height - Exact Menu Page Spec) */}
-                <div className="dish-img-box">
-                  <div className="dish-img-placeholder">
-                    <RestaurantMenuIcon className="dish-no-img-icon" />
+              return (
+                <div
+                  key={`menu-${menuId}`}
+                  className="showcase-nav-card menu-nav-card"
+                  onClick={() => navigate(`/menu?menu=${menuId}`)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View ${menuName}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate(`/menu?menu=${menuId}`);
+                    }
+                  }}
+                >
+                  <div className="nav-card-img-box">
+                    <div className="nav-card-placeholder">
+                      <RestaurantMenuIcon className="nav-card-placeholder-icon" />
+                    </div>
+                    {imageUrl && (
+                      <img
+                        src={imageUrl}
+                        alt={menuName}
+                        className="nav-card-img"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                    )}
                   </div>
 
-                  {dish.image && (
-                    <img
-                      src={dish.image}
-                      alt={dish.title}
-                      className="dish-img"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                      }}
-                    />
-                  )}
-
-                  {isCombo ? (
-                    <span className="deal-ribbon-badge combo">
-                      Combo
-                    </span>
-                  ) : (
-                    dish.tag && <span className="dish-tag-badge">{dish.tag}</span>
-                  )}
-
-                  {dish.prepTime && (
-                    <span className="dish-prep-time">
-                      <AccessTimeIcon fontSize="inherit" />
-                      {dish.prepTime}
-                    </span>
-                  )}
-
-                  <DietIndicator isVeg={dish.isVeg} />
+                  <div className="nav-card-content">
+                    <h3 className="nav-card-title" title={menuName}>
+                      {menuName}
+                    </h3>
+                    <div className="nav-card-arrow-pill" aria-hidden="true">
+                      <ArrowForwardIosIcon className="explore-arrow-icon" />
+                    </div>
+                  </div>
                 </div>
+              );
+            })
+          ) : section.type === "category" ? (
+            (section.categoryDetails || section.items || []).map((catItem, idx) => {
+              const catId = catItem.itemcategoryid || catItem.id || idx;
+              const catName = catItem.itemcategoryname || catItem.title || catItem.name || "Category";
+              const imageUrl = catItem.imageUrl || catItem.image || "";
 
-                {/* 2. Dish Content Body */}
-                <div className="dish-content">
-                  <h3 className="dish-title" title={dish.title}>
-                    {dish.title}
-                  </h3>
+              return (
+                <div
+                  key={`cat-${catId}`}
+                  className="showcase-nav-card category-nav-card"
+                  onClick={() => navigate(`/menu?category=${catId}`)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View ${catName}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate(`/menu?category=${catId}`);
+                    }
+                  }}
+                >
+                  <div className="nav-card-img-box">
+                    <div className="nav-card-placeholder">
+                      <CategoryIcon className="nav-card-placeholder-icon" />
+                    </div>
+                    {imageUrl && (
+                      <img
+                        src={imageUrl}
+                        alt={catName}
+                        className="nav-card-img"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                    )}
+                  </div>
 
-                  {dish.desc && (
-                    <p className="dish-desc" title={dish.desc}>
-                      {dish.desc}
-                    </p>
-                  )}
+                  <div className="nav-card-content">
+                    <h3 className="nav-card-title" title={catName}>
+                      {catName}
+                    </h3>
+                    <div className="nav-card-arrow-pill" aria-hidden="true">
+                      <ArrowForwardIosIcon className="explore-arrow-icon" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            (section.itemDetails || section.comboDetails || section.unlimitedDetails || section.items || []).map((rawDish) => {
+              const dish = {
+                ...rawDish,
+                id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.id,
+                title: rawDish.itemname || rawDish.dealsbundlesname || rawDish.title || "",
+                desc: rawDish.description || rawDish.desc || "",
+                image: rawDish.imageUrl || rawDish.image || "",
+                isVeg: rawDish.itemtype ? rawDish.itemtype === "Veg" : Boolean(rawDish.isVeg),
+                prepTime: rawDish.preparationtime ? `${rawDish.preparationtime} min` : (rawDish.prepTime || ""),
+                tag: rawDish.itemcategoryname || rawDish.tag || "",
+                isDeal: Boolean(rawDish.bundletype || rawDish.dealsbundlesid || rawDish.isDeal),
+                includedItems: Array.isArray(rawDish.items) ? rawDish.items.map((i) => i.itemname || i) : (rawDish.includedItems || []),
+                includedCount: Array.isArray(rawDish.items) ? rawDish.items.length : (rawDish.includedCount || 0),
+              };
+              const count = cartCounts[dish.id] || 0;
+              const priceFormatted = `${dish.currencySymbol || ""}${dish.price !== undefined && dish.price !== null ? Number(dish.price).toFixed(2) : "0.00"}`;
+              const isCombo = dish.isDeal && (dish.bundletype === "combo" || !dish.bundletype);
+              const isUnlimited = dish.isDeal && dish.bundletype === "unlimited";
+              const isComboOrUnlimited = isCombo || isUnlimited || dish.isDeal;
 
-                  {dish.isDeal && dish.includedCount && (
-                    <div className="deal-items-preview-row">
-                      <span className="deal-items-pill">
-                        🍽️ {dish.includedCount} dishes included
+              return (
+                <div
+                  key={dish.id}
+                  className={`dish-card showcase-dish-card ${dish.isDeal ? "deal-card combo-card" : ""}`}
+                  onClick={() => onCardClick(dish)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View details for ${dish.title}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onCardClick(dish);
+                    }
+                  }}
+                >
+                  {/* 1. Image Box (200px height - Exact Menu Page Spec) */}
+                  <div className="dish-img-box">
+                    <div className="dish-img-placeholder">
+                      <RestaurantMenuIcon className="dish-no-img-icon" />
+                    </div>
+
+                    {dish.image && (
+                      <img
+                        src={dish.image}
+                        alt={dish.title}
+                        className="dish-img"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                    )}
+
+                    {isCombo ? (
+                      <span className="deal-ribbon-badge combo">
+                        Combo
                       </span>
-                    </div>
-                  )}
+                    ) : (
+                      dish.tag && <span className="dish-tag-badge">{dish.tag}</span>
+                    )}
 
-                  <div className="dish-footer-row">
-                    <div className="dish-price-group">
-                      <span className="dish-price">{priceFormatted}</span>
-                    </div>
+                    {dish.prepTime && (
+                      <span className="dish-prep-time">
+                        <AccessTimeIcon fontSize="inherit" />
+                        {dish.prepTime}
+                      </span>
+                    )}
 
-                    <div className="dish-card-actions">
-                      {/* Dedicated Add-on Button when customizable addons exist (hidden on combo and unlimited items) */}
-                      {!isComboOrUnlimited && dish.addons && dish.addons.length > 0 && (
-                        <button
-                          type="button"
-                          className="dish-addon-btn"
-                          onClick={(e) => onOpenAddonModal(e, dish)}
-                          title={`Add-ons - ${dish.title}`}
-                          aria-label={`${dish.title} Add-ons`}
-                        >
-                          <AddIcon className="addon-btn-icon" />
-                        </button>
-                      )}
+                    <DietIndicator isVeg={dish.isVeg} />
+                  </div>
 
-                      {/* Direct Add to Cart Button (hidden on combo and unlimited items) */}
-                      {!isComboOrUnlimited && (
-                        <button
-                          type="button"
-                          className={`dish-add-btn ${count > 0 ? "added" : ""}`}
-                          onClick={(e) => onAddToCart(e, dish)}
-                          aria-label="Add to cart"
-                          title={count > 0 ? `Added (${count})` : "Add to cart"}
-                        >
-                          <ShoppingCartOutlinedIcon fontSize="small" />
-                          {count > 0 && <span className="dish-btn-count-badge">{count}</span>}
-                        </button>
-                      )}
+                  {/* 2. Dish Content Body */}
+                  <div className="dish-content">
+                    <h3 className="dish-title" title={dish.title}>
+                      {dish.title}
+                    </h3>
+
+                    {dish.desc && (
+                      <p className="dish-desc" title={dish.desc}>
+                        {dish.desc}
+                      </p>
+                    )}
+
+                    {dish.isDeal && dish.includedCount && (
+                      <div className="deal-items-preview-row">
+                        <span className="deal-items-pill">
+                          🍽️ {dish.includedCount} dishes included
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="dish-footer-row">
+                      <div className="dish-price-group">
+                        <span className="dish-price">{priceFormatted}</span>
+                      </div>
+
+                      <div className="dish-card-actions">
+                        {/* Dedicated Add-on Button when customizable addons exist (hidden on combo and unlimited items) */}
+                        {!isComboOrUnlimited && dish.addons && dish.addons.length > 0 && (
+                          <button
+                            type="button"
+                            className="dish-addon-btn"
+                            onClick={(e) => onOpenAddonModal(e, dish)}
+                            title={`Add-ons - ${dish.title}`}
+                            aria-label={`${dish.title} Add-ons`}
+                          >
+                            <AddIcon className="addon-btn-icon" />
+                          </button>
+                        )}
+
+                        {/* Direct Add to Cart Button (hidden on combo and unlimited items) */}
+                        {!isComboOrUnlimited && (
+                          <button
+                            type="button"
+                            className={`dish-add-btn ${count > 0 ? "added" : ""}`}
+                            onClick={(e) => onAddToCart(e, dish)}
+                            aria-label="Add to cart"
+                            title={count > 0 ? `Added (${count})` : "Add to cart"}
+                          >
+                            <ShoppingCartOutlinedIcon fontSize="small" />
+                            {count > 0 && <span className="dish-btn-count-badge">{count}</span>}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </div>
