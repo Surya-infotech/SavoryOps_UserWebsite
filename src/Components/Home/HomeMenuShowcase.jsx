@@ -163,7 +163,20 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
         >
-          {section.items.map((dish) => {
+          {section.items.map((rawDish) => {
+            const dish = {
+              ...rawDish,
+              id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.id,
+              title: rawDish.itemname || rawDish.dealsbundlesname || rawDish.title || "",
+              desc: rawDish.description || rawDish.desc || "",
+              image: rawDish.imageUrl || rawDish.image || "",
+              isVeg: rawDish.itemtype ? rawDish.itemtype === "Veg" : Boolean(rawDish.isVeg),
+              prepTime: rawDish.preparationtime ? `${rawDish.preparationtime} min` : (rawDish.prepTime || ""),
+              tag: rawDish.itemcategoryname || rawDish.tag || "",
+              isDeal: Boolean(rawDish.bundletype || rawDish.dealsbundlesid || rawDish.isDeal),
+              includedItems: Array.isArray(rawDish.items) ? rawDish.items.map((i) => i.itemname || i) : (rawDish.includedItems || []),
+              includedCount: Array.isArray(rawDish.items) ? rawDish.items.length : (rawDish.includedCount || 0),
+            };
             const count = cartCounts[dish.id] || 0;
             const priceFormatted = `${dish.currencySymbol || ""}${dish.price !== undefined && dish.price !== null ? Number(dish.price).toFixed(2) : "0.00"}`;
             const isCombo = dish.isDeal && (dish.bundletype === "combo" || !dish.bundletype);
