@@ -6,8 +6,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import CategoryIcon from "@mui/icons-material/Category";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
@@ -181,20 +179,12 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                   }}
                 >
                   <div className="nav-card-img-box">
-                    <div className="nav-card-placeholder">
-                      <RestaurantMenuIcon className="nav-card-placeholder-icon" />
-                    </div>
-                    {imageUrl && (
-                      <img
-                        src={imageUrl}
-                        alt={menuName}
-                        className="nav-card-img"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    )}
+                    <img
+                      src={imageUrl}
+                      alt={menuName}
+                      className="nav-card-img"
+                      loading="lazy"
+                    />
                   </div>
 
                   <div className="nav-card-content">
@@ -230,20 +220,12 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                   }}
                 >
                   <div className="nav-card-img-box">
-                    <div className="nav-card-placeholder">
-                      <CategoryIcon className="nav-card-placeholder-icon" />
-                    </div>
-                    {imageUrl && (
-                      <img
-                        src={imageUrl}
-                        alt={catName}
-                        className="nav-card-img"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    )}
+                    <img
+                      src={imageUrl}
+                      alt={catName}
+                      className="nav-card-img"
+                      loading="lazy"
+                    />
                   </div>
 
                   <div className="nav-card-content">
@@ -300,21 +282,12 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                 >
                   {/* 1. Image Box (200px height - Exact Menu Page Spec) */}
                   <div className="dish-img-box">
-                    <div className="dish-img-placeholder">
-                      <RestaurantMenuIcon className="dish-no-img-icon" />
-                    </div>
-
-                    {dish.image && (
-                      <img
-                        src={dish.image}
-                        alt={dish.title}
-                        className="dish-img"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                        }}
-                      />
-                    )}
+                    <img
+                      src={dish.image}
+                      alt={dish.title}
+                      className="dish-img"
+                      loading="lazy"
+                    />
 
                     {isDeal ? (
                       isUnlimited ? (

@@ -437,19 +437,12 @@ const MenuPage = () => {
         onClick={() => handleCardClick(dish)}
       >
         <div className="dish-img-box">
-          {dish.image ? (
-            <img
-              src={dish.image}
-              alt={dish.title}
-              className="dish-img"
-              loading="lazy"
-              onError={(e) => {
-                e.target.style.display = "none";
-              }}
-            />
-          ) : (
-            <RestaurantMenuIcon className="dish-no-img-icon" />
-          )}
+          <img
+            src={dish.image}
+            alt={dish.title}
+            className="dish-img"
+            loading="lazy"
+          />
 
           {dish.isDeal ? (
             dish.bundletype ? (
@@ -706,26 +699,16 @@ const MenuPage = () => {
               <CloseIcon fontSize="small" />
             </button>
 
-            {selectedItemModal.image ? (
-              <div className="dish-modal-hero">
-                <img
-                  src={selectedItemModal.image}
-                  alt={selectedItemModal.title}
-                  onError={(e) => {
-                    e.target.style.display = "none";
-                  }}
-                />
-                {selectedItemModal.hasDiet && (selectedItemModal.isVeg || selectedItemModal.isNonVeg) && (
-                  <DietIndicator isVeg={selectedItemModal.isVeg} className="dish-modal-diet-badge" />
-                )}
-              </div>
-            ) : (
-              selectedItemModal.hasDiet && (selectedItemModal.isVeg || selectedItemModal.isNonVeg) && (
-                <div className="dish-modal-no-img-diet">
-                  <DietIndicator isVeg={selectedItemModal.isVeg} className="dish-modal-diet-badge" />
-                </div>
-              )
-            )}
+            {/* Hero Image */}
+            <div className="dish-modal-hero">
+              <img
+                src={selectedItemModal.image}
+                alt={selectedItemModal.title}
+              />
+              {selectedItemModal.hasDiet && (selectedItemModal.isVeg || selectedItemModal.isNonVeg) && (
+                <DietIndicator isVeg={selectedItemModal.isVeg} className="dish-modal-diet-badge" />
+              )}
+            </div>
 
             <div className="dish-modal-body">
               <div className="dish-modal-header">

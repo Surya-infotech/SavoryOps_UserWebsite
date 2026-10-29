@@ -130,6 +130,7 @@
 
       &.diet-nonveg .diet-box {
         border-color: #c62828;
+
         .diet-dot {
           background: #c62828;
         }
@@ -380,24 +381,15 @@
   height: 200px;
   flex-shrink: 0;
   overflow: hidden;
-  background: #0f172a;
+  background: #f8fafc;
 }
 
 .dish-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 0.5s ease;
-}
-
-.dish-no-img-icon {
-  width: 54px !important;
-  height: 54px !important;
-  color: #334155;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .dish-tag-badge {
@@ -504,6 +496,7 @@
   &.non-veg {
     .diet-box {
       border-color: #c62828;
+
       .diet-dot {
         background: #c62828;
       }
@@ -716,14 +709,17 @@
       height: 20px;
       width: 75%;
     }
+
     &.desc1 {
       height: 14px;
       width: 95%;
     }
+
     &.desc2 {
       height: 14px;
       width: 60%;
     }
+
     &.footer {
       height: 26px;
       width: 40%;
@@ -736,6 +732,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -1395,6 +1392,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -1405,6 +1403,7 @@
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
