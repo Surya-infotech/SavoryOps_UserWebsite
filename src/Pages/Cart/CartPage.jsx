@@ -304,11 +304,11 @@ const CartPage = () => {
                           <div className="cart-qty-pill">
                             <button
                               type="button"
-                              className={`qty-btn ${item.quantity === 1 ? "delete-variant" : ""}`}
+                              className="qty-btn"
                               onClick={() => handleDecrease(item.cartItemId)}
                               aria-label="Decrease quantity"
                             >
-                              {item.quantity === 1 ? <DeleteOutlineOutlinedIcon fontSize="inherit" /> : <RemoveIcon fontSize="inherit" />}
+                              <RemoveIcon fontSize="inherit" />
                             </button>
                             <span className="qty-val">{item.quantity}</span>
                             <button
