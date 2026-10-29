@@ -12,6 +12,7 @@ import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
+import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
@@ -41,7 +42,7 @@ export const DEFAULT_MENU_SECTIONS = [];
 /**
  * Individual Horizontal Carousel Row Component
  */
-const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAddToCart }) => {
+const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAddToCart, selectedBranch }) => {
   const { translations = {} } = useLanguage();
   const navigate = useNavigate();
   const trackRef = useRef(null);
@@ -263,7 +264,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                 includedCount: Array.isArray(rawDish.items) ? rawDish.items.length : (rawDish.includedCount || 0),
               };
               const count = cartCounts[dish.id] || 0;
-              const priceFormatted = `${dish.currencySymbol || ""}${dish.price !== undefined && dish.price !== null ? Number(dish.price).toFixed(2) : "0.00"}`;
+              const priceFormatted = formatPriceFromBranch(dish.price, selectedBranch);
 
               return (
                 <div
@@ -383,6 +384,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
  */
 const HomeMenuShowcase = () => {
   const { translations = {} } = useLanguage();
+  const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const { showSnackbar } = useSnackbar();
 
   // Local cart count state
@@ -446,11 +448,18 @@ const HomeMenuShowcase = () => {
 
     fetchShowcases();
 
-    const handleBranchChange = () => {
-      fetchShowcases();
+    const handleBranchChange = (e) => {
+      if (e?.detail) {
+        setSelectedBranch(e.detail);
+        fetchShowcases(e.detail._id);
+      } else {
+        setSelectedBranch(getActiveBranch());
+        fetchShowcases();
+      }
     };
 
     window.addEventListener("branchChange", handleBranchChange);
+    window.dispatchEvent(new CustomEvent("requestBranch"));
 
     return () => {
       isMounted = false;
@@ -598,6 +607,7 @@ const HomeMenuShowcase = () => {
             onCardClick={handleCardClick}
             onOpenAddonModal={handleOpenAddonModal}
             onAddToCart={handleAddToCart}
+            selectedBranch={selectedBranch}
           />
         ))}
       </div>
@@ -668,8 +678,7 @@ const HomeMenuShowcase = () => {
                 </div>
 
                 <span className="dish-modal-price">
-                  {selectedDishModal.currencySymbol || "$"}
-                  {Number(selectedDishModal.price || 0).toFixed(2)}
+                  {formatPriceFromBranch(selectedDishModal.price, selectedBranch)}
                 </span>
               </div>
 
@@ -722,8 +731,7 @@ const HomeMenuShowcase = () => {
                                 <span>• {addon.addonname || addon.name}</span>
                               </div>
                               <span className="addon-price">
-                                +{selectedDishModal.currencySymbol || "$"}
-                                {Number(addon.price || 0).toFixed(2)}
+                                +{formatPriceFromBranch(addon.price, selectedBranch)}
                               </span>
                             </div>
                           );
@@ -745,8 +753,7 @@ const HomeMenuShowcase = () => {
                               <span>{addon.addonname || addon.name}</span>
                             </div>
                             <span className="addon-price">
-                              +{selectedDishModal.currencySymbol || "$"}
-                              {Number(addon.price || 0).toFixed(2)}
+                              +{formatPriceFromBranch(addon.price, selectedBranch)}
                             </span>
                           </label>
                         );
@@ -786,8 +793,7 @@ const HomeMenuShowcase = () => {
                       className="confirm-add-btn"
                       onClick={handleConfirmDishModal}
                     >
-                      Add to Order • {selectedDishModal.currencySymbol || "$"}
-                      {selectedDishGrandTotal.toFixed(2)}
+                      Add to Order • {formatPriceFromBranch(selectedDishGrandTotal, selectedBranch)}
                     </button>
                   </div>
                 )}
@@ -820,8 +826,7 @@ const HomeMenuShowcase = () => {
                 </div>
                 <div className="addon-modal-price-meta">
                   <span className="addon-base-price">
-                    {addonModalDish.currencySymbol || "$"}
-                    {Number(addonModalDish.price || 0).toFixed(2)}
+                    {formatPriceFromBranch(addonModalDish.price, selectedBranch)}
                   </span>
                   {addonModalDish.prepTime && (
                     <span className="addon-prep-time">
@@ -886,8 +891,7 @@ const HomeMenuShowcase = () => {
                         <span className="addon-option-name">{addon.addonname || addon.name}</span>
                       </div>
                       <span className="addon-option-price">
-                        +{addonModalDish.currencySymbol || "$"}
-                        {Number(addon.price || 0).toFixed(2)}
+                        +{formatPriceFromBranch(addon.price, selectedBranch)}
                       </span>
                     </label>
                   );
@@ -924,8 +928,7 @@ const HomeMenuShowcase = () => {
                 <span>Add to cart</span>
                 <span className="addon-btn-separator">•</span>
                 <span className="addon-total-price">
-                  {addonModalDish.currencySymbol || "$"}
-                  {addonModalGrandTotal.toFixed(2)}
+                  {formatPriceFromBranch(addonModalGrandTotal, selectedBranch)}
                 </span>
               </button>
             </div>

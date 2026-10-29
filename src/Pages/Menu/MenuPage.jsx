@@ -9,6 +9,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
+import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import "../../Scss/Pages/Menu/menupage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -44,6 +45,7 @@ const MenuPage = () => {
   const [rawCategories, setRawCategories] = useState([]);
   const [rawDealsBundles, setRawDealsBundles] = useState([]);
   const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("");
+  const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
 
   useEffect(() => {
     if (businessDisplayName) {
@@ -122,9 +124,12 @@ const MenuPage = () => {
     fetchMenuData();
 
     const handleBranchChange = (e) => {
-      if (e?.detail?._id) {
-        fetchMenuData(e.detail._id);
+      if (e?.detail) {
+        setSelectedBranch(e.detail);
+        if (e.detail._id) fetchMenuData(e.detail._id);
+        else fetchMenuData();
       } else {
+        setSelectedBranch(getActiveBranch());
         fetchMenuData();
       }
     };
@@ -426,7 +431,7 @@ const MenuPage = () => {
   // Reusable card renderer
   const renderDishCard = (dish) => {
     const count = addedItems[dish.id] || 0;
-    const priceFormatted = `${dish.currencysymbol || ""}${dish.price != null ? Number(dish.price).toFixed(2) : ""}`;
+    const priceFormatted = formatPriceFromBranch(dish.price, selectedBranch);
     const isCombo = dish.isDeal && dish.bundletype === "combo";
     const isUnlimited = dish.isDeal && dish.bundletype === "unlimited";
 
@@ -728,8 +733,7 @@ const MenuPage = () => {
                 </div>
 
                 <span className="dish-modal-price">
-                  {selectedItemModal.currencysymbol || ""}
-                  {selectedItemModal.price != null ? Number(selectedItemModal.price).toFixed(2) : ""}
+                  {formatPriceFromBranch(selectedItemModal.price, selectedBranch)}
                 </span>
               </div>
 
@@ -765,8 +769,7 @@ const MenuPage = () => {
                                 <span>• {addon.addonname}</span>
                               </div>
                               <span className="addon-price">
-                                +{addon.currencysymbol || selectedItemModal.currencysymbol || ""}
-                                {Number(addon.price || 0).toFixed(2)}
+                                +{formatPriceFromBranch(addon.price, selectedBranch)}
                               </span>
                             </div>
                           );
@@ -788,8 +791,7 @@ const MenuPage = () => {
                               <span>{addon.addonname}</span>
                             </div>
                             <span className="addon-price">
-                              +{addon.currencysymbol || selectedItemModal.currencysymbol || ""}
-                              {Number(addon.price || 0).toFixed(2)}
+                              +{formatPriceFromBranch(addon.price, selectedBranch)}
                             </span>
                           </label>
                         );
@@ -838,8 +840,7 @@ const MenuPage = () => {
                     className="confirm-add-btn"
                     onClick={handleConfirmModalAdd}
                   >
-                    {translations.addtocart} • {selectedItemModal.currencysymbol || ""}
-                    {selectedItemGrandTotal.toFixed(2)}
+                    {translations.addtocart} • {formatPriceFromBranch(selectedItemGrandTotal, selectedBranch)}
                   </button>
                 </div>
               )}
@@ -874,8 +875,7 @@ const MenuPage = () => {
                 </div>
                 <div className="addon-modal-price-meta">
                   <span className="addon-base-price">
-                    {addonModalItem.currencysymbol || "$"}
-                    {Number(addonModalItem.price || 0).toFixed(2)}
+                    {formatPriceFromBranch(addonModalItem.price, selectedBranch)}
                   </span>
                   {addonModalItem.preparationtime && Number(addonModalItem.preparationtime) > 0 && (
                     <span className="addon-prep-time">
@@ -940,8 +940,7 @@ const MenuPage = () => {
                         <span className="addon-option-name">{addon.addonname}</span>
                       </div>
                       <span className="addon-option-price">
-                        +{addon.currencysymbol || addonModalItem.currencysymbol || "$"}
-                        {Number(addon.price || 0).toFixed(2)}
+                        +{formatPriceFromBranch(addon.price, selectedBranch)}
                       </span>
                     </label>
                   );
@@ -978,8 +977,7 @@ const MenuPage = () => {
                 <span>{translations.addtocart}</span>
                 <span className="addon-btn-separator">•</span>
                 <span className="addon-total-price">
-                  {addonModalItem.currencysymbol || "$"}
-                  {addonModalGrandTotal.toFixed(2)}
+                  {formatPriceFromBranch(addonModalGrandTotal, selectedBranch)}
                 </span>
               </button>
             </div>
