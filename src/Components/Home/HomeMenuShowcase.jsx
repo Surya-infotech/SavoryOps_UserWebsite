@@ -609,8 +609,7 @@ const HomeMenuShowcase = () => {
                 return (
                   <div className="dish-modal-addons-box">
                     <div className="dish-modal-addons-title-wrap">
-                      <h5>{isComboItem ? (translations?.addons || "Add-ons") : "Customizable Add-ons"}</h5>
-                      {!isComboItem && <span className="addons-subtitle">Optional enhancements</span>}
+                      <h5>{isComboItem ? (translations?.addons || "Add-ons") : (translations?.customizableaddons || "Customizable Add-ons")}</h5>
                     </div>
                     <div className="addons-list">
                       {selectedDishModal.addons.map((addon) => {
