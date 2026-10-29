@@ -80,7 +80,7 @@ const HomeFeatures = ({ hasBanner = false }) => {
     return featuresList
       .filter((item) => (item?.title && item.title.trim()) || (item?.desc && item.desc.trim()))
       .map((item, idx) => ({
-        id: item.id || item._id || idx + 1,
+        _id: item._id,
         title: item.title || "",
         desc: item.desc || "",
         icon: renderFeatureIcon(item.icon),
@@ -96,7 +96,7 @@ const HomeFeatures = ({ hasBanner = false }) => {
     <section className={`features-strip ${hasBanner ? "has-banner" : "no-banner"}`}>
       <div className="features-grid">
         {displayFeatures.map((item) => (
-          <div key={item.id} className="feature-card">
+          <div key={item._id} className="feature-card">
             <div className={`feature-icon-wrapper ${item.iconClass}`}>
               {item.icon}
             </div>

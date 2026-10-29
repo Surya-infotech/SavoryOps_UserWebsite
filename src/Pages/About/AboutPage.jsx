@@ -179,7 +179,7 @@ const AboutPage = () => {
     return aboutUsSetting.pillars
       .filter((p) => (p?.title && p.title.trim()) || (p?.text && p.text.trim()))
       .map((p, idx) => ({
-        id: p.id || idx + 1,
+        _id: p._id || idx + 1,
         title: (p.title || "").trim(),
         text: (p.text || "").trim(),
         icon: p.icon || "organic",
@@ -305,7 +305,7 @@ const AboutPage = () => {
             {pillarsList.length > 0 && (
               <div className="pillars-grid">
                 {pillarsList.map((pillar) => (
-                  <div key={pillar.id} className="pillar-card">
+                  <div key={pillar._id} className="pillar-card">
                     <div className={`pillar-icon-box ${pillar.colorClass || "green"}`}>
                       {getPillarIcon(pillar.icon)}
                     </div>

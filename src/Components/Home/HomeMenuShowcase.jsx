@@ -107,7 +107,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
   };
 
   return (
-    <div className="showcase-carousel-row" id={`section-${section.id}`}>
+    <div className="showcase-carousel-row" id={`section-${section._id}`}>
       {/* Row Header */}
       <div className="carousel-row-header">
         <div className="header-info-wrap">
@@ -509,9 +509,9 @@ const HomeMenuShowcase = () => {
     <section className="home-menu-showcase-section" aria-label="Curated Menu Showcase">
       {/* --- Section-Wise Horizontal Carousels --- */}
       <div className="showcase-sections-list">
-        {displaySections.map((section) => (
+        {displaySections.map((section, sIdx) => (
           <CarouselRow
-            key={section.id}
+            key={section._id || sIdx}
             section={section}
             cartCounts={cartCounts}
             onCardClick={handleCardClick}
@@ -649,35 +649,35 @@ const HomeMenuShowcase = () => {
                 selectedDishModal.bundletype === "unlimited" ||
                 selectedDishModal.isDeal
               ) && (
-                <div className="dish-modal-footer">
-                  <div className="quantity-counter">
+                  <div className="dish-modal-footer">
+                    <div className="quantity-counter">
+                      <button
+                        type="button"
+                        onClick={() => setModalQuantity((q) => Math.max(1, q - 1))}
+                        aria-label="Decrease quantity"
+                      >
+                        -
+                      </button>
+                      <span>{modalQuantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => setModalQuantity((q) => q + 1)}
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+
                     <button
                       type="button"
-                      onClick={() => setModalQuantity((q) => Math.max(1, q - 1))}
-                      aria-label="Decrease quantity"
+                      className="confirm-add-btn"
+                      onClick={handleConfirmDishModal}
                     >
-                      -
-                    </button>
-                    <span>{modalQuantity}</span>
-                    <button
-                      type="button"
-                      onClick={() => setModalQuantity((q) => q + 1)}
-                      aria-label="Increase quantity"
-                    >
-                      +
+                      Add to Order • {selectedDishModal.currencySymbol || "$"}
+                      {selectedDishGrandTotal.toFixed(2)}
                     </button>
                   </div>
-
-                  <button
-                    type="button"
-                    className="confirm-add-btn"
-                    onClick={handleConfirmDishModal}
-                  >
-                    Add to Order • {selectedDishModal.currencySymbol || "$"}
-                    {selectedDishGrandTotal.toFixed(2)}
-                  </button>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </div>
