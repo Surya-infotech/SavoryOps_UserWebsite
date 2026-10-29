@@ -45,6 +45,23 @@ const DietIndicator = ({ isVeg, className = "" }) => {
   );
 };
 
+/**
+ * Determine Diet Info (Veg / Non-Veg) for Cart Items based on item details
+ */
+const getDietInfo = (item) => {
+  if (!item) return { hasDiet: false, isVeg: false };
+  if (item.isVeg !== undefined && item.isVeg !== null) {
+    return { hasDiet: true, isVeg: Boolean(item.isVeg) };
+  }
+  const type = (item.itemtype || item.itemType || "").trim().toLowerCase();
+  if (type) {
+    const isNonVeg = type.includes("non") || type.includes("egg");
+    const isVeg = !isNonVeg && (type.includes("veg") || type === "vegan");
+    return { hasDiet: isVeg || isNonVeg, isVeg };
+  }
+  return { hasDiet: false, isVeg: false };
+};
+
 const CartPage = () => {
   const navigate = useNavigate();
   const { translations = {} } = useLanguage();
@@ -243,7 +260,7 @@ const CartPage = () => {
           </div>
         ) : (
           <>
-            {/* Header with Title and Clear Cart Button */}
+            {/* Header with Title */}
             <div className="cart-header-row">
               <div className="cart-title-group">
                 <h1 className="cart-page-title">{translations.yourcart || "Your Cart"}</h1>
@@ -251,15 +268,6 @@ const CartPage = () => {
                   {totalQuantity} {totalQuantity === 1 ? translations.item || "item" : translations.items || "items"}
                 </span>
               </div>
-              <button
-                type="button"
-                className="clear-cart-btn"
-                onClick={handleClearCart}
-                title="Remove all items from your cart"
-              >
-                <DeleteOutlineOutlinedIcon fontSize="small" />
-                <span>{translations.clearcart || "Clear Cart"}</span>
-              </button>
             </div>
 
             {/* Main Cart Grid */}
@@ -284,7 +292,7 @@ const CartPage = () => {
                     0
                   );
                   const itemSubtotal = (itemPrice + addonsTotal) * (Number(item.quantity) || 1);
-                  const isVeg = item.itemtype ? item.itemtype.toLowerCase() === "veg" : false;
+                  const itemDiet = getDietInfo(item);
                   const showInstructions = Boolean(openNotesMap[item.cartItemId]);
 
                   return (
@@ -308,7 +316,12 @@ const CartPage = () => {
                       {/* 2. Item Content */}
                       <div className="cart-item-details">
                         <div className="cart-item-header">
-                          {item.itemtype && <DietIndicator isVeg={isVeg} />}
+                          {itemDiet.hasDiet && (
+                            <DietIndicator
+                              isVeg={itemDiet.isVeg}
+                              className="cart-item-diet-badge"
+                            />
+                          )}
                           <h4 className="cart-item-title">{item.name}</h4>
                         </div>
 
@@ -507,12 +520,17 @@ const CartPage = () => {
             <div className="addon-modal-header">
               <div className="addon-header-main">
                 <div className="addon-header-title-row">
-                  {editingCartItem.itemtype && (
-                    <DietIndicator
-                      isVeg={editingCartItem.itemtype.toLowerCase() === "veg"}
-                      className="addon-header-diet"
-                    />
-                  )}
+                  {(() => {
+                    const modalDiet = getDietInfo(editingCartItem);
+                    return (
+                      modalDiet.hasDiet && (
+                        <DietIndicator
+                          isVeg={modalDiet.isVeg}
+                          className="addon-header-diet"
+                        />
+                      )
+                    );
+                  })()}
                   <h3 className="addon-modal-item-title">
                     {editingCartItem.name}
                   </h3>
