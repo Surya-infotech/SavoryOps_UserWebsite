@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { Link } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -7,7 +6,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -119,13 +117,6 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
           )}
           <h2 className="row-title">{section.title}</h2>
           {section.subtitle && <p className="row-subtitle">{section.subtitle}</p>}
-        </div>
-
-        <div className="header-actions-wrap">
-          <Link to={section.viewAllLink || "/menu"} className="row-view-all-link">
-            <span>View All</span>
-            <ArrowForwardIcon fontSize="inherit" />
-          </Link>
         </div>
       </div>
 
