@@ -160,9 +160,9 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
         >
           {section.type === "menu" ? (
             (section.menuDetails || section.items || []).map((menuItem, idx) => {
-              const menuId = menuItem.menuid || menuItem.id || idx;
+              const menuId = menuItem.menuid ?? menuItem._id ?? menuItem.id ?? idx;
               const menuName = menuItem.menuname || menuItem.title || menuItem.name || "Menu";
-              const imageUrl = menuItem.imageUrl || menuItem.image || "";
+              const imageUrl = menuItem.imageUrl || menuItem.image || menuItem.menuimage || menuItem.img || "";
 
               return (
                 <div
@@ -190,7 +190,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                         className="nav-card-img"
                         loading="lazy"
                         onError={(e) => {
-                          e.target.style.display = "none";
+                          e.currentTarget.style.display = "none";
                         }}
                       />
                     )}
@@ -209,9 +209,9 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
             })
           ) : section.type === "category" ? (
             (section.categoryDetails || section.items || []).map((catItem, idx) => {
-              const catId = catItem.itemcategoryid || catItem.id || idx;
+              const catId = catItem.itemcategoryid ?? catItem._id ?? catItem.id ?? idx;
               const catName = catItem.itemcategoryname || catItem.title || catItem.name || "Category";
-              const imageUrl = catItem.imageUrl || catItem.image || "";
+              const imageUrl = catItem.imageUrl || catItem.image || catItem.categoryimage || catItem.itemcategoryimage || catItem.img || "";
 
               return (
                 <div
@@ -239,7 +239,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                         className="nav-card-img"
                         loading="lazy"
                         onError={(e) => {
-                          e.target.style.display = "none";
+                          e.currentTarget.style.display = "none";
                         }}
                       />
                     )}
