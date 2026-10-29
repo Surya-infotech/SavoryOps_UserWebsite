@@ -165,7 +165,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
         >
           {section.items.map((dish) => {
             const count = cartCounts[dish.id] || 0;
-            const priceFormatted = `${dish.currencySymbol}${dish.price.toFixed(2)}`;
+            const priceFormatted = `${dish.currencySymbol || ""}${dish.price !== undefined && dish.price !== null ? Number(dish.price).toFixed(2) : "0.00"}`;
             const isCombo = dish.isDeal && (dish.bundletype === "combo" || !dish.bundletype);
             const isUnlimited = dish.isDeal && dish.bundletype === "unlimited";
             const isComboOrUnlimited = isCombo || isUnlimited || dish.isDeal;
