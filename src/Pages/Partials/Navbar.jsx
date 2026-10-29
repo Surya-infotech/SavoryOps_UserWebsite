@@ -24,6 +24,7 @@ import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { getCartTotalCount } from "../../utils/cartService.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
@@ -652,7 +653,17 @@ export const ProfileDropdown = ({ className = "" }) => {
    4. Main Navbar Component
    ========================================================================== */
 const Navbar = () => {
+  const navigate = useNavigate();
   const { translations = {}, language } = useLanguage();
+  const [cartCount, setCartCount] = useState(getCartTotalCount);
+
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      setCartCount(getCartTotalCount());
+    };
+    window.addEventListener("cartUpdated", handleCartUpdated);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdated);
+  }, []);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -874,11 +885,12 @@ const Navbar = () => {
             <button
               type="button"
               className="nav-cart-btn"
-              title={translations.cart}
-              onClick={() => alert("Cart: 2 delicious items ready for checkout!")}
+              title={translations.cart || "Cart"}
+              onClick={() => navigate("/cart")}
+              aria-label={translations.cart || "Cart"}
             >
               <ShoppingBagOutlinedIcon fontSize="small" />
-              <span className="cart-count-badge">2</span>
+              {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
             </button>
 
             <ProfileDropdown />

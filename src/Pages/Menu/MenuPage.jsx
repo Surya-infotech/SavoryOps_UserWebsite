@@ -6,10 +6,12 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
+import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 import "../../Scss/Pages/Menu/menupage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -35,17 +37,26 @@ const DietIndicator = ({ isVeg, className = "" }) => {
 
 const MenuPage = () => {
   const { translations = {} } = useLanguage();
+  const { showSnackbar } = useSnackbar();
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname;
 
   const [loading, setLoading] = useState(true);
-  const [addedItems, setAddedItems] = useState({});
+  const [addedItems, setAddedItems] = useState(getItemQuantitiesMap);
 
   // Raw API data from owner database
   const [rawCategories, setRawCategories] = useState([]);
   const [rawDealsBundles, setRawDealsBundles] = useState([]);
   const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
+
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      setAddedItems(getItemQuantitiesMap());
+    };
+    window.addEventListener("cartUpdated", handleCartUpdated);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdated);
+  }, []);
 
   useEffect(() => {
     if (businessDisplayName) {
@@ -368,10 +379,24 @@ const MenuPage = () => {
 
   const handleConfirmAddonModal = () => {
     if (addonModalItem) {
-      setAddedItems((prev) => ({
-        ...prev,
-        [addonModalItem.id]: (prev[addonModalItem.id] || 0) + addonQuantity,
-      }));
+      const selectedAddons = (addonModalItem.addons || []).map((addon) => {
+        const addonKey = addon.addonid || addon._id || addon.id;
+        const isSelected = selectedAddonIds.includes(addonKey);
+        return {
+          addonid: addon.addonid || addonKey,
+          addonname: addon.addonname || addon.name,
+          price: Number(addon.price ?? addon.addonprice ?? 0),
+          selected: isSelected,
+        };
+      });
+
+      addItemToCart(addonModalItem, {
+        addons: selectedAddons,
+        quantity: addonQuantity,
+        image: addonModalItem.image || addonModalItem.imageUrl,
+        description: addonModalItem.desc || addonModalItem.description,
+        showToast: showSnackbar,
+      });
       setAddonModalItem(null);
     }
   };
@@ -406,10 +431,19 @@ const MenuPage = () => {
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
-    setAddedItems((prev) => ({
-      ...prev,
-      [item.id]: (prev[item.id] || 0) + 1,
-    }));
+    const addons = item.addons ? item.addons.map((addon) => ({
+      addonid: addon.addonid || addon._id || addon.id,
+      addonname: addon.addonname || addon.name,
+      price: Number(addon.price ?? addon.addonprice ?? 0),
+      selected: false,
+    })) : [];
+
+    addItemToCart(item, {
+      addons,
+      image: item.image || item.imageUrl,
+      description: item.desc || item.description,
+      showToast: showSnackbar,
+    });
   };
 
   const handleCardClick = (item) => {
@@ -420,10 +454,24 @@ const MenuPage = () => {
 
   const handleConfirmModalAdd = () => {
     if (selectedItemModal) {
-      setAddedItems((prev) => ({
-        ...prev,
-        [selectedItemModal.id]: (prev[selectedItemModal.id] || 0) + modalQuantity,
-      }));
+      const selectedAddons = (selectedItemModal.addons || []).map((addon) => {
+        const addonKey = addon.addonid || addon._id || addon.id;
+        const isSelected = selectedAddonIds.includes(addonKey);
+        return {
+          addonid: addon.addonid || addonKey,
+          addonname: addon.addonname || addon.name,
+          price: Number(addon.price ?? addon.addonprice ?? 0),
+          selected: isSelected,
+        };
+      });
+
+      addItemToCart(selectedItemModal, {
+        addons: selectedAddons,
+        quantity: modalQuantity,
+        image: selectedItemModal.image || selectedItemModal.imageUrl,
+        description: selectedItemModal.desc || selectedItemModal.description,
+        showToast: showSnackbar,
+      });
       setSelectedItemModal(null);
     }
   };

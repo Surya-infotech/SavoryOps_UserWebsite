@@ -13,6 +13,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
+import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
@@ -388,7 +389,15 @@ const HomeMenuShowcase = () => {
   const { showSnackbar } = useSnackbar();
 
   // Local cart count state
-  const [cartCounts, setCartCounts] = useState({});
+  const [cartCounts, setCartCounts] = useState(getItemQuantitiesMap);
+
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      setCartCounts(getItemQuantitiesMap());
+    };
+    window.addEventListener("cartUpdated", handleCartUpdated);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdated);
+  }, []);
 
   // Dynamic showcases fetched from backend
   const [dynamicShowcases, setDynamicShowcases] = useState([]);
@@ -510,14 +519,19 @@ const HomeMenuShowcase = () => {
   // Quick direct add-to-cart (from shopping cart button)
   const handleAddToCart = (e, dish) => {
     e.stopPropagation();
-    setCartCounts((prev) => ({
-      ...prev,
-      [dish.id]: (prev[dish.id] || 0) + 1,
-    }));
+    const addons = dish.addons ? dish.addons.map((addon) => ({
+      addonid: addon.addonid || addon._id || addon.id,
+      addonname: addon.addonname || addon.name,
+      price: Number(addon.price ?? addon.addonprice ?? 0),
+      selected: false,
+    })) : [];
 
-    if (typeof showSnackbar === "function") {
-      showSnackbar(`${dish.title} added to your order!`, "success", 3000);
-    }
+    addItemToCart(dish, {
+      addons,
+      image: dish.image || dish.imageUrl,
+      description: dish.desc || dish.description,
+      showToast: showSnackbar,
+    });
   };
 
   // Card click -> Open Item Details Modal
@@ -551,28 +565,48 @@ const HomeMenuShowcase = () => {
   // Confirm handlers
   const handleConfirmDishModal = () => {
     if (!selectedDishModal) return;
-    setCartCounts((prev) => ({
-      ...prev,
-      [selectedDishModal.id]: (prev[selectedDishModal.id] || 0) + modalQuantity,
-    }));
+    const selectedAddons = (selectedDishModal.addons || []).map((addon) => {
+      const addonKey = addon.addonid || addon._id || addon.id;
+      const isSelected = selectedAddonIds.includes(addonKey);
+      return {
+        addonid: addon.addonid || addonKey,
+        addonname: addon.addonname || addon.name,
+        price: Number(addon.price ?? addon.addonprice ?? 0),
+        selected: isSelected,
+      };
+    });
 
-    if (typeof showSnackbar === "function") {
-      showSnackbar(`${selectedDishModal.title} (${modalQuantity}x) added to order!`, "success", 3000);
-    }
+    addItemToCart(selectedDishModal, {
+      addons: selectedAddons,
+      quantity: modalQuantity,
+      image: selectedDishModal.image || selectedDishModal.imageUrl,
+      description: selectedDishModal.desc || selectedDishModal.description,
+      showToast: showSnackbar,
+    });
 
     setSelectedDishModal(null);
   };
 
   const handleConfirmAddonModal = () => {
     if (!addonModalDish) return;
-    setCartCounts((prev) => ({
-      ...prev,
-      [addonModalDish.id]: (prev[addonModalDish.id] || 0) + addonQuantity,
-    }));
+    const selectedAddons = (addonModalDish.addons || []).map((addon) => {
+      const addonKey = addon.addonid || addon._id || addon.id;
+      const isSelected = addonSelectedIds.includes(addonKey);
+      return {
+        addonid: addon.addonid || addonKey,
+        addonname: addon.addonname || addon.name,
+        price: Number(addon.price ?? addon.addonprice ?? 0),
+        selected: isSelected,
+      };
+    });
 
-    if (typeof showSnackbar === "function") {
-      showSnackbar(`${addonModalDish.title} (${addonQuantity}x) added to order!`, "success", 3000);
-    }
+    addItemToCart(addonModalDish, {
+      addons: selectedAddons,
+      quantity: addonQuantity,
+      image: addonModalDish.image || addonModalDish.imageUrl,
+      description: addonModalDish.desc || addonModalDish.description,
+      showToast: showSnackbar,
+    });
 
     setAddonModalDish(null);
   };
