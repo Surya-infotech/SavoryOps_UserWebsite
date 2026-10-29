@@ -113,7 +113,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
       <div className="carousel-row-header">
         <div className="header-info-wrap">
           {section.tag && (
-            <div className={`row-tag-badge ${section.tagColor || ""}`}>
+            <div className={`row-tag-badge ${section.tagColor || "pill-emerald"}`}>
               <SparklesIcon className="pill-icon" />
               <span>{section.tag}</span>
             </div>

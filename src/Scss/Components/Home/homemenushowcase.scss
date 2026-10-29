@@ -123,25 +123,37 @@
 
       .pill-icon {
         font-size: 1rem;
+        color: currentColor;
+      }
+
+      &.pill-emerald {
+        background: rgba(2, 136, 2, 0.1);
+        border-color: rgba(2, 136, 2, 0.25);
         color: #028802;
       }
 
-      &.gold {
-        background: rgba(2, 136, 2, 0.08);
-        border-color: rgba(2, 136, 2, 0.2);
-        color: #028802;
+      &.pill-amber {
+        background: rgba(245, 158, 11, 0.12);
+        border-color: rgba(245, 158, 11, 0.3);
+        color: #d97706;
       }
 
-      &.emerald {
-        background: rgba(2, 136, 2, 0.08);
-        border-color: rgba(2, 136, 2, 0.2);
-        color: #028802;
+      &.pill-rose {
+        background: rgba(244, 63, 94, 0.12);
+        border-color: rgba(244, 63, 94, 0.3);
+        color: #e11d48;
       }
 
-      &.rose {
-        background: rgba(2, 136, 2, 0.08);
-        border-color: rgba(2, 136, 2, 0.2);
-        color: #028802;
+      &.pill-blue {
+        background: rgba(2, 132, 199, 0.12);
+        border-color: rgba(2, 132, 199, 0.3);
+        color: #0284c7;
+      }
+
+      &.pill-purple {
+        background: rgba(139, 92, 246, 0.12);
+        border-color: rgba(139, 92, 246, 0.3);
+        color: #7c3aed;
       }
     }
 
