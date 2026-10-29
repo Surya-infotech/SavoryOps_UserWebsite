@@ -155,7 +155,18 @@ export const addItemToCart = (item, options = {}) => {
         quantity: addQty,
         image: image || item.image || item.imageUrl || "",
         description: description || item.description || item.desc || "",
-        itemtype: item.itemtype || item.itemType || (item.isVeg ? "Veg" : "Non-Veg"),
+        itemtype:
+          item.itemtype ||
+          item.itemType ||
+          (item.isVeg === true ? "Veg" : item.isVeg === false ? "Non-Veg" : ""),
+        isVeg:
+          item.isVeg !== undefined
+            ? Boolean(item.isVeg)
+            : (item.itemtype || item.itemType || "").trim().toLowerCase() === "veg",
+        hasDiet:
+          item.hasDiet !== undefined
+            ? item.hasDiet
+            : Boolean(item.itemtype || item.itemType || item.isVeg !== undefined),
         addons: addons,
         availableAddons: options.availableAddons || item.availableAddons || item.addons || addons,
         specialInstructions: specialInstructions || item.specialInstructions || "",
