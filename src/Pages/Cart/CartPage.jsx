@@ -5,6 +5,9 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
@@ -20,6 +23,7 @@ import {
   removeCartItem,
   clearCart,
   updateCartItemInstructions,
+  updateCartItemAddons,
 } from "../../utils/cartService.js";
 import "../../Scss/Pages/Cart/cartpage.scss";
 
@@ -51,6 +55,10 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState(getCart);
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const [openNotesMap, setOpenNotesMap] = useState({});
+
+  // Addon Customization Modal State
+  const [editingCartItem, setEditingCartItem] = useState(null);
+  const [selectedModalAddonIds, setSelectedModalAddonIds] = useState([]);
 
   // Sync cart items with global cartUpdated event
   useEffect(() => {
@@ -129,6 +137,46 @@ const CartPage = () => {
     updateCartItemInstructions(cartItemId, text);
   };
 
+  // Addon Modal Handlers
+  const handleOpenAddonModal = (item) => {
+    setEditingCartItem(item);
+    const initialSelected = (item.addons || [])
+      .filter((a) => a && a.selected !== false)
+      .map((a) => String(a.addonid || a.id || a._id));
+    setSelectedModalAddonIds(initialSelected);
+  };
+
+  const toggleModalAddon = (addonKey) => {
+    const strKey = String(addonKey);
+    setSelectedModalAddonIds((prev) =>
+      prev.includes(strKey) ? prev.filter((id) => id !== strKey) : [...prev, strKey]
+    );
+  };
+
+  const handleSaveAddons = () => {
+    if (!editingCartItem) return;
+    const available =
+      editingCartItem.availableAddons && editingCartItem.availableAddons.length > 0
+        ? editingCartItem.availableAddons
+        : editingCartItem.addons || [];
+
+    const updatedAddons = available.map((addon) => {
+      const key = String(addon.addonid || addon.id || addon._id);
+      return {
+        addonid: addon.addonid || addon.id || addon._id,
+        addonname: addon.addonname || addon.name,
+        price: Number(addon.price ?? addon.addonprice ?? 0),
+        selected: selectedModalAddonIds.includes(key),
+      };
+    });
+
+    updateCartItemAddons(editingCartItem.cartItemId, updatedAddons);
+    if (typeof showSnackbar === "function") {
+      showSnackbar(`Add-ons updated for ${editingCartItem.name}`, "success", 2500);
+    }
+    setEditingCartItem(null);
+  };
+
   // Calculations
   const subtotal = useMemo(() => {
     return cartItems.reduce((sum, item) => {
@@ -145,6 +193,22 @@ const CartPage = () => {
   }, [cartItems]);
 
   const grandTotal = subtotal;
+
+  const modalAvailableAddons = useMemo(() => {
+    if (!editingCartItem) return [];
+    return editingCartItem.availableAddons && editingCartItem.availableAddons.length > 0
+      ? editingCartItem.availableAddons
+      : editingCartItem.addons || [];
+  }, [editingCartItem]);
+
+  const modalComputedTotal = useMemo(() => {
+    if (!editingCartItem) return 0;
+    const base = Number(editingCartItem.price || 0);
+    const addonsSum = modalAvailableAddons
+      .filter((a) => selectedModalAddonIds.includes(String(a.addonid || a.id || a._id)))
+      .reduce((sum, a) => sum + Number(a.price || 0), 0);
+    return (base + addonsSum) * (Number(editingCartItem.quantity) || 1);
+  }, [editingCartItem, modalAvailableAddons, selectedModalAddonIds]);
 
   const handleProceedCheckout = () => {
     showSnackbar(
@@ -205,6 +269,13 @@ const CartPage = () => {
                 {cartItems.map((item) => {
                   const itemKey = item.cartItemId || item.itemId;
                   const itemPrice = Number(item.price || 0);
+                  const availableAddons =
+                    item.availableAddons && item.availableAddons.length > 0
+                      ? item.availableAddons
+                      : item.addons && item.addons.length > 0
+                        ? item.addons
+                        : [];
+                  const hasAddons = availableAddons.length > 0;
                   const selectedAddons = (item.addons || []).filter(
                     (a) => a && a.selected !== false
                   );
@@ -245,17 +316,47 @@ const CartPage = () => {
                           {formatPriceFromBranch(itemPrice, selectedBranch)}
                         </span>
 
-                        {/* Selected Add-ons */}
-                        {selectedAddons.length > 0 && (
-                          <div className="cart-item-addons-list">
-                            {selectedAddons.map((addon, aIdx) => (
-                              <div key={addon.addonid || aIdx} className="cart-addon-row">
-                                <span className="addon-name">+ {addon.addonname || addon.name}</span>
-                                <span className="addon-price">
-                                  +{formatPriceFromBranch(addon.price || 0, selectedBranch)}
-                                </span>
+                        {/* Add-ons Option Section */}
+                        {hasAddons && (
+                          <div className="cart-item-addons-wrapper">
+                            {selectedAddons.length > 0 ? (
+                              <div className="cart-item-addons-list">
+                                <div className="cart-addons-header-row">
+                                  <span className="cart-addons-label">
+                                    {translations.addons || "Add-ons"}:
+                                  </span>
+                                  <button
+                                    type="button"
+                                    className="cart-addon-edit-btn"
+                                    onClick={() => handleOpenAddonModal(item)}
+                                    title="Customize Add-ons"
+                                  >
+                                    <EditOutlinedIcon fontSize="inherit" />
+                                    <span>{translations.customize || "Customize"}</span>
+                                  </button>
+                                </div>
+                                {selectedAddons.map((addon, aIdx) => (
+                                  <div key={addon.addonid || aIdx} className="cart-addon-row">
+                                    <span className="addon-name">+ {addon.addonname || addon.name}</span>
+                                    <span className="addon-price">
+                                      +{formatPriceFromBranch(addon.price || 0, selectedBranch)}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            ) : (
+                              <div className="cart-addon-prompt-box">
+                                <button
+                                  type="button"
+                                  className="cart-addon-customize-trigger"
+                                  onClick={() => handleOpenAddonModal(item)}
+                                  title="Add customizations and add-ons"
+                                >
+                                  <AddCircleOutlineIcon fontSize="inherit" />
+                                  <span>{translations.customizableaddons || "+ Add Add-ons"}</span>
+                                </button>
+                              </div>
+                            )}
                           </div>
                         )}
 
@@ -389,6 +490,121 @@ const CartPage = () => {
           </>
         )}
       </div>
+
+      {/* --- Add-on Customization Popup Modal --- */}
+      {editingCartItem && (
+        <div
+          className="dish-modal-overlay addon-modal-overlay"
+          onClick={() => setEditingCartItem(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="addon-modal-card cart-addon-edit-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="addon-modal-header">
+              <div className="addon-header-main">
+                <div className="addon-header-title-row">
+                  {editingCartItem.itemtype && (
+                    <DietIndicator
+                      isVeg={editingCartItem.itemtype.toLowerCase() === "veg"}
+                      className="addon-header-diet"
+                    />
+                  )}
+                  <h3 className="addon-modal-item-title">
+                    {editingCartItem.name}
+                  </h3>
+                </div>
+                <div className="addon-modal-price-meta">
+                  <span className="addon-base-price">
+                    {formatPriceFromBranch(editingCartItem.price, selectedBranch)}
+                  </span>
+                  <span className="addon-edit-tag">
+                    {translations.customizeaddons || "Customize Add-ons"}
+                  </span>
+                </div>
+              </div>
+
+              {editingCartItem.image && (
+                <div className="addon-modal-thumb-box">
+                  <img
+                    src={editingCartItem.image}
+                    alt={editingCartItem.name}
+                    className="addon-modal-thumb"
+                  />
+                </div>
+              )}
+
+              <button
+                type="button"
+                className="addon-modal-close-btn"
+                onClick={() => setEditingCartItem(null)}
+                aria-label="Close"
+              >
+                <CloseIcon fontSize="small" />
+              </button>
+            </div>
+
+            {/* Modal Body: Addons Checklist */}
+            <div className="addon-selection-section">
+              <div className="addon-section-title-wrap">
+                <h4 className="addon-section-title">
+                  {translations.chooseaddons || "Select Your Add-ons"}
+                </h4>
+              </div>
+
+              <div className="addon-options-list">
+                {modalAvailableAddons.map((addon) => {
+                  const addonKey = String(addon.addonid || addon._id || addon.id);
+                  const isChecked = selectedModalAddonIds.includes(addonKey);
+
+                  return (
+                    <label
+                      key={addonKey}
+                      className={`addon-option-item ${isChecked ? "is-selected" : ""}`}
+                    >
+                      <div className="addon-option-left">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleModalAddon(addonKey)}
+                          className="addon-option-checkbox"
+                        />
+                        <span className="addon-option-name">
+                          {addon.addonname || addon.name}
+                        </span>
+                      </div>
+                      <span className="addon-option-price">
+                        +{formatPriceFromBranch(addon.price || 0, selectedBranch)}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Modal Bottom Sticky Footer */}
+            <div className="addon-modal-footer">
+              <div className="addon-modal-total-preview">
+                <span className="total-preview-label">{translations.itemtotal || "Item Total"}:</span>
+                <span className="total-preview-val">
+                  {formatPriceFromBranch(modalComputedTotal, selectedBranch)}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                className="addon-add-cart-btn cart-save-addons-btn"
+                onClick={handleSaveAddons}
+              >
+                <span>{translations.updateaddons || "Update Add-ons"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

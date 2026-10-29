@@ -392,6 +392,7 @@ const MenuPage = () => {
 
       addItemToCart(addonModalItem, {
         addons: selectedAddons,
+        availableAddons: addonModalItem.addons || [],
         quantity: addonQuantity,
         image: addonModalItem.image || addonModalItem.imageUrl,
         description: addonModalItem.desc || addonModalItem.description,
@@ -440,6 +441,7 @@ const MenuPage = () => {
 
     addItemToCart(item, {
       addons,
+      availableAddons: item.addons || [],
       image: item.image || item.imageUrl,
       description: item.desc || item.description,
       showToast: showSnackbar,
@@ -467,6 +469,7 @@ const MenuPage = () => {
 
       addItemToCart(selectedItemModal, {
         addons: selectedAddons,
+        availableAddons: selectedItemModal.addons || [],
         quantity: modalQuantity,
         image: selectedItemModal.image || selectedItemModal.imageUrl,
         description: selectedItemModal.desc || selectedItemModal.description,

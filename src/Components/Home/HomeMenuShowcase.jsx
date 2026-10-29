@@ -528,6 +528,7 @@ const HomeMenuShowcase = () => {
 
     addItemToCart(dish, {
       addons,
+      availableAddons: dish.addons || [],
       image: dish.image || dish.imageUrl,
       description: dish.desc || dish.description,
       showToast: showSnackbar,
@@ -578,6 +579,7 @@ const HomeMenuShowcase = () => {
 
     addItemToCart(selectedDishModal, {
       addons: selectedAddons,
+      availableAddons: selectedDishModal.addons || [],
       quantity: modalQuantity,
       image: selectedDishModal.image || selectedDishModal.imageUrl,
       description: selectedDishModal.desc || selectedDishModal.description,
@@ -602,6 +604,7 @@ const HomeMenuShowcase = () => {
 
     addItemToCart(addonModalDish, {
       addons: selectedAddons,
+      availableAddons: addonModalDish.addons || [],
       quantity: addonQuantity,
       image: addonModalDish.image || addonModalDish.imageUrl,
       description: addonModalDish.desc || addonModalDish.description,

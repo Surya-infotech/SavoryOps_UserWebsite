@@ -157,6 +157,7 @@ export const addItemToCart = (item, options = {}) => {
         description: description || item.description || item.desc || "",
         itemtype: item.itemtype || item.itemType || (item.isVeg ? "Veg" : "Non-Veg"),
         addons: addons,
+        availableAddons: options.availableAddons || item.availableAddons || item.addons || addons,
         specialInstructions: specialInstructions || item.specialInstructions || "",
       };
       newCart = [...existingCart, resultingCartItem];
@@ -258,6 +259,34 @@ export const updateCartItemInstructions = (cartItemId, instructions) => {
     return updated;
   } catch (error) {
     console.error("Error updating cart item instructions:", error);
+    return getCart();
+  }
+};
+
+/**
+ * Update addons for a specific cart item and re-merge duplicates if identical
+ */
+export const updateCartItemAddons = (cartItemId, updatedAddons) => {
+  try {
+    const cart = getCart();
+    const updated = cart.map((item) => {
+      if (item.cartItemId === cartItemId) {
+        return {
+          ...item,
+          addons: updatedAddons,
+        };
+      }
+      return item;
+    });
+
+    const merged = mergeDuplicateCartItems(updated);
+    saveCart(merged);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("cartUpdated", { detail: merged }));
+    }
+    return merged;
+  } catch (error) {
+    console.error("Error updating cart item addons:", error);
     return getCart();
   }
 };

@@ -163,31 +163,92 @@
       color: #64748b;
     }
 
-    /* Selected Addons */
+    /* Add-ons Option Section */
+    .cart-item-addons-wrapper {
+      margin-top: 0.25rem;
+    }
+
     .cart-item-addons-list {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
-      margin-top: 0.2rem;
+      gap: 0.35rem;
       background: #f8fafc;
-      padding: 0.5rem 0.75rem;
-      border-radius: 8px;
-      border: 1px solid #f1f5f9;
+      padding: 0.55rem 0.8rem;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+
+      .cart-addons-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.2rem;
+
+        .cart-addons-label {
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: #475569;
+          text-transform: uppercase;
+          letter-spacing: 0.4px;
+        }
+
+        .cart-addon-edit-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.25rem;
+          background: transparent;
+          border: none;
+          color: #028802;
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          padding: 0.15rem 0.4rem;
+          border-radius: 6px;
+          transition: all 0.15s ease;
+
+          &:hover {
+            background: rgba(2, 136, 2, 0.08);
+          }
+        }
+      }
 
       .cart-addon-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 0.8rem;
-        color: #475569;
+        font-size: 0.82rem;
+        color: #334155;
 
         .addon-name {
           font-weight: 500;
         }
 
         .addon-price {
-          font-weight: 600;
+          font-weight: 700;
           color: #028802;
+        }
+      }
+    }
+
+    .cart-addon-prompt-box {
+      margin-top: 0.25rem;
+
+      .cart-addon-customize-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(2, 136, 2, 0.05);
+        border: 1px dashed rgba(2, 136, 2, 0.35);
+        color: #028802;
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s ease;
+
+        &:hover {
+          background: rgba(2, 136, 2, 0.1);
+          border-color: #028802;
         }
       }
     }
@@ -522,3 +583,278 @@
   }
 }
 
+
+/* --- Cart Addon Edit Modal --- */
+.dish-modal-overlay.addon-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.addon-modal-card.cart-addon-edit-modal {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 94%;
+  max-width: 480px;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 85vh;
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .addon-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 1.25rem 1.4rem;
+    border-bottom: 1px solid #f1f5f9;
+
+    .addon-header-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .addon-header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.35rem;
+
+      .addon-header-diet {
+        position: static;
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+
+    .addon-modal-item-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .addon-modal-price-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .addon-base-price {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #028802;
+      }
+
+      .addon-edit-tag {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+      }
+    }
+
+    .addon-modal-thumb-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid #e2e8f0;
+
+      .addon-modal-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .addon-modal-close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #64748b;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .addon-selection-section {
+    padding: 1.15rem 1.4rem;
+    overflow-y: auto;
+    flex: 1;
+
+    .addon-section-title-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.85rem;
+
+      .addon-section-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+
+      .addon-section-subtitle {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: 500;
+      }
+    }
+
+    .addon-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .addon-option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0.75rem 0.95rem;
+      border-radius: 12px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+
+      &:hover {
+        border-color: #cbd5e1;
+        background: #ffffff;
+      }
+
+      &.is-selected {
+        background: #f0fdf4;
+        border-color: #028802;
+        box-shadow: 0 2px 8px rgba(2, 136, 2, 0.12);
+
+        .addon-option-name {
+          color: #0f172a;
+          font-weight: 700;
+        }
+
+        .addon-option-price {
+          color: #028802;
+        }
+      }
+
+      .addon-option-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .addon-option-checkbox {
+        accent-color: #028802;
+        width: 17px;
+        height: 17px;
+        cursor: pointer;
+      }
+
+      .addon-option-name {
+        font-size: 0.92rem;
+        color: #334155;
+        font-weight: 500;
+      }
+
+      .addon-option-price {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #64748b;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  .addon-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 1rem 1.4rem;
+    border-top: 1px solid #f1f5f9;
+    background: #ffffff;
+
+    .addon-modal-total-preview {
+      display: flex;
+      flex-direction: column;
+
+      .total-preview-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+
+      .total-preview-val {
+        font-size: 1.25rem;
+        font-weight: 900;
+        color: #028802;
+      }
+    }
+
+    .cart-save-addons-btn {
+      background: linear-gradient(135deg, #028802 0%, #039e03 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(2, 136, 2, 0.3);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(2, 136, 2, 0.4);
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
