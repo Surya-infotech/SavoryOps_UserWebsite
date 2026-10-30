@@ -8,7 +8,6 @@ import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
-import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -287,7 +286,6 @@ const getOrderTypeNavIcon = (typeName = "") => {
   const lower = String(typeName).toLowerCase().replace(/[\s_\-]+/g, "");
   if (lower.includes("delivery")) return <DeliveryDiningIcon className="order-type-icon-pin" />;
   if (lower.includes("pickup")) return <StorefrontIcon className="order-type-icon-pin" />;
-  if (lower.includes("takeaway")) return <TakeoutDiningIcon className="order-type-icon-pin" />;
   if (lower.includes("dine")) return <TableRestaurantIcon className="order-type-icon-pin" />;
   return <RestaurantMenuIcon className="order-type-icon-pin" />;
 };
@@ -436,13 +434,6 @@ export const OrderTypeDropdown = ({ className = "" }) => {
 
       {isOpen && (
         <div className="order-type-dropdown-menu" role="listbox">
-          <div className="order-type-menu-header">
-            <span className="order-type-menu-title">{translations.ordertype || "Order Type"}</span>
-            <span className="order-type-menu-subtitle">
-              {orderTypes.length} {translations.available || "available"}
-            </span>
-          </div>
-
           <div className="order-type-list">
             {orderTypes.map((ot) => {
               const isSelected =
