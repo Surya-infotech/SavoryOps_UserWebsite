@@ -24,8 +24,9 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
-import { getCart, clearCart } from "../../utils/cartService.js";
+import { getCart, clearCart, saveCart } from "../../utils/cartService.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
+import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Cart/checkoutpage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -143,6 +144,39 @@ const CheckoutPage = () => {
       navigate("/cart", { replace: true });
     }
   }, [cartItems, navigate]);
+
+  // Dynamically recalculate cart item prices when order type or branch tax settings change
+  useEffect(() => {
+    if (!posPayload) return;
+    let hasPriceChange = false;
+    const updated = cartItems.map((item) => {
+      const trueRawPrice = Number(item.rawPrice ?? item.price ?? 0);
+      const trueTaxes = Array.isArray(item.taxes) ? item.taxes : [];
+      const itemToCalc = {
+        ...item,
+        price: trueRawPrice,
+        rawPrice: trueRawPrice,
+        taxes: trueTaxes,
+      };
+      const newPrice = calculateItemPrice(itemToCalc, posPayload, selectedOrderType);
+      if (item.price !== newPrice) {
+        hasPriceChange = true;
+        return {
+          ...item,
+          price: newPrice,
+          rawPrice: trueRawPrice,
+          taxes: trueTaxes,
+        };
+      }
+      return item;
+    });
+
+    if (hasPriceChange) {
+      setCartItems(updated);
+      saveCart(updated);
+    }
+  }, [posPayload, selectedOrderType, cartItems]);
+
 
   // Adjust default payment method per order type (UserApp rule)
   useEffect(() => {
@@ -652,10 +686,10 @@ const CheckoutPage = () => {
                   const taxAmount = typeof tax.amount === "number"
                     ? tax.amount
                     : (typeof tax.calculatedAmount === "number"
-                        ? tax.calculatedAmount
-                        : (isPct
-                            ? billingSummary.subtotal * (parseFloat(taxRate) / 100)
-                            : parseFloat(taxRate)));
+                      ? tax.calculatedAmount
+                      : (isPct
+                        ? billingSummary.subtotal * (parseFloat(taxRate) / 100)
+                        : parseFloat(taxRate)));
                   const hasRate = taxRate != null && taxRate !== "" && Number(taxRate) > 0;
                   return (
                     <div className="bill-row bill-tax-row" key={tax.taxid || tax._id || tax.taxname || `tax-${idx}`}>
