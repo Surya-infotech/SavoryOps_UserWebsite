@@ -19,6 +19,9 @@ import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import MarkunreadMailboxOutlinedIcon from "@mui/icons-material/MarkunreadMailboxOutlined";
+import { Country, State, City } from "country-state-city";
+import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -28,10 +31,17 @@ import { getCart, clearCart, saveCart } from "../../utils/cartService.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Cart/checkoutpage.scss";
+import "../../Scss/Pages/Profile/manageaddress.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
+
+const ADDRESS_TYPES = [
+  { id: "home", label: "Home", icon: HomeOutlinedIcon },
+  { id: "work", label: "Work", icon: WorkOutlineOutlinedIcon },
+  { id: "other", label: "Other", icon: PlaceOutlinedIcon },
+];
 
 const formatAddressLine = (addr) => {
   if (!addr) return "";
@@ -71,15 +81,47 @@ const CheckoutPage = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("Online");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Quick Add Address Modal States
+  // Add Address Modal States (Parity with ManageAddressPage)
   const [isAddAddressModalOpen, setIsAddAddressModalOpen] = useState(false);
-  const [newAddressType, setNewAddressType] = useState("home");
-  const [newStreetAddress, setNewStreetAddress] = useState("");
-  const [newCity, setNewCity] = useState("");
-  const [newState, setNewState] = useState("");
-  const [newCountry, setNewCountry] = useState("");
-  const [newPostalCode, setNewPostalCode] = useState("");
+  const [addressType, setAddressType] = useState("home");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [countryCode, setCountryCode] = useState("");
+  const [countryName, setCountryName] = useState("");
+  const [stateCode, setStateCode] = useState("");
+  const [stateName, setStateName] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [pincode, setPincode] = useState("");
   const [isSavingAddress, setIsSavingAddress] = useState(false);
+
+  // Form Validation Errors
+  const [addressError, setAddressError] = useState("");
+  const [countryError, setCountryError] = useState("");
+  const [stateError, setStateError] = useState("");
+  const [cityError, setCityError] = useState("");
+  const [pincodeError, setPincodeError] = useState("");
+
+  // Country, State, City lists
+  const countries = useMemo(() => {
+    return Country.getAllCountries().map((c) => ({
+      name: c.name,
+      isoCode: c.isoCode,
+    }));
+  }, []);
+
+  const states = useMemo(() => {
+    if (!countryCode) return [];
+    return State.getStatesOfCountry(countryCode).map((s) => ({
+      name: s.name,
+      isoCode: s.isoCode,
+    }));
+  }, [countryCode]);
+
+  const cities = useMemo(() => {
+    if (!countryCode || !stateCode) return [];
+    return City.getCitiesOfState(countryCode, stateCode).map((c) => ({
+      name: c.name,
+    }));
+  }, [countryCode, stateCode]);
 
   // Normalize order type
   const orderTypeStr = typeof selectedOrderType === "object"
@@ -186,7 +228,7 @@ const CheckoutPage = () => {
   }, [isDelivery]);
 
   // Fetch Delivery Addresses when order type is delivery
-  const fetchAddresses = useCallback(async () => {
+  const fetchAddresses = useCallback(async (selectAddressId = null) => {
     if (!isDelivery) return;
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
@@ -212,6 +254,13 @@ const CheckoutPage = () => {
         const list = Array.isArray(data) ? data : [];
         setAddresses(list);
         if (list.length > 0) {
+          if (selectAddressId) {
+            const matched = list.find((a) => (a._id || a.addressid) === selectAddressId);
+            if (matched) {
+              setSelectedAddress(matched);
+              return;
+            }
+          }
           setSelectedAddress((prev) => {
             if (prev) {
               const matched = list.find((a) => (a._id || a.addressid) === (prev._id || prev.addressid));
@@ -249,22 +298,120 @@ const CheckoutPage = () => {
     return cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
   }, [cartItems]);
 
-  // Handle Quick Add Address
-  const handleSaveQuickAddress = async (e) => {
+  // Open modal for Adding new address (reset all fields & errors)
+  const handleOpenAddAddressModal = () => {
+    setAddressType("home");
+    setStreetAddress("");
+    setCountryCode("");
+    setCountryName("");
+    setStateCode("");
+    setStateName("");
+    setCityName("");
+    setPincode("");
+
+    setAddressError("");
+    setCountryError("");
+    setStateError("");
+    setCityError("");
+    setPincodeError("");
+
+    setIsAddAddressModalOpen(true);
+  };
+
+  const handleCloseAddAddressModal = () => {
+    if (isSavingAddress) return;
+    setIsAddAddressModalOpen(false);
+  };
+
+  // Country Change Handler in Form
+  const handleCountryChange = (isoCode) => {
+    setCountryCode(isoCode);
+    const found = countries.find((c) => c.isoCode === isoCode);
+    setCountryName(found ? found.name : "");
+    setStateCode("");
+    setStateName("");
+    setCityName("");
+    if (countryError) setCountryError("");
+  };
+
+  // State Change Handler in Form
+  const handleStateChange = (isoCode) => {
+    setStateCode(isoCode);
+    const found = states.find((s) => s.isoCode === isoCode);
+    setStateName(found ? found.name : "");
+    setCityName("");
+    if (stateError) setStateError("");
+  };
+
+  // City Change Handler in Form
+  const handleCityChange = (val) => {
+    setCityName(val);
+    if (cityError) setCityError("");
+  };
+
+  // Save / Update Address Submission
+  const handleSaveNewAddress = async (e) => {
     e.preventDefault();
-    if (!newStreetAddress.trim() || !newCity.trim()) {
-      showSnackbar("Please enter street address and city", "warning");
-      return;
+
+    let isValid = true;
+
+    if (!streetAddress.trim()) {
+      setAddressError(translations.addressrequired || "Street address is required");
+      isValid = false;
+    } else {
+      setAddressError("");
     }
+
+    if (!countryName) {
+      setCountryError(translations.countryrequired || "Country is required");
+      isValid = false;
+    } else {
+      setCountryError("");
+    }
+
+    if (!stateName) {
+      setStateError(translations.staterequired || "State is required");
+      isValid = false;
+    } else {
+      setStateError("");
+    }
+
+    if (!cityName) {
+      setCityError(translations.cityrequired || "City is required");
+      isValid = false;
+    } else {
+      setCityError("");
+    }
+
+    if (!pincode.trim()) {
+      setPincodeError(translations.pincoderequired || "Postal code is required");
+      isValid = false;
+    } else if (pincode.trim().length < 3) {
+      setPincodeError(translations.pincodeinvalid || "Postal code is too short");
+      isValid = false;
+    } else {
+      setPincodeError("");
+    }
+
+    if (!isValid) return;
 
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
     if (!customerId || !token) {
-      showSnackbar(translations.pleasesignintoorder || "Please sign in", "error");
+      showSnackbar(translations.pleasesignintoorder || "Please sign in to order", "error");
       return;
     }
 
     setIsSavingAddress(true);
+    const payload = {
+      address: streetAddress.trim(),
+      addresstype: addressType,
+      country: countryName,
+      state: stateName,
+      city: cityName,
+      postalcode: pincode.trim(),
+    };
+
     try {
       const response = await fetch(
         `${adminPanelBackendPath}/Website/Profile/AddManageAddress/${customerId}`,
@@ -275,26 +422,16 @@ const CheckoutPage = () => {
             "x-user": "customer",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            addresstype: newAddressType,
-            address: newStreetAddress.trim(),
-            city: newCity.trim(),
-            state: newState.trim(),
-            country: newCountry.trim(),
-            postalcode: newPostalCode.trim(),
-          }),
+          body: JSON.stringify(payload),
         }
       );
 
       if (response.ok) {
-        showSnackbar("Address added successfully", "success");
+        const resData = await response.json().catch(() => ({}));
+        showSnackbar(translations.addressaddedsuccess || "Address added successfully", "success");
         setIsAddAddressModalOpen(false);
-        setNewStreetAddress("");
-        setNewCity("");
-        setNewState("");
-        setNewCountry("");
-        setNewPostalCode("");
-        await fetchAddresses();
+        const newId = resData?.data?._id || resData?._id || resData?.addressid;
+        await fetchAddresses(newId);
       } else {
         const data = await response.json().catch(() => ({}));
         showSnackbar(data.message || "Failed to save address", "error");
@@ -541,7 +678,7 @@ const CheckoutPage = () => {
                       <button
                         type="button"
                         className="select-add-address-btn"
-                        onClick={() => setIsAddAddressModalOpen(true)}
+                        onClick={handleOpenAddAddressModal}
                       >
                         <AddLocationAltOutlinedIcon fontSize="small" />
                         <span>{translations.addnewaddress || "Add New Address"}</span>
@@ -817,7 +954,7 @@ const CheckoutPage = () => {
                     className="modal-add-addr-btn"
                     onClick={() => {
                       setIsAddressModalOpen(false);
-                      setIsAddAddressModalOpen(true);
+                      handleOpenAddAddressModal();
                     }}
                   >
                     <AddIcon fontSize="small" />
@@ -864,7 +1001,7 @@ const CheckoutPage = () => {
                 className="modal-add-addr-btn secondary"
                 onClick={() => {
                   setIsAddressModalOpen(false);
-                  setIsAddAddressModalOpen(true);
+                  handleOpenAddAddressModal();
                 }}
               >
                 <AddIcon fontSize="small" />
@@ -875,116 +1012,186 @@ const CheckoutPage = () => {
         </div>
       )}
 
-      {/* --- Quick Add Address Modal --- */}
+      {/* --- ADD NEW ADDRESS MODAL (Exact design and details matching Manage Address / Image 2) --- */}
       {isAddAddressModalOpen && (
-        <div
-          className="dish-modal-overlay"
-          onClick={() => setIsAddAddressModalOpen(false)}
-          role="dialog"
-          aria-modal="true"
-        >
+        <div className="address-modal-overlay" onClick={handleCloseAddAddressModal}>
           <div
-            className="addon-modal-card quick-add-address-modal"
+            className="address-modal-dialog"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="checkout-address-modal-title"
           >
-            <div className="addon-modal-header">
-              <div className="addon-header-main">
-                <h3 className="addon-modal-item-title">
-                  {translations.addnewaddress || "Add New Address"}
-                </h3>
-              </div>
+            {/* Modal Header */}
+            <div className="modal-header">
+              <h2 id="checkout-address-modal-title" className="modal-title">
+                {translations.addaddress || translations.addnewaddress || "Add New Address"}
+              </h2>
               <button
                 type="button"
-                className="addon-modal-close-btn"
-                onClick={() => setIsAddAddressModalOpen(false)}
+                className="modal-close-btn"
+                onClick={handleCloseAddAddressModal}
+                disabled={isSavingAddress}
+                aria-label="Close dialog"
               >
-                <CloseIcon fontSize="small" />
+                <CloseIcon />
               </button>
             </div>
 
-            <form onSubmit={handleSaveQuickAddress} className="quick-address-form">
-              <div className="address-type-selector">
-                {["home", "work", "other"].map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    className={`type-chip ${newAddressType === type ? "active" : ""}`}
-                    onClick={() => setNewAddressType(type)}
-                  >
-                    {getAddressTypeIcon(type)}
-                    <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                  </button>
-                ))}
+            {/* Modal Form */}
+            <form onSubmit={handleSaveNewAddress} className="address-modal-form" noValidate autoComplete="off">
+              {/* Address Type Chips */}
+              <div className="form-group span-full">
+                <label className="form-label">
+                  {translations.addresstype || "Address Type"}
+                </label>
+                <div className="address-type-selector">
+                  {ADDRESS_TYPES.map((typeObj) => {
+                    const isSelected = addressType === typeObj.id;
+                    const IconComp = typeObj.icon;
+                    return (
+                      <button
+                        key={typeObj.id}
+                        type="button"
+                        className={`type-select-btn ${isSelected ? "selected" : ""}`}
+                        onClick={() => setAddressType(typeObj.id)}
+                      >
+                        <IconComp fontSize="small" />
+                        <span>{translations[typeObj.id] || typeObj.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
+              {/* Street Address */}
+              <div className="form-group span-full">
+                <label className="form-label" htmlFor="checkout-address-street">
+                  {translations.address || "Street Address"} <span className="req">*</span>
+                </label>
+                <div className={`textarea-field-wrap ${addressError ? "has-error" : ""}`}>
+                  <HomeOutlinedIcon className="field-icon textarea-icon" />
+                  <textarea
+                    id="checkout-address-street"
+                    name="modal_addr_street"
+                    rows={2}
+                    className="textarea-input"
+                    placeholder={translations.streetaddressplaceholder || "House/Apartment number, street name, landmark"}
+                    autoComplete="off"
+                    value={streetAddress}
+                    onChange={(e) => {
+                      setStreetAddress(e.target.value);
+                      if (addressError) setAddressError("");
+                    }}
+                  />
+                </div>
+                {addressError && <span className="field-error-msg">{addressError}</span>}
+              </div>
+
+              {/* Country Dropdown */}
               <div className="form-group">
-                <label>Street Address *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. 123 Gourmet Blvd, Apt 4B"
-                  value={newStreetAddress}
-                  onChange={(e) => setNewStreetAddress(e.target.value)}
+                <Dropdown
+                  id="checkout-address-country-dropdown"
+                  label={translations.country || "Country"}
+                  required={true}
+                  options={countries}
+                  labelKey="name"
+                  valueKey="isoCode"
+                  selectedValue={countryCode}
+                  onValueChange={handleCountryChange}
+                  placeholder={translations.countryselect || "Select Country"}
+                  showSearch={true}
                 />
+                {countryError && <span className="field-error-msg">{countryError}</span>}
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>City *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. New York"
-                    value={newCity}
-                    onChange={(e) => setNewCity(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>State</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. NY"
-                    value={newState}
-                    onChange={(e) => setNewState(e.target.value)}
-                  />
-                </div>
+              {/* State Dropdown */}
+              <div className="form-group">
+                <Dropdown
+                  id="checkout-address-state-dropdown"
+                  label={translations.state || "State"}
+                  required={true}
+                  options={states}
+                  labelKey="name"
+                  valueKey="isoCode"
+                  selectedValue={stateCode}
+                  onValueChange={handleStateChange}
+                  placeholder={
+                    countryCode ? (translations.stateselect || "Select State") : (translations.selectcountryfirst || "Select Country First")
+                  }
+                  disabled={!countryCode || states.length === 0}
+                  showSearch={true}
+                />
+                {stateError && <span className="field-error-msg">{stateError}</span>}
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Country</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. United States"
-                    value={newCountry}
-                    onChange={(e) => setNewCountry(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Postal / ZIP Code</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 10001"
-                    value={newPostalCode}
-                    onChange={(e) => setNewPostalCode(e.target.value)}
-                  />
-                </div>
+              {/* City Dropdown */}
+              <div className="form-group">
+                <Dropdown
+                  id="checkout-address-city-dropdown"
+                  label={translations.city || "City"}
+                  required={true}
+                  options={cities}
+                  labelKey="name"
+                  valueKey="name"
+                  selectedValue={cityName}
+                  onValueChange={handleCityChange}
+                  placeholder={
+                    stateCode ? (translations.cityselect || "Select City") : (translations.selectstatefirst || "Select State First")
+                  }
+                  disabled={!stateCode || cities.length === 0}
+                  showSearch={true}
+                />
+                {cityError && <span className="field-error-msg">{cityError}</span>}
               </div>
 
-              <div className="quick-address-footer">
+              {/* Postal Code / Pincode */}
+              <div className="form-group">
+                <label className="form-label" htmlFor="checkout-address-postalcode">
+                  {translations.postalcode || "Postal Code"} <span className="req">*</span>
+                </label>
+                <div className={`input-field-wrap ${pincodeError ? "has-error" : ""}`}>
+                  <MarkunreadMailboxOutlinedIcon className="field-icon" />
+                  <input
+                    id="checkout-address-postalcode"
+                    name="address_postal_code_field"
+                    type="text"
+                    className="text-input"
+                    placeholder={translations.enterpostalcode || "Enter postal code"}
+                    autoComplete="off"
+                    value={pincode}
+                    onChange={(e) => {
+                      setPincode(e.target.value);
+                      if (pincodeError) setPincodeError("");
+                    }}
+                  />
+                </div>
+                {pincodeError && <span className="field-error-msg">{pincodeError}</span>}
+              </div>
+
+              {/* Modal Footer Buttons */}
+              <div className="modal-footer">
                 <button
                   type="button"
-                  className="cancel-btn"
-                  onClick={() => setIsAddAddressModalOpen(false)}
+                  className="modal-cancel-btn"
+                  onClick={handleCloseAddAddressModal}
+                  disabled={isSavingAddress}
                 >
-                  Cancel
+                  {translations.cancel || "Cancel"}
                 </button>
                 <button
                   type="submit"
-                  className="save-btn"
+                  className="modal-save-btn"
                   disabled={isSavingAddress}
                 >
-                  {isSavingAddress ? "Saving..." : "Save Address"}
+                  {isSavingAddress ? (
+                    <>
+                      <CircularProgress size={18} color="inherit" />
+                      <span>{translations.saving || "Saving..."}</span>
+                    </>
+                  ) : (
+                    <span>{translations.saveaddress || "Save Address"}</span>
+                  )}
                 </button>
               </div>
             </form>
@@ -996,4 +1203,3 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
-
