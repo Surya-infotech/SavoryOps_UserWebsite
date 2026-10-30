@@ -14,6 +14,7 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
+import { calculateItemPrice } from "../../utils/priceCalculator.js";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
@@ -43,7 +44,16 @@ export const DEFAULT_MENU_SECTIONS = [];
 /**
  * Individual Horizontal Carousel Row Component
  */
-const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAddToCart, selectedBranch }) => {
+const CarouselRow = ({
+  section,
+  cartCounts,
+  onCardClick,
+  onOpenAddonModal,
+  onAddToCart,
+  selectedBranch,
+  branchSetting,
+  selectedOrderType,
+}) => {
   const { translations = {}, isRtl } = useLanguage();
   const navigate = useNavigate();
   const trackRef = useRef(null);
@@ -295,6 +305,18 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
               const isUnlimited = isDeal && (bundleTypeLower === "unlimited" || section.type === "unlimited");
               const isComboOrUnlimited = isCombo || isUnlimited || isDeal;
 
+              const rawBasePrice = Number(rawDish.rawPrice ?? rawDish.price ?? 0);
+              const effectivePrice = calculateItemPrice(
+                {
+                  ...rawDish,
+                  price: rawBasePrice,
+                  rawPrice: rawBasePrice,
+                  taxes: rawDish.taxes || [],
+                },
+                branchSetting,
+                selectedOrderType
+              );
+
               const dish = {
                 ...rawDish,
                 id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.id,
@@ -309,6 +331,10 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
                 items: rawDish.items || [],
                 includedItems: Array.isArray(rawDish.items) ? rawDish.items.map((i) => i.itemname || i) : (rawDish.includedItems || []),
                 includedCount: Array.isArray(rawDish.items) ? rawDish.items.length : (rawDish.includedCount || 0),
+                price: effectivePrice,
+                rawPrice: rawBasePrice,
+                taxes: rawDish.taxes || [],
+                addons: rawDish.addons || [],
               };
               const count = cartCounts[dish.id] || 0;
               const priceFormatted = formatPriceFromBranch(dish.price, selectedBranch);
@@ -429,7 +455,7 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
 /**
  * Main Home Menu Showcase Section Component
  */
-const HomeMenuShowcase = () => {
+const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
   const { translations = {} } = useLanguage();
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const { showSnackbar } = useSnackbar();
@@ -437,12 +463,61 @@ const HomeMenuShowcase = () => {
   // Local cart count state
   const [cartCounts, setCartCounts] = useState(getItemQuantitiesMap);
 
+  // Selected Order Type & Branch Setting for dynamic inclusive tax calculation
+  const [selectedOrderType, setSelectedOrderType] = useState(() => {
+    return localStorage.getItem("selectedOrderType");
+  });
+  const [branchSetting, setBranchSetting] = useState(() => {
+    return propBranchSetting || (typeof window !== "undefined" ? window.__branchSetting : null);
+  });
+
+  useEffect(() => {
+    if (propBranchSetting) {
+      setBranchSetting(propBranchSetting);
+    }
+  }, [propBranchSetting]);
+
   useEffect(() => {
     const handleCartUpdated = () => {
       setCartCounts(getItemQuantitiesMap());
     };
     window.addEventListener("cartUpdated", handleCartUpdated);
     return () => window.removeEventListener("cartUpdated", handleCartUpdated);
+  }, []);
+
+  // Listen to orderType and branchSetting changes from Navbar and Storage
+  useEffect(() => {
+    const handleOrderTypeChange = (e) => {
+      const ot = e?.detail?.orderType;
+      if (ot) {
+        setSelectedOrderType(ot);
+      }
+    };
+
+    const handleBranchSettingChange = (e) => {
+      if (e?.detail) {
+        setBranchSetting(e.detail);
+      }
+    };
+
+    const handleStorage = (e) => {
+      if (e.key === "selectedOrderType" && e.newValue) {
+        setSelectedOrderType(e.newValue);
+      }
+    };
+
+    window.addEventListener("orderTypeChange", handleOrderTypeChange);
+    window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("storage", handleStorage);
+
+    // Request branch setting from Navbar
+    window.dispatchEvent(new CustomEvent("requestBranchSetting"));
+
+    return () => {
+      window.removeEventListener("orderTypeChange", handleOrderTypeChange);
+      window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("storage", handleStorage);
+    };
   }, []);
 
   // Dynamic showcases fetched from backend
@@ -489,10 +564,17 @@ const HomeMenuShowcase = () => {
         if (isMounted) {
           if (response.ok && data.success && Array.isArray(data.showcases) && data.showcases.length > 0) {
             setDynamicShowcases(data.showcases);
+            if (data.branchSetting) {
+              setBranchSetting(data.branchSetting);
+              if (typeof window !== "undefined") {
+                window.__branchSetting = data.branchSetting;
+              }
+            }
           } else {
             setDynamicShowcases([]);
           }
         }
+
       } catch (err) {
         console.error("Error fetching dynamic menu showcases:", err);
         if (isMounted) setDynamicShowcases([]);
@@ -542,11 +624,15 @@ const HomeMenuShowcase = () => {
       .reduce((sum, a) => sum + Number(a.price || 0), 0);
   }, [selectedDishModal, selectedAddonIds]);
 
+  const selectedDishEffectivePrice = useMemo(() => {
+    if (!selectedDishModal) return 0;
+    return calculateItemPrice(selectedDishModal, branchSetting, selectedOrderType);
+  }, [selectedDishModal, branchSetting, selectedOrderType]);
+
   const selectedDishGrandTotal = useMemo(() => {
     if (!selectedDishModal) return 0;
-    const base = Number(selectedDishModal.price || 0);
-    return (base + selectedDishAddonsTotal) * modalQuantity;
-  }, [selectedDishModal, selectedDishAddonsTotal, modalQuantity]);
+    return (selectedDishEffectivePrice + selectedDishAddonsTotal) * modalQuantity;
+  }, [selectedDishEffectivePrice, selectedDishAddonsTotal, modalQuantity]);
 
   // Addon price calculations for Dedicated Add-on Modal
   const addonModalAddonsTotal = useMemo(() => {
@@ -556,27 +642,36 @@ const HomeMenuShowcase = () => {
       .reduce((sum, a) => sum + Number(a.price || 0), 0);
   }, [addonModalDish, addonSelectedIds]);
 
+  const addonModalEffectivePrice = useMemo(() => {
+    if (!addonModalDish) return 0;
+    return calculateItemPrice(addonModalDish, branchSetting, selectedOrderType);
+  }, [addonModalDish, branchSetting, selectedOrderType]);
+
   const addonModalGrandTotal = useMemo(() => {
     if (!addonModalDish) return 0;
-    const base = Number(addonModalDish.price || 0);
-    return (base + addonModalAddonsTotal) * addonQuantity;
-  }, [addonModalDish, addonModalAddonsTotal, addonQuantity]);
+    return (addonModalEffectivePrice + addonModalAddonsTotal) * addonQuantity;
+  }, [addonModalEffectivePrice, addonModalAddonsTotal, addonQuantity]);
 
   // Quick direct add-to-cart (from shopping cart button)
   const handleAddToCart = (e, dish) => {
     e.stopPropagation();
-    const addons = dish.addons ? dish.addons.map((addon) => ({
+    const effectivePrice = calculateItemPrice(dish, branchSetting, selectedOrderType);
+    const dishWithPrice = {
+      ...dish,
+      price: effectivePrice,
+    };
+    const addons = dishWithPrice.addons ? dishWithPrice.addons.map((addon) => ({
       addonid: addon.addonid || addon._id || addon.id,
       addonname: addon.addonname || addon.name,
       price: Number(addon.price ?? addon.addonprice ?? 0),
       selected: false,
     })) : [];
 
-    addItemToCart(dish, {
+    addItemToCart(dishWithPrice, {
       addons,
-      availableAddons: dish.addons || [],
-      image: dish.image || dish.imageUrl,
-      description: dish.desc || dish.description,
+      availableAddons: dishWithPrice.addons || [],
+      image: dishWithPrice.image || dishWithPrice.imageUrl,
+      description: dishWithPrice.desc || dishWithPrice.description,
       showToast: showSnackbar,
     });
   };
@@ -612,6 +707,11 @@ const HomeMenuShowcase = () => {
   // Confirm handlers
   const handleConfirmDishModal = () => {
     if (!selectedDishModal) return;
+    const effectivePrice = calculateItemPrice(selectedDishModal, branchSetting, selectedOrderType);
+    const dishWithPrice = {
+      ...selectedDishModal,
+      price: effectivePrice,
+    };
     const selectedAddons = (selectedDishModal.addons || []).map((addon) => {
       const addonKey = addon.addonid || addon._id || addon.id;
       const isSelected = selectedAddonIds.includes(addonKey);
@@ -623,7 +723,7 @@ const HomeMenuShowcase = () => {
       };
     });
 
-    addItemToCart(selectedDishModal, {
+    addItemToCart(dishWithPrice, {
       addons: selectedAddons,
       availableAddons: selectedDishModal.addons || [],
       quantity: modalQuantity,
@@ -637,6 +737,11 @@ const HomeMenuShowcase = () => {
 
   const handleConfirmAddonModal = () => {
     if (!addonModalDish) return;
+    const effectivePrice = calculateItemPrice(addonModalDish, branchSetting, selectedOrderType);
+    const dishWithPrice = {
+      ...addonModalDish,
+      price: effectivePrice,
+    };
     const selectedAddons = (addonModalDish.addons || []).map((addon) => {
       const addonKey = addon.addonid || addon._id || addon.id;
       const isSelected = addonSelectedIds.includes(addonKey);
@@ -648,7 +753,7 @@ const HomeMenuShowcase = () => {
       };
     });
 
-    addItemToCart(addonModalDish, {
+    addItemToCart(dishWithPrice, {
       addons: selectedAddons,
       availableAddons: addonModalDish.addons || [],
       quantity: addonQuantity,
@@ -691,6 +796,8 @@ const HomeMenuShowcase = () => {
             onOpenAddonModal={handleOpenAddonModal}
             onAddToCart={handleAddToCart}
             selectedBranch={selectedBranch}
+            branchSetting={branchSetting}
+            selectedOrderType={selectedOrderType}
           />
         ))}
       </div>
@@ -761,7 +868,7 @@ const HomeMenuShowcase = () => {
                 </div>
 
                 <span className="dish-modal-price">
-                  {formatPriceFromBranch(selectedDishModal.price, selectedBranch)}
+                  {formatPriceFromBranch(selectedDishEffectivePrice, selectedBranch)}
                 </span>
               </div>
 
@@ -909,7 +1016,7 @@ const HomeMenuShowcase = () => {
                 </div>
                 <div className="addon-modal-price-meta">
                   <span className="addon-base-price">
-                    {formatPriceFromBranch(addonModalDish.price, selectedBranch)}
+                    {formatPriceFromBranch(addonModalEffectivePrice, selectedBranch)}
                   </span>
                   {addonModalDish.prepTime && (
                     <span className="addon-prep-time">

@@ -12,6 +12,7 @@ import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
+import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Menu/menupage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -49,6 +50,12 @@ const MenuPage = () => {
   const [rawDealsBundles, setRawDealsBundles] = useState([]);
   const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
+  const [selectedOrderType, setSelectedOrderType] = useState(() => {
+    return localStorage.getItem("selectedOrderType");
+  });
+  const [posPayload, setPosPayload] = useState(() => {
+    return typeof window !== "undefined" ? window.__branchSetting : null;
+  });
 
   useEffect(() => {
     const handleCartUpdated = () => {
@@ -105,6 +112,10 @@ const MenuPage = () => {
 
       setRawCategories(categories);
       setRawDealsBundles(bundles);
+      setPosPayload(data.branchSetting || data);
+      if (data.branchSetting && typeof window !== "undefined") {
+        window.__branchSetting = data.branchSetting;
+      }
 
       // Extract currency symbol from first item or deal
       let symbol = "";
@@ -145,13 +156,37 @@ const MenuPage = () => {
       }
     };
 
-    window.addEventListener("branchChange", handleBranchChange);
+    const handleOrderTypeChange = (e) => {
+      const ot = e?.detail?.orderType;
+      if (ot) {
+        setSelectedOrderType(ot);
+      }
+    };
+    const handleBranchSettingChange = (e) => {
+      if (e?.detail) {
+        setPosPayload(e.detail);
+      }
+    };
+    const handleStorage = (e) => {
+      if (e.key === "selectedOrderType" && e.newValue) {
+        setSelectedOrderType(e.newValue);
+      }
+    };
 
-    // If navbar is already mounted, request the current branch
+    window.addEventListener("branchChange", handleBranchChange);
+    window.addEventListener("orderTypeChange", handleOrderTypeChange);
+    window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("storage", handleStorage);
+
+    // Request current branch and branch setting from Navbar
     window.dispatchEvent(new CustomEvent("requestBranch"));
+    window.dispatchEvent(new CustomEvent("requestBranchSetting"));
 
     return () => {
       window.removeEventListener("branchChange", handleBranchChange);
+      window.removeEventListener("orderTypeChange", handleOrderTypeChange);
+      window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("storage", handleStorage);
     };
   }, [fetchMenuData]);
 
@@ -167,6 +202,18 @@ const MenuPage = () => {
           const isVeg = !isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan");
           const hasDiet = isVeg || isNonVeg;
 
+          const rawPrice = Number(item.rawPrice ?? item.price ?? 0);
+          const effectivePrice = calculateItemPrice(
+            {
+              ...item,
+              price: rawPrice,
+              rawPrice: rawPrice,
+              taxes: item.taxes || [],
+            },
+            posPayload,
+            selectedOrderType
+          );
+
           list.push({
             id: String(item.itemid),
             itemid: item.itemid,
@@ -176,7 +223,9 @@ const MenuPage = () => {
             menuname: menuDetails.menuname || "",
             title: item.itemname || "",
             desc: item.description || "",
-            price: item.price != null ? item.price : 0,
+            price: effectivePrice,
+            rawPrice: rawPrice,
+            taxes: item.taxes || [],
             currency: item.currency || "",
             currencysymbol: item.currencysymbol || branchCurrencySymbol || "",
             image: item.imageUrl || "",
@@ -193,7 +242,7 @@ const MenuPage = () => {
       });
     });
     return list;
-  }, [rawCategories, branchCurrencySymbol]);
+  }, [rawCategories, branchCurrencySymbol, posPayload, selectedOrderType]);
 
   const formattedDeals = useMemo(() => {
     return rawDealsBundles.map((b) => {
@@ -202,6 +251,18 @@ const MenuPage = () => {
       const isVeg = !isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan");
       const hasDiet = isVeg || isNonVeg;
       const bundleTypeLower = (b.bundletype || "").toLowerCase();
+
+      const rawPrice = Number(b.rawPrice ?? b.price ?? 0);
+      const effectivePrice = calculateItemPrice(
+        {
+          ...b,
+          price: rawPrice,
+          rawPrice: rawPrice,
+          taxes: b.taxes || [],
+        },
+        posPayload,
+        selectedOrderType
+      );
 
       return {
         id: `deal-${b.dealsbundlesid}`,
@@ -216,7 +277,9 @@ const MenuPage = () => {
         bundletype: bundleTypeLower,
         title: b.dealsbundlesname || "",
         desc: b.description || "",
-        price: b.price != null ? b.price : 0,
+        price: effectivePrice,
+        rawPrice: rawPrice,
+        taxes: b.taxes || [],
         currency: b.currency || "",
         currencysymbol: b.currencysymbol || branchCurrencySymbol || "",
         image: b.imageUrl || "",
@@ -231,7 +294,7 @@ const MenuPage = () => {
         filterType: bundleTypeLower === "combo" ? "combos" : "unlimited",
       };
     });
-  }, [rawDealsBundles, branchCurrencySymbol, translations]);
+  }, [rawDealsBundles, branchCurrencySymbol, translations, posPayload, selectedOrderType]);
 
   const comboMeals = useMemo(() => {
     return formattedDeals.filter((d) => d.bundletype === "combo");
@@ -392,7 +455,8 @@ const MenuPage = () => {
         };
       });
 
-      addItemToCart(addonModalItem, {
+      const effectivePrice = calculateItemPrice(addonModalItem, posPayload, selectedOrderType);
+      addItemToCart({ ...addonModalItem, price: effectivePrice }, {
         addons: selectedAddons,
         availableAddons: addonModalItem.addons || [],
         quantity: addonQuantity,
@@ -412,11 +476,15 @@ const MenuPage = () => {
       .reduce((sum, a) => sum + Number(a.price || 0), 0);
   }, [addonModalItem, selectedAddonIds]);
 
+  const addonModalEffectivePrice = useMemo(() => {
+    if (!addonModalItem) return 0;
+    return calculateItemPrice(addonModalItem, posPayload, selectedOrderType);
+  }, [addonModalItem, posPayload, selectedOrderType]);
+
   const addonModalGrandTotal = useMemo(() => {
     if (!addonModalItem) return 0;
-    const base = Number(addonModalItem.price || 0);
-    return (base + selectedAddonsTotal) * addonQuantity;
-  }, [addonModalItem, selectedAddonsTotal, addonQuantity]);
+    return (addonModalEffectivePrice + selectedAddonsTotal) * addonQuantity;
+  }, [addonModalItem, addonModalEffectivePrice, selectedAddonsTotal, addonQuantity]);
 
   // Addon prices calculation for standard item details modal
   const selectedItemAddonsTotal = useMemo(() => {
@@ -426,26 +494,35 @@ const MenuPage = () => {
       .reduce((sum, a) => sum + Number(a.price || 0), 0);
   }, [selectedItemModal, selectedAddonIds]);
 
+  const selectedItemEffectivePrice = useMemo(() => {
+    if (!selectedItemModal) return 0;
+    return calculateItemPrice(selectedItemModal, posPayload, selectedOrderType);
+  }, [selectedItemModal, posPayload, selectedOrderType]);
+
   const selectedItemGrandTotal = useMemo(() => {
     if (!selectedItemModal) return 0;
-    const base = Number(selectedItemModal.price || 0);
-    return (base + selectedItemAddonsTotal) * modalQuantity;
-  }, [selectedItemModal, selectedItemAddonsTotal, modalQuantity]);
+    return (selectedItemEffectivePrice + selectedItemAddonsTotal) * modalQuantity;
+  }, [selectedItemModal, selectedItemEffectivePrice, selectedItemAddonsTotal, modalQuantity]);
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
-    const addons = item.addons ? item.addons.map((addon) => ({
+    const effectivePrice = calculateItemPrice(item, posPayload, selectedOrderType);
+    const itemWithPrice = {
+      ...item,
+      price: effectivePrice,
+    };
+    const addons = itemWithPrice.addons ? itemWithPrice.addons.map((addon) => ({
       addonid: addon.addonid || addon._id || addon.id,
       addonname: addon.addonname || addon.name,
       price: Number(addon.price ?? addon.addonprice ?? 0),
       selected: false,
     })) : [];
 
-    addItemToCart(item, {
+    addItemToCart(itemWithPrice, {
       addons,
-      availableAddons: item.addons || [],
-      image: item.image || item.imageUrl,
-      description: item.desc || item.description,
+      availableAddons: itemWithPrice.addons || [],
+      image: itemWithPrice.image || itemWithPrice.imageUrl,
+      description: itemWithPrice.desc || itemWithPrice.description,
       showToast: showSnackbar,
     });
   };
@@ -469,7 +546,8 @@ const MenuPage = () => {
         };
       });
 
-      addItemToCart(selectedItemModal, {
+      const effectivePrice = calculateItemPrice(selectedItemModal, posPayload, selectedOrderType);
+      addItemToCart({ ...selectedItemModal, price: effectivePrice }, {
         addons: selectedAddons,
         availableAddons: selectedItemModal.addons || [],
         quantity: modalQuantity,
@@ -786,7 +864,7 @@ const MenuPage = () => {
                 </div>
 
                 <span className="dish-modal-price">
-                  {formatPriceFromBranch(selectedItemModal.price, selectedBranch)}
+                  {formatPriceFromBranch(selectedItemEffectivePrice, selectedBranch)}
                 </span>
               </div>
 
@@ -928,7 +1006,7 @@ const MenuPage = () => {
                 </div>
                 <div className="addon-modal-price-meta">
                   <span className="addon-base-price">
-                    {formatPriceFromBranch(addonModalItem.price, selectedBranch)}
+                    {formatPriceFromBranch(addonModalEffectivePrice, selectedBranch)}
                   </span>
                   {addonModalItem.preparationtime && Number(addonModalItem.preparationtime) > 0 && (
                     <span className="addon-prep-time">

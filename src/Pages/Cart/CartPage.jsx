@@ -19,12 +19,14 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import {
   getCart,
+  saveCart,
   updateCartItemQuantity,
   removeCartItem,
   clearCart,
   updateCartItemInstructions,
   updateCartItemAddons,
 } from "../../utils/cartService.js";
+import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Cart/cartpage.scss";
 
 /**
@@ -72,6 +74,12 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState(getCart);
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const [openNotesMap, setOpenNotesMap] = useState({});
+  const [selectedOrderType, setSelectedOrderType] = useState(() => {
+    return localStorage.getItem("selectedOrderType");
+  });
+  const [posPayload, setPosPayload] = useState(() => {
+    return typeof window !== "undefined" ? window.__branchSetting : null;
+  });
 
   // Addon Customization Modal State
   const [editingCartItem, setEditingCartItem] = useState(null);
@@ -101,11 +109,69 @@ const CartPage = () => {
       }
     };
 
-    window.addEventListener("branchChange", handleBranchChange);
-    window.dispatchEvent(new CustomEvent("requestBranch"));
+    const handleOrderTypeChange = (e) => {
+      const ot = e?.detail?.orderType;
+      if (ot) {
+        setSelectedOrderType(ot);
+      }
+    };
+    const handleBranchSettingChange = (e) => {
+      if (e?.detail) {
+        setPosPayload(e.detail);
+      }
+    };
+    const handleStorage = (e) => {
+      if (e.key === "selectedOrderType" && e.newValue) {
+        setSelectedOrderType(e.newValue);
+      }
+    };
 
-    return () => window.removeEventListener("branchChange", handleBranchChange);
+    window.addEventListener("branchChange", handleBranchChange);
+    window.addEventListener("orderTypeChange", handleOrderTypeChange);
+    window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("storage", handleStorage);
+    window.dispatchEvent(new CustomEvent("requestBranch"));
+    window.dispatchEvent(new CustomEvent("requestBranchSetting"));
+
+    return () => {
+      window.removeEventListener("branchChange", handleBranchChange);
+      window.removeEventListener("orderTypeChange", handleOrderTypeChange);
+      window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("storage", handleStorage);
+    };
   }, []);
+
+  // Dynamically update cart items price when order type or branch tax settings change
+  useEffect(() => {
+    if (!posPayload) return;
+    let hasPriceChange = false;
+    const updated = cartItems.map((item) => {
+      const trueRawPrice = Number(item.rawPrice ?? item.price ?? 0);
+      const trueTaxes = Array.isArray(item.taxes) ? item.taxes : [];
+      const itemToCalc = {
+        ...item,
+        price: trueRawPrice,
+        rawPrice: trueRawPrice,
+        taxes: trueTaxes,
+      };
+      const newPrice = calculateItemPrice(itemToCalc, posPayload, selectedOrderType);
+      if (item.price !== newPrice) {
+        hasPriceChange = true;
+        return {
+          ...item,
+          price: newPrice,
+          rawPrice: trueRawPrice,
+          taxes: trueTaxes,
+        };
+      }
+      return item;
+    });
+
+    if (hasPriceChange) {
+      setCartItems(updated);
+      saveCart(updated);
+    }
+  }, [posPayload, selectedOrderType, cartItems]);
 
   // Dynamic document title
   useEffect(() => {

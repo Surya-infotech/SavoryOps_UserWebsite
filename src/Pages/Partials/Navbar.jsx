@@ -322,6 +322,23 @@ export const OrderTypeDropdown = ({ className = "" }) => {
 
       const data = await res.json();
       if (res.ok && data.success && data.branchSetting) {
+        if (typeof window !== "undefined") {
+          window.__branchSetting = data.branchSetting;
+          window.__branchHours = data.branchHours || null;
+        }
+        window.dispatchEvent(
+          new CustomEvent("branchSettingChange", {
+            detail: data.branchSetting,
+          })
+        );
+        window.dispatchEvent(
+          new CustomEvent("branchSettingsLoaded", {
+            detail: {
+              branchSetting: data.branchSetting,
+              branchHours: data.branchHours || null,
+            },
+          })
+        );
         const rawTypes = data.branchSetting.ordertypes;
         if (Array.isArray(rawTypes)) {
           const enabled = rawTypes.filter((t) => t.isEnabled === true);
@@ -380,6 +397,34 @@ export const OrderTypeDropdown = ({ className = "" }) => {
       window.removeEventListener("orderTypeChange", handleOrderTypeChange);
     };
   }, [fetchOrderTypes]);
+
+  // Allow all pages (HomePage, HomeMenuShowcase, MenuPage, CartPage) to request current branchSetting from Navbar
+  useEffect(() => {
+    const handleRequestBranchSetting = () => {
+      const setting = typeof window !== "undefined" ? window.__branchSetting : null;
+      const hours = typeof window !== "undefined" ? window.__branchHours : null;
+      if (setting) {
+        window.dispatchEvent(
+          new CustomEvent("branchSettingChange", {
+            detail: setting,
+          })
+        );
+        window.dispatchEvent(
+          new CustomEvent("branchSettingsLoaded", {
+            detail: {
+              branchSetting: setting,
+              branchHours: hours,
+            },
+          })
+        );
+      }
+    };
+
+    window.addEventListener("requestBranchSetting", handleRequestBranchSetting);
+    return () => {
+      window.removeEventListener("requestBranchSetting", handleRequestBranchSetting);
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

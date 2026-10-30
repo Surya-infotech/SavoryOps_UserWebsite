@@ -13,89 +13,39 @@ const HomePage = () => {
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname;
   const [hasHeroBanner, setHasHeroBanner] = useState(false);
-  const [branchSetting, setBranchSetting] = useState(null);
-  const [branchHours, setBranchHours] = useState(null);
-  const [, setLoadingBranchSettings] = useState(true);
+  const [branchSetting, setBranchSetting] = useState(() => {
+    return typeof window !== "undefined" ? window.__branchSetting : null;
+  });
+  const [branchHours, setBranchHours] = useState(() => {
+    return typeof window !== "undefined" ? window.__branchHours : null;
+  });
 
-  // Fetch branch settings & operating hours from owner database via website API
-  const fetchBranchSettings = useCallback(async () => {
-    const currentSubdomain = getWebsiteSubdomain();
-    if (!currentSubdomain) {
-      setLoadingBranchSettings(false);
-      return;
-    }
-
-    const branchId =
-      localStorage.getItem("selectedBranchId") ||
-      (typeof window !== "undefined" && window.__selectedBranch?._id);
-
-    // Without branchid, do not call the API
-    if (!branchId) {
-      setLoadingBranchSettings(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetBranchSettings/${branchId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user": "admin",
-          "x-subdomain": currentSubdomain,
-        },
-      });
-
-      const data = await response.json();
-      if (response.ok && data.success) {
-        setBranchSetting(data.branchSetting || null);
-        setBranchHours(data.branchHours || null);
-
-        // Cache globally for child components or global listeners
-        if (typeof window !== "undefined") {
-          window.__branchSetting = data.branchSetting;
-          window.__branchHours = data.branchHours;
-          window.dispatchEvent(
-            new CustomEvent("branchSettingsLoaded", {
-              detail: {
-                branchSetting: data.branchSetting,
-                branchHours: data.branchHours,
-              },
-            })
-          );
-        }
-      } else {
-        setBranchSetting(null);
-        setBranchHours(null);
-      }
-    } catch (err) {
-      console.error("Error fetching branch settings & hours:", err);
-      setBranchSetting(null);
-      setBranchHours(null);
-    } finally {
-      setLoadingBranchSettings(false);
-    }
-  }, []);
-
+  // Get branchSetting & operating hours from Navbar.jsx
   useEffect(() => {
-    fetchBranchSettings();
-
-    const handleStorageChange = (e) => {
-      if (e.key === "selectedBranchId") {
-        fetchBranchSettings();
+    const handleBranchSettingChange = (e) => {
+      if (e?.detail) {
+        setBranchSetting(e.detail);
       }
     };
-    const handleBranchChange = () => {
-      fetchBranchSettings();
+
+    const handleBranchSettingsLoaded = (e) => {
+      if (e?.detail) {
+        if (e.detail.branchSetting) setBranchSetting(e.detail.branchSetting);
+        if (e.detail.branchHours) setBranchHours(e.detail.branchHours);
+      }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("branchChange", handleBranchChange);
+    window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("branchSettingsLoaded", handleBranchSettingsLoaded);
+
+    // Request branch settings from Navbar
+    window.dispatchEvent(new CustomEvent("requestBranchSetting"));
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("branchChange", handleBranchChange);
+      window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("branchSettingsLoaded", handleBranchSettingsLoaded);
     };
-  }, [fetchBranchSettings]);
+  }, []);
 
   useEffect(() => {
     if (businessDisplayName) {
