@@ -30,6 +30,9 @@ import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
 import "../../Scss/Pages/Cart/cartpage.scss";
 
+const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
+const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
+
 /**
  * Standard Veg/Non-Veg FSSAI-compliant diet badge
  */
@@ -290,11 +293,45 @@ const CartPage = () => {
   }, [editingCartItem, modalAvailableAddons, selectedModalAddonIds]);
 
   const handleProceedCheckout = () => {
-    showSnackbar(
-      translations.ordersuccessnotice || "Ready for checkout! Order submission is active.",
-      "success",
-      3500
-    );
+    if (!cartItems.length) {
+      if (typeof showSnackbar === "function") {
+        showSnackbar(translations.emptycartmessage || "Your cart is empty", "warning");
+      }
+      return;
+    }
+
+    const orderTypeStr = typeof selectedOrderType === "object"
+      ? String(selectedOrderType?.ordertypename || selectedOrderType?.name || "").trim()
+      : String(selectedOrderType || "").trim();
+    const normalized = orderTypeStr.toLowerCase().replace(/[\s_-]+/g, "");
+
+    const isDelivery = normalized === "delivery";
+    const isPickup = normalized === "pickup";
+
+    if (isDelivery || isPickup) {
+      const token = localStorage.getItem(customerTokenName);
+      const customerId = localStorage.getItem(customerIdName);
+
+      if (!token || !customerId) {
+        if (typeof showSnackbar === "function") {
+          showSnackbar(
+            translations.pleasesignintoorder || "Please sign in to proceed to checkout",
+            "info"
+          );
+        }
+        navigate("/signin", { state: { from: "/checkout" } });
+        return;
+      }
+
+      navigate("/checkout");
+    } else {
+      if (typeof showSnackbar === "function") {
+        showSnackbar(
+          translations.selectdeliveryorpickup || "Please select Delivery or Pickup to proceed to checkout",
+          "warning"
+        );
+      }
+    }
   };
 
   return (

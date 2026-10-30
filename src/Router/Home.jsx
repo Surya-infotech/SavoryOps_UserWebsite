@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { useLanguage } from "../Context/useLanguage.js";
 import HomePage from "../Pages/Home/HomePage.jsx";
 import SigninPage from "../Pages/Partials/SigninPage.jsx";
@@ -11,16 +11,18 @@ import ManageAddressPage from "../Pages/Profile/ManageAddressPage.jsx";
 import AboutPage from "../Pages/About/AboutPage.jsx";
 import MenuPage from "../Pages/Menu/MenuPage.jsx";
 import CartPage from "../Pages/Cart/CartPage.jsx";
+import CheckoutPage from "../Pages/Cart/CheckoutPage.jsx";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
 const ProtectedRoute = ({ children }) => {
+  const location = useLocation();
   const token = localStorage.getItem(customerTokenName);
   const customerId = localStorage.getItem(customerIdName);
 
   if (!token || !customerId) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/signin" state={{ from: location.pathname }} replace />;
   }
 
   return children;
@@ -37,6 +39,14 @@ const HomeRouter = () => {
       <Route path="/policy" element={<PolicyPage />} />
       <Route path="/menu" element={<MenuPage />} />
       <Route path="/cart" element={<CartPage />} />
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/offers"
         element={
