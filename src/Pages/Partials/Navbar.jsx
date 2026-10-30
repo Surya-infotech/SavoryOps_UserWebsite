@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import FlagModule from "react-world-flags";
@@ -7,6 +7,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -26,6 +28,8 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getCartTotalCount } from "../../utils/cartService.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
+import { LanguageDropdown } from "./LanguageDropdown.jsx";
+export { LanguageDropdown };
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
 
@@ -277,96 +281,192 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
 };
 
 /* ==========================================================================
-   2. LanguageDropdown Component
+   2. OrderTypeDropdown Component
    ========================================================================== */
-export const LanguageDropdown = ({ className = "" }) => {
+const getOrderTypeNavIcon = (typeName = "") => {
+  const lower = String(typeName).toLowerCase().replace(/[\s_\-]+/g, "");
+  if (lower.includes("delivery")) return <DeliveryDiningIcon className="order-type-icon-pin" />;
+  if (lower.includes("pickup")) return <StorefrontIcon className="order-type-icon-pin" />;
+  if (lower.includes("takeaway")) return <TakeoutDiningIcon className="order-type-icon-pin" />;
+  if (lower.includes("dine")) return <TableRestaurantIcon className="order-type-icon-pin" />;
+  return <RestaurantMenuIcon className="order-type-icon-pin" />;
+};
+
+export const OrderTypeDropdown = ({ className = "" }) => {
+  const { translations = {} } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const { language, changeLanguage } = useLanguage();
+  const [orderTypes, setOrderTypes] = useState([]);
+  const [selectedOrderType, setSelectedOrderType] = useState(() => {
+    return localStorage.getItem("selectedOrderType") || "";
+  });
   const dropdownRef = useRef(null);
-  const languages = getLanguageOptions();
 
-  const currentLanguage = language || localStorage.getItem("selectedLanguage") || "English";
+  const fetchOrderTypes = useCallback(async (explicitBranchId) => {
+    const currentSubdomain = getWebsiteSubdomain();
+    if (!currentSubdomain) return;
 
-  const selectedLang =
-    languages.find((lang) => lang.name.toLowerCase() === currentLanguage.toLowerCase()) ||
-    languages.find((lang) => lang.name === "English") ||
-    languages[0];
+    const branchId =
+      explicitBranchId ||
+      localStorage.getItem("selectedBranchId") ||
+      (typeof window !== "undefined" && window.__selectedBranch?._id);
+
+    if (!branchId) return;
+
+    try {
+      const res = await fetch(`${adminPanelBackendPath}/Website/Home/GetBranchSettings/${branchId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "admin",
+          "x-subdomain": currentSubdomain,
+        },
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success && data.branchSetting) {
+        const rawTypes = data.branchSetting.ordertypes;
+        if (Array.isArray(rawTypes)) {
+          const enabled = rawTypes.filter((t) => t.isEnabled === true);
+          setOrderTypes(enabled);
+
+          const saved = localStorage.getItem("selectedOrderType");
+          const exists = enabled.some(
+            (t) => t.ordertypename.toLowerCase() === (saved || "").toLowerCase()
+          );
+
+          if (exists) {
+            setSelectedOrderType(saved);
+          } else if (enabled.length > 0) {
+            const first = enabled[0].ordertypename;
+            setSelectedOrderType(first);
+            localStorage.setItem("selectedOrderType", first);
+            window.dispatchEvent(
+              new CustomEvent("orderTypeChange", {
+                detail: { orderType: first },
+              })
+            );
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching branch order types in Navbar:", err);
+    }
+  }, []);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        !event.target.closest?.(".language-dropdown-wrapper")
-      ) {
-        setIsOpen(false);
+    fetchOrderTypes();
+
+    const handleBranchChange = (e) => {
+      fetchOrderTypes(e?.detail?._id);
+    };
+    const handleStorage = (e) => {
+      if (e.key === "selectedBranchId") {
+        fetchOrderTypes(e.newValue);
+      } else if (e.key === "selectedOrderType") {
+        setSelectedOrderType(e.newValue || "");
+      }
+    };
+    const handleOrderTypeChange = (e) => {
+      if (e.detail?.orderType) {
+        setSelectedOrderType(e.detail.orderType);
       }
     };
 
+    window.addEventListener("branchChange", handleBranchChange);
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("orderTypeChange", handleOrderTypeChange);
+
+    return () => {
+      window.removeEventListener("branchChange", handleBranchChange);
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("orderTypeChange", handleOrderTypeChange);
+    };
+  }, [fetchOrderTypes]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [isOpen]);
 
-  const handleLanguageSelect = (lang) => {
-    if (!lang || !lang.name) return;
-    changeLanguage(lang.name);
+  const handleSelect = (typeName) => {
+    setSelectedOrderType(typeName);
+    localStorage.setItem("selectedOrderType", typeName);
     setIsOpen(false);
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("closeMobileMenu"));
-    }
+    window.dispatchEvent(
+      new CustomEvent("orderTypeChange", {
+        detail: { orderType: typeName },
+      })
+    );
   };
+
+  if (orderTypes.length === 0) {
+    return null;
+  }
+
+  const activeName = selectedOrderType || orderTypes[0]?.ordertypename || "Order Mode";
 
   return (
     <div
       ref={dropdownRef}
-      className={`language-dropdown-wrapper ${className} ${isOpen ? "open" : ""}`}
+      className={`order-type-dropdown-wrapper ${className} ${isOpen ? "open" : ""}`}
     >
       <button
         type="button"
-        className="language-dropdown-btn"
+        className="order-type-trigger-btn"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={`Selected Language: ${selectedLang?.name}`}
+        title={`Order Mode: ${activeName}`}
       >
-        <span className="lang-flag-container">
-          <Flag code={selectedLang?.code} className="flag-icon" alt={selectedLang?.name} />
-        </span>
-        <span className="lang-name-label">{selectedLang?.name.substring(0, 3)}</span>
+        {getOrderTypeNavIcon(activeName)}
+        <span className="order-type-active-name">{activeName}</span>
+        <KeyboardArrowDownIcon
+          className={`order-type-chevron ${isOpen ? "rotated" : ""}`}
+        />
       </button>
 
       {isOpen && (
-        <div className="language-dropdown-menu" role="listbox">
-          <ul className="language-menu-list">
-            {languages.map((item) => {
-              const isSelected = item.name.toLowerCase() === currentLanguage.toLowerCase();
+        <div className="order-type-dropdown-menu" role="listbox">
+          <div className="order-type-menu-header">
+            <span className="order-type-menu-title">{translations.ordertype || "Order Type"}</span>
+            <span className="order-type-menu-subtitle">
+              {orderTypes.length} {translations.available || "available"}
+            </span>
+          </div>
+
+          <div className="order-type-list">
+            {orderTypes.map((ot) => {
+              const isSelected =
+                activeName.toLowerCase() === ot.ordertypename.toLowerCase();
               return (
-                <li
-                  key={item.code}
-                  className={`language-menu-item ${isSelected ? "selected" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleLanguageSelect(item);
-                  }}
+                <button
+                  key={ot.ordertypeid || ot.ordertypename}
+                  type="button"
+                  className={`order-type-menu-item ${isSelected ? "selected" : ""}`}
+                  onClick={() => handleSelect(ot.ordertypename)}
                   role="option"
                   aria-selected={isSelected}
                 >
-                  <span className="lang-flag-container">
-                    <Flag code={item.code} className="flag-icon" alt={item.name} />
-                  </span>
-                  <span className="language-item-name">{item.name}</span>
-                  {isSelected && <CheckIcon className="language-item-check" />}
-                </li>
+                  <div className="order-type-item-content">
+                    <div className="order-type-item-icon">
+                      {getOrderTypeNavIcon(ot.ordertypename)}
+                    </div>
+                    <span className="order-type-item-name">{ot.ordertypename}</span>
+                  </div>
+                  {isSelected && <CheckIcon className="order-type-check-icon" />}
+                </button>
               );
             })}
-          </ul>
+          </div>
         </div>
       )}
     </div>
@@ -844,7 +944,10 @@ const Navbar = () => {
               <Link to="/" className="nav-brand-name-link">
                 <span className="nav-brand-name">{brandDisplayName}</span>
               </Link>
-              <BranchDropdown onBranchChange={setSelectedBranch} />
+              <div className="nav-brand-selectors">
+                <BranchDropdown onBranchChange={setSelectedBranch} />
+                <OrderTypeDropdown />
+              </div>
             </div>
           </div>
 
@@ -942,6 +1045,10 @@ const Navbar = () => {
                 <div className="mobile-branch-section">
                   <span className="mobile-section-label">{translations.selectbranch}</span>
                   <BranchDropdown className="mobile-branch-dropdown" onBranchChange={setSelectedBranch} />
+                </div>
+                <div className="mobile-ordertype-section">
+                  <span className="mobile-section-label">{translations.ordertype || "Order Type"}</span>
+                  <OrderTypeDropdown className="mobile-ordertype-dropdown" />
                 </div>
 
                 <form className="mobile-search-box" onSubmit={handleSearchSubmit} autoComplete="off">

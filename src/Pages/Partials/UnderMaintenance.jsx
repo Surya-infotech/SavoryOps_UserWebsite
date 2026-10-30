@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { LanguageDropdown } from "./Navbar.jsx";
+import { LanguageDropdown } from "./LanguageDropdown.jsx";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
