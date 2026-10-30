@@ -461,11 +461,51 @@
       .bill-row-label {
         color: #64748b;
         font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+
+        .tax-plus-icon {
+          font-size: 0.85rem;
+          color: #94a3b8;
+          flex-shrink: 0;
+        }
       }
 
       .bill-row-value {
         color: #0f172a;
         font-weight: 700;
+      }
+
+      &.bill-charge-row,
+      &.bill-tax-row,
+      &.bill-roundoff-row {
+        .bill-row-label {
+          font-size: 0.88rem;
+          color: #64748b;
+        }
+
+        .bill-row-value {
+          font-size: 0.88rem;
+          color: #334155;
+          font-weight: 600;
+        }
+      }
+
+      &.bill-total-tax-row {
+        padding-top: 0.15rem;
+
+        .bill-row-label {
+          font-size: 0.92rem;
+          font-weight: 700;
+          color: #0f172a;
+        }
+
+        .bill-row-value {
+          font-size: 0.92rem;
+          font-weight: 700;
+          color: #0f172a;
+        }
       }
     }
   }

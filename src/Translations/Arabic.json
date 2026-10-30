@@ -291,5 +291,10 @@
   "unlimitedmeals": "وجبات غير محدودة",
   "itemsincluded": "أصناف متضمنة",
   "itemincluded": "صنف متضمن",
-  "nodishesfound": "لم يتم العثور على أطباق في هذا التحديد."
+  "nodishesfound": "لم يتم العثور على أطباق في هذا التحديد.",
+  "billdetails": "تفاصيل الفاتورة",
+  "subtotal": "المجموع الفرعي للأصناف",
+  "totaltax": "إجمالي الضريبة",
+  "roundoff": "التقريب",
+  "grandtotal": "المبلغ للدفع"
 }

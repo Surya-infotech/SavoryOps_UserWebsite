@@ -27,6 +27,7 @@ import {
   updateCartItemAddons,
 } from "../../utils/cartService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
+import { computeCartBilling } from "../../utils/billingCalculator.js";
 import "../../Scss/Pages/Cart/cartpage.scss";
 
 /**
@@ -260,22 +261,17 @@ const CartPage = () => {
     setEditingCartItem(null);
   };
 
-  // Calculations
-  const subtotal = useMemo(() => {
-    return cartItems.reduce((sum, item) => {
-      const basePrice = Number(item.price || 0);
-      const addonsPrice = (item.addons || [])
-        .filter((a) => a && a.selected !== false)
-        .reduce((aSum, a) => aSum + Number(a.price || 0), 0);
-      return sum + (basePrice + addonsPrice) * (Number(item.quantity) || 1);
-    }, 0);
-  }, [cartItems]);
+  // Calculations & Billing Summary
+  const billingSummary = useMemo(() => {
+    return computeCartBilling(cartItems, posPayload, selectedOrderType);
+  }, [cartItems, posPayload, selectedOrderType]);
+
+  const subtotal = billingSummary.subtotal;
+  const grandTotal = billingSummary.grandTotal;
 
   const totalQuantity = useMemo(() => {
     return cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
   }, [cartItems]);
-
-  const grandTotal = subtotal;
 
   const modalAvailableAddons = useMemo(() => {
     if (!editingCartItem) return [];
@@ -527,12 +523,102 @@ const CartPage = () => {
                   </div>
 
                   <div className="bill-rows-container">
+                    {/* Sub Total */}
                     <div className="bill-row">
                       <span className="bill-row-label">{translations.subtotal || "Item Subtotal"}</span>
                       <span className="bill-row-value">
-                        {formatPriceFromBranch(subtotal, selectedBranch)}
+                        {formatPriceFromBranch(billingSummary.subtotal, selectedBranch)}
                       </span>
                     </div>
+
+                    {/* Before Tax Charges */}
+                    {billingSummary.beforeTaxCharges.map((charge, idx) => {
+                      const name = charge.name || charge.chargename || charge.eventname;
+                      const val = charge.val ?? charge.chargevalue ?? charge.value;
+                      const isPct = String(charge.chargetype || charge.chargeType || charge.type || "").toLowerCase().trim() === "percentage";
+                      const hasVal = val != null && val !== "";
+                      return (
+                        <div className="bill-row bill-charge-row" key={charge.id || `btc-${idx}`}>
+                          <span className="bill-row-label">
+                            {name}{isPct && hasVal ? ` (${val}%)` : ""}
+                          </span>
+                          <span className="bill-row-value">
+                            {formatPriceFromBranch(charge.amount, selectedBranch)}
+                          </span>
+                        </div>
+                      );
+                    })}
+
+                    {/* Exclusive Taxes */}
+                    {billingSummary.taxRows.map((tax, idx) => {
+                      const isPct = String(tax.taxtype || tax.taxType || tax.type || "").toLowerCase().trim() === "percentage";
+                      const taxRate = tax.price ?? tax.rate ?? 0;
+                      const taxAmount = typeof tax.amount === "number"
+                        ? tax.amount
+                        : (typeof tax.calculatedAmount === "number"
+                            ? tax.calculatedAmount
+                            : (isPct
+                                ? billingSummary.subtotal * (parseFloat(taxRate) / 100)
+                                : parseFloat(taxRate)));
+                      const hasRate = taxRate != null && taxRate !== "" && Number(taxRate) > 0;
+                      return (
+                        <div className="bill-row bill-tax-row" key={tax.taxid || tax._id || tax.taxname || `tax-${idx}`}>
+                          <span className="bill-row-label bill-tax-label">
+                            <AddIcon className="tax-plus-icon" />
+                            <span>{tax.taxname}{isPct && hasRate ? ` (${taxRate}%)` : ""}</span>
+                          </span>
+                          <span className="bill-row-value">
+                            {formatPriceFromBranch(taxAmount, selectedBranch)}
+                          </span>
+                        </div>
+                      );
+                    })}
+
+                    {/* Total Tax Summary Line */}
+                    {billingSummary.taxRows.length > 0 && (
+                      <div className="bill-row bill-total-tax-row">
+                        <span className="bill-row-label bill-total-tax-label">
+                          {translations.totaltax || "Total Tax"}
+                        </span>
+                        <span className="bill-row-value bill-total-tax-value">
+                          {formatPriceFromBranch(billingSummary.totalExclusiveTax, selectedBranch)}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* After Tax Charges */}
+                    {billingSummary.afterTaxCharges.map((charge, idx) => {
+                      const name = charge.name || charge.chargename || charge.eventname;
+                      const val = charge.val ?? charge.chargevalue ?? charge.value;
+                      const isPct = String(charge.chargetype || charge.chargeType || charge.type || "").toLowerCase().trim() === "percentage";
+                      const hasVal = val != null && val !== "";
+                      return (
+                        <div className="bill-row bill-charge-row" key={charge.id || `atc-${idx}`}>
+                          <span className="bill-row-label">
+                            {name}{isPct && hasVal ? ` (${val}%)` : ""}
+                          </span>
+                          <span className="bill-row-value">
+                            {formatPriceFromBranch(charge.amount, selectedBranch)}
+                          </span>
+                        </div>
+                      );
+                    })}
+
+                    {/* Round Off Line */}
+                    {Boolean(billingSummary.roundoff && (billingSummary.roundoff.status === true || billingSummary.roundoff.status === "true")) && (
+                      <div className="bill-row bill-roundoff-row">
+                        <span className="bill-row-label">
+                          {translations.roundoff || "Round Off"}
+                        </span>
+                        <span className="bill-row-value">
+                          {(billingSummary.roundoff.roundedAmount ?? 0) > 0
+                            ? `+${formatPriceFromBranch(billingSummary.roundoff.roundedAmount, selectedBranch)}`
+                            : (billingSummary.roundoff.roundedAmount ?? 0) < 0
+                              ? `-${formatPriceFromBranch(Math.abs(billingSummary.roundoff.roundedAmount), selectedBranch)}`
+                              : formatPriceFromBranch(0, selectedBranch)}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="bill-divider" />

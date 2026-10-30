@@ -291,5 +291,10 @@
   "close": "Close",
   "increasequantity": "Increase quantity",
   "decreasequantity": "Decrease quantity",
-  "min": "min"
+  "min": "min",
+  "billdetails": "Bill Details",
+  "subtotal": "Item Subtotal",
+  "totaltax": "Total Tax",
+  "roundoff": "Round Off",
+  "grandtotal": "To Pay"
 }
