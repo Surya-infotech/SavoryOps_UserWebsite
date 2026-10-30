@@ -525,7 +525,7 @@ const CartPage = () => {
                   <div className="bill-rows-container">
                     {/* Sub Total */}
                     <div className="bill-row">
-                      <span className="bill-row-label">{translations.subtotal || "Item Subtotal"}</span>
+                      <span className="bill-row-label">{translations.subtotal || "Subtotal"}</span>
                       <span className="bill-row-value">
                         {formatPriceFromBranch(billingSummary.subtotal, selectedBranch)}
                       </span>
