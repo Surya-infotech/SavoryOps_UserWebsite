@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
+import { useState, useEffect, useCallback } from "react";
+import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
 import HomeMenuShowcase from "../../Components/Home/HomeMenuShowcase.jsx";
@@ -7,10 +7,101 @@ import HomeCustomerApp from "../../Components/Home/HomeCustomerApp.jsx";
 import HomeReviews from "../../Components/Home/HomeReviews.jsx";
 import "../../Scss/Pages/Home/homepage.scss";
 
+const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+
 const HomePage = () => {
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname;
   const [hasHeroBanner, setHasHeroBanner] = useState(false);
+  const [branchSetting, setBranchSetting] = useState(null);
+  const [branchHours, setBranchHours] = useState(null);
+  const [branchDetails, setBranchDetails] = useState(null);
+  const [, setLoadingBranchSettings] = useState(true);
+
+  // Fetch branch settings & operating hours from owner database via website API
+  const fetchBranchSettings = useCallback(async () => {
+    const currentSubdomain = getWebsiteSubdomain();
+    if (!currentSubdomain) {
+      setLoadingBranchSettings(false);
+      return;
+    }
+
+    const branchId =
+      localStorage.getItem("selectedBranchId") ||
+      (typeof window !== "undefined" && window.__selectedBranch?._id);
+
+    // Without branchid, do not call the API
+    if (!branchId) {
+      setLoadingBranchSettings(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetBranchSettings/${branchId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "admin",
+          "x-subdomain": currentSubdomain,
+        },
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setBranchSetting(data.branchSetting || null);
+        setBranchHours(data.branchHours || null);
+        setBranchDetails(data.branch || null);
+
+        // Cache globally for child components or global listeners
+        if (typeof window !== "undefined") {
+          window.__branchSetting = data.branchSetting;
+          window.__branchHours = data.branchHours;
+          window.__branchDetails = data.branch;
+          window.dispatchEvent(
+            new CustomEvent("branchSettingsLoaded", {
+              detail: {
+                branchSetting: data.branchSetting,
+                branchHours: data.branchHours,
+                branch: data.branch,
+              },
+            })
+          );
+        }
+      } else {
+        setBranchSetting(null);
+        setBranchHours(null);
+        setBranchDetails(null);
+      }
+    } catch (err) {
+      console.error("Error fetching branch settings & hours:", err);
+      setBranchSetting(null);
+      setBranchHours(null);
+      setBranchDetails(null);
+    } finally {
+      setLoadingBranchSettings(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBranchSettings();
+
+    const handleStorageChange = (e) => {
+      if (e.key === "selectedBranchId") {
+        fetchBranchSettings();
+      }
+    };
+    const handleBranchChange = () => {
+      fetchBranchSettings();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("branchChange", handleBranchChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("branchChange", handleBranchChange);
+    };
+  }, [fetchBranchSettings]);
 
   useEffect(() => {
     if (businessDisplayName) {
@@ -27,7 +118,11 @@ const HomePage = () => {
       <HomeFeatures hasBanner={hasHeroBanner} />
 
       {/* 3. Section-Wise Menu Showcase (Curated Horizontal Carousels) */}
-      <HomeMenuShowcase />
+      <HomeMenuShowcase
+        branchSetting={branchSetting}
+        branchHours={branchHours}
+        branchDetails={branchDetails}
+      />
 
       {/* 4. Customer Mobile App Showcase & Tableside Ordering Section */}
       <HomeCustomerApp />
