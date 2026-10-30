@@ -1483,3 +1483,14 @@
     transform: scale(1);
   }
 }
+/* RTL Support for Showcase Cards */
+[dir="rtl"],
+body.rtl-mode {
+  .nav-card-arrow-pill .explore-arrow-icon {
+    transform: rotate(180deg);
+  }
+
+  .showcase-nav-card:hover .nav-card-arrow-pill .explore-arrow-icon {
+    transform: rotate(180deg) translateX(2px);
+  }
+}

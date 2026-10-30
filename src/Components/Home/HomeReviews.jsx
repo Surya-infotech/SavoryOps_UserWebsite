@@ -25,7 +25,7 @@ import "../../Scss/Components/Home/homereviews.scss";
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 const HomeReviews = () => {
-  const { translations = {} } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const { business } = useWebsiteStatus();
   const brandName = business?.businessname || "SavoryOps Kitchen";
 
@@ -110,10 +110,28 @@ const HomeReviews = () => {
     const el = scrollTrackRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    const maxScroll = scrollWidth - clientWidth;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < maxScroll - 10);
-  }, []);
+    const maxScroll = Math.max(0, scrollWidth - clientWidth);
+    if (maxScroll <= 5) {
+      setCanScrollLeft(false);
+      setCanScrollRight(false);
+      return;
+    }
+
+    const rtlActive =
+      isRtl ||
+      document.documentElement.dir === "rtl" ||
+      document.body.classList.contains("rtl-mode") ||
+      (typeof window !== "undefined" && window.getComputedStyle(el).direction === "rtl");
+
+    if (rtlActive) {
+      const absScroll = Math.abs(scrollLeft);
+      setCanScrollLeft(absScroll < maxScroll - 10);
+      setCanScrollRight(absScroll > 10);
+    } else {
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < maxScroll - 10);
+    }
+  }, [isRtl]);
 
   useEffect(() => {
     const track = scrollTrackRef.current;
@@ -132,7 +150,7 @@ const HomeReviews = () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [reviewsList, updateScrollButtons]);
+  }, [reviewsList, isRtl, updateScrollButtons]);
 
   const handleScroll = (direction) => {
     const el = scrollTrackRef.current;
@@ -146,20 +164,8 @@ const HomeReviews = () => {
     const gap = parseFloat(window.getComputedStyle(el).gap) || 20;
     const cardStep = cardWidth + gap;
 
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    const currentScroll = el.scrollLeft;
-
-    // Calculate current aligned card index
-    const currentIndex = Math.round(currentScroll / cardStep);
-    let targetIndex = direction === "left" ? currentIndex - 1 : currentIndex + 1;
-    if (targetIndex < 0) targetIndex = 0;
-
-    let targetScroll = targetIndex * cardStep;
-    if (targetScroll > maxScroll) targetScroll = maxScroll;
-    if (targetScroll < 0) targetScroll = 0;
-
-    el.scrollTo({
-      left: targetScroll,
+    el.scrollBy({
+      left: direction === "left" ? -cardStep : cardStep,
       behavior: "smooth",
     });
 
@@ -181,7 +187,17 @@ const HomeReviews = () => {
     e.preventDefault();
     const x = e.pageX - scrollTrackRef.current.offsetLeft;
     const walk = (x - startXRef.current) * 1.25;
-    scrollTrackRef.current.scrollLeft = scrollLeftRef.current - walk;
+
+    const rtlActive =
+      isRtl ||
+      document.documentElement.dir === "rtl" ||
+      document.body.classList.contains("rtl-mode") ||
+      (typeof window !== "undefined" && window.getComputedStyle(scrollTrackRef.current).direction === "rtl");
+
+    scrollTrackRef.current.scrollTo({
+      left: rtlActive ? scrollLeftRef.current + walk : scrollLeftRef.current - walk,
+      behavior: "instant",
+    });
   };
 
   const handleMouseUpOrLeave = () => {
@@ -197,19 +213,36 @@ const HomeReviews = () => {
       const cardWidth = firstCard.getBoundingClientRect().width;
       const gap = parseFloat(window.getComputedStyle(el).gap) || 20;
       const cardStep = cardWidth + gap;
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      const targetIndex = Math.round(el.scrollLeft / cardStep);
-      let targetScroll = targetIndex * cardStep;
-      if (targetScroll > maxScroll) targetScroll = maxScroll;
-      if (targetScroll < 0) targetScroll = 0;
+      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
 
-      el.scrollTo({
-        left: targetScroll,
-        behavior: "smooth",
-      });
+      const rtlActive =
+        isRtl ||
+        document.documentElement.dir === "rtl" ||
+        document.body.classList.contains("rtl-mode") ||
+        (typeof window !== "undefined" && window.getComputedStyle(el).direction === "rtl");
+
+      if (rtlActive) {
+        const absScroll = Math.abs(el.scrollLeft);
+        let targetIndex = Math.round(absScroll / cardStep);
+        let targetScroll = -(targetIndex * cardStep);
+        if (-targetScroll > maxScroll) targetScroll = -maxScroll;
+        if (targetScroll > 0) targetScroll = 0;
+        el.scrollTo({
+          left: targetScroll,
+          behavior: "smooth",
+        });
+      } else {
+        const targetIndex = Math.round(el.scrollLeft / cardStep);
+        let targetScroll = targetIndex * cardStep;
+        if (targetScroll > maxScroll) targetScroll = maxScroll;
+        if (targetScroll < 0) targetScroll = 0;
+        el.scrollTo({
+          left: targetScroll,
+          behavior: "smooth",
+        });
+      }
     }
-
-    setTimeout(updateScrollButtons, 350);
+    updateScrollButtons();
   };
 
   // Prevent background scrolling when modal is open

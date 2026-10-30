@@ -44,7 +44,7 @@ export const DEFAULT_MENU_SECTIONS = [];
  * Individual Horizontal Carousel Row Component
  */
 const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAddToCart, selectedBranch }) => {
-  const { translations = {} } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const navigate = useNavigate();
   const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -59,24 +59,53 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
     const el = trackRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    const maxScroll = scrollWidth - clientWidth;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < maxScroll - 10);
-  }, []);
+    const maxScroll = Math.max(0, scrollWidth - clientWidth);
+    if (maxScroll <= 5) {
+      setCanScrollLeft(false);
+      setCanScrollRight(false);
+      return;
+    }
+
+    const rtlActive =
+      isRtl ||
+      document.documentElement.dir === "rtl" ||
+      document.body.classList.contains("rtl-mode") ||
+      (typeof window !== "undefined" && window.getComputedStyle(el).direction === "rtl");
+
+    if (rtlActive) {
+      // In RTL (Chrome, Edge, Firefox):
+      // Initial position (far right) has scrollLeft ~ 0.
+      // Scrolling left makes scrollLeft negative down to -maxScroll.
+      const absScroll = Math.abs(scrollLeft);
+      // Can scroll left if not at the far left edge
+      setCanScrollLeft(absScroll < maxScroll - 10);
+      // Can scroll right if away from the far right edge
+      setCanScrollRight(absScroll > 10);
+    } else {
+      // In LTR:
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < maxScroll - 10);
+    }
+  }, [isRtl]);
 
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
     updateScrollButtons();
+    const t1 = setTimeout(updateScrollButtons, 150);
+    const t2 = setTimeout(updateScrollButtons, 500);
+
     track.addEventListener("scroll", updateScrollButtons, { passive: true });
     window.addEventListener("resize", updateScrollButtons);
 
     return () => {
       track.removeEventListener("scroll", updateScrollButtons);
       window.removeEventListener("resize", updateScrollButtons);
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
-  }, [updateScrollButtons]);
+  }, [isRtl, updateScrollButtons]);
 
   const handleScroll = (direction) => {
     const el = trackRef.current;
@@ -87,12 +116,14 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
       behavior: "smooth",
     });
     setTimeout(updateScrollButtons, 350);
+    setTimeout(updateScrollButtons, 500);
   };
 
   // Mouse drag handlers for track
   const handleMouseDown = (e) => {
     if (e.button !== 0 || !trackRef.current) return;
     isDraggingRef.current = true;
+    trackRef.current.classList.add("is-dragging");
     startXRef.current = e.pageX - trackRef.current.offsetLeft;
     scrollLeftRef.current = trackRef.current.scrollLeft;
   };
@@ -102,11 +133,26 @@ const CarouselRow = ({ section, cartCounts, onCardClick, onOpenAddonModal, onAdd
     e.preventDefault();
     const x = e.pageX - trackRef.current.offsetLeft;
     const walk = (x - startXRef.current) * 1.25;
-    trackRef.current.scrollLeft = scrollLeftRef.current - walk;
+
+    const rtlActive =
+      isRtl ||
+      document.documentElement.dir === "rtl" ||
+      document.body.classList.contains("rtl-mode") ||
+      (typeof window !== "undefined" && window.getComputedStyle(trackRef.current).direction === "rtl");
+
+    trackRef.current.scrollTo({
+      left: rtlActive ? scrollLeftRef.current + walk : scrollLeftRef.current - walk,
+      behavior: "instant",
+    });
   };
 
   const handleMouseUpOrLeave = () => {
+    if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
+    if (trackRef.current) {
+      trackRef.current.classList.remove("is-dragging");
+    }
+    updateScrollButtons();
   };
 
   return (
