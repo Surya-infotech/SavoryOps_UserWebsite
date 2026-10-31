@@ -48,6 +48,7 @@ import {
   formatOrderPrice,
 } from "./orderHelpers.js";
 import { printOrderInvoice } from "./orderInvoiceGenerator.js";
+import OrderStatusIcon from "./OrderStatusIcon.jsx";
 import "../../Scss/Pages/Orders/orderdetails.scss";
 import OrderStatusHistoryModal from "./OrderStatusHistoryModal.jsx";
 import OrderReviewModal from "./OrderReviewModal.jsx";
@@ -673,7 +674,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                     borderColor: `${statusColor}40`,
                   }}
                 >
-                  <CheckCircleIcon fontSize="inherit" />
+                  <OrderStatusIcon status={order.orderstatus} fontSize="inherit" />
                   <span>{translations[order.orderstatus] || order.orderstatus}</span>
                 </span>
 

@@ -6,6 +6,7 @@ import {
   getOrderStatusColor,
   formatOrderDateTime,
 } from "./orderHelpers.js";
+import OrderStatusIcon from "./OrderStatusIcon.jsx";
 import "../../Scss/Pages/Orders/orderstatushistorymodal.scss";
 
 const OrderStatusHistoryModal = ({
@@ -77,7 +78,8 @@ const OrderStatusHistoryModal = ({
                             borderColor: `${statusColor}40`,
                           }}
                         >
-                          {translations[log.newStatus] || log.newStatus}
+                          <OrderStatusIcon status={log.newStatus} fontSize="inherit" />
+                          <span>{translations[log.newStatus] || log.newStatus}</span>
                         </span>
                         {isLatest && (
                           <span className="current-badge">

@@ -27,6 +27,7 @@ import {
   formatOrderDateTime,
   formatOrderPrice,
 } from "./orderHelpers.js";
+import OrderStatusIcon from "./OrderStatusIcon.jsx";
 import "../../Scss/Pages/Orders/orderspage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -266,10 +267,7 @@ const OrderList = ({ onSelectOrder }) => {
                         borderColor: `${statusColor}30`,
                       }}
                     >
-                      <span
-                        className="status-dot"
-                        style={{ backgroundColor: statusColor }}
-                      />
+                      <OrderStatusIcon status={order.orderstatus} fontSize="inherit" />
                       <span>{translations[order.orderstatus] || order.orderstatus}</span>
                     </span>
                   </div>
