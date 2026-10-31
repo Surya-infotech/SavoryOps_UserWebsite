@@ -10,6 +10,7 @@ import ProfilePage from "../Pages/Profile/ProfilePage.jsx";
 import ManageAddressPage from "../Pages/Profile/ManageAddressPage.jsx";
 import AboutPage from "../Pages/About/AboutPage.jsx";
 import MenuPage from "../Pages/Menu/MenuPage.jsx";
+import OffersPage from "../Pages/Offers/OffersPage.jsx";
 import CartPage from "../Pages/Cart/CartPage.jsx";
 import CheckoutPage from "../Pages/Cart/CheckoutPage.jsx";
 import OrdersPage from "../Pages/Orders/OrdersPage.jsx";
@@ -48,16 +49,7 @@ const HomeRouter = () => {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/offers"
-        element={
-          <SubpagePlaceholder
-            icon="🔥"
-            title={translations.specialoffers}
-            subtitle={translations.offerssubtitle}
-          />
-        }
-      />
+      <Route path="/offers" element={<OffersPage />} />
       <Route
         path="/reservation"
         element={

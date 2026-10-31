@@ -296,18 +296,10 @@ const MenuPage = () => {
     });
   }, [rawDealsBundles, branchCurrencySymbol, translations, posPayload, selectedOrderType]);
 
-  const comboMeals = useMemo(() => {
-    return formattedDeals.filter((d) => d.bundletype === "combo");
-  }, [formattedDeals]);
-
-  const unlimitedMeals = useMemo(() => {
-    return formattedDeals.filter((d) => d.bundletype === "unlimited");
-  }, [formattedDeals]);
-
-  // Unified list of all items across combos, unlimited, and standard dishes
+  // Unified list of standard dishes (combos and unlimited moved to Offers page)
   const allCombinedItems = useMemo(() => {
-    return [...comboMeals, ...unlimitedMeals, ...allDishes];
-  }, [comboMeals, unlimitedMeals, allDishes]);
+    return allDishes;
+  }, [allDishes]);
 
   // Filter States: Menu, Item Category, Veg / Non-Veg
   const [searchParams] = useSearchParams();
@@ -344,56 +336,34 @@ const MenuPage = () => {
   // Dynamically extract unique available Categories with item counts
   const availableCategories = useMemo(() => {
     const list = [];
-    if (comboMeals.length > 0) {
-      list.push({
-        id: "combo",
-        name: translations.combos,
-        count: comboMeals.length,
-      });
-    }
-    if (unlimitedMeals.length > 0) {
-      list.push({
-        id: "unlimited",
-        name: translations.unlimitedmeals,
-        count: unlimitedMeals.length,
-      });
-    }
     rawCategories.forEach((cat) => {
       const catId = String(cat.itemcategoryid);
       const count = allDishes.filter((d) => String(d.categoryid) === catId).length;
-      list.push({
-        id: catId,
-        name: cat.itemcategoryname || "Category",
-        count,
-      });
+      if (count > 0) {
+        list.push({
+          id: catId,
+          name: cat.itemcategoryname || "Category",
+          count,
+        });
+      }
     });
     return list;
-  }, [rawCategories, comboMeals.length, unlimitedMeals.length, allDishes, translations]);
+  }, [rawCategories, allDishes]);
 
   // Filter items based on selected Menu, Item Category, and Diet (Veg/Non-Veg)
   const filteredItems = useMemo(() => {
     return allCombinedItems.filter((item) => {
       // 1. Menu Filter
       if (selectedMenu !== "all") {
-        if (item.isDeal) {
-          if (selectedCategory !== "combo" && selectedCategory !== "unlimited") {
-            return false;
-          }
-        } else if (String(item.menuid) !== String(selectedMenu)) {
+        if (String(item.menuid) !== String(selectedMenu)) {
           return false;
         }
       }
 
       // 2. Category Filter
       if (selectedCategory !== "all") {
-        if (selectedCategory === "combo") {
-          if (!item.isDeal || item.bundletype !== "combo") return false;
-        } else if (selectedCategory === "unlimited") {
-          if (!item.isDeal || item.bundletype !== "unlimited") return false;
-        } else {
-          if (item.isDeal || String(item.categoryid) !== String(selectedCategory)) {
-            return false;
-          }
+        if (String(item.categoryid) !== String(selectedCategory)) {
+          return false;
         }
       }
 
