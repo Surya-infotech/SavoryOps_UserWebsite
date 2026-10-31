@@ -232,12 +232,7 @@ const OrderList = ({ onSelectOrder }) => {
                 onClick={() => onSelectOrder(order._id)}
               >
                 {/* Top accent bar */}
-                <div
-                  className="card-accent-bar"
-                  style={{
-                    background: `linear-gradient(90deg, ${statusColor}, ${paymentColor})`,
-                  }}
-                />
+                <div className="card-accent-bar" />
 
                 <div className="order-card-main">
                   {/* Card Header: Order #, Order Type, and Status */}
