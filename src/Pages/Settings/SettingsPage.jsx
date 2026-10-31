@@ -14,6 +14,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import { clearStorageOnLogout } from "../../utils/authUtils.js";
 import "../../Scss/Pages/Settings/settings.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -368,11 +369,12 @@ const SettingsPage = () => {
 
       if (response.ok) {
         // Clear authentication and preferences from localStorage
-        localStorage.removeItem(customerTokenName);
-        localStorage.removeItem(customerIdName);
-        localStorage.removeItem("DateFormat");
-        localStorage.removeItem("TimeFormat");
-        localStorage.removeItem("TimeZone");
+        clearStorageOnLogout();
+        window.dispatchEvent(
+          new CustomEvent("cartUpdated", {
+            detail: [],
+          })
+        );
 
         // Notify application state
         window.dispatchEvent(
