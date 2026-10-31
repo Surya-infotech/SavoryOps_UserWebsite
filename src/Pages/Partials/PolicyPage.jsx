@@ -122,15 +122,6 @@ const PolicyPage = () => {
       />
 
       <div className="policy-container">
-        {/* Header Block */}
-        <div className="policy-page-header-block">
-          <header className="policy-page-header">
-            <h1 className="policy-page-title">
-              {currentPolicy ? currentPolicy.title : translations.termsofservice}
-            </h1>
-          </header>
-        </div>
-
         {/* Hero Header */}
         <header className="policy-hero-header">
           <div className="policy-hero-top">

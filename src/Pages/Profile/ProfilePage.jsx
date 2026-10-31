@@ -421,20 +421,6 @@ const ProfilePage = () => {
       <Breadcrumbs currentPage={translations.myaccount} />
 
       <div className="profile-page-container">
-        {/* Header Block */}
-        <div className="profile-page-header-block">
-          <header className="profile-page-header">
-            <div className="profile-page-header-meta">
-              <h1 className="profile-page-title">
-                {translations.myaccount}
-              </h1>
-              <p className="profile-page-subtitle">
-                {translations.profilesubtitle}
-              </p>
-            </div>
-          </header>
-        </div>
-
         {/* Profile Card Layout */}
         <div className="profile-card">
           {/* Unified Card Header Banner */}

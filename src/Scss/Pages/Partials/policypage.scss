@@ -6,9 +6,7 @@
 
 .policy-page-wrapper {
   min-height: calc(100vh - 80px);
-  background: radial-gradient(circle at 10% 15%, rgba(2, 136, 2, 0.04) 0%, transparent 45%),
-              radial-gradient(circle at 90% 85%, rgba(105, 232, 105, 0.06) 0%, transparent 50%),
-              #f8fafc;
+  background: #ffffff;
   padding: 0 0 80px;
   color: #1e293b;
   font-family: inherit;
@@ -20,19 +18,6 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-  }
-
-  /* Page Top Header */
-  .policy-page-header {
-    margin-bottom: 0.25rem;
-
-    .policy-page-title {
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0;
-      letter-spacing: -0.5px;
-    }
   }
 
   /* Hero Header */

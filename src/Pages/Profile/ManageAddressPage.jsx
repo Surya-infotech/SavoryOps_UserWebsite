@@ -414,16 +414,8 @@ const ManageAddressPage = () => {
       />
 
       <div className="manage-address-container">
-        {/* Page Top Header */}
-        <header className="manage-address-header">
-          <div className="manage-address-header-meta">
-            <h1 className="manage-address-title">
-              {translations.manageaddress}
-            </h1>
-            <p className="manage-address-subtitle">
-              {translations.addresssubtitle}
-            </p>
-          </div>
+        {/* Page Top Action Bar */}
+        <div className="manage-address-action-bar">
           <button
             type="button"
             className="add-address-btn"
@@ -433,7 +425,7 @@ const ManageAddressPage = () => {
             <AddIcon fontSize="small" />
             <span>{translations.addaddress}</span>
           </button>
-        </header>
+        </div>
 
         {/* Content Area */}
         {loading ? (

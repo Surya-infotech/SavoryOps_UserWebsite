@@ -407,18 +407,6 @@ const SettingsPage = () => {
       <Breadcrumbs currentPage={translations.settings} />
 
       <div className="settings-container">
-        {/* Page Top Header */}
-        <header className="settings-page-header">
-          <div className="settings-page-header-meta">
-            <h1 className="settings-page-title">
-              {translations.settings}
-            </h1>
-            <p className="settings-page-subtitle">
-              {translations.settingssubtitle}
-            </p>
-          </div>
-        </header>
-
         {/* Vertical Tabs & Content Layout */}
         <div className="settings-layout">
           {/* Vertical Tabs Sidebar */}
