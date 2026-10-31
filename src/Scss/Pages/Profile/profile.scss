@@ -14,7 +14,7 @@
 
 .profile-page-container {
   width: 100%;
-  max-width: 960px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 0 1.5rem;
   display: flex;
@@ -625,7 +625,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .profile-page-wrapper {
-    padding: 1.5rem 1rem;
+    padding: 0 0 3rem;
   }
 
   .profile-card-header,

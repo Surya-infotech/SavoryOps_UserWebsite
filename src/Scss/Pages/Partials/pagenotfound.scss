@@ -5,12 +5,19 @@
 
 @use "../../Customize/var.scss" as var;
 
+.page-not-found-wrapper {
+  width: 100%;
+  min-height: 80vh;
+  padding: 0 0 5rem;
+  background-color: #f8fafc;
+}
+
 .page-not-found {
-  min-height: 60vh;
+  min-height: 50vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1.5rem;
+  padding: 1.5rem;
 
   .pnf-content {
     background: #ffffff;
