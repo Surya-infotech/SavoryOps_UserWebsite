@@ -165,6 +165,25 @@
     color: #69e869;
     transform: translateX(4px);
   }
+
+  &.footer-view-all-link {
+    color: #69e869;
+    font-weight: 600;
+    margin-top: 0.25rem;
+
+    .view-all-arrow {
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    &:hover {
+      color: #86efac;
+
+      .view-all-arrow {
+        transform: translateX(3px);
+      }
+    }
+  }
 }
 
 /* Newsletter Column */

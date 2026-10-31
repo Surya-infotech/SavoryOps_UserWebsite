@@ -299,17 +299,31 @@ const Footer = () => {
             <h4 className="footer-col-title">{translations.exploremenu || "Explore Menu"}</h4>
             <ul className="footer-nav-list">
               {footerMenus.length > 0 ? (
-                footerMenus.map((menu) => (
-                  <li key={menu.id}>
-                    <Link
-                      to={`/menu?menu=${encodeURIComponent(menu.id)}`}
-                      className="footer-nav-link"
-                      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                    >
-                      {menu.name}
-                    </Link>
-                  </li>
-                ))
+                <>
+                  {(footerMenus.length > 6 ? footerMenus.slice(0, 6) : footerMenus).map((menu) => (
+                    <li key={menu.id}>
+                      <Link
+                        to={`/menu?menu=${encodeURIComponent(menu.id)}`}
+                        className="footer-nav-link"
+                        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                      >
+                        {menu.name}
+                      </Link>
+                    </li>
+                  ))}
+                  {footerMenus.length > 6 && (
+                    <li>
+                      <Link
+                        to="/menu"
+                        className="footer-nav-link footer-view-all-link"
+                        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                      >
+                        <span>{translations.allmenus || "All Menus"}</span>
+                        <span className="view-all-arrow">→</span>
+                      </Link>
+                    </li>
+                  )}
+                </>
               ) : (
                 <li>
                   <Link
