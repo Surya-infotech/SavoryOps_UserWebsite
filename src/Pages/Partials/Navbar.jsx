@@ -26,7 +26,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getCartTotalCount } from "../../utils/cartService.js";
-import { clearStorageOnLogout } from "../../utils/authUtils.js";
+import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
 export { LanguageDropdown };
@@ -597,7 +597,12 @@ export const ProfileDropdown = ({ className = "" }) => {
     };
   }, [isOpen]);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    const token = localStorage.getItem(customerTokenName);
+    const customerId = localStorage.getItem(customerIdName);
+
+    // Call backend API to remove token from database tokens array
+    await logoutCustomerApi(token, customerId);
     clearStorageOnLogout();
     window.dispatchEvent(
       new CustomEvent("cartUpdated", {
