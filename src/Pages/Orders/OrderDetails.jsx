@@ -662,12 +662,7 @@ const OrderDetails = ({ orderId, onBack }) => {
         <div className="details-main-column">
           {/* Top Status & Meta Card */}
           <div className="detail-card overview-card">
-            <div
-              className="card-top-accent"
-              style={{
-                background: `linear-gradient(90deg, ${statusColor}, ${paymentColor})`,
-              }}
-            />
+            <div className="card-top-accent green" />
             <div className="overview-card-header">
               <div className="overview-badges-wrap">
                 <span
@@ -834,7 +829,7 @@ const OrderDetails = ({ orderId, onBack }) => {
               </span>
             </div>
             <div className="detail-card items-details-card">
-              <div className="card-top-accent primary" />
+              <div className="card-top-accent green" />
               <div className="items-list">
                 {(order.products || []).map((product, pIndex) => {
                   const cancelled = String(
