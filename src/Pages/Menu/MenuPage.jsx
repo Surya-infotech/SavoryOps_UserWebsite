@@ -356,22 +356,17 @@ const MenuPage = () => {
 
   // Options for custom Category Dropdown component
   const categoryOptions = useMemo(() => {
-    const totalCount =
-      selectedMenu === "all"
-        ? allCombinedItems.length
-        : allDishes.filter((d) => String(d.menuid) === String(selectedMenu)).length;
-
     return [
       {
         id: "all",
-        name: `${translations.allcategories || "All Categories"} (${totalCount})`,
+        name: translations.allcategories || "All Categories",
       },
       ...availableCategories.map((cat) => ({
         id: cat.id,
-        name: `${cat.name} (${cat.count})`,
+        name: cat.name,
       })),
     ];
-  }, [availableCategories, allCombinedItems, allDishes, selectedMenu, translations]);
+  }, [availableCategories, translations]);
 
   // Filter items based on selected Menu, Item Category, and Diet (Veg/Non-Veg)
   const filteredItems = useMemo(() => {
