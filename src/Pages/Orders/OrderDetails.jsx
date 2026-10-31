@@ -49,6 +49,95 @@ import OrderReviewModal from "./OrderReviewModal.jsx";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
+/**
+ * Modern Skeleton Shimmer for Order Details
+ * Replaces the spinner with animated cards mirroring the actual layout
+ */
+const OrderDetailsShimmer = () => (
+  <div className="order-details-container order-details-shimmer">
+    {/* Nav Header Shimmer */}
+    <div className="order-details-nav-header">
+      <div className="shimmer-line order-title-shimmer" />
+      <div className="shimmer-pill order-btn-shimmer" />
+    </div>
+
+    {/* Content Grid Shimmer */}
+    <div className="order-details-content-grid">
+      {/* Left Column Shimmer */}
+      <div className="details-main-column">
+        {/* Overview Card Shimmer */}
+        <div className="detail-card shimmer-card overview-shimmer">
+          <div className="shimmer-accent-bar" />
+          <div className="shimmer-badges-row">
+            <div className="shimmer-pill status-pill-shimmer" />
+            <div className="shimmer-pill payment-pill-shimmer" />
+          </div>
+          <div className="shimmer-grid">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="shimmer-info-row">
+                <div className="shimmer-icon-box" />
+                <div className="shimmer-text-col">
+                  <div className="shimmer-line small-label" />
+                  <div className="shimmer-line text-val" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Items Card Shimmer */}
+        <div className="detail-card shimmer-card items-shimmer">
+          <div className="shimmer-accent-bar primary" />
+          <div className="shimmer-card-header">
+            <div className="shimmer-line header-title" />
+            <div className="shimmer-pill count-pill" />
+          </div>
+          <div className="shimmer-items-list">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="shimmer-product-row">
+                <div className="shimmer-dot" />
+                <div className="shimmer-product-meta">
+                  <div className="shimmer-line product-name" />
+                  <div className="shimmer-line product-price" />
+                </div>
+                <div className="shimmer-pill qty-pill" />
+                <div className="shimmer-line total-price" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column Shimmer */}
+      <div className="details-side-column">
+        {/* Bill Summary Card Shimmer */}
+        <div className="detail-card shimmer-card bill-shimmer">
+          <div className="shimmer-accent-bar green" />
+          <div className="shimmer-card-header">
+            <div className="shimmer-line header-title" />
+          </div>
+          <div className="shimmer-bill-rows">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="shimmer-bill-row">
+                <div className="shimmer-line bill-label" />
+                <div className="shimmer-line bill-val" />
+              </div>
+            ))}
+            <div className="shimmer-divider" />
+            <div className="shimmer-bill-row total-row">
+              <div className="shimmer-line total-label" />
+              <div className="shimmer-line total-val" />
+            </div>
+          </div>
+        </div>
+
+        {/* Invoice Button Shimmer */}
+        <div className="shimmer-button-full" />
+      </div>
+    </div>
+  </div>
+);
+
 const OrderDetails = ({ orderId, onBack }) => {
   const { translations = {}, isRtl } = useLanguage();
   const { showSnackbar } = useSnackbar();
@@ -483,12 +572,7 @@ const OrderDetails = ({ orderId, onBack }) => {
   const showRoundoff = order?.roundoff?.status || roundoffAmount !== 0;
 
   if (loading && !refreshing) {
-    return (
-      <div className="order-details-loading-state">
-        <CircularProgress size={42} style={{ color: "#028802" }} />
-        <p>{translations.loading || "Loading order details..."}</p>
-      </div>
-    );
+    return <OrderDetailsShimmer />;
   }
 
   if (!order) {
