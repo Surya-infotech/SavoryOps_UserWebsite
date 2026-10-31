@@ -122,6 +122,27 @@ const PolicyPage = () => {
       />
 
       <div className="policy-container">
+        {/* Multi-Policy Navigation Tabs */}
+        {activePolicies.length > 1 && (
+          <div className="policy-tabs-bar no-print">
+            <div className="policy-tabs-scroll">
+              {activePolicies.map((p) => {
+                const isActive = currentPolicy && (currentPolicy._id === p._id || currentPolicy.policyid === p.policyid);
+                return (
+                  <Link
+                    key={p._id || p.policyid}
+                    to={`/policy/${encodeURIComponent(p.title.toLowerCase())}`}
+                    className={`policy-tab-chip ${isActive ? "active" : ""}`}
+                  >
+                    <PolicyOutlinedIcon fontSize="inherit" />
+                    <span>{p.title}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Hero Header */}
         <header className="policy-hero-header">
           <div className="policy-hero-top">
@@ -148,27 +169,6 @@ const PolicyPage = () => {
             </div>
           </div>
         </header>
-
-        {/* Multi-Policy Navigation Tabs */}
-        {activePolicies.length > 1 && (
-          <div className="policy-tabs-bar no-print">
-            <div className="policy-tabs-scroll">
-              {activePolicies.map((p) => {
-                const isActive = currentPolicy && (currentPolicy._id === p._id || currentPolicy.policyid === p.policyid);
-                return (
-                  <Link
-                    key={p._id || p.policyid}
-                    to={`/policy/${encodeURIComponent(p.title.toLowerCase())}`}
-                    className={`policy-tab-chip ${isActive ? "active" : ""}`}
-                  >
-                    <PolicyOutlinedIcon fontSize="inherit" />
-                    <span>{p.title}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
         {/* Main Policy Content Card */}
         <main className="policy-content-card">
