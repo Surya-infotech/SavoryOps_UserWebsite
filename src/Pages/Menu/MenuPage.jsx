@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -302,8 +302,16 @@ const MenuPage = () => {
   }, [allDishes]);
 
   // Filter States: Menu, Item Category, Veg / Non-Veg
+  const location = useLocation();
   const [searchParams] = useSearchParams();
-  const [selectedMenu, setSelectedMenu] = useState(() => searchParams.get("menu") || "all");
+  const [selectedMenu, setSelectedMenu] = useState(() => {
+    return (
+      location.state?.selectedMenuId ||
+      location.state?.menuId ||
+      searchParams.get("menu") ||
+      "all"
+    );
+  });
   const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") || "all");
   const [selectedDiet, setSelectedDiet] = useState("all"); // "all" | "veg" | "nonveg"
 
@@ -331,8 +339,10 @@ const MenuPage = () => {
   }, [availableMenus]);
 
   useEffect(() => {
-    const m = searchParams.get("menu");
+    const stateMenu = location.state?.selectedMenuId || location.state?.menuId;
+    const m = searchParams.get("menu") || stateMenu;
     const c = searchParams.get("category");
+
     if (m) {
       if (m === "all") {
         setSelectedMenu("all");
@@ -340,27 +350,36 @@ const MenuPage = () => {
         const found = availableMenus.find(
           (item) =>
             String(item.id) === String(m) ||
-            item.name.toLowerCase() === decodeURIComponent(m).toLowerCase()
+            item.name.toLowerCase() === decodeURIComponent(String(m)).toLowerCase()
         );
         if (found) {
           setSelectedMenu(String(found.id));
         } else {
-          setSelectedMenu(m);
+          setSelectedMenu(String(m));
         }
       }
       if (!c) {
         setSelectedCategory("all");
       }
-    } else {
+
+      // Hide ?menu=... from the browser URL so it cleanly displays /menu
+      if (searchParams.has("menu")) {
+        const currentPath = window.location.pathname;
+        const newParams = new URLSearchParams(window.location.search);
+        newParams.delete("menu");
+        const newSearch = newParams.toString() ? `?${newParams.toString()}` : "";
+        window.history.replaceState(null, "", `${currentPath}${newSearch}`);
+      }
+    } else if (!stateMenu && location.state === null) {
       setSelectedMenu("all");
     }
 
     if (c) {
       setSelectedCategory(c);
-    } else if (!m) {
+    } else if (!m && location.state === null) {
       setSelectedCategory("all");
     }
-  }, [searchParams, availableMenus]);
+  }, [searchParams, location.state, availableMenus]);
 
   // Options for custom Dropdown component
   const menuOptions = useMemo(() => {

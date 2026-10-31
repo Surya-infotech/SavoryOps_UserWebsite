@@ -303,7 +303,8 @@ const Footer = () => {
                   {(footerMenus.length > 6 ? footerMenus.slice(0, 6) : footerMenus).map((menu) => (
                     <li key={menu.id}>
                       <Link
-                        to={`/menu?menu=${encodeURIComponent(menu.id)}`}
+                        to="/menu"
+                        state={{ selectedMenuId: menu.id, timestamp: Date.now() }}
                         className="footer-nav-link"
                         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                       >
