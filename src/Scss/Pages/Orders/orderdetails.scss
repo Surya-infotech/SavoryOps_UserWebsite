@@ -7,6 +7,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -128,6 +129,7 @@
           &.gold {
             color: #f59e0b;
           }
+
           &.teal {
             color: #009688;
           }
@@ -169,12 +171,15 @@
       &.primary {
         background: #028802;
       }
+
       &.green {
         background: #4caf50;
       }
+
       &.teal {
         background: #009688;
       }
+
       &.gold {
         background: #f59e0b;
       }
@@ -217,75 +222,113 @@
 
   /* Overview Card */
   .overview-card {
-    padding: 1.25rem;
+    padding: 0;
 
-    .overview-badges-row {
+    .overview-card-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.25rem;
+      background: #fafbfc;
+      border-bottom: 1px solid #f1f5f9;
       gap: 0.75rem;
-      margin-bottom: 1.25rem;
       flex-wrap: wrap;
 
-      .status-badge,
-      .payment-badge {
+      .overview-badges-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+
+        .status-badge,
+        .payment-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.35rem 0.85rem;
+          border-radius: 9999px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          border: 1px solid transparent;
+
+          svg {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .overview-header-date {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
-        padding: 0.35rem 0.85rem;
-        border-radius: 9999px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        border: 1px solid transparent;
+        gap: 0.45rem;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #64748b;
+
+        svg {
+          color: #94a3b8;
+          font-size: 1.15rem;
+        }
       }
     }
 
-    .overview-info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
+    .overview-card-body {
+      padding: 1.25rem;
 
-      .info-row {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+      .overview-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
 
-        .info-icon-wrap {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.25rem;
-
-          svg {
-            font-size: 1.3rem;
-          }
-
-          &.primary {
-            background: rgba(2, 136, 2, 0.12);
-            color: #028802;
-          }
-
-          &.secondary {
-            background: rgba(239, 68, 68, 0.12);
-            color: #ef4444;
-          }
-
-          &.muted {
-            background: rgba(148, 163, 184, 0.15);
-            color: #64748b;
-          }
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
         }
 
-        .info-text {
+        .info-row {
           display: flex;
           align-items: center;
+          gap: 0.75rem;
 
-          span {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #0f172a;
+          .info-icon-wrap {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+
+            svg {
+              font-size: 1.3rem;
+            }
+
+            &.primary {
+              background: rgba(2, 136, 2, 0.12);
+              color: #028802;
+            }
+
+            &.secondary {
+              background: rgba(239, 68, 68, 0.12);
+              color: #ef4444;
+            }
+
+            &.muted {
+              background: rgba(148, 163, 184, 0.15);
+              color: #64748b;
+            }
+          }
+
+          .info-text {
+            display: flex;
+            align-items: center;
+
+            span {
+              font-size: 0.95rem;
+              font-weight: 700;
+              color: #0f172a;
+            }
           }
         }
       }
@@ -409,6 +452,7 @@
               &.veg {
                 border-color: #16a34a;
               }
+
               &.non-veg {
                 border-color: #dc2626;
               }
@@ -421,6 +465,7 @@
                 &.veg {
                   background: #16a34a;
                 }
+
                 &.non-veg {
                   background: #dc2626;
                 }
@@ -771,6 +816,7 @@
             color: #f59e0b;
             font-size: 1.25rem;
           }
+
           .star-empty {
             color: #cbd5e1;
             font-size: 1.25rem;
@@ -878,29 +924,48 @@
 
     /* Overview Shimmer */
     .overview-shimmer {
-      padding: 1.25rem;
+      padding: 0;
 
-      .shimmer-badges-row {
+      .shimmer-accent-bar {
+        height: 4px;
+        width: 100%;
+      }
+
+      .shimmer-header-row {
         display: flex;
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1.25rem;
+        border-bottom: 1px solid #f1f5f9;
 
-        .status-pill-shimmer {
-          height: 28px;
-          width: 110px;
-          border-radius: 9999px;
+        .shimmer-badges-row {
+          display: flex;
+          gap: 0.65rem;
+
+          .status-pill-shimmer {
+            height: 28px;
+            width: 100px;
+            border-radius: 9999px;
+          }
+
+          .payment-pill-shimmer {
+            height: 28px;
+            width: 80px;
+            border-radius: 9999px;
+          }
         }
 
-        .payment-pill-shimmer {
-          height: 28px;
-          width: 80px;
-          border-radius: 9999px;
+        .date-shimmer {
+          height: 18px;
+          width: 140px;
+          border-radius: 4px;
         }
       }
 
       .shimmer-grid {
+        padding: 1.25rem;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 1.25rem;
 
         @media (max-width: 600px) {
@@ -1144,4 +1209,3 @@
     }
   }
 }
-

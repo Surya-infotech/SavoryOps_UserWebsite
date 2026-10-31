@@ -89,12 +89,15 @@ const OrderDetailsShimmer = () => (
         {/* Overview Card Shimmer */}
         <div className="detail-card shimmer-card overview-shimmer">
           <div className="shimmer-accent-bar" />
-          <div className="shimmer-badges-row">
-            <div className="shimmer-pill status-pill-shimmer" />
-            <div className="shimmer-pill payment-pill-shimmer" />
+          <div className="shimmer-header-row">
+            <div className="shimmer-badges-row">
+              <div className="shimmer-pill status-pill-shimmer" />
+              <div className="shimmer-pill payment-pill-shimmer" />
+            </div>
+            <div className="shimmer-line date-shimmer" />
           </div>
           <div className="shimmer-grid">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3].map((i) => (
               <div key={i} className="shimmer-info-row">
                 <div className="shimmer-icon-box" />
                 <div className="shimmer-text-col">
@@ -665,82 +668,82 @@ const OrderDetails = ({ orderId, onBack }) => {
                 background: `linear-gradient(90deg, ${statusColor}, ${paymentColor})`,
               }}
             />
-            <div className="overview-badges-row">
-              <span
-                className="status-badge"
-                style={{
-                  backgroundColor: `${statusColor}15`,
-                  color: statusColor,
-                  borderColor: `${statusColor}40`,
-                }}
-              >
-                <CheckCircleIcon fontSize="inherit" />
-                <span>{translations[order.orderstatus] || order.orderstatus}</span>
-              </span>
+            <div className="overview-card-header">
+              <div className="overview-badges-wrap">
+                <span
+                  className="status-badge"
+                  style={{
+                    backgroundColor: `${statusColor}18`,
+                    color: statusColor,
+                    borderColor: `${statusColor}40`,
+                  }}
+                >
+                  <CheckCircleIcon fontSize="inherit" />
+                  <span>{translations[order.orderstatus] || order.orderstatus}</span>
+                </span>
 
-              <span
-                className="payment-badge"
-                style={{
-                  backgroundColor: `${paymentColor}15`,
-                  color: paymentColor,
-                  borderColor: `${paymentColor}40`,
-                }}
-              >
-                <PaymentsOutlinedIcon fontSize="inherit" />
-                <span>{translations[order.paymentstatus] || order.paymentstatus}</span>
-              </span>
+                <span
+                  className="payment-badge"
+                  style={{
+                    backgroundColor: `${paymentColor}18`,
+                    color: paymentColor,
+                    borderColor: `${paymentColor}40`,
+                  }}
+                >
+                  <PaymentsOutlinedIcon fontSize="inherit" />
+                  <span>{translations[order.paymentstatus] || order.paymentstatus}</span>
+                </span>
+              </div>
+
+              <div className="overview-header-date">
+                <CalendarMonthOutlinedIcon fontSize="small" />
+                <span>
+                  {formatOrderDateTime(
+                    order.createdAt,
+                    dateFormat,
+                    timeFormat,
+                    timeZone
+                  )}
+                </span>
+              </div>
             </div>
 
-            <div className="overview-info-grid">
-              <div className="info-row">
-                <div className="info-icon-wrap primary">
-                  <StorefrontIcon fontSize="small" />
-                </div>
-                <div className="info-text">
-                  <span>{order.businessname}</span>
-                </div>
-              </div>
-
-              <div className="info-row">
-                <div className="info-icon-wrap secondary">
-                  <LocationOnOutlinedIcon fontSize="small" />
-                </div>
-                <div className="info-text">
-                  <span>{order.branchname}</span>
-                </div>
-              </div>
-
-              {order.ordertype && (
+            <div className="overview-card-body">
+              <div className="overview-info-grid">
                 <div className="info-row">
-                  <div
-                    className="info-icon-wrap"
-                    style={{
-                      backgroundColor: `${getOrderTypeBackgroundColor(order.ordertype)}18`,
-                      color: getOrderTypeBackgroundColor(order.ordertype),
-                    }}
-                  >
-                    {getOrderTypeComponentIcon(order.ordertype)}
+                  <div className="info-icon-wrap primary">
+                    <StorefrontIcon fontSize="small" />
                   </div>
                   <div className="info-text">
-                    <span>{translations[order.ordertype] || order.ordertype}</span>
+                    <span>{order.businessname}</span>
                   </div>
                 </div>
-              )}
 
-              <div className="info-row">
-                <div className="info-icon-wrap muted">
-                  <CalendarMonthOutlinedIcon fontSize="small" />
+                <div className="info-row">
+                  <div className="info-icon-wrap secondary">
+                    <LocationOnOutlinedIcon fontSize="small" />
+                  </div>
+                  <div className="info-text">
+                    <span>{order.branchname}</span>
+                  </div>
                 </div>
-                <div className="info-text">
-                  <span>
-                    {formatOrderDateTime(
-                      order.createdAt,
-                      dateFormat,
-                      timeFormat,
-                      timeZone
-                    )}
-                  </span>
-                </div>
+
+                {order.ordertype && (
+                  <div className="info-row">
+                    <div
+                      className="info-icon-wrap"
+                      style={{
+                        backgroundColor: `${getOrderTypeBackgroundColor(order.ordertype)}18`,
+                        color: getOrderTypeBackgroundColor(order.ordertype),
+                      }}
+                    >
+                      {getOrderTypeComponentIcon(order.ordertype)}
+                    </div>
+                    <div className="info-text">
+                      <span>{translations[order.ordertype] || order.ordertype}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
