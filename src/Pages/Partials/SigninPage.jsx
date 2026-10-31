@@ -11,6 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
+import { getBrowserAndDeviceDetails, getIpAndLocation } from "../../utils/deviceDetails.js";
 import "../../Scss/Pages/Partials/signin.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -54,6 +55,17 @@ const SigninPage = () => {
       document.title = `${translations.signinwithphone} | ${brandDisplayName}`;
     }
   }, [brandDisplayName, translations]);
+
+  // Pre-request / warm-up browser location so it is instantly available upon Sign In
+  useEffect(() => {
+    if (typeof window !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => {},
+        () => {},
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 300000 }
+      );
+    }
+  }, []);
 
   // Auth flow step: "phone" | "otp" | "success"
   const [step, setStep] = useState("phone");
@@ -115,13 +127,25 @@ const SigninPage = () => {
     setIsSubmitting(true);
 
     try {
+      const { browserdetails, device } = getBrowserAndDeviceDetails();
+      const { ipaddress, location: userGeoLocation } = await getIpAndLocation().catch(() => ({
+        ipaddress: "Unknown",
+        location: "Unknown",
+      }));
+
       const response = await fetch(`${adminPanelBackendPath}/Website/General/SigninPhoneSendOtp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-user": "customer",
         },
-        body: JSON.stringify({ phone: phoneNumber }),
+        body: JSON.stringify({
+          phone: phoneNumber,
+          browserdetails,
+          device,
+          ipaddress,
+          location: userGeoLocation,
+        }),
       });
 
       await response.json();
@@ -214,6 +238,12 @@ const SigninPage = () => {
     let verifySuccessData = null;
 
     try {
+      const { browserdetails, device } = getBrowserAndDeviceDetails();
+      const { ipaddress, location: userGeoLocation } = await getIpAndLocation().catch(() => ({
+        ipaddress: "Unknown",
+        location: "Unknown",
+      }));
+
       const response = await fetch(`${adminPanelBackendPath}/Website/General/VerifySignInPhoneOtp`, {
         method: "POST",
         headers: {
@@ -223,6 +253,10 @@ const SigninPage = () => {
         body: JSON.stringify({
           phone: phoneNumber,
           otp: fullOtp,
+          browserdetails,
+          device,
+          ipaddress,
+          location: userGeoLocation,
         }),
       });
 
