@@ -42,6 +42,90 @@ const Footer = () => {
     }
     return null;
   });
+  const [footerMenus, setFooterMenus] = useState(() => {
+    if (typeof window !== "undefined" && Array.isArray(window.__availableMenus)) {
+      return window.__availableMenus;
+    }
+    return [];
+  });
+
+  // Fetch real menu names dynamically for the current branch
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchFooterMenus = async () => {
+      const currentSubdomain = getWebsiteSubdomain();
+      if (!currentSubdomain) return;
+
+      const branchId =
+        selectedBranch?._id ||
+        localStorage.getItem("selectedBranchId") ||
+        (typeof window !== "undefined" && window.__selectedBranch?._id);
+
+      if (!branchId) return;
+
+      try {
+        const response = await fetch(
+          `${adminPanelBackendPath}/Website/Menu/GetItemcategory/${branchId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user": "admin",
+              "x-subdomain": currentSubdomain,
+            },
+          }
+        );
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const menusMap = new Map();
+
+        (data.itemCategories || []).forEach((cat) => {
+          (cat.menuGroups || []).forEach((mg) => {
+            const m = mg.menuDetails;
+            if (m && m.menuid && m.menuname) {
+              const id = String(m.menuid);
+              if (!menusMap.has(id)) {
+                menusMap.set(id, {
+                  id,
+                  name: m.menuname,
+                });
+              }
+            }
+          });
+        });
+
+        if (isMounted) {
+          const list = Array.from(menusMap.values());
+          if (list.length > 0) {
+            setFooterMenus(list);
+            if (typeof window !== "undefined") {
+              window.__availableMenus = list;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching footer menus:", err);
+      }
+    };
+
+    fetchFooterMenus();
+
+    const handleMenusLoaded = (e) => {
+      if (e?.detail && Array.isArray(e.detail) && e.detail.length > 0 && isMounted) {
+        setFooterMenus(e.detail);
+      }
+    };
+
+    window.addEventListener("menusLoaded", handleMenusLoaded);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("menusLoaded", handleMenusLoaded);
+    };
+  }, [selectedBranch, adminPanelBackendPath]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.__selectedBranch) {
@@ -210,15 +294,33 @@ const Footer = () => {
             )}
           </div>
 
-          {/* Quick Links */}
+          {/* Explore Menu Column */}
           <div className="footer-col">
-            <h4 className="footer-col-title">{translations.exploremenu}</h4>
+            <h4 className="footer-col-title">{translations.exploremenu || "Explore Menu"}</h4>
             <ul className="footer-nav-list">
-              <li><Link to="/menu" className="footer-nav-link">🍕 {translations.artisanpizzas}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍔 {translations.smashburgers}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍜 {translations.ramenbowls}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍰 {translations.dessertsgelato}</Link></li>
-              <li><Link to="/menu" className="footer-nav-link">🍹 {translations.handcraftedmocktails}</Link></li>
+              {footerMenus.length > 0 ? (
+                footerMenus.map((menu) => (
+                  <li key={menu.id}>
+                    <Link
+                      to={`/menu?menu=${encodeURIComponent(menu.id)}`}
+                      className="footer-nav-link"
+                      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    >
+                      {menu.name}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li>
+                  <Link
+                    to="/menu"
+                    className="footer-nav-link"
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  >
+                    {translations.allmenus || "All Menus"}
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 

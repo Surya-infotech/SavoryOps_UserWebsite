@@ -307,13 +307,6 @@ const MenuPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") || "all");
   const [selectedDiet, setSelectedDiet] = useState("all"); // "all" | "veg" | "nonveg"
 
-  useEffect(() => {
-    const m = searchParams.get("menu");
-    const c = searchParams.get("category");
-    if (m) setSelectedMenu(m);
-    if (c) setSelectedCategory(c);
-  }, [searchParams]);
-
   // Dynamically extract unique available Menus
   const availableMenus = useMemo(() => {
     const map = new Map();
@@ -324,6 +317,50 @@ const MenuPage = () => {
     });
     return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
   }, [allDishes]);
+
+  // Sync availableMenus globally for Footer and other components
+  useEffect(() => {
+    if (availableMenus.length > 0) {
+      if (typeof window !== "undefined") {
+        window.__availableMenus = availableMenus;
+      }
+      window.dispatchEvent(
+        new CustomEvent("menusLoaded", { detail: availableMenus })
+      );
+    }
+  }, [availableMenus]);
+
+  useEffect(() => {
+    const m = searchParams.get("menu");
+    const c = searchParams.get("category");
+    if (m) {
+      if (m === "all") {
+        setSelectedMenu("all");
+      } else {
+        const found = availableMenus.find(
+          (item) =>
+            String(item.id) === String(m) ||
+            item.name.toLowerCase() === decodeURIComponent(m).toLowerCase()
+        );
+        if (found) {
+          setSelectedMenu(String(found.id));
+        } else {
+          setSelectedMenu(m);
+        }
+      }
+      if (!c) {
+        setSelectedCategory("all");
+      }
+    } else {
+      setSelectedMenu("all");
+    }
+
+    if (c) {
+      setSelectedCategory(c);
+    } else if (!m) {
+      setSelectedCategory("all");
+    }
+  }, [searchParams, availableMenus]);
 
   // Options for custom Dropdown component
   const menuOptions = useMemo(() => {
