@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -18,7 +17,6 @@ import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import BoltIcon from "@mui/icons-material/Bolt";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
-import CircularProgress from "@mui/material/CircularProgress";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -79,9 +77,7 @@ const OrderList = ({ onSelectOrder }) => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   const customerId = localStorage.getItem(customerIdName);
   const dateFormat = localStorage.getItem("DateFormat") || "DD/MM/YYYY";
@@ -124,7 +120,6 @@ const OrderList = ({ onSelectOrder }) => {
       setFilteredOrders([]);
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, [customerId, showSnackbar, translations]);
 
@@ -132,161 +127,60 @@ const OrderList = ({ onSelectOrder }) => {
     fetchOrders();
   }, [fetchOrders]);
 
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await fetchOrders();
-  };
-
-  // Filter by search & status tabs
+  // Search filter
   useEffect(() => {
-    let result = [...orders];
-
-    // Status Tab Filter
-    if (activeTab === "active") {
-      result = result.filter((o) => {
-        const s = String(o.orderstatus || "").toLowerCase();
-        return (
-          s !== "completed" &&
-          s !== "delivered" &&
-          s !== "cancelled"
-        );
-      });
-    } else if (activeTab === "completed") {
-      result = result.filter((o) => {
-        const s = String(o.orderstatus || "").toLowerCase();
-        return s === "completed" || s === "delivered";
-      });
-    } else if (activeTab === "cancelled") {
-      result = result.filter((o) => {
-        const s = String(o.orderstatus || "").toLowerCase();
-        return s === "cancelled";
-      });
+    if (!search.trim()) {
+      setFilteredOrders(orders);
+      return;
     }
 
-    // Search query filter
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      result = result.filter((item) => {
-        const orderNo = String(item.orderno || "").toLowerCase();
-        const businessName = String(item.businessname || "").toLowerCase();
-        const branchName = String(item.branchname || "").toLowerCase();
-        return (
-          orderNo.includes(q) ||
-          businessName.includes(q) ||
-          branchName.includes(q)
-        );
-      });
-    }
-
-    setFilteredOrders(result);
-  }, [orders, search, activeTab]);
-
-  // Tab counts
-  const counts = useMemo(() => {
-    const all = orders.length;
-    let active = 0;
-    let completed = 0;
-    let cancelled = 0;
-    orders.forEach((o) => {
-      const s = String(o.orderstatus || "").toLowerCase();
-      if (s === "cancelled") {
-        cancelled += 1;
-      } else if (s === "completed" || s === "delivered") {
-        completed += 1;
-      } else {
-        active += 1;
-      }
+    const q = search.trim().toLowerCase();
+    const filtered = orders.filter((item) => {
+      const orderNo = String(item.orderno || "").toLowerCase();
+      const businessName = String(item.businessname || "").toLowerCase();
+      const branchName = String(item.branchname || "").toLowerCase();
+      return (
+        orderNo.includes(q) ||
+        businessName.includes(q) ||
+        branchName.includes(q)
+      );
     });
-    return { all, active, completed, cancelled };
-  }, [orders]);
+
+    setFilteredOrders(filtered);
+  }, [orders, search]);
 
   return (
     <div className={`orders-list-wrapper ${isRtl ? "is-rtl" : ""}`}>
-      {/* Search & Actions Bar */}
-      <div className="orders-toolbar">
-        <div className="orders-search-box">
-          <SearchIcon className="search-icon" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={
-              translations.searchorders ||
-              "Search by order number, restaurant, branch..."
-            }
-          />
-          {search && (
-            <button
-              type="button"
-              className="search-clear-btn"
-              onClick={() => setSearch("")}
-              aria-label="Clear search"
-            >
-              <CloseIcon fontSize="small" />
-            </button>
-          )}
+      {/* Search Toolbar - Parity with UserApp */}
+      {(loading || orders.length > 0) && (
+        <div className="orders-toolbar">
+          <div className="orders-search-box">
+            <SearchIcon className="search-icon" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={
+                translations.searchorders ||
+                "Search by order number, restaurant, branch..."
+              }
+            />
+            {search && (
+              <button
+                type="button"
+                className="search-clear-btn"
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+              >
+                <CloseIcon fontSize="small" />
+              </button>
+            )}
+          </div>
         </div>
-
-        <button
-          type="button"
-          className="orders-refresh-btn"
-          onClick={handleRefresh}
-          disabled={loading || refreshing}
-          title="Refresh orders"
-        >
-          {refreshing ? (
-            <CircularProgress size={18} color="inherit" />
-          ) : (
-            <RefreshIcon fontSize="small" />
-          )}
-          <span>{translations.refresh || "Refresh"}</span>
-        </button>
-      </div>
-
-      {/* Status Filter Tabs */}
-      <div className="orders-tabs-row">
-        <button
-          type="button"
-          className={`order-tab-btn ${activeTab === "all" ? "active" : ""}`}
-          onClick={() => setActiveTab("all")}
-        >
-          <span>{translations.allorders || "All Orders"}</span>
-          <span className="tab-count">{counts.all}</span>
-        </button>
-        <button
-          type="button"
-          className={`order-tab-btn ${activeTab === "active" ? "active" : ""}`}
-          onClick={() => setActiveTab("active")}
-        >
-          <span>{translations.activeorders || "Active"}</span>
-          {counts.active > 0 && (
-            <span className="tab-count active-count">{counts.active}</span>
-          )}
-        </button>
-        <button
-          type="button"
-          className={`order-tab-btn ${
-            activeTab === "completed" ? "active" : ""
-          }`}
-          onClick={() => setActiveTab("completed")}
-        >
-          <span>{translations.completedorders || "Completed"}</span>
-          <span className="tab-count">{counts.completed}</span>
-        </button>
-        <button
-          type="button"
-          className={`order-tab-btn ${
-            activeTab === "cancelled" ? "active" : ""
-          }`}
-          onClick={() => setActiveTab("cancelled")}
-        >
-          <span>{translations.cancelledorders || "Cancelled"}</span>
-          <span className="tab-count">{counts.cancelled}</span>
-        </button>
-      </div>
+      )}
 
       {/* Main Content Area */}
-      {loading && !refreshing ? (
+      {loading ? (
         <div className="orders-grid">
           {[1, 2, 3, 4, 5, 6].map((k) => (
             <ShimmerCard key={k} />
