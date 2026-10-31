@@ -473,7 +473,7 @@ const CheckoutPage = () => {
       return;
     }
 
-    const branchId = selectedBranch?.branchid || selectedBranch?.id || selectedBranch?._id;
+    const branchId = localStorage.getItem("selectedBranchId");
     if (!branchId) {
       showSnackbar("Branch information not found. Please try again.", "error");
       return;
@@ -570,7 +570,7 @@ const CheckoutPage = () => {
       }
 
       const response = await fetch(
-        `${adminPanelBackendPath}/Customer/Order/AddOrder/${customerId}/${branchId}`,
+        `${adminPanelBackendPath}/Website/Order/AddOrder/${customerId}/${branchId}`,
         {
           method: "POST",
           headers: {
