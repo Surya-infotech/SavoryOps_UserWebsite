@@ -998,7 +998,7 @@ const OrderDetails = ({ orderId, onBack }) => {
 
               <div className="bill-rows-container">
                 {/* Subtotal */}
-                <div className="bill-row">
+                <div className="bill-row subtotal-row">
                   <span className="label">
                     {translations.subtotal || "Subtotal"}
                   </span>
@@ -1021,8 +1021,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                   return (
                     <div key={`btc-${idx}`} className="bill-row charge">
                       <span className="label">
-                        {chg.name || chg.chargename || chg.eventname}
-                        {valLabel}
+                        <span>{chg.name || chg.chargename || chg.eventname}</span>
+                        {valLabel && <span className="rate-badge">{valLabel}</span>}
                       </span>
                       <span className="value">
                         {formatOrderPrice(chg.amount, order)}
@@ -1032,39 +1032,55 @@ const OrderDetails = ({ orderId, onBack }) => {
                 })}
 
                 {/* Itemized Taxes */}
-                {Array.isArray(order.taxes) &&
-                  order.taxes.map((tax, idx) => {
-                    const rateLabel =
-                      tax.taxtype === "percentage"
-                        ? ` (${tax.price ?? tax.rate}%)`
-                        : tax.taxtype === "fixed"
-                          ? ` (${formatOrderPrice(tax.price ?? tax.rate, order)})`
-                          : "";
-                    return (
-                      <div key={`tax-${idx}`} className="bill-row tax">
-                        <span className="label">
-                          {tax.taxname}
-                          {rateLabel}
+                {Array.isArray(order.taxes) && order.taxes.length > 0 && (
+                  <div className="bill-tax-card">
+                    <div className="tax-card-header">
+                      <span className="tax-card-title">
+                        {translations.taxes || "Taxes"}
+                      </span>
+                      {order.taxes.length > 1 && (
+                        <span className="tax-card-badge">
+                          {order.taxes.length} {translations.taxes || "taxes"}
                         </span>
-                        <span className="value">
-                          {formatOrderPrice(
-                            tax.calculatedAmount ?? tax.amount ?? 0,
-                            order
-                          )}
+                      )}
+                    </div>
+                    <div className="tax-card-items">
+                      {order.taxes.map((tax, idx) => {
+                        const rateLabel =
+                          tax.taxtype === "percentage"
+                            ? ` (${tax.price ?? tax.rate}%)`
+                            : tax.taxtype === "fixed"
+                              ? ` (${formatOrderPrice(tax.price ?? tax.rate, order)})`
+                              : "";
+                        return (
+                          <div key={`tax-${idx}`} className="tax-card-row">
+                            <span className="tax-label">
+                              <span className="tax-bullet">+</span>
+                              <span className="tax-name">{tax.taxname}</span>
+                              {rateLabel && <span className="tax-rate">{rateLabel}</span>}
+                            </span>
+                            <span className="tax-value">
+                              {formatOrderPrice(
+                                tax.calculatedAmount ?? tax.amount ?? 0,
+                                order
+                              )}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Total Tax (if more than 1 tax) */}
+                    {order.taxes.length > 1 && (
+                      <div className="tax-card-total-row">
+                        <span className="total-tax-label">
+                          {translations.totaltax || "Total Tax"}
+                        </span>
+                        <span className="total-tax-value">
+                          {formatOrderPrice(order.totaltax, order)}
                         </span>
                       </div>
-                    );
-                  })}
-
-                {/* Total Tax (if more than 1 tax) */}
-                {Array.isArray(order.taxes) && order.taxes.length > 1 && (
-                  <div className="bill-row total-tax-row">
-                    <span className="label">
-                      {translations.totaltax || "Total Tax"}
-                    </span>
-                    <span className="value">
-                      {formatOrderPrice(order.totaltax, order)}
-                    </span>
+                    )}
                   </div>
                 )}
 
@@ -1082,8 +1098,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                   return (
                     <div key={`atc-${idx}`} className="bill-row charge">
                       <span className="label">
-                        {chg.name || chg.chargename || chg.eventname}
-                        {valLabel}
+                        <span>{chg.name || chg.chargename || chg.eventname}</span>
+                        {valLabel && <span className="rate-badge">{valLabel}</span>}
                       </span>
                       <span className="value">
                         {formatOrderPrice(chg.amount, order)}
@@ -1098,7 +1114,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                     <span className="label">
                       {translations.roundoff || "Round Off"}
                     </span>
-                    <span className="value">
+                    <span className={`value ${roundoffAmount < 0 ? "negative" : ""}`}>
                       {roundoffAmount > 0
                         ? `+${formatOrderPrice(roundoffAmount, order)}`
                         : roundoffAmount < 0
@@ -1111,7 +1127,9 @@ const OrderDetails = ({ orderId, onBack }) => {
                 {/* Grand Total */}
                 <div className="bill-grand-total">
                   <div className="grand-label">
-                    <AccountBalanceWalletOutlinedIcon fontSize="small" />
+                    <div className="grand-icon-wrap">
+                      <AccountBalanceWalletOutlinedIcon fontSize="small" />
+                    </div>
                     <span>{translations.grandtotal || "Grand Total"}</span>
                   </div>
                   <span className="grand-value">
