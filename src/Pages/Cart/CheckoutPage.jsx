@@ -575,7 +575,7 @@ const CheckoutPage = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-user": "customer",
+            "x-user": "admin",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(orderData),
