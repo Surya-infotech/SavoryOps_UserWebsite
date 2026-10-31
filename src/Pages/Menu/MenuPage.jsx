@@ -704,15 +704,21 @@ const MenuPage = () => {
                   <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
                     <button
                       type="button"
+                      tabIndex={-1}
                       className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
                       onClick={() => setSelectedDiet("all")}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onFocus={(e) => e.target.blur()}
                     >
                       <span>{translations.all || "All"}</span>
                     </button>
                     <button
                       type="button"
+                      tabIndex={-1}
                       className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
                       onClick={() => setSelectedDiet("veg")}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onFocus={(e) => e.target.blur()}
                     >
                       <span className="diet-box">
                         <span className="diet-dot" />
@@ -721,8 +727,11 @@ const MenuPage = () => {
                     </button>
                     <button
                       type="button"
+                      tabIndex={-1}
                       className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
                       onClick={() => setSelectedDiet("nonveg")}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onFocus={(e) => e.target.blur()}
                     >
                       <span className="diet-box">
                         <span className="diet-dot" />
