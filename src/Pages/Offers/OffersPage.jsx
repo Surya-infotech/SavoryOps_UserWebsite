@@ -448,9 +448,9 @@ const OffersPage = () => {
               <div className="filter-actions-wrap">
                 <span className="filter-results-badge">
                   {filteredDeals.length}{" "}
-                  {filteredDeals.length === 1
-                    ? (translations.deal || "deal")
-                    : (translations.deals || "deals")}
+                 {filteredDeals.length === 1
+                    ? (translations.deal || "Deal")
+                    : (translations.deals || "Deals")}
                 </span>
                 {isFilterActive && (
                   <button

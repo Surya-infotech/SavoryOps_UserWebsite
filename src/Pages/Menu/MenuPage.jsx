@@ -747,8 +747,8 @@ const MenuPage = () => {
                 <span className="filter-results-badge">
                   {filteredItems.length}{" "}
                   {filteredItems.length === 1
-                    ? (translations.dish || "dish")
-                    : (translations.dishes || "dishes")}
+                    ? (translations.dish || "Dish")
+                    : (translations.dishes || "Dishes")}
                 </span>
                 {isFilterActive && (
                   <button
