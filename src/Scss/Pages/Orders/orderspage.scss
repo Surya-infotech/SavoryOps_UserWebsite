@@ -158,8 +158,8 @@
   overflow: hidden;
   box-shadow: 0 4px 18px -4px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.25s ease;
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -408,23 +408,14 @@
 
     .order-amount-display {
       display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
-
-      .total-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #94a3b8;
-        letter-spacing: 0.06em;
-      }
+      align-items: center;
 
       .total-val {
         font-size: 1.25rem;
         font-weight: 800;
         color: #028802;
         letter-spacing: -0.02em;
-        line-height: 1.2;
+        line-height: 1;
       }
     }
 
@@ -473,27 +464,33 @@
       height: 4px;
       width: 100%;
     }
+
     &.title {
       height: 22px;
       width: 90px;
     }
+
     &.badge {
       height: 24px;
       width: 80px;
       border-radius: 9999px;
     }
+
     &.line {
       height: 16px;
       width: 85%;
     }
+
     &.short {
       width: 55%;
     }
+
     &.pill {
       height: 24px;
       width: 75px;
       border-radius: 9999px;
     }
+
     &.price {
       width: 100px;
     }
@@ -517,6 +514,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -552,6 +550,7 @@
 
     &.search {
       background: rgba(148, 163, 184, 0.15);
+
       .empty-illustration-icon {
         color: #64748b;
       }

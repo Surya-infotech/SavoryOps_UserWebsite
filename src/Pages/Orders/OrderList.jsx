@@ -346,9 +346,6 @@ const OrderList = ({ onSelectOrder }) => {
                 {/* Card Footer */}
                 <div className="order-tile-footer">
                   <div className="order-amount-display">
-                    <span className="total-label">
-                      {translations.total || "Total"}
-                    </span>
                     <span className="total-val">
                       {formatOrderPrice(order.totalprice, order)}
                     </span>
