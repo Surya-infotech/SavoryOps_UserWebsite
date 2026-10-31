@@ -459,16 +459,15 @@ const OffersPage = () => {
 
         {/* Content Section: Loading Shimmer, Grid, or Empty State */}
         {loading ? (
-          <div className="dishes-grid offers-grid">
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <div key={idx} className="dish-card-shimmer">
-                <div className="shimmer-img shimmer-animated" />
-                <div className="shimmer-body">
-                  <div className="shimmer-title shimmer-animated" />
-                  <div className="shimmer-desc shimmer-animated" />
-                  <div className="shimmer-footer">
-                    <div className="shimmer-price shimmer-animated" />
-                  </div>
+          <div className="dishes-grid">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+              <div key={n} className="dish-skeleton-card">
+                <div className="skeleton-img" />
+                <div className="skeleton-body">
+                  <div className="skeleton-line title" />
+                  <div className="skeleton-line desc1" />
+                  <div className="skeleton-line desc2" />
+                  <div className="skeleton-line footer" />
                 </div>
               </div>
             ))}
