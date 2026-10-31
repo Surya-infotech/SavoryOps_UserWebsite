@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
@@ -11,6 +11,7 @@ const OrdersPage = () => {
   const { orderId: paramOrderId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { translations = {}, isRtl } = useLanguage();
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname || "";
@@ -19,16 +20,18 @@ const OrdersPage = () => {
   const selectedOrderId = paramOrderId || searchParams.get("id") || null;
 
   useEffect(() => {
-    const pageTitle = translations.orders || "Orders";
+    const pageTitle = selectedOrderId
+      ? translations.orderdetails || "Order Details"
+      : translations.orders || "Orders";
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {
       document.title = pageTitle;
     }
-  }, [translations, businessDisplayName]);
+  }, [selectedOrderId, translations, businessDisplayName]);
 
   const handleSelectOrder = (id) => {
-    navigate(`/orders/${id}`);
+    navigate(`/orderdetails/${id}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -41,7 +44,7 @@ const OrdersPage = () => {
     ? [
         { label: translations.home || "Home", path: "/" },
         { label: translations.orders || "Orders", path: "/orders" },
-        { label: `${translations.order || "Order"} Details` },
+        { label: translations.orderdetails || "Order Details" },
       ]
     : [
         { label: translations.home || "Home", path: "/" },

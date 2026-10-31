@@ -229,8 +229,6 @@ const Footer = () => {
               <li><Link to="/reservation" className="footer-nav-link">{translations.tablereservation}</Link></li>
               <li><Link to="/offers" className="footer-nav-link">{translations.specialoffers}</Link></li>
               <li><Link to="/about" className="footer-nav-link">{translations.aboutourkitchen}</Link></li>
-              <li><Link to="/contact" className="footer-nav-link">{translations.cateringevents}</Link></li>
-              <li><Link to="/contact" className="footer-nav-link">{translations.customersupport}</Link></li>
             </ul>
           </div>
 

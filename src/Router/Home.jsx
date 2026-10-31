@@ -88,6 +88,14 @@ const HomeRouter = () => {
         }
       />
       <Route
+        path="/orderdetails/:orderId"
+        element={
+          <ProtectedRoute>
+            <OrdersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/orders/:orderId"
         element={
           <ProtectedRoute>
