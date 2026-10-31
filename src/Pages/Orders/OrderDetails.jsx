@@ -525,16 +525,6 @@ const OrderDetails = ({ orderId, onBack }) => {
     <div className={`order-details-container ${isRtl ? "is-rtl" : ""}`}>
       {/* Top Header Bar */}
       <div className="order-details-nav-header">
-        <button
-          type="button"
-          className="back-btn"
-          onClick={onBack}
-          title={translations.backtoorders || "Back to Orders"}
-        >
-          <ArrowBackIcon fontSize="small" />
-          <span>{translations.backtoorders || "Back to Orders"}</span>
-        </button>
-
         <div className="header-order-title">
           <h2>
             {translations.orderno || "Order"} #{order.orderno}
