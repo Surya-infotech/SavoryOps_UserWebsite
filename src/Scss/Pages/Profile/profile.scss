@@ -313,7 +313,7 @@
 /* Form Fields Grid */
 .profile-fields-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 
   .span-full {
@@ -435,32 +435,39 @@
 /* Gender Options */
 .gender-options-row {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
 }
 
 .gender-chip {
+  flex: 1;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 0.65rem 1.4rem;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.72rem 0.5rem;
   border-radius: 12px;
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   color: #334155;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 0;
+  white-space: nowrap;
+  box-sizing: border-box;
 
   .chip-radio-circle {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     border: 2px solid #cbd5e1;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     transition: border-color 0.2s;
 
     .chip-radio-inner {
@@ -623,6 +630,12 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .profile-fields-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .profile-page-wrapper {
     padding: 0 0 3rem;

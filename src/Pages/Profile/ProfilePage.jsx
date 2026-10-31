@@ -583,7 +583,30 @@ const ProfilePage = () => {
                 {lastNameError && <span className="field-error-msg">{lastNameError}</span>}
               </div>
 
-              {/* 3. Email Address */}
+              {/* 3. Gender Selection */}
+              <div className="form-group">
+                <label className="form-label">{translations.gender}</label>
+                <div className="gender-options-row">
+                  {["Male", "Female", "Other"].map((option) => {
+                    const isSelected = gender === option;
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        className={`gender-chip ${isSelected ? "selected" : ""}`}
+                        onClick={() => setGender(option)}
+                      >
+                        <span className="chip-radio-circle">
+                          {isSelected && <span className="chip-radio-inner" />}
+                        </span>
+                        <span>{translations[option.toLowerCase()] || option}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 4. Email Address */}
               <div className="form-group">
                 <label className="form-label" htmlFor="profile-email">
                   {translations.emailid} <span className="req">*</span>
@@ -608,7 +631,7 @@ const ProfilePage = () => {
                 {emailError && <span className="field-error-msg">{emailError}</span>}
               </div>
 
-              {/* 4. Phone Number */}
+              {/* 5. Phone Number */}
               <div className="form-group">
                 <label className="form-label" htmlFor="profile-phone">
                   {translations.phonenumber} <span className="req">*</span>
@@ -637,42 +660,19 @@ const ProfilePage = () => {
                 )}
               </div>
 
-              {/* 5. Gender Selection (Full Row or Span) */}
-              <div className="form-group span-full">
-                <label className="form-label">{translations.gender}</label>
-                <div className="gender-options-row">
-                  {["Male", "Female", "Other"].map((option) => {
-                    const isSelected = gender === option;
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        className={`gender-chip ${isSelected ? "selected" : ""}`}
-                        onClick={() => setGender(option)}
-                      >
-                        <span className="chip-radio-circle">
-                          {isSelected && <span className="chip-radio-inner" />}
-                        </span>
-                        <span>{translations[option.toLowerCase()] || option}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
               {/* 6. Street Address */}
-              <div className="form-group span-full">
+              <div className="form-group">
                 <label className="form-label" htmlFor="profile-address">
                   {translations.address} <span className="req">*</span>
                 </label>
-                <div className={`textarea-field-wrap ${addressError ? "has-error" : ""}`}>
-                  <HomeOutlinedIcon className="field-icon textarea-icon" />
-                  <textarea
+                <div className={`input-field-wrap ${addressError ? "has-error" : ""}`}>
+                  <HomeOutlinedIcon className="field-icon" />
+                  <input
                     id="profile-address"
                     name="profile_street_address_field"
+                    type="text"
+                    className="text-input"
                     autoComplete="off"
-                    rows={3}
-                    className="textarea-input"
                     placeholder={translations.enterstreetaddress}
                     value={address}
                     onChange={(e) => {
