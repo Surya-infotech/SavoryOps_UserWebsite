@@ -57,20 +57,6 @@ const OrdersPage = () => {
       <Breadcrumbs items={breadcrumbItems} />
 
       <div className="orders-page-container">
-        {!selectedOrderId && (
-          <header className="orders-page-header">
-            <div className="orders-header-meta">
-              <h1 className="orders-main-title">
-                {translations.orders || "Orders"}
-              </h1>
-              <p className="orders-main-subtitle">
-                {translations.orderssubtitle ||
-                  "View, reorder, and track your active delivery orders and dining receipts."}
-              </p>
-            </div>
-          </header>
-        )}
-
         <div className="orders-page-content">
           {selectedOrderId ? (
             <OrderDetails
