@@ -5,6 +5,11 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import BoltIcon from "@mui/icons-material/Bolt";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
@@ -48,6 +53,22 @@ import OrderStatusHistoryModal from "./OrderStatusHistoryModal.jsx";
 import OrderReviewModal from "./OrderReviewModal.jsx";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+
+const getOrderTypeComponentIcon = (orderType) => {
+  const norm = String(orderType || "").toLowerCase().replace(/[-\s_]/g, "");
+  switch (norm) {
+    case "dinein":
+      return <TableRestaurantIcon fontSize="small" />;
+    case "pickup":
+      return <TakeoutDiningIcon fontSize="small" />;
+    case "delivery":
+      return <DeliveryDiningIcon fontSize="small" />;
+    case "takeaway":
+      return <ShoppingBagOutlinedIcon fontSize="small" />;
+    default:
+      return <RestaurantIcon fontSize="small" />;
+  }
+};
 
 /**
  * Modern Skeleton Shimmer for Order Details
@@ -692,7 +713,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                       color: getOrderTypeBackgroundColor(order.ordertype),
                     }}
                   >
-                    <TableRestaurantIcon fontSize="small" />
+                    {getOrderTypeComponentIcon(order.ordertype)}
                   </div>
                   <div className="info-text">
                     <span>{translations[order.ordertype] || order.ordertype}</span>
