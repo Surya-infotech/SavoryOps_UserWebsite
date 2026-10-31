@@ -841,25 +841,22 @@ const OrderDetails = ({ orderId, onBack }) => {
                   return (
                     <div
                       key={pIndex}
-                      className={`order-product-card ${cancelled ? "is-cancelled" : ""
-                        }`}
+                      className={`order-product-item ${cancelled ? "is-cancelled" : ""}`}
                     >
-                      <div className="product-card-main">
-                        <div className="diet-dot-wrap">
-                          <div
-                            className={`diet-box ${isVeg ? "veg" : "non-veg"}`}
-                          >
-                            <div
-                              className={`diet-dot ${isVeg ? "veg" : "non-veg"}`}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="product-title-group">
-                          <div className="name-and-badge">
+                      <div className="product-row-top">
+                        <div className="product-info-col">
+                          <div className="product-title-row">
+                            <div className="diet-dot-wrap">
+                              <div
+                                className={`diet-box ${isVeg ? "veg" : "non-veg"}`}
+                              >
+                                <div
+                                  className={`diet-dot ${isVeg ? "veg" : "non-veg"}`}
+                                />
+                              </div>
+                            </div>
                             <span
-                              className={`product-name ${cancelled ? "strikethrough" : ""
-                                }`}
+                              className={`product-name ${cancelled ? "strikethrough" : ""}`}
                             >
                               {product.productname}
                             </span>
@@ -869,20 +866,23 @@ const OrderDetails = ({ orderId, onBack }) => {
                               </span>
                             )}
                           </div>
-                          <span className="unit-price">
-                            {formatOrderPrice(product.price, order)}
-                          </span>
-                        </div>
 
-                        <div className="product-amount-col">
-                          <div className="qty-tag">
-                            <span>
-                              {translations.qty || "Qty"}: {product.quantity}
+                          <div className="product-meta-subline">
+                            <span className="item-qty-badge">
+                              <ShoppingBasketOutlinedIcon fontSize="inherit" />
+                              <span>
+                                {translations.qty || "Qty"}: {product.quantity}
+                              </span>
+                            </span>
+                            <span className="unit-price-sub">
+                              {formatOrderPrice(product.price, order)}
                             </span>
                           </div>
+                        </div>
+
+                        <div className="product-price-col">
                           <span
-                            className={`product-total-price ${cancelled ? "strikethrough" : ""
-                              }`}
+                            className={`product-total-price ${cancelled ? "strikethrough" : ""}`}
                           >
                             {formatOrderPrice(product.amount, order)}
                           </span>
@@ -896,35 +896,37 @@ const OrderDetails = ({ orderId, onBack }) => {
                             <AddCircleOutlineIcon fontSize="inherit" />
                             <span>{translations.addons || "Add-ons"}</span>
                           </div>
-                          {product.addons.map((addon, aIdx) => (
-                            <div key={aIdx} className="addon-line">
-                              <span className="addon-name">
-                                • {addon.addonname}
-                              </span>
-                              <span className="addon-calc">
-                                ({formatOrderPrice(addon.addonprice, order)} ×{" "}
-                                {product.quantity})
-                              </span>
-                              <span className="addon-total">
-                                {formatOrderPrice(addon.amount, order)}
-                              </span>
-                            </div>
-                          ))}
+                          <div className="addons-list">
+                            {product.addons.map((addon, aIdx) => (
+                              <div key={aIdx} className="addon-line">
+                                <span className="addon-name">
+                                  • {addon.addonname}
+                                  <span className="addon-calc">
+                                    ({formatOrderPrice(addon.addonprice, order)} ×{" "}
+                                    {product.quantity})
+                                  </span>
+                                </span>
+                                <span className="addon-total">
+                                  {formatOrderPrice(addon.amount, order)}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
 
                       {/* Special Instructions */}
                       {product.specialInstructions && (
                         <div className="product-notes-box">
-                          <SpeakerNotesOutlinedIcon fontSize="inherit" />
-                          <div className="notes-text">
-                            <label>
+                          <div className="notes-header">
+                            <SpeakerNotesOutlinedIcon fontSize="inherit" />
+                            <span>
                               {translations.specialinstructions ||
                                 "Special Instructions"}
                               :
-                            </label>
-                            <span>{product.specialInstructions}</span>
+                            </span>
                           </div>
+                          <p className="notes-text">{product.specialInstructions}</p>
                         </div>
                       )}
 
