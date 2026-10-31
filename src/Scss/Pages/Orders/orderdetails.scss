@@ -1,0 +1,809 @@
+/* ==========================================================================
+   SavoryOps User Website - Order Details SCSS
+   Parity with SavoryOps_UserApp OrderDetails component
+   ========================================================================== */
+
+.order-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+
+  &.is-rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* Nav Header */
+  .order-details-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.15rem;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9999px;
+      color: #334155;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #028802;
+        color: #028802;
+        background: #f0fdf4;
+      }
+    }
+
+    .header-order-title {
+      h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.01em;
+      }
+    }
+
+    .header-actions {
+      .history-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 1.15rem;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 9999px;
+        color: #028802;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f0fdf4;
+          border-color: #028802;
+        }
+      }
+    }
+  }
+
+  /* Grid Layout: Main Left Column & Side Right Column */
+  .order-details-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 1.5rem;
+    align-items: flex-start;
+
+    @media (max-width: 980px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .details-main-column,
+  .details-side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  /* Common Detail Card */
+  .detail-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+
+    .card-top-accent {
+      height: 4px;
+      width: 100%;
+
+      &.primary {
+        background: #028802;
+      }
+      &.green {
+        background: #4caf50;
+      }
+      &.teal {
+        background: #009688;
+      }
+      &.gold {
+        background: #f59e0b;
+      }
+    }
+
+    .card-header {
+      padding: 1.15rem 1.25rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid #f1f5f9;
+
+      .card-header-icon {
+        color: #028802;
+        font-size: 1.25rem;
+
+        &.gold {
+          color: #f59e0b;
+        }
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #0f172a;
+        flex: 1;
+      }
+
+      .item-count-badge {
+        font-size: 0.78rem;
+        font-weight: 700;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 0.2rem 0.65rem;
+        border-radius: 9999px;
+      }
+    }
+  }
+
+  /* Overview Card */
+  .overview-card {
+    padding: 1.25rem;
+
+    .overview-badges-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+
+      .status-badge,
+      .payment-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+      }
+    }
+
+    .overview-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+
+      .info-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        .info-icon-wrap {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+
+          &.primary {
+            background: rgba(2, 136, 2, 0.12);
+            color: #028802;
+          }
+
+          &.secondary {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+          }
+
+          &.muted {
+            background: rgba(148, 163, 184, 0.15);
+            color: #64748b;
+          }
+        }
+
+        .info-text {
+          display: flex;
+          flex-direction: column;
+
+          label {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          span {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #0f172a;
+          }
+        }
+      }
+    }
+  }
+
+  /* Table Details Card (Dine-in) */
+  .table-details-card {
+    .table-details-list {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .table-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.65rem 0.85rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 1px solid #f1f5f9;
+
+        .area-name {
+          font-weight: 700;
+          color: #0f172a;
+          font-size: 0.9rem;
+        }
+
+        .table-numbers {
+          font-weight: 600;
+          color: #009688;
+          font-size: 0.88rem;
+        }
+      }
+    }
+  }
+
+  /* Delivery Location Details Card */
+  .location-details-card {
+    .location-details-content {
+      padding: 1.25rem;
+
+      .address-type-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.75rem;
+        background: rgba(2, 136, 2, 0.1);
+        color: #028802;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+      }
+
+      .address-full-line {
+        margin: 0;
+        font-size: 0.92rem;
+        color: #334155;
+        line-height: 1.5;
+        font-weight: 500;
+      }
+    }
+  }
+
+  /* Items Details Card */
+  .items-details-card {
+    .items-list {
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+
+      .order-product-card {
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #fafbfc;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+
+        &.is-cancelled {
+          background: #fef2f2;
+          border-color: #fecaca;
+        }
+
+        .product-card-main {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.85rem;
+
+          .diet-dot-wrap {
+            margin-top: 3px;
+
+            .diet-box {
+              width: 18px;
+              height: 18px;
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 1.5px solid;
+
+              &.veg {
+                border-color: #16a34a;
+              }
+              &.non-veg {
+                border-color: #dc2626;
+              }
+
+              .diet-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+
+                &.veg {
+                  background: #16a34a;
+                }
+                &.non-veg {
+                  background: #dc2626;
+                }
+              }
+            }
+          }
+
+          .product-title-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .name-and-badge {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              flex-wrap: wrap;
+
+              .product-name {
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: #0f172a;
+
+                &.strikethrough {
+                  text-decoration: line-through;
+                  color: #94a3b8;
+                }
+              }
+
+              .cancelled-pill {
+                padding: 0.15rem 0.5rem;
+                background: #ef4444;
+                color: #ffffff;
+                font-size: 0.7rem;
+                font-weight: 700;
+                border-radius: 9999px;
+              }
+            }
+
+            .unit-price {
+              font-size: 0.82rem;
+              color: #64748b;
+              font-weight: 500;
+            }
+          }
+
+          .product-amount-col {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+
+            .qty-tag {
+              padding: 0.15rem 0.6rem;
+              background: #f1f5f9;
+              border-radius: 6px;
+              font-size: 0.78rem;
+              font-weight: 700;
+              color: #475569;
+            }
+
+            .product-total-price {
+              font-size: 1rem;
+              font-weight: 800;
+              color: #0f172a;
+
+              &.strikethrough {
+                text-decoration: line-through;
+                color: #94a3b8;
+              }
+            }
+          }
+        }
+
+        .product-addons-box {
+          background: #ffffff;
+          border: 1px solid #f1f5f9;
+          border-radius: 8px;
+          padding: 0.6rem 0.75rem;
+
+          .addons-title {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+          }
+
+          .addon-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: #475569;
+            padding: 2px 0;
+
+            .addon-name {
+              font-weight: 500;
+            }
+
+            .addon-calc {
+              font-size: 0.76rem;
+              color: #94a3b8;
+              margin: 0 0.4rem;
+            }
+
+            .addon-total {
+              font-weight: 700;
+              color: #0f172a;
+            }
+          }
+        }
+
+        .product-notes-box {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          padding: 0.5rem 0.75rem;
+          background: #fff7ed;
+          border-left: 3px solid #f97316;
+          border-radius: 6px;
+          font-size: 0.82rem;
+          color: #9a3412;
+
+          svg {
+            color: #ea580c;
+            margin-top: 2px;
+          }
+
+          .notes-text {
+            display: flex;
+            flex-direction: column;
+
+            label {
+              font-weight: 700;
+              font-size: 0.74rem;
+            }
+          }
+        }
+
+        .item-cancellation-box {
+          background: #ffffff;
+          border: 1px solid #fecaca;
+          border-radius: 8px;
+          padding: 0.75rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+
+          .cancellation-header {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 0.82rem;
+          }
+
+          .cancellation-meta {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+
+            .meta-pill {
+              font-size: 0.78rem;
+              color: #64748b;
+            }
+          }
+
+          .cancellation-reason {
+            font-size: 0.82rem;
+            color: #334155;
+            background: #fef2f2;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+
+            .reason-label {
+              font-weight: 700;
+              color: #dc2626;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* Bill Summary Card */
+  .bill-summary-card {
+    .bill-rows-container {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+
+      .bill-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #475569;
+
+        .label {
+          font-weight: 500;
+        }
+
+        .value {
+          font-weight: 600;
+          color: #0f172a;
+        }
+
+        &.charge,
+        &.tax,
+        &.roundoff {
+          font-size: 0.86rem;
+          color: #64748b;
+        }
+
+        &.total-tax-row {
+          padding-top: 0.4rem;
+          border-top: 1px dashed #e2e8f0;
+          font-weight: 700;
+
+          .label,
+          .value {
+            font-weight: 700;
+            color: #0f172a;
+          }
+        }
+      }
+
+      .bill-grand-total {
+        margin-top: 0.75rem;
+        padding-top: 0.85rem;
+        border-top: 2px solid #028802;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .grand-label {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          color: #028802;
+          font-weight: 800;
+          font-size: 1.05rem;
+        }
+
+        .grand-value {
+          font-size: 1.35rem;
+          font-weight: 800;
+          color: #028802;
+          letter-spacing: -0.01em;
+        }
+      }
+    }
+
+    .invoice-action-wrap {
+      padding: 0 1.25rem 1.25rem;
+
+      .invoice-download-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: #028802;
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.92rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover:not(:disabled) {
+          background: #026b02;
+          box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  /* Dining Reviews Card */
+  .reviews-card {
+    .write-review-prompt {
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #fefce8;
+      }
+
+      .prompt-left {
+        .prompt-title {
+          font-size: 1rem;
+          font-weight: 800;
+          color: #b45309;
+        }
+
+        .prompt-sub {
+          margin: 0.25rem 0 0.5rem;
+          font-size: 0.82rem;
+          color: #78350f;
+        }
+
+        .stars-placeholder {
+          display: flex;
+          gap: 0.2rem;
+          color: #f59e0b;
+        }
+      }
+
+      .prompt-chevron {
+        color: #b45309;
+      }
+    }
+
+    .existing-review-box {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .review-top-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .review-stars {
+          display: flex;
+          gap: 0.2rem;
+
+          .star-filled {
+            color: #f59e0b;
+            font-size: 1.25rem;
+          }
+          .star-empty {
+            color: #cbd5e1;
+            font-size: 1.25rem;
+          }
+        }
+
+        .icon-action-btn {
+          background: #f1f5f9;
+          border: none;
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #334155;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #e2e8f0;
+            color: #028802;
+          }
+        }
+      }
+
+      .review-quote-bubble {
+        background: #f8fafc;
+        border-left: 3px solid #028802;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+
+        p {
+          margin: 0;
+          font-size: 0.88rem;
+          color: #334155;
+          font-style: italic;
+          line-height: 1.45;
+        }
+      }
+
+      .review-footer-date {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.78rem;
+        color: #94a3b8;
+      }
+    }
+  }
+
+  /* Loading & Empty States */
+  .order-details-loading-state {
+    padding: 5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: #64748b;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .order-details-empty-state {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 3.5rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px;
+    margin: 2rem auto;
+
+    .empty-icon {
+      font-size: 3.2rem;
+      color: #ef4444;
+      margin-bottom: 0.85rem;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem;
+    }
+
+    p {
+      color: #64748b;
+      font-size: 0.92rem;
+      margin: 0 0 1.5rem;
+      line-height: 1.5;
+    }
+
+    .empty-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+  }
+}
+
