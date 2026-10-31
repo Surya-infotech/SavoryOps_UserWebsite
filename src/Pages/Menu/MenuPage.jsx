@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
@@ -71,8 +71,11 @@ const MenuPage = () => {
     }
   }, [businessDisplayName, translations]);
 
+  const lastBranchIdRef = useRef(null);
+  const isFetchingRef = useRef(false);
+
   // Fetch Menu, Category, Item, and Deal data from website endpoint
-  const fetchMenuData = useCallback(async (branchIdParam) => {
+  const fetchMenuData = useCallback(async (branchIdParam, force = false) => {
     const currentSubdomain = getWebsiteSubdomain();
     if (!currentSubdomain) {
       setLoading(false);
@@ -89,6 +92,13 @@ const MenuPage = () => {
       return;
     }
 
+    // Prevent duplicate refetch for the same branch if already fetched or in-flight
+    if (!force && (lastBranchIdRef.current === String(branchId) || isFetchingRef.current)) {
+      return;
+    }
+
+    lastBranchIdRef.current = String(branchId);
+    isFetchingRef.current = true;
     setLoading(true);
     try {
       const response = await fetch(`${adminPanelBackendPath}/Website/Menu/GetItemcategory/${branchId}`, {
@@ -137,6 +147,7 @@ const MenuPage = () => {
       setRawCategories([]);
       setRawDealsBundles([]);
     } finally {
+      isFetchingRef.current = false;
       setLoading(false);
     }
   }, []);
@@ -146,13 +157,16 @@ const MenuPage = () => {
     fetchMenuData();
 
     const handleBranchChange = (e) => {
-      if (e?.detail) {
-        setSelectedBranch(e.detail);
-        if (e.detail._id) fetchMenuData(e.detail._id);
-        else fetchMenuData();
-      } else {
-        setSelectedBranch(getActiveBranch());
-        fetchMenuData();
+      const newBranch = e?.detail;
+      const newBranchId = newBranch?._id || newBranch?.branchid;
+
+      if (newBranch) {
+        setSelectedBranch(newBranch);
+      }
+
+      // Only refetch if the branch is genuinely different from what was already fetched
+      if (newBranchId && String(newBranchId) !== String(lastBranchIdRef.current)) {
+        fetchMenuData(newBranchId, true);
       }
     };
 

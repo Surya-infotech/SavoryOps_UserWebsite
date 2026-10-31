@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
@@ -82,8 +82,11 @@ const OffersPage = () => {
     };
   }, [selectedItemModal]);
 
+  const lastBranchIdRef = useRef(null);
+  const isFetchingRef = useRef(false);
+
   // Fetch Deals / Bundles from owner database
-  const fetchOffersData = useCallback(async (branchIdParam) => {
+  const fetchOffersData = useCallback(async (branchIdParam, force = false) => {
     const currentSubdomain = getWebsiteSubdomain();
     if (!currentSubdomain) {
       setLoading(false);
@@ -100,7 +103,15 @@ const OffersPage = () => {
       return;
     }
 
+    // Prevent duplicate refetch for the same branch if already fetched or in-flight
+    if (!force && (lastBranchIdRef.current === String(branchId) || isFetchingRef.current)) {
+      return;
+    }
+
+    lastBranchIdRef.current = String(branchId);
+    isFetchingRef.current = true;
     setLoading(true);
+
     try {
       const response = await fetch(
         `${adminPanelBackendPath}/Website/Menu/GetItemcategory/${branchId}`,
@@ -138,6 +149,7 @@ const OffersPage = () => {
       console.error("Error fetching offers details for website:", err);
       setRawDealsBundles([]);
     } finally {
+      isFetchingRef.current = false;
       setLoading(false);
     }
   }, []);
@@ -147,13 +159,16 @@ const OffersPage = () => {
     fetchOffersData();
 
     const handleBranchChange = (e) => {
-      if (e?.detail) {
-        setSelectedBranch(e.detail);
-        if (e.detail._id) fetchOffersData(e.detail._id);
-        else fetchOffersData();
-      } else {
-        setSelectedBranch(getActiveBranch());
-        fetchOffersData();
+      const newBranch = e?.detail;
+      const newBranchId = newBranch?._id || newBranch?.branchid;
+
+      if (newBranch) {
+        setSelectedBranch(newBranch);
+      }
+
+      // Only refetch if the branch is genuinely different from what was already fetched
+      if (newBranchId && String(newBranchId) !== String(lastBranchIdRef.current)) {
+        fetchOffersData(newBranchId, true);
       }
     };
 
