@@ -70,7 +70,7 @@ const getDietInfo = (item) => {
 
 const CartPage = () => {
   const navigate = useNavigate();
-  const { translations = {} } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const { business } = useWebsiteStatus();
   const { showSnackbar } = useSnackbar();
   const businessDisplayName = business?.businessname || "";
@@ -335,11 +335,16 @@ const CartPage = () => {
   };
 
   return (
-    <div className="cart-page-wrapper">
-      <div className="cart-container">
-        {/* Breadcrumbs */}
-        <Breadcrumbs currentPage={translations.cart || "Cart"} />
+    <div className={`cart-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
+      {/* Site-wide Unified Breadcrumbs - Exact design and position as ManageAddress */}
+      <Breadcrumbs
+        items={[
+          { label: translations.home || "Home", path: "/" },
+          { label: translations.cart || "Cart" },
+        ]}
+      />
 
+      <div className="cart-container">
         {/* Empty State */}
         {cartItems.length === 0 ? (
           <div className="cart-empty-state">

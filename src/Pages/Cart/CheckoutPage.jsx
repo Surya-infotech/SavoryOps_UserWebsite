@@ -605,11 +605,17 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div className="checkout-page-wrapper">
-      <div className="checkout-container">
-        {/* Breadcrumbs */}
-        <Breadcrumbs currentPage={translations.checkout || "Checkout"} />
+    <div className={`checkout-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
+      {/* Site-wide Unified Breadcrumbs - Exact design and position as ManageAddress */}
+      <Breadcrumbs
+        items={[
+          { label: translations.home || "Home", path: "/" },
+          { label: translations.cart || "Cart", path: "/cart" },
+          { label: translations.checkout || "Checkout" },
+        ]}
+      />
 
+      <div className="checkout-container">
         {/* Page Header */}
         <div className="checkout-header-row">
           <div className="checkout-title-group">

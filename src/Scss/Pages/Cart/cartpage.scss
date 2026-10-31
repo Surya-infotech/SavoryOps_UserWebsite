@@ -6,8 +6,18 @@
 .cart-page-wrapper {
   width: 100%;
   min-height: 85vh;
-  padding-bottom: 6rem;
+  padding: 0 0 5rem;
   background-color: #f8fafc;
+
+  .site-breadcrumb-container {
+    max-width: 1320px;
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  &.is-rtl {
+    direction: rtl;
+    text-align: right;
+  }
 }
 
 .cart-container {
