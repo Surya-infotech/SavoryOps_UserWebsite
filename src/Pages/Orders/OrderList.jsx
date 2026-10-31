@@ -8,7 +8,6 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
@@ -331,11 +330,6 @@ const OrderList = ({ onSelectOrder }) => {
                     <span className="total-val">
                       {formatOrderPrice(order.totalprice, order)}
                     </span>
-                  </div>
-
-                  <div className="view-details-action">
-                    <span>{translations.viewdetails || "View Details"}</span>
-                    <ArrowForwardIcon className="arrow-icon" fontSize="small" />
                   </div>
                 </div>
               </div>
