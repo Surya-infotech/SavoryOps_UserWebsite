@@ -77,12 +77,14 @@
   .orders-toolbar {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     width: 100%;
     margin-bottom: 0.25rem;
 
     .orders-search-box {
       width: 100%;
       max-width: 480px;
+      margin-left: auto;
       position: relative;
       display: flex;
       align-items: center;
