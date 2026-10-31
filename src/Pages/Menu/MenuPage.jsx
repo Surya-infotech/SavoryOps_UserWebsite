@@ -328,7 +328,7 @@ const MenuPage = () => {
   // Options for custom Dropdown component
   const menuOptions = useMemo(() => {
     return [
-      { id: "all", name: translations.allmenus },
+      { id: "all", name: translations.allmenus || "All Menus" },
       ...availableMenus,
     ];
   }, [availableMenus, translations]);
@@ -338,17 +338,40 @@ const MenuPage = () => {
     const list = [];
     rawCategories.forEach((cat) => {
       const catId = String(cat.itemcategoryid);
-      const count = allDishes.filter((d) => String(d.categoryid) === catId).length;
-      if (count > 0) {
+      const matchingDishes = allDishes.filter((d) => {
+        if (String(d.categoryid) !== catId) return false;
+        if (selectedMenu !== "all" && String(d.menuid) !== String(selectedMenu)) return false;
+        return true;
+      });
+      if (matchingDishes.length > 0) {
         list.push({
           id: catId,
           name: cat.itemcategoryname || "Category",
-          count,
+          count: matchingDishes.length,
         });
       }
     });
     return list;
-  }, [rawCategories, allDishes]);
+  }, [rawCategories, allDishes, selectedMenu]);
+
+  // Options for custom Category Dropdown component
+  const categoryOptions = useMemo(() => {
+    const totalCount =
+      selectedMenu === "all"
+        ? allCombinedItems.length
+        : allDishes.filter((d) => String(d.menuid) === String(selectedMenu)).length;
+
+    return [
+      {
+        id: "all",
+        name: `${translations.allcategories || "All Categories"} (${totalCount})`,
+      },
+      ...availableCategories.map((cat) => ({
+        id: cat.id,
+        name: `${cat.name} (${cat.count})`,
+      })),
+    ];
+  }, [availableCategories, allCombinedItems, allDishes, selectedMenu, translations]);
 
   // Filter items based on selected Menu, Item Category, and Diet (Veg/Non-Veg)
   const filteredItems = useMemo(() => {
@@ -635,59 +658,83 @@ const MenuPage = () => {
       <Breadcrumbs currentPage={translations.menu} />
 
       <div className="menu-main-content-container">
-        {/* --- Modern Interactive Filters (Menu, Item Category, Veg / Non-Veg) --- */}
+        {/* --- Modern Interactive Filters (Ultra-Compact Single Row Bar) --- */}
         {!loading && allCombinedItems.length > 0 && (
           <div className="menu-filters-wrapper">
             <div className="menu-filter-bar">
-              {/* 1. Menu Filter Dropdown (Custom Searchable Dropdown) */}
-              {availableMenus.length > 0 && (
-                <div className="filter-item-wrap menu-dropdown-wrap">
-                  <div className="menu-custom-dropdown-container">
-                    <Dropdown
-                      id="menu-filter-dropdown"
-                      options={menuOptions}
-                      labelKey="name"
-                      valueKey="id"
-                      selectedValue={selectedMenu}
-                      onValueChange={(val) => setSelectedMenu(val || "all")}
-                      placeholder={translations.allmenus}
-                      showSearch={true}
-                      className="menu-page-dropdown"
-                    />
+              <div className="filter-controls-group">
+                {/* 1. Menu Filter Dropdown (Custom Searchable Dropdown) */}
+                {availableMenus.length > 0 && (
+                  <div className="filter-item-wrap menu-dropdown-wrap">
+                    <div className="menu-custom-dropdown-container">
+                      <Dropdown
+                        id="menu-filter-dropdown"
+                        options={menuOptions}
+                        labelKey="name"
+                        valueKey="id"
+                        selectedValue={selectedMenu}
+                        onValueChange={(val) => {
+                          setSelectedMenu(val || "all");
+                          setSelectedCategory("all");
+                        }}
+                        placeholder={translations.allmenus || "All Menus"}
+                        showSearch={true}
+                        className="menu-page-dropdown"
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* 2. Diet Filter (Veg / Non-Veg) Segmented Group */}
-              <div className="filter-item-wrap diet-toggle-wrap">
-                <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
-                  <button
-                    type="button"
-                    className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
-                    onClick={() => setSelectedDiet("all")}
-                  >
-                    <span>{translations.all}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
-                    onClick={() => setSelectedDiet("veg")}
-                  >
-                    <span className="diet-box">
-                      <span className="diet-dot" />
-                    </span>
-                    <span>{translations.veg}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
-                    onClick={() => setSelectedDiet("nonveg")}
-                  >
-                    <span className="diet-box">
-                      <span className="diet-dot" />
-                    </span>
-                    <span>{translations.nonveg}</span>
-                  </button>
+                {/* 2. Category Filter Dropdown (Custom Searchable Dropdown with Counts) */}
+                {availableCategories.length > 0 && (
+                  <div className="filter-item-wrap category-dropdown-wrap">
+                    <div className="menu-custom-dropdown-container category-select-dropdown">
+                      <Dropdown
+                        id="category-filter-dropdown"
+                        options={categoryOptions}
+                        labelKey="name"
+                        valueKey="id"
+                        selectedValue={selectedCategory}
+                        onValueChange={(val) => setSelectedCategory(val || "all")}
+                        placeholder={translations.allcategories || "All Categories"}
+                        showSearch={true}
+                        className="menu-page-dropdown"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. Diet Filter (Veg / Non-Veg) Segmented Group */}
+                <div className="filter-item-wrap diet-toggle-wrap">
+                  <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
+                    <button
+                      type="button"
+                      className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
+                      onClick={() => setSelectedDiet("all")}
+                    >
+                      <span>{translations.all || "All"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
+                      onClick={() => setSelectedDiet("veg")}
+                    >
+                      <span className="diet-box">
+                        <span className="diet-dot" />
+                      </span>
+                      <span>{translations.veg || "Veg"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
+                      onClick={() => setSelectedDiet("nonveg")}
+                    >
+                      <span className="diet-box">
+                        <span className="diet-dot" />
+                      </span>
+                      <span>{translations.nonveg || "Non-Veg"}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -696,8 +743,8 @@ const MenuPage = () => {
                 <span className="filter-results-badge">
                   {filteredItems.length}{" "}
                   {filteredItems.length === 1
-                    ? translations.dish
-                    : translations.dishes}
+                    ? (translations.dish || "dish")
+                    : (translations.dishes || "dishes")}
                 </span>
                 {isFilterActive && (
                   <button
@@ -707,44 +754,11 @@ const MenuPage = () => {
                     title="Clear all filters"
                   >
                     <CloseIcon fontSize="small" />
-                    <span>{translations.clear}</span>
+                    <span>{translations.clear || "Clear"}</span>
                   </button>
                 )}
               </div>
             </div>
-
-            {/* 3. Item Category Filter Pills (Wraps across lines, no horizontal scroll) */}
-            {availableCategories.length > 0 && (
-              <div
-                className="menu-category-pills-bar"
-                role="tablist"
-                aria-label="Item Categories"
-              >
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={selectedCategory === "all"}
-                  className={`category-pill-btn ${selectedCategory === "all" ? "active" : ""}`}
-                  onClick={() => setSelectedCategory("all")}
-                >
-                  <span>{translations.allcategories}</span>
-                  <span className="pill-badge">{allCombinedItems.length}</span>
-                </button>
-                {availableCategories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={selectedCategory === cat.id}
-                    className={`category-pill-btn ${selectedCategory === cat.id ? "active" : ""}`}
-                    onClick={() => setSelectedCategory(cat.id)}
-                  >
-                    <span>{cat.name}</span>
-                    {cat.count != null && <span className="pill-badge">{cat.count}</span>}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         )}
 

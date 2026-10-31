@@ -352,40 +352,86 @@ const OffersPage = () => {
       <Breadcrumbs currentPage={translations.specialoffers || "Special Offers & Deals"} />
 
       <div className="offers-main-content-container">
-        {/* Filter Bar (matching MenuPage) */}
+        {/* Filter Bar (matching MenuPage ultra-compact single-row design) */}
         {!loading && formattedDeals.length > 0 && (
           <div className="menu-filters-wrapper">
             <div className="menu-filter-bar">
-              {/* Diet Filter (Veg / Non-Veg) */}
-              <div className="filter-item-wrap diet-toggle-wrap">
-                <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
+              <div className="filter-controls-group">
+                {/* Category Pills Bar */}
+                <div
+                  className="menu-category-pills-bar"
+                  role="tablist"
+                  aria-label="Deals Categories"
+                >
                   <button
                     type="button"
-                    className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
-                    onClick={() => setSelectedDiet("all")}
+                    role="tab"
+                    aria-selected={selectedType === "all"}
+                    className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
+                    onClick={() => setSelectedType("all")}
                   >
-                    <span>{translations.all || "All"}</span>
+                    <span>{translations.alloffers || "All Deals"}</span>
+                    <span className="pill-badge">{formattedDeals.length}</span>
                   </button>
-                  <button
-                    type="button"
-                    className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
-                    onClick={() => setSelectedDiet("veg")}
-                  >
-                    <span className="diet-box">
-                      <span className="diet-dot" />
-                    </span>
-                    <span>{translations.veg || "Veg"}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
-                    onClick={() => setSelectedDiet("nonveg")}
-                  >
-                    <span className="diet-box">
-                      <span className="diet-dot" />
-                    </span>
-                    <span>{translations.nonveg || "Non-Veg"}</span>
-                  </button>
+
+                  {comboMeals.length > 0 && (
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={selectedType === "combo"}
+                      className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
+                      onClick={() => setSelectedType("combo")}
+                    >
+                      <span>{translations.combos || "Combos"}</span>
+                      <span className="pill-badge">{comboMeals.length}</span>
+                    </button>
+                  )}
+
+                  {unlimitedMeals.length > 0 && (
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={selectedType === "unlimited"}
+                      className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
+                      onClick={() => setSelectedType("unlimited")}
+                    >
+                      <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
+                      <span className="pill-badge">{unlimitedMeals.length}</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Diet Filter (Veg / Non-Veg) */}
+                <div className="filter-item-wrap diet-toggle-wrap">
+                  <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
+                    <button
+                      type="button"
+                      className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
+                      onClick={() => setSelectedDiet("all")}
+                    >
+                      <span>{translations.all || "All"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
+                      onClick={() => setSelectedDiet("veg")}
+                    >
+                      <span className="diet-box">
+                        <span className="diet-dot" />
+                      </span>
+                      <span>{translations.veg || "Veg"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
+                      onClick={() => setSelectedDiet("nonveg")}
+                    >
+                      <span className="diet-box">
+                        <span className="diet-dot" />
+                      </span>
+                      <span>{translations.nonveg || "Non-Veg"}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -394,8 +440,8 @@ const OffersPage = () => {
                 <span className="filter-results-badge">
                   {filteredDeals.length}{" "}
                   {filteredDeals.length === 1
-                    ? translations.deal || "deal"
-                    : translations.deals || "deals"}
+                    ? (translations.deal || "deal")
+                    : (translations.deals || "deals")}
                 </span>
                 {isFilterActive && (
                   <button
@@ -409,50 +455,6 @@ const OffersPage = () => {
                   </button>
                 )}
               </div>
-            </div>
-
-            {/* Category Pills Bar (Wraps across lines, matching MenuPage) */}
-            <div
-              className="menu-category-pills-bar"
-              role="tablist"
-              aria-label="Deals Categories"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={selectedType === "all"}
-                className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
-                onClick={() => setSelectedType("all")}
-              >
-                <span>{translations.alloffers || "All Deals"}</span>
-                <span className="pill-badge">{formattedDeals.length}</span>
-              </button>
-
-              {comboMeals.length > 0 && (
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={selectedType === "combo"}
-                  className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
-                  onClick={() => setSelectedType("combo")}
-                >
-                  <span>{translations.combos || "Combos"}</span>
-                  <span className="pill-badge">{comboMeals.length}</span>
-                </button>
-              )}
-
-              {unlimitedMeals.length > 0 && (
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={selectedType === "unlimited"}
-                  className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
-                  onClick={() => setSelectedType("unlimited")}
-                >
-                  <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
-                  <span className="pill-badge">{unlimitedMeals.length}</span>
-                </button>
-              )}
             </div>
           </div>
         )}
