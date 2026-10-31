@@ -570,9 +570,11 @@ const OrderDetails = ({ orderId, onBack }) => {
     [locationDetails, order?.ordertype]
   );
 
-  const showReviewAndInvoiceActions =
-    (order?.orderstatus === "Completed" || order?.orderstatus === "Delivered") &&
-    order?.paymentstatus === "Paid";
+  const showReviewAndInvoiceActions = useMemo(() => {
+    const status = String(order?.orderstatus || "").trim().toLowerCase();
+    const payment = String(order?.paymentstatus || "").trim().toLowerCase();
+    return (status === "completed" || status === "delivered") && payment === "paid";
+  }, [order?.orderstatus, order?.paymentstatus]);
 
   const beforeTaxCharges = useMemo(() => {
     return (order?.additionalCharges || [])
@@ -1100,24 +1102,26 @@ const OrderDetails = ({ orderId, onBack }) => {
               </div>
             </div>
 
-            {/* Invoice Button */}
-            <div className="invoice-action-wrap">
-              <button
-                type="button"
-                className="invoice-download-btn"
-                onClick={handlePrintInvoice}
-                disabled={isInvoicePrinting}
-              >
-                {isInvoicePrinting ? (
-                  <CircularProgress size={18} color="inherit" />
-                ) : (
-                  <DownloadOutlinedIcon fontSize="small" />
-                )}
-                <span>
-                  {translations.generatepdfinvoice || "Download / Print Invoice"}
-                </span>
-              </button>
-            </div>
+            {/* Invoice Button (Parity with UserApp: only show when order is Paid and Completed/Delivered) */}
+            {showReviewAndInvoiceActions && (
+              <div className="invoice-action-wrap">
+                <button
+                  type="button"
+                  className="invoice-download-btn"
+                  onClick={handlePrintInvoice}
+                  disabled={isInvoicePrinting}
+                >
+                  {isInvoicePrinting ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : (
+                    <DownloadOutlinedIcon fontSize="small" />
+                  )}
+                  <span>
+                    {translations.generatepdfinvoice || "Download / Print Invoice"}
+                  </span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Dining Reviews Section */}
