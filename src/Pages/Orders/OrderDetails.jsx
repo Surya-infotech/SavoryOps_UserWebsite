@@ -58,15 +58,15 @@ const getOrderTypeComponentIcon = (orderType) => {
   const norm = String(orderType || "").toLowerCase().replace(/[-\s_]/g, "");
   switch (norm) {
     case "dinein":
-      return <TableRestaurantIcon fontSize="small" />;
+      return <TableRestaurantIcon fontSize="medium" />;
     case "pickup":
-      return <TakeoutDiningIcon fontSize="small" />;
+      return <TakeoutDiningIcon fontSize="medium" />;
     case "delivery":
-      return <DeliveryDiningIcon fontSize="small" />;
+      return <DeliveryDiningIcon fontSize="medium" />;
     case "takeaway":
-      return <ShoppingBagOutlinedIcon fontSize="small" />;
+      return <ShoppingBagOutlinedIcon fontSize="medium" />;
     default:
-      return <RestaurantIcon fontSize="small" />;
+      return <RestaurantIcon fontSize="medium" />;
   }
 };
 
@@ -240,8 +240,8 @@ const OrderDetails = ({ orderId, onBack }) => {
 
         const serverSubtotal =
           data.subtotalprice !== undefined &&
-          data.subtotalprice !== null &&
-          !isNaN(parseFloat(data.subtotalprice))
+            data.subtotalprice !== null &&
+            !isNaN(parseFloat(data.subtotalprice))
             ? parseFloat(data.subtotalprice)
             : null;
 
@@ -258,8 +258,8 @@ const OrderDetails = ({ orderId, onBack }) => {
             calculatedSubtotal > 0
               ? calculatedSubtotal
               : serverSubtotal !== null
-              ? serverSubtotal
-              : 0;
+                ? serverSubtotal
+                : 0;
         }
 
         const formattedProducts = (data.items || []).map((item) => {
@@ -289,9 +289,9 @@ const OrderDetails = ({ orderId, onBack }) => {
             item.cancelledAt ||
             (cancelled
               ? data.cancelledat ||
-                data.cancelledtime ||
-                data.cancelledTime ||
-                data.cancelledAt
+              data.cancelledtime ||
+              data.cancelledTime ||
+              data.cancelledAt
               : null);
 
           return {
@@ -345,17 +345,17 @@ const OrderDetails = ({ orderId, onBack }) => {
           Array.isArray(data.taxes) && data.taxes.length > 0
             ? data.taxes
             : [
-                ...(data.branchTaxes || []),
-                ...(data.orderTypeTaxes || []),
-                ...(data.itemTaxes || []),
-              ];
+              ...(data.branchTaxes || []),
+              ...(data.orderTypeTaxes || []),
+              ...(data.itemTaxes || []),
+            ];
         const validTaxesMap = new Map();
         allTaxesList.forEach((t) => {
           if (
             !t ||
             !t.taxname ||
             String(t.taxcomputation ?? "exclusive").toLowerCase() ===
-              "inclusive"
+            "inclusive"
           )
             return;
           const key = t.taxid ?? t.taxname;
@@ -423,8 +423,8 @@ const OrderDetails = ({ orderId, onBack }) => {
 
         const serverTax =
           data.totaltax !== undefined &&
-          data.totaltax !== null &&
-          !isNaN(parseFloat(data.totaltax))
+            data.totaltax !== null &&
+            !isNaN(parseFloat(data.totaltax))
             ? parseFloat(data.totaltax)
             : null;
 
@@ -443,8 +443,8 @@ const OrderDetails = ({ orderId, onBack }) => {
 
         const serverTotalPrice =
           data.totalprice !== undefined &&
-          data.totalprice !== null &&
-          !isNaN(parseFloat(data.totalprice))
+            data.totalprice !== null &&
+            !isNaN(parseFloat(data.totalprice))
             ? parseFloat(data.totalprice)
             : null;
 
@@ -776,24 +776,30 @@ const OrderDetails = ({ orderId, onBack }) => {
                 <h3>{translations.locationdetails || "Delivery Location"}</h3>
               </div>
               <div className="location-details-content">
-                <div className="address-type-pill">
-                  {locationDetails.addresstype === "work" ? (
-                    <WorkOutlineOutlinedIcon fontSize="inherit" />
-                  ) : locationDetails.addresstype === "other" ? (
-                    <PlaceOutlinedIcon fontSize="inherit" />
-                  ) : (
-                    <HomeOutlinedIcon fontSize="inherit" />
-                  )}
-                  <span>
-                    {formatLocationAddressType(
+                <div className="location-address-row">
+                  <div
+                    className="location-type-icon-wrap"
+                    title={formatLocationAddressType(
                       locationDetails.addresstype,
                       translations
                     )}
-                  </span>
+                    aria-label={formatLocationAddressType(
+                      locationDetails.addresstype,
+                      translations
+                    )}
+                  >
+                    {locationDetails.addresstype === "work" ? (
+                      <WorkOutlineOutlinedIcon className="location-type-icon" />
+                    ) : locationDetails.addresstype === "other" ? (
+                      <PlaceOutlinedIcon className="location-type-icon" />
+                    ) : (
+                      <HomeOutlinedIcon className="location-type-icon" />
+                    )}
+                  </div>
+                  <p className="address-full-line">
+                    {formatLocationDetailsLine(locationDetails)}
+                  </p>
                 </div>
-                <p className="address-full-line">
-                  {formatLocationDetailsLine(locationDetails)}
-                </p>
               </div>
             </div>
           )}
@@ -821,9 +827,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                 return (
                   <div
                     key={pIndex}
-                    className={`order-product-card ${
-                      cancelled ? "is-cancelled" : ""
-                    }`}
+                    className={`order-product-card ${cancelled ? "is-cancelled" : ""
+                      }`}
                   >
                     <div className="product-card-main">
                       <div className="diet-dot-wrap">
@@ -839,9 +844,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                       <div className="product-title-group">
                         <div className="name-and-badge">
                           <span
-                            className={`product-name ${
-                              cancelled ? "strikethrough" : ""
-                            }`}
+                            className={`product-name ${cancelled ? "strikethrough" : ""
+                              }`}
                           >
                             {product.productname}
                           </span>
@@ -863,9 +867,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                           </span>
                         </div>
                         <span
-                          className={`product-total-price ${
-                            cancelled ? "strikethrough" : ""
-                          }`}
+                          className={`product-total-price ${cancelled ? "strikethrough" : ""
+                            }`}
                         >
                           {formatOrderPrice(product.amount, order)}
                         </span>
@@ -992,8 +995,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                     ? chg.chargetype === "percentage"
                       ? ` (${rawVal}%)`
                       : chg.chargetype === "fixed"
-                      ? ` (${formatOrderPrice(rawVal, order)})`
-                      : ` (${rawVal})`
+                        ? ` (${formatOrderPrice(rawVal, order)})`
+                        : ` (${rawVal})`
                     : "";
                 return (
                   <div key={`btc-${idx}`} className="bill-row charge">
@@ -1015,8 +1018,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                     tax.taxtype === "percentage"
                       ? ` (${tax.price ?? tax.rate}%)`
                       : tax.taxtype === "fixed"
-                      ? ` (${formatOrderPrice(tax.price ?? tax.rate, order)})`
-                      : "";
+                        ? ` (${formatOrderPrice(tax.price ?? tax.rate, order)})`
+                        : "";
                   return (
                     <div key={`tax-${idx}`} className="bill-row tax">
                       <span className="label">
@@ -1053,8 +1056,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                     ? chg.chargetype === "percentage"
                       ? ` (${rawVal}%)`
                       : chg.chargetype === "fixed"
-                      ? ` (${formatOrderPrice(rawVal, order)})`
-                      : ` (${rawVal})`
+                        ? ` (${formatOrderPrice(rawVal, order)})`
+                        : ` (${rawVal})`
                     : "";
                 return (
                   <div key={`atc-${idx}`} className="bill-row charge">
@@ -1079,8 +1082,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                     {roundoffAmount > 0
                       ? `+${formatOrderPrice(roundoffAmount, order)}`
                       : roundoffAmount < 0
-                      ? `-${formatOrderPrice(Math.abs(roundoffAmount), order)}`
-                      : formatOrderPrice(0, order)}
+                        ? `-${formatOrderPrice(Math.abs(roundoffAmount), order)}`
+                        : formatOrderPrice(0, order)}
                   </span>
                 </div>
               )}
