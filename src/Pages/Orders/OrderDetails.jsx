@@ -106,24 +106,26 @@ const OrderDetailsShimmer = () => (
         </div>
 
         {/* Items Card Shimmer */}
-        <div className="detail-card shimmer-card items-shimmer">
-          <div className="shimmer-accent-bar primary" />
-          <div className="shimmer-card-header">
+        <div className="order-details-section shimmer-section">
+          <div className="section-header-outside shimmer-section-header">
             <div className="shimmer-line header-title" />
             <div className="shimmer-pill count-pill" />
           </div>
-          <div className="shimmer-items-list">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="shimmer-product-row">
-                <div className="shimmer-dot" />
-                <div className="shimmer-product-meta">
-                  <div className="shimmer-line product-name" />
-                  <div className="shimmer-line product-price" />
+          <div className="detail-card shimmer-card items-shimmer">
+            <div className="shimmer-accent-bar primary" />
+            <div className="shimmer-items-list">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="shimmer-product-row">
+                  <div className="shimmer-dot" />
+                  <div className="shimmer-product-meta">
+                    <div className="shimmer-line product-name" />
+                    <div className="shimmer-line product-price" />
+                  </div>
+                  <div className="shimmer-pill qty-pill" />
+                  <div className="shimmer-line total-price" />
                 </div>
-                <div className="shimmer-pill qty-pill" />
-                <div className="shimmer-line total-price" />
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -131,22 +133,24 @@ const OrderDetailsShimmer = () => (
       {/* Right Column Shimmer */}
       <div className="details-side-column">
         {/* Bill Summary Card Shimmer */}
-        <div className="detail-card shimmer-card bill-shimmer">
-          <div className="shimmer-accent-bar green" />
-          <div className="shimmer-card-header">
+        <div className="order-details-section shimmer-section">
+          <div className="section-header-outside shimmer-section-header">
             <div className="shimmer-line header-title" />
           </div>
-          <div className="shimmer-bill-rows">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="shimmer-bill-row">
-                <div className="shimmer-line bill-label" />
-                <div className="shimmer-line bill-val" />
+          <div className="detail-card shimmer-card bill-shimmer">
+            <div className="shimmer-accent-bar green" />
+            <div className="shimmer-bill-rows">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="shimmer-bill-row">
+                  <div className="shimmer-line bill-label" />
+                  <div className="shimmer-line bill-val" />
+                </div>
+              ))}
+              <div className="shimmer-divider" />
+              <div className="shimmer-bill-row total-row">
+                <div className="shimmer-line total-label" />
+                <div className="shimmer-line total-val" />
               </div>
-            ))}
-            <div className="shimmer-divider" />
-            <div className="shimmer-bill-row total-row">
-              <div className="shimmer-line total-label" />
-              <div className="shimmer-line total-val" />
             </div>
           </div>
         </div>
@@ -743,227 +747,238 @@ const OrderDetails = ({ orderId, onBack }) => {
 
           {/* Table Details Card (Dine-in) */}
           {hasTableDetails && (
-            <div className="detail-card table-details-card">
-              <div className="card-top-accent teal" />
-              <div className="card-header">
-                <TableRestaurantIcon className="card-header-icon" />
-                <h3>{translations.tabledetails || "Table Details"}</h3>
+            <div className="order-details-section table-details-section">
+              <div className="section-header-outside">
+                <div className="section-header-left">
+                  <TableRestaurantIcon className="section-header-icon teal" />
+                  <h3>{translations.tabledetails || "Table Details"}</h3>
+                </div>
               </div>
-              <div className="table-details-list">
-                {order.areatabledetails
-                  .filter((a) => Array.isArray(a?.tables) && a.tables.length > 0)
-                  .map((area, idx) => {
-                    const tableNos = area.tables
-                      .map((t) => t.tableno)
-                      .join(", ");
-                    return (
-                      <div key={idx} className="table-row">
-                        <span className="area-name">{area.areaname}</span>
-                        <span className="table-numbers">
-                          {translations.tableno || "Table"} {tableNos}
-                        </span>
-                      </div>
-                    );
-                  })}
+              <div className="detail-card table-details-card">
+                <div className="card-top-accent teal" />
+                <div className="table-details-list">
+                  {order.areatabledetails
+                    .filter((a) => Array.isArray(a?.tables) && a.tables.length > 0)
+                    .map((area, idx) => {
+                      const tableNos = area.tables
+                        .map((t) => t.tableno)
+                        .join(", ");
+                      return (
+                        <div key={idx} className="table-row">
+                          <span className="area-name">{area.areaname}</span>
+                          <span className="table-numbers">
+                            {translations.tableno || "Table"} {tableNos}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             </div>
           )}
 
           {/* Delivery Location Details Card */}
           {showLocationDetails && (
-            <div className="detail-card location-details-card">
-              <div className="card-top-accent green" />
-              <div className="card-header">
-                <PlaceOutlinedIcon className="card-header-icon" />
-                <h3>{translations.locationdetails || "Delivery Location"}</h3>
+            <div className="order-details-section location-details-section">
+              <div className="section-header-outside">
+                <div className="section-header-left">
+                  <PlaceOutlinedIcon className="section-header-icon" />
+                  <h3>{translations.locationdetails || "Delivery Location"}</h3>
+                </div>
               </div>
-              <div className="location-details-content">
-                <div className="location-address-row">
-                  <div
-                    className="location-type-icon-wrap"
-                    title={formatLocationAddressType(
-                      locationDetails.addresstype,
-                      translations
-                    )}
-                    aria-label={formatLocationAddressType(
-                      locationDetails.addresstype,
-                      translations
-                    )}
-                  >
-                    {locationDetails.addresstype === "work" ? (
-                      <WorkOutlineOutlinedIcon className="location-type-icon" />
-                    ) : locationDetails.addresstype === "other" ? (
-                      <PlaceOutlinedIcon className="location-type-icon" />
-                    ) : (
-                      <HomeOutlinedIcon className="location-type-icon" />
-                    )}
+              <div className="detail-card location-details-card">
+                <div className="card-top-accent green" />
+                <div className="location-details-content">
+                  <div className="location-address-row">
+                    <div
+                      className="location-type-icon-wrap"
+                      title={formatLocationAddressType(
+                        locationDetails.addresstype,
+                        translations
+                      )}
+                      aria-label={formatLocationAddressType(
+                        locationDetails.addresstype,
+                        translations
+                      )}
+                    >
+                      {locationDetails.addresstype === "work" ? (
+                        <WorkOutlineOutlinedIcon className="location-type-icon" />
+                      ) : locationDetails.addresstype === "other" ? (
+                        <PlaceOutlinedIcon className="location-type-icon" />
+                      ) : (
+                        <HomeOutlinedIcon className="location-type-icon" />
+                      )}
+                    </div>
+                    <p className="address-full-line">
+                      {formatLocationDetailsLine(locationDetails)}
+                    </p>
                   </div>
-                  <p className="address-full-line">
-                    {formatLocationDetailsLine(locationDetails)}
-                  </p>
                 </div>
               </div>
             </div>
           )}
 
           {/* Item Details Card */}
-          <div className="detail-card items-details-card">
-            <div className="card-top-accent primary" />
-            <div className="card-header">
-              <ShoppingBasketOutlinedIcon className="card-header-icon" />
-              <h3>{translations.itemdetails || "Item Details"}</h3>
+          <div className="order-details-section items-details-section">
+            <div className="section-header-outside">
+              <div className="section-header-left">
+                <ShoppingBasketOutlinedIcon className="section-header-icon" />
+                <h3>{translations.itemdetails || "Item Details"}</h3>
+              </div>
               <span className="item-count-badge">
                 {order.products?.length || 0}{" "}
                 {translations.items || "Items"}
               </span>
             </div>
+            <div className="detail-card items-details-card">
+              <div className="card-top-accent primary" />
+              <div className="items-list">
+                {(order.products || []).map((product, pIndex) => {
+                  const cancelled = String(
+                    product.itemstatus || ""
+                  ).toLowerCase() === "cancelled";
+                  const isVeg =
+                    String(product.itemtype || "veg").toLowerCase() === "veg";
 
-            <div className="items-list">
-              {(order.products || []).map((product, pIndex) => {
-                const cancelled = String(
-                  product.itemstatus || ""
-                ).toLowerCase() === "cancelled";
-                const isVeg =
-                  String(product.itemtype || "veg").toLowerCase() === "veg";
-
-                return (
-                  <div
-                    key={pIndex}
-                    className={`order-product-card ${cancelled ? "is-cancelled" : ""
-                      }`}
-                  >
-                    <div className="product-card-main">
-                      <div className="diet-dot-wrap">
-                        <div
-                          className={`diet-box ${isVeg ? "veg" : "non-veg"}`}
-                        >
+                  return (
+                    <div
+                      key={pIndex}
+                      className={`order-product-card ${cancelled ? "is-cancelled" : ""
+                        }`}
+                    >
+                      <div className="product-card-main">
+                        <div className="diet-dot-wrap">
                           <div
-                            className={`diet-dot ${isVeg ? "veg" : "non-veg"}`}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="product-title-group">
-                        <div className="name-and-badge">
-                          <span
-                            className={`product-name ${cancelled ? "strikethrough" : ""
-                              }`}
+                            className={`diet-box ${isVeg ? "veg" : "non-veg"}`}
                           >
-                            {product.productname}
-                          </span>
-                          {cancelled && (
-                            <span className="cancelled-pill">
-                              {translations.Cancelled || "Cancelled"}
-                            </span>
-                          )}
+                            <div
+                              className={`diet-dot ${isVeg ? "veg" : "non-veg"}`}
+                            />
+                          </div>
                         </div>
-                        <span className="unit-price">
-                          {formatOrderPrice(product.price, order)}
-                        </span>
-                      </div>
 
-                      <div className="product-amount-col">
-                        <div className="qty-tag">
-                          <span>
-                            {translations.qty || "Qty"}: {product.quantity}
+                        <div className="product-title-group">
+                          <div className="name-and-badge">
+                            <span
+                              className={`product-name ${cancelled ? "strikethrough" : ""
+                                }`}
+                            >
+                              {product.productname}
+                            </span>
+                            {cancelled && (
+                              <span className="cancelled-pill">
+                                {translations.Cancelled || "Cancelled"}
+                              </span>
+                            )}
+                          </div>
+                          <span className="unit-price">
+                            {formatOrderPrice(product.price, order)}
                           </span>
                         </div>
-                        <span
-                          className={`product-total-price ${cancelled ? "strikethrough" : ""
-                            }`}
-                        >
-                          {formatOrderPrice(product.amount, order)}
-                        </span>
-                      </div>
-                    </div>
 
-                    {/* Addons List */}
-                    {product.addons && product.addons.length > 0 && (
-                      <div className="product-addons-box">
-                        <div className="addons-title">
-                          <AddCircleOutlineIcon fontSize="inherit" />
-                          <span>{translations.addons || "Add-ons"}</span>
-                        </div>
-                        {product.addons.map((addon, aIdx) => (
-                          <div key={aIdx} className="addon-line">
-                            <span className="addon-name">
-                              • {addon.addonname}
-                            </span>
-                            <span className="addon-calc">
-                              ({formatOrderPrice(addon.addonprice, order)} ×{" "}
-                              {product.quantity})
-                            </span>
-                            <span className="addon-total">
-                              {formatOrderPrice(addon.amount, order)}
+                        <div className="product-amount-col">
+                          <div className="qty-tag">
+                            <span>
+                              {translations.qty || "Qty"}: {product.quantity}
                             </span>
                           </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Special Instructions */}
-                    {product.specialInstructions && (
-                      <div className="product-notes-box">
-                        <SpeakerNotesOutlinedIcon fontSize="inherit" />
-                        <div className="notes-text">
-                          <label>
-                            {translations.specialinstructions ||
-                              "Special Instructions"}
-                            :
-                          </label>
-                          <span>{product.specialInstructions}</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Item Cancellation Details */}
-                    {cancelled && (
-                      <div className="item-cancellation-box">
-                        <div className="cancellation-header">
-                          <CancelOutlinedIcon fontSize="small" />
-                          <span>
-                            {translations.cancellationdetails ||
-                              "Cancellation Details"}
-                          </span>
-                        </div>
-                        <div className="cancellation-meta">
-                          {product.cancelledby && (
-                            <span className="meta-pill">
-                              <strong>
-                                {translations.cancelledby || "By"}:
-                              </strong>{" "}
-                              {product.cancelledby}
-                            </span>
-                          )}
-                          {product.cancelledat && (
-                            <span className="meta-pill">
-                              <strong>
-                                {translations.cancelledtime || "Time"}:
-                              </strong>{" "}
-                              {formatOrderDateTime(
-                                product.cancelledat,
-                                dateFormat,
-                                timeFormat,
-                                timeZone
-                              )}
-                            </span>
-                          )}
-                        </div>
-                        <div className="cancellation-reason">
-                          <span className="reason-label">
-                            {translations.cancellationreason || "Reason"}:
-                          </span>{" "}
-                          <span className="reason-text">
-                            {product.cancelreason ||
-                              translations.notspecified ||
-                              "Not specified"}
+                          <span
+                            className={`product-total-price ${cancelled ? "strikethrough" : ""
+                              }`}
+                          >
+                            {formatOrderPrice(product.amount, order)}
                           </span>
                         </div>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+
+                      {/* Addons List */}
+                      {product.addons && product.addons.length > 0 && (
+                        <div className="product-addons-box">
+                          <div className="addons-title">
+                            <AddCircleOutlineIcon fontSize="inherit" />
+                            <span>{translations.addons || "Add-ons"}</span>
+                          </div>
+                          {product.addons.map((addon, aIdx) => (
+                            <div key={aIdx} className="addon-line">
+                              <span className="addon-name">
+                                • {addon.addonname}
+                              </span>
+                              <span className="addon-calc">
+                                ({formatOrderPrice(addon.addonprice, order)} ×{" "}
+                                {product.quantity})
+                              </span>
+                              <span className="addon-total">
+                                {formatOrderPrice(addon.amount, order)}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Special Instructions */}
+                      {product.specialInstructions && (
+                        <div className="product-notes-box">
+                          <SpeakerNotesOutlinedIcon fontSize="inherit" />
+                          <div className="notes-text">
+                            <label>
+                              {translations.specialinstructions ||
+                                "Special Instructions"}
+                              :
+                            </label>
+                            <span>{product.specialInstructions}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Item Cancellation Details */}
+                      {cancelled && (
+                        <div className="item-cancellation-box">
+                          <div className="cancellation-header">
+                            <CancelOutlinedIcon fontSize="small" />
+                            <span>
+                              {translations.cancellationdetails ||
+                                "Cancellation Details"}
+                            </span>
+                          </div>
+                          <div className="cancellation-meta">
+                            {product.cancelledby && (
+                              <span className="meta-pill">
+                                <strong>
+                                  {translations.cancelledby || "By"}:
+                                </strong>{" "}
+                                {product.cancelledby}
+                              </span>
+                            )}
+                            {product.cancelledat && (
+                              <span className="meta-pill">
+                                <strong>
+                                  {translations.cancelledtime || "Time"}:
+                                </strong>{" "}
+                                {formatOrderDateTime(
+                                  product.cancelledat,
+                                  dateFormat,
+                                  timeFormat,
+                                  timeZone
+                                )}
+                              </span>
+                            )}
+                          </div>
+                          <div className="cancellation-reason">
+                            <span className="reason-label">
+                              {translations.cancellationreason || "Reason"}:
+                            </span>{" "}
+                            <span className="reason-text">
+                              {product.cancelreason ||
+                                translations.notspecified ||
+                                "Not specified"}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -971,236 +986,244 @@ const OrderDetails = ({ orderId, onBack }) => {
         {/* Right Column: Bill Details, Invoice, Reviews */}
         <div className="details-side-column">
           {/* Bill Summary Card */}
-          <div className="detail-card bill-summary-card">
-            <div className="card-top-accent green" />
-            <div className="card-header">
-              <AccountBalanceWalletOutlinedIcon className="card-header-icon" />
-              <h3>{translations.billdetails || "Bill Details"}</h3>
-            </div>
-
-            <div className="bill-rows-container">
-              {/* Subtotal */}
-              <div className="bill-row">
-                <span className="label">
-                  {translations.subtotal || "Subtotal"}
-                </span>
-                <span className="value">
-                  {formatOrderPrice(order.subtotalprice, order)}
-                </span>
+          <div className="order-details-section bill-summary-section">
+            <div className="section-header-outside">
+              <div className="section-header-left">
+                <AccountBalanceWalletOutlinedIcon className="section-header-icon" />
+                <h3>{translations.billdetails || "Bill Details"}</h3>
               </div>
+            </div>
+            <div className="detail-card bill-summary-card">
+              <div className="card-top-accent green" />
 
-              {/* Before-Tax Additional Charges */}
-              {beforeTaxCharges.map((chg, idx) => {
-                const rawVal = chg.chargevalue ?? chg.val ?? chg.value;
-                const valLabel =
-                  rawVal != null && rawVal !== ""
-                    ? chg.chargetype === "percentage"
-                      ? ` (${rawVal}%)`
-                      : chg.chargetype === "fixed"
-                        ? ` (${formatOrderPrice(rawVal, order)})`
-                        : ` (${rawVal})`
-                    : "";
-                return (
-                  <div key={`btc-${idx}`} className="bill-row charge">
-                    <span className="label">
-                      {chg.name || chg.chargename || chg.eventname}
-                      {valLabel}
-                    </span>
-                    <span className="value">
-                      {formatOrderPrice(chg.amount, order)}
-                    </span>
-                  </div>
-                );
-              })}
+              <div className="bill-rows-container">
+                {/* Subtotal */}
+                <div className="bill-row">
+                  <span className="label">
+                    {translations.subtotal || "Subtotal"}
+                  </span>
+                  <span className="value">
+                    {formatOrderPrice(order.subtotalprice, order)}
+                  </span>
+                </div>
 
-              {/* Itemized Taxes */}
-              {Array.isArray(order.taxes) &&
-                order.taxes.map((tax, idx) => {
-                  const rateLabel =
-                    tax.taxtype === "percentage"
-                      ? ` (${tax.price ?? tax.rate}%)`
-                      : tax.taxtype === "fixed"
-                        ? ` (${formatOrderPrice(tax.price ?? tax.rate, order)})`
-                        : "";
+                {/* Before-Tax Additional Charges */}
+                {beforeTaxCharges.map((chg, idx) => {
+                  const rawVal = chg.chargevalue ?? chg.val ?? chg.value;
+                  const valLabel =
+                    rawVal != null && rawVal !== ""
+                      ? chg.chargetype === "percentage"
+                        ? ` (${rawVal}%)`
+                        : chg.chargetype === "fixed"
+                          ? ` (${formatOrderPrice(rawVal, order)})`
+                          : ` (${rawVal})`
+                      : "";
                   return (
-                    <div key={`tax-${idx}`} className="bill-row tax">
+                    <div key={`btc-${idx}`} className="bill-row charge">
                       <span className="label">
-                        {tax.taxname}
-                        {rateLabel}
+                        {chg.name || chg.chargename || chg.eventname}
+                        {valLabel}
                       </span>
                       <span className="value">
-                        {formatOrderPrice(
-                          tax.calculatedAmount ?? tax.amount ?? 0,
-                          order
-                        )}
+                        {formatOrderPrice(chg.amount, order)}
                       </span>
                     </div>
                   );
                 })}
 
-              {/* Total Tax (if more than 1 tax) */}
-              {Array.isArray(order.taxes) && order.taxes.length > 1 && (
-                <div className="bill-row total-tax-row">
-                  <span className="label">
-                    {translations.totaltax || "Total Tax"}
-                  </span>
-                  <span className="value">
-                    {formatOrderPrice(order.totaltax, order)}
-                  </span>
-                </div>
-              )}
+                {/* Itemized Taxes */}
+                {Array.isArray(order.taxes) &&
+                  order.taxes.map((tax, idx) => {
+                    const rateLabel =
+                      tax.taxtype === "percentage"
+                        ? ` (${tax.price ?? tax.rate}%)`
+                        : tax.taxtype === "fixed"
+                          ? ` (${formatOrderPrice(tax.price ?? tax.rate, order)})`
+                          : "";
+                    return (
+                      <div key={`tax-${idx}`} className="bill-row tax">
+                        <span className="label">
+                          {tax.taxname}
+                          {rateLabel}
+                        </span>
+                        <span className="value">
+                          {formatOrderPrice(
+                            tax.calculatedAmount ?? tax.amount ?? 0,
+                            order
+                          )}
+                        </span>
+                      </div>
+                    );
+                  })}
 
-              {/* After-Tax Additional Charges */}
-              {afterTaxCharges.map((chg, idx) => {
-                const rawVal = chg.chargevalue ?? chg.val ?? chg.value;
-                const valLabel =
-                  rawVal != null && rawVal !== ""
-                    ? chg.chargetype === "percentage"
-                      ? ` (${rawVal}%)`
-                      : chg.chargetype === "fixed"
-                        ? ` (${formatOrderPrice(rawVal, order)})`
-                        : ` (${rawVal})`
-                    : "";
-                return (
-                  <div key={`atc-${idx}`} className="bill-row charge">
+                {/* Total Tax (if more than 1 tax) */}
+                {Array.isArray(order.taxes) && order.taxes.length > 1 && (
+                  <div className="bill-row total-tax-row">
                     <span className="label">
-                      {chg.name || chg.chargename || chg.eventname}
-                      {valLabel}
+                      {translations.totaltax || "Total Tax"}
                     </span>
                     <span className="value">
-                      {formatOrderPrice(chg.amount, order)}
+                      {formatOrderPrice(order.totaltax, order)}
                     </span>
                   </div>
-                );
-              })}
+                )}
 
-              {/* Round Off */}
-              {showRoundoff && (
-                <div className="bill-row roundoff">
-                  <span className="label">
-                    {translations.roundoff || "Round Off"}
+                {/* After-Tax Additional Charges */}
+                {afterTaxCharges.map((chg, idx) => {
+                  const rawVal = chg.chargevalue ?? chg.val ?? chg.value;
+                  const valLabel =
+                    rawVal != null && rawVal !== ""
+                      ? chg.chargetype === "percentage"
+                        ? ` (${rawVal}%)`
+                        : chg.chargetype === "fixed"
+                          ? ` (${formatOrderPrice(rawVal, order)})`
+                          : ` (${rawVal})`
+                      : "";
+                  return (
+                    <div key={`atc-${idx}`} className="bill-row charge">
+                      <span className="label">
+                        {chg.name || chg.chargename || chg.eventname}
+                        {valLabel}
+                      </span>
+                      <span className="value">
+                        {formatOrderPrice(chg.amount, order)}
+                      </span>
+                    </div>
+                  );
+                })}
+
+                {/* Round Off */}
+                {showRoundoff && (
+                  <div className="bill-row roundoff">
+                    <span className="label">
+                      {translations.roundoff || "Round Off"}
+                    </span>
+                    <span className="value">
+                      {roundoffAmount > 0
+                        ? `+${formatOrderPrice(roundoffAmount, order)}`
+                        : roundoffAmount < 0
+                          ? `-${formatOrderPrice(Math.abs(roundoffAmount), order)}`
+                          : formatOrderPrice(0, order)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Grand Total */}
+                <div className="bill-grand-total">
+                  <div className="grand-label">
+                    <AccountBalanceWalletOutlinedIcon fontSize="small" />
+                    <span>{translations.grandtotal || "Grand Total"}</span>
+                  </div>
+                  <span className="grand-value">
+                    {formatOrderPrice(order.totalprice, order)}
                   </span>
-                  <span className="value">
-                    {roundoffAmount > 0
-                      ? `+${formatOrderPrice(roundoffAmount, order)}`
-                      : roundoffAmount < 0
-                        ? `-${formatOrderPrice(Math.abs(roundoffAmount), order)}`
-                        : formatOrderPrice(0, order)}
-                  </span>
+                </div>
+              </div>
+
+              {/* Invoice Button (Parity with UserApp: only show when order is Paid and Completed/Delivered) */}
+              {showReviewAndInvoiceActions && (
+                <div className="invoice-action-wrap">
+                  <button
+                    type="button"
+                    className="invoice-download-btn"
+                    onClick={handlePrintInvoice}
+                    disabled={isInvoicePrinting}
+                  >
+                    {isInvoicePrinting ? (
+                      <CircularProgress size={18} color="inherit" />
+                    ) : (
+                      <DownloadOutlinedIcon fontSize="small" />
+                    )}
+                    <span>
+                      {translations.generatepdfinvoice || "Download / Print Invoice"}
+                    </span>
+                  </button>
                 </div>
               )}
-
-              {/* Grand Total */}
-              <div className="bill-grand-total">
-                <div className="grand-label">
-                  <AccountBalanceWalletOutlinedIcon fontSize="small" />
-                  <span>{translations.grandtotal || "Grand Total"}</span>
-                </div>
-                <span className="grand-value">
-                  {formatOrderPrice(order.totalprice, order)}
-                </span>
-              </div>
             </div>
-
-            {/* Invoice Button (Parity with UserApp: only show when order is Paid and Completed/Delivered) */}
-            {showReviewAndInvoiceActions && (
-              <div className="invoice-action-wrap">
-                <button
-                  type="button"
-                  className="invoice-download-btn"
-                  onClick={handlePrintInvoice}
-                  disabled={isInvoicePrinting}
-                >
-                  {isInvoicePrinting ? (
-                    <CircularProgress size={18} color="inherit" />
-                  ) : (
-                    <DownloadOutlinedIcon fontSize="small" />
-                  )}
-                  <span>
-                    {translations.generatepdfinvoice || "Download / Print Invoice"}
-                  </span>
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Dining Reviews Section */}
           {showReviewAndInvoiceActions && (
-            <div className="detail-card reviews-card">
-              <div className="card-top-accent gold" />
-              <div className="card-header">
-                <RateReviewOutlinedIcon className="card-header-icon gold" />
-                <h3>{translations.reviews || "Dining Review"}</h3>
+            <div className="order-details-section reviews-section">
+              <div className="section-header-outside">
+                <div className="section-header-left">
+                  <RateReviewOutlinedIcon className="section-header-icon gold" />
+                  <h3>{translations.reviews || "Dining Review"}</h3>
+                </div>
               </div>
+              <div className="detail-card reviews-card">
+                <div className="card-top-accent gold" />
 
-              {!order.review || !order.review._id ? (
-                <div
-                  className="write-review-prompt"
-                  onClick={() => {
-                    setIsEditReview(false);
-                    setIsReviewModalOpen(true);
-                  }}
-                >
-                  <div className="prompt-left">
-                    <span className="prompt-title">
-                      {translations.writeareview || "Write a Review"}
-                    </span>
-                    <p className="prompt-sub">
-                      Share your dining experience, dish flavor, and service
-                      ratings.
-                    </p>
-                    <div className="stars-placeholder">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <StarBorderIcon key={s} fontSize="small" />
-                      ))}
+                {!order.review || !order.review._id ? (
+                  <div
+                    className="write-review-prompt"
+                    onClick={() => {
+                      setIsEditReview(false);
+                      setIsReviewModalOpen(true);
+                    }}
+                  >
+                    <div className="prompt-left">
+                      <span className="prompt-title">
+                        {translations.writeareview || "Write a Review"}
+                      </span>
+                      <p className="prompt-sub">
+                        Share your dining experience, dish flavor, and service
+                        ratings.
+                      </p>
+                      <div className="stars-placeholder">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <StarBorderIcon key={s} fontSize="small" />
+                        ))}
+                      </div>
+                    </div>
+                    <ChevronRightIcon className="prompt-chevron" />
+                  </div>
+                ) : (
+                  <div className="existing-review-box">
+                    <div className="review-top-meta">
+                      <div className="review-stars">
+                        {[1, 2, 3, 4, 5].map((s) =>
+                          s <= order.review.rating ? (
+                            <StarIcon key={s} className="star-filled" />
+                          ) : (
+                            <StarBorderIcon key={s} className="star-empty" />
+                          )
+                        )}
+                      </div>
+                      <div className="review-actions">
+                        <button
+                          type="button"
+                          className="icon-action-btn edit"
+                          onClick={() => {
+                            setIsEditReview(true);
+                            setIsReviewModalOpen(true);
+                          }}
+                          title={translations.editreview || "Edit Review"}
+                        >
+                          <EditOutlinedIcon fontSize="small" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="review-quote-bubble">
+                      <p>"{order.review.review}"</p>
+                    </div>
+
+                    <div className="review-footer-date">
+                      <AccessTimeIcon fontSize="inherit" />
+                      <span>
+                        {formatOrderDateTime(
+                          order.review.updatedAt,
+                          dateFormat,
+                          timeFormat,
+                          timeZone
+                        )}
+                      </span>
                     </div>
                   </div>
-                  <ChevronRightIcon className="prompt-chevron" />
-                </div>
-              ) : (
-                <div className="existing-review-box">
-                  <div className="review-top-meta">
-                    <div className="review-stars">
-                      {[1, 2, 3, 4, 5].map((s) =>
-                        s <= order.review.rating ? (
-                          <StarIcon key={s} className="star-filled" />
-                        ) : (
-                          <StarBorderIcon key={s} className="star-empty" />
-                        )
-                      )}
-                    </div>
-                    <div className="review-actions">
-                      <button
-                        type="button"
-                        className="icon-action-btn edit"
-                        onClick={() => {
-                          setIsEditReview(true);
-                          setIsReviewModalOpen(true);
-                        }}
-                        title={translations.editreview || "Edit Review"}
-                      >
-                        <EditOutlinedIcon fontSize="small" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="review-quote-bubble">
-                    <p>"{order.review.review}"</p>
-                  </div>
-
-                  <div className="review-footer-date">
-                    <AccessTimeIcon fontSize="inherit" />
-                    <span>
-                      {formatOrderDateTime(
-                        order.review.updatedAt,
-                        dateFormat,
-                        timeFormat,
-                        timeZone
-                      )}
-                    </span>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
         </div>
