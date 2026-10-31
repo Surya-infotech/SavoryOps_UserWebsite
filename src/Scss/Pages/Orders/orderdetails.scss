@@ -227,19 +227,11 @@
 
         .info-text {
           display: flex;
-          flex-direction: column;
-
-          label {
-            font-size: 0.72rem;
-            color: #94a3b8;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
+          align-items: center;
 
           span {
-            font-size: 0.92rem;
-            font-weight: 600;
+            font-size: 0.95rem;
+            font-weight: 700;
             color: #0f172a;
           }
         }
@@ -862,18 +854,11 @@
 
           .shimmer-text-col {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: center;
             flex: 1;
 
-            .small-label {
-              height: 12px;
-              width: 60px;
-              border-radius: 4px;
-            }
-
             .text-val {
-              height: 16px;
+              height: 18px;
               width: 80%;
               border-radius: 4px;
             }

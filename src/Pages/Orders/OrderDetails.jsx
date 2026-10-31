@@ -77,7 +77,6 @@ const OrderDetailsShimmer = () => (
               <div key={i} className="shimmer-info-row">
                 <div className="shimmer-icon-box" />
                 <div className="shimmer-text-col">
-                  <div className="shimmer-line small-label" />
                   <div className="shimmer-line text-val" />
                 </div>
               </div>
@@ -671,7 +670,6 @@ const OrderDetails = ({ orderId, onBack }) => {
                   <StorefrontIcon fontSize="small" />
                 </div>
                 <div className="info-text">
-                  <label>{translations.restaurant || "Restaurant"}</label>
                   <span>{order.businessname}</span>
                 </div>
               </div>
@@ -681,7 +679,6 @@ const OrderDetails = ({ orderId, onBack }) => {
                   <LocationOnOutlinedIcon fontSize="small" />
                 </div>
                 <div className="info-text">
-                  <label>{translations.branch || "Branch"}</label>
                   <span>{order.branchname}</span>
                 </div>
               </div>
@@ -698,7 +695,6 @@ const OrderDetails = ({ orderId, onBack }) => {
                     <TableRestaurantIcon fontSize="small" />
                   </div>
                   <div className="info-text">
-                    <label>{translations.ordertype || "Order Type"}</label>
                     <span>{translations[order.ordertype] || order.ordertype}</span>
                   </div>
                 </div>
@@ -709,7 +705,6 @@ const OrderDetails = ({ orderId, onBack }) => {
                   <CalendarMonthOutlinedIcon fontSize="small" />
                 </div>
                 <div className="info-text">
-                  <label>{translations.orderdate || "Order Date"}</label>
                   <span>
                     {formatOrderDateTime(
                       order.createdAt,
