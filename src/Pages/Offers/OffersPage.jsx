@@ -352,60 +352,10 @@ const OffersPage = () => {
       <Breadcrumbs currentPage={translations.specialoffers || "Special Offers & Deals"} />
 
       <div className="offers-main-content-container">
-        {/* Page Header */}
-        <div className="offers-page-header">
-          <span className="offers-badge-pill">
-            🔥 {translations.limitedtimeoffers || "Special Deals & Feasts"}
-          </span>
-          <h1 className="offers-title">
-            {translations.specialoffers || "Special Offers & Deals"}
-          </h1>
-          <p className="offers-subtitle">
-            {translations.offerssubtitle ||
-              "Explore curated combo meals, unlimited dining packages, and special chef deals."}
-          </p>
-        </div>
-
         {/* Filter Bar (matching MenuPage) */}
         {!loading && formattedDeals.length > 0 && (
-          <div className="menu-filters-wrapper offers-filters-wrapper">
+          <div className="menu-filters-wrapper">
             <div className="menu-filter-bar">
-              {/* Type Category Pills */}
-              <div className="filter-item-wrap category-pills-wrap">
-                <div className="category-scroll-container">
-                  <button
-                    type="button"
-                    className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
-                    onClick={() => setSelectedType("all")}
-                  >
-                    <span>{translations.alloffers || "All Deals"}</span>
-                    <span className="pill-count-badge">{formattedDeals.length}</span>
-                  </button>
-
-                  {comboMeals.length > 0 && (
-                    <button
-                      type="button"
-                      className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
-                      onClick={() => setSelectedType("combo")}
-                    >
-                      <span>{translations.combos || "Combos"}</span>
-                      <span className="pill-count-badge">{comboMeals.length}</span>
-                    </button>
-                  )}
-
-                  {unlimitedMeals.length > 0 && (
-                    <button
-                      type="button"
-                      className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
-                      onClick={() => setSelectedType("unlimited")}
-                    >
-                      <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
-                      <span className="pill-count-badge">{unlimitedMeals.length}</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-
               {/* Diet Filter (Veg / Non-Veg) */}
               <div className="filter-item-wrap diet-toggle-wrap">
                 <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
@@ -418,36 +368,89 @@ const OffersPage = () => {
                   </button>
                   <button
                     type="button"
-                    className={`diet-segment-btn veg-btn ${selectedDiet === "veg" ? "active" : ""}`}
+                    className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
                     onClick={() => setSelectedDiet("veg")}
                   >
-                    <span className="diet-dot veg-dot" />
+                    <span className="diet-box">
+                      <span className="diet-dot" />
+                    </span>
                     <span>{translations.veg || "Veg"}</span>
                   </button>
                   <button
                     type="button"
-                    className={`diet-segment-btn nonveg-btn ${selectedDiet === "nonveg" ? "active" : ""}`}
+                    className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
                     onClick={() => setSelectedDiet("nonveg")}
                   >
-                    <span className="diet-dot nonveg-dot" />
+                    <span className="diet-box">
+                      <span className="diet-dot" />
+                    </span>
                     <span>{translations.nonveg || "Non-Veg"}</span>
                   </button>
                 </div>
               </div>
+
+              {/* Filter Count & Reset Action */}
+              <div className="filter-actions-wrap">
+                <span className="filter-results-badge">
+                  {filteredDeals.length}{" "}
+                  {filteredDeals.length === 1
+                    ? translations.deal || "deal"
+                    : translations.deals || "deals"}
+                </span>
+                {isFilterActive && (
+                  <button
+                    type="button"
+                    className="filter-clear-btn"
+                    onClick={handleClearFilters}
+                    title="Clear all filters"
+                  >
+                    <CloseIcon fontSize="small" />
+                    <span>{translations.clear || "Clear"}</span>
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Active Items Count Row */}
-            <div className="menu-active-count-row">
-              <span className="count-label">
-                {filteredDeals.length} {filteredDeals.length === 1 ? translations.deal || "deal" : translations.deals || "deals"}
-              </span>
-              {isFilterActive && (
+            {/* Category Pills Bar (Wraps across lines, matching MenuPage) */}
+            <div
+              className="menu-category-pills-bar"
+              role="tablist"
+              aria-label="Deals Categories"
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={selectedType === "all"}
+                className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
+                onClick={() => setSelectedType("all")}
+              >
+                <span>{translations.alloffers || "All Deals"}</span>
+                <span className="pill-badge">{formattedDeals.length}</span>
+              </button>
+
+              {comboMeals.length > 0 && (
                 <button
                   type="button"
-                  className="clear-all-link"
-                  onClick={handleClearFilters}
+                  role="tab"
+                  aria-selected={selectedType === "combo"}
+                  className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
+                  onClick={() => setSelectedType("combo")}
                 >
-                  {translations.resetfilters || "Reset Filters"}
+                  <span>{translations.combos || "Combos"}</span>
+                  <span className="pill-badge">{comboMeals.length}</span>
+                </button>
+              )}
+
+              {unlimitedMeals.length > 0 && (
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedType === "unlimited"}
+                  className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
+                  onClick={() => setSelectedType("unlimited")}
+                >
+                  <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
+                  <span className="pill-badge">{unlimitedMeals.length}</span>
                 </button>
               )}
             </div>
