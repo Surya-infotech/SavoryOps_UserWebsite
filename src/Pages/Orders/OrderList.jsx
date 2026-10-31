@@ -8,6 +8,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
@@ -238,98 +239,123 @@ const OrderList = ({ onSelectOrder }) => {
                   }}
                 />
 
-                {/* Card Header */}
-                <div className="order-tile-header">
-                  <div className="order-no-pill">
-                    <ReceiptLongIcon fontSize="small" />
-                    <span>#{order.orderno}</span>
-                  </div>
-
-                  <span
-                    className="order-status-pill"
-                    style={{
-                      backgroundColor: `${statusColor}15`,
-                      color: statusColor,
-                      borderColor: `${statusColor}35`,
-                    }}
-                  >
-                    <CheckCircleIcon fontSize="inherit" />
-                    <span>{translations[order.orderstatus] || order.orderstatus}</span>
-                  </span>
-                </div>
-
-                {/* Card Details */}
-                <div className="order-tile-details">
-                  <div className="detail-line">
-                    <div className="line-icon store">
-                      <StorefrontIcon fontSize="small" />
-                    </div>
-                    <span className="line-text bold" title={order.businessname}>
-                      {order.businessname}
-                    </span>
-                  </div>
-
-                  <div className="detail-line">
-                    <div className="line-icon pin">
-                      <LocationOnOutlinedIcon fontSize="small" />
-                    </div>
-                    <span className="line-text" title={order.branchname}>
-                      {order.branchname}
-                    </span>
-                  </div>
-
-                  {order.ordertype && (
-                    <div className="detail-line">
-                      <div
-                        className="line-icon type"
-                        style={{
-                          backgroundColor: `${orderTypeBg}18`,
-                          color: orderTypeBg,
-                        }}
-                      >
-                        {getOrderTypeComponentIcon(order.ordertype)}
+                <div className="order-card-main">
+                  {/* Card Header: Order #, Order Type, and Status */}
+                  <div className="order-tile-header">
+                    <div className="header-tags-left">
+                      <div className="order-no-badge">
+                        <ReceiptLongIcon className="order-no-icon" />
+                        <span>#{order.orderno}</span>
                       </div>
-                      <span className="line-text">
-                        {translations[order.ordertype] || order.ordertype}
+
+                      {order.ordertype && (
+                        <span
+                          className="order-type-chip"
+                          style={{
+                            backgroundColor: `${orderTypeBg}14`,
+                            color: orderTypeBg,
+                            borderColor: `${orderTypeBg}30`,
+                          }}
+                        >
+                          {getOrderTypeComponentIcon(order.ordertype)}
+                          <span>{translations[order.ordertype] || order.ordertype}</span>
+                        </span>
+                      )}
+                    </div>
+
+                    <span
+                      className="order-status-pill"
+                      style={{
+                        backgroundColor: `${statusColor}14`,
+                        color: statusColor,
+                        borderColor: `${statusColor}30`,
+                      }}
+                    >
+                      <span
+                        className="status-dot"
+                        style={{ backgroundColor: statusColor }}
+                      />
+                      <span>{translations[order.orderstatus] || order.orderstatus}</span>
+                    </span>
+                  </div>
+
+                  {/* Restaurant & Branch Info */}
+                  <div className="order-restaurant-row">
+                    <div className="restaurant-avatar-box">
+                      <StorefrontIcon />
+                    </div>
+                    <div className="restaurant-meta-col">
+                      <h4 className="restaurant-brand-name" title={order.businessname}>
+                        {order.businessname}
+                      </h4>
+                      <div className="restaurant-branch-subline" title={order.branchname}>
+                        <LocationOnOutlinedIcon className="branch-pin-icon" />
+                        <span>{order.branchname}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Items Summary Preview (if available) */}
+                  {Array.isArray(order.products) && order.products.length > 0 && (
+                    <div className="order-items-preview">
+                      <span className="items-count-badge">
+                        {order.products.length}{" "}
+                        {order.products.length === 1
+                          ? translations.item || "item"
+                          : translations.items || "items"}
+                      </span>
+                      <span className="items-preview-names">
+                        {order.products
+                          .map((p) => p.name || p.itemname)
+                          .filter(Boolean)
+                          .slice(0, 2)
+                          .join(", ")}
+                        {order.products.length > 2 ? "..." : ""}
                       </span>
                     </div>
                   )}
-                </div>
 
-                {/* Payment & Date Row */}
-                <div className="order-tile-meta-row">
-                  <span
-                    className="payment-badge-pill"
-                    style={{
-                      backgroundColor: `${paymentColor}15`,
-                      color: paymentColor,
-                      borderColor: `${paymentColor}30`,
-                    }}
-                  >
-                    <PaymentsOutlinedIcon fontSize="inherit" />
-                    <span>{translations[order.paymentstatus] || order.paymentstatus}</span>
-                  </span>
-
-                  <div className="order-date-pill">
-                    <CalendarMonthOutlinedIcon fontSize="inherit" />
-                    <span>
-                      {formatOrderDateTime(
-                        order.createdAt,
-                        dateFormat,
-                        timeFormat,
-                        timeZone
-                      )}
+                  {/* Payment & Date Row */}
+                  <div className="order-tile-meta-row">
+                    <span
+                      className="payment-badge-pill"
+                      style={{
+                        backgroundColor: `${paymentColor}14`,
+                        color: paymentColor,
+                        borderColor: `${paymentColor}28`,
+                      }}
+                    >
+                      <PaymentsOutlinedIcon fontSize="inherit" />
+                      <span>{translations[order.paymentstatus] || order.paymentstatus}</span>
                     </span>
+
+                    <div className="order-date-pill">
+                      <CalendarMonthOutlinedIcon fontSize="inherit" />
+                      <span>
+                        {formatOrderDateTime(
+                          order.createdAt,
+                          dateFormat,
+                          timeFormat,
+                          timeZone
+                        )}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Card Footer */}
                 <div className="order-tile-footer">
                   <div className="order-amount-display">
-                    <AccountBalanceWalletOutlinedIcon fontSize="small" />
+                    <span className="total-label">
+                      {translations.total || "Total"}
+                    </span>
                     <span className="total-val">
                       {formatOrderPrice(order.totalprice, order)}
                     </span>
+                  </div>
+
+                  <div className="order-action-circle" title={translations.viewdetails || "View Details"}>
+                    <ArrowForwardIcon className="arrow-icon" fontSize="small" />
                   </div>
                 </div>
               </div>
