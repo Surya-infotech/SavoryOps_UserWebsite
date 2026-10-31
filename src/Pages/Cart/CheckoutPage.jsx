@@ -473,7 +473,7 @@ const CheckoutPage = () => {
       return;
     }
 
-    const branchId = localStorage.getItem("selectedBranchId");
+    const branchId = selectedBranch?.branchid;
     if (!branchId) {
       showSnackbar("Branch information not found. Please try again.", "error");
       return;
