@@ -17,20 +17,8 @@
     direction: rtl;
     text-align: right;
 
-    .review-tile-header {
-      flex-direction: row-reverse;
-    }
-
-    .review-restaurant-row {
-      flex-direction: row-reverse;
-    }
-
-    .review-quote-box {
-      flex-direction: row-reverse;
-    }
-
-    .review-tile-footer {
-      flex-direction: row-reverse;
+    .quote-icon {
+      transform: scaleX(-1);
     }
   }
 }
