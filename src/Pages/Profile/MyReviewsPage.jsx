@@ -7,18 +7,13 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
-import CircularProgress from "@mui/material/CircularProgress";
-import Tooltip from "@mui/material/Tooltip";
 
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { formatOrderDateTime } from "../Orders/orderHelpers.js";
-import OrderReviewModal from "../Orders/OrderReviewModal.jsx";
 import "../../Scss/Pages/Profile/myreviewspage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -46,10 +41,6 @@ const ReviewShimmerCard = () => (
       </div>
       <div className="shimmer-footer">
         <div className="shimmer-box date" />
-        <div className="shimmer-actions">
-          <div className="shimmer-box action" />
-          <div className="shimmer-box action" />
-        </div>
       </div>
     </div>
   </div>
@@ -61,15 +52,6 @@ const MyReviewsPage = () => {
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Edit Review Modal State
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [reviewToEdit, setReviewToEdit] = useState(null);
-
-  // Delete Review Confirmation Modal State
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [reviewToDelete, setReviewToDelete] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   // Date and Time formats from user preferences/storage
   const dateFormat = localStorage.getItem("DateFormat") || "DD/MM/YYYY";
@@ -145,81 +127,6 @@ const MyReviewsPage = () => {
   useEffect(() => {
     fetchMyReviews();
   }, [fetchMyReviews]);
-
-  // Open Edit Modal for a review
-  const handleOpenEdit = (review) => {
-    setReviewToEdit(review);
-    setIsEditModalOpen(true);
-  };
-
-  // Callback when review is updated via OrderReviewModal
-  const handleReviewUpdated = (updatedData) => {
-    if (!reviewToEdit) return;
-    setReviews((prev) =>
-      prev.map((r) =>
-        r._id === reviewToEdit._id
-          ? {
-            ...r,
-            rating: updatedData.rating !== undefined ? updatedData.rating : r.rating,
-            review: updatedData.review !== undefined ? updatedData.review : r.review,
-            updatedAt: updatedData.updatedAt || new Date().toISOString(),
-          }
-          : r
-      )
-    );
-    setIsEditModalOpen(false);
-    setReviewToEdit(null);
-  };
-
-  // Prompt delete review
-  const handlePromptDelete = (review) => {
-    setReviewToDelete(review);
-    setIsDeleteModalOpen(true);
-  };
-
-  // Confirm delete review
-  const handleConfirmDelete = async () => {
-    if (!reviewToDelete) return;
-    setIsDeleting(true);
-
-    try {
-      const response = await fetch(
-        `${adminPanelBackendPath}/Website/Order/DeleteOrderReview/${reviewToDelete._id}/${reviewToDelete.ownerid}/${reviewToDelete._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user": "admin",
-          },
-        }
-      );
-
-      const data = await response.json().catch(() => ({}));
-      if (response.ok) {
-        showSnackbar(
-          translations.yourreviewdeleted || "Your review has been deleted successfully.",
-          "success"
-        );
-        setReviews((prev) => prev.filter((r) => r._id !== reviewToDelete._id));
-        setIsDeleteModalOpen(false);
-        setReviewToDelete(null);
-      } else {
-        const err =
-          data.message ||
-          translations.failedtodeletereview ||
-          "Failed to delete review";
-        showSnackbar(err, "error");
-      }
-    } catch (err) {
-      console.error("Error deleting review:", err);
-      showSnackbar(
-        translations.somethingWentWrong || "Something went wrong.",
-        "error"
-      );
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   // Render 5 stars
   const renderStars = (rating) => {
@@ -326,7 +233,7 @@ const MyReviewsPage = () => {
                     <p className="review-text-content">{rev.review}</p>
                   </div>
 
-                  {/* 4. Footer: Date & Actions (Edit & Delete) */}
+                  {/* 4. Footer: Date */}
                   <div className="review-tile-footer">
                     <div className="review-date-pill">
                       <CalendarMonthOutlinedIcon />
@@ -339,29 +246,6 @@ const MyReviewsPage = () => {
                         )}
                       </span>
                     </div>
-
-                    <div className="card-actions-group">
-                      <Tooltip title={translations.editreview || "Edit Review"} arrow>
-                        <button
-                          type="button"
-                          className="card-action-btn edit"
-                          onClick={() => handleOpenEdit(rev)}
-                          aria-label="Edit review"
-                        >
-                          <EditOutlinedIcon fontSize="small" />
-                        </button>
-                      </Tooltip>
-                      <Tooltip title={translations.deletereview || "Delete Review"} arrow>
-                        <button
-                          type="button"
-                          className="card-action-btn delete"
-                          onClick={() => handlePromptDelete(rev)}
-                          aria-label="Delete review"
-                        >
-                          <DeleteOutlineIcon fontSize="small" />
-                        </button>
-                      </Tooltip>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -369,83 +253,6 @@ const MyReviewsPage = () => {
           </div>
         )}
       </div>
-
-      {/* Reusable Edit Review Modal */}
-      {isEditModalOpen && reviewToEdit && (
-        <OrderReviewModal
-          isOpen={isEditModalOpen}
-          onClose={() => {
-            setIsEditModalOpen(false);
-            setReviewToEdit(null);
-          }}
-          order={{
-            _id: reviewToEdit._id,
-            ownerid: reviewToEdit.ownerid,
-            orderno: reviewToEdit.orderno,
-            businessname: reviewToEdit.branchname
-              ? `${reviewToEdit.branchname} (${reviewToEdit.businessname || ""})`
-              : reviewToEdit.businessname || "Order Review",
-          }}
-          isEdit={true}
-          existingReview={reviewToEdit}
-          onReviewSubmitted={handleReviewUpdated}
-          showSnackbar={showSnackbar}
-          translations={translations}
-        />
-      )}
-
-      {/* Delete Review Confirmation Dialog */}
-      {isDeleteModalOpen && reviewToDelete && (
-        <div
-          className="delete-review-modal-overlay"
-          onClick={() => !isDeleting && setIsDeleteModalOpen(false)}
-        >
-          <div
-            className="delete-modal-dialog"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
-            <div className="delete-icon-box">
-              <DeleteOutlineIcon className="delete-icon" />
-            </div>
-            <h3 className="delete-modal-title">
-              {translations.deletereviewtitle ||
-                translations.deletereview ||
-                "Delete Review?"}
-            </h3>
-            <p className="delete-modal-text">
-              {translations.deletereviewconfirm ||
-                "Are you sure you want to permanently delete your review for this order?"}
-            </p>
-            <div className="delete-modal-actions">
-              <button
-                type="button"
-                className="delete-cancel-btn"
-                onClick={() => setIsDeleteModalOpen(false)}
-                disabled={isDeleting}
-              >
-                {translations.cancel || "Cancel"}
-              </button>
-              <button
-                type="button"
-                className="delete-confirm-btn"
-                onClick={handleConfirmDelete}
-                disabled={isDeleting}
-              >
-                {isDeleting ? (
-                  <>
-                    <CircularProgress size={16} color="inherit" />
-                    <span>{translations.deleting || "Deleting..."}</span>
-                  </>
-                ) : (
-                  translations.delete || "Delete"
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

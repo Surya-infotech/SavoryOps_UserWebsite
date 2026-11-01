@@ -241,14 +241,13 @@
     }
   }
 
-  /* 4. Footer: Date & Actions */
+  /* 4. Footer: Date */
   .review-tile-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding-top: 0.85rem;
     border-top: 1px dashed #e2e8f0;
-    gap: 0.5rem;
 
     .review-date-pill {
       display: inline-flex;
@@ -261,38 +260,6 @@
       svg {
         font-size: 0.95rem;
         color: #94a3b8;
-      }
-    }
-
-    .card-actions-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-
-      .card-action-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        color: #64748b;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.15s ease;
-
-        &.edit:hover {
-          background: rgba(2, 136, 2, 0.08);
-          color: #028802;
-          border-color: #028802;
-        }
-
-        &.delete:hover {
-          background: #fee2e2;
-          color: #dc2626;
-          border-color: #dc2626;
-        }
       }
     }
   }
@@ -394,7 +361,7 @@
 
     .shimmer-footer {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       padding-top: 0.85rem;
       border-top: 1px dashed #e2e8f0;
@@ -403,17 +370,6 @@
         width: 120px;
         height: 16px;
         border-radius: 4px;
-      }
-
-      .shimmer-actions {
-        display: flex;
-        gap: 6px;
-
-        .shimmer-box.action {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
-        }
       }
     }
   }
@@ -501,141 +457,6 @@
       box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
       color: #ffffff;
     }
-  }
-}
-
-/* ==========================================================================
-   Delete Confirmation Dialog (1:1 with OrderDetails & ManageAddress)
-   ========================================================================== */
-.delete-review-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(5px);
-  z-index: 1200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1.25rem;
-  overflow-y: auto;
-  animation: modalFadeIn 0.2s ease;
-
-  .delete-modal-dialog {
-    width: 100%;
-    max-width: 400px;
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 2rem 1.75rem;
-    text-align: center;
-    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
-    animation: modalSlideUp 0.2s ease;
-
-    .delete-icon-box {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: #fee2e2;
-      color: #dc2626;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.25rem;
-
-      .delete-icon {
-        font-size: 1.85rem;
-      }
-    }
-
-    .delete-modal-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0 0 0.5rem;
-    }
-
-    .delete-modal-text {
-      font-size: 0.9rem;
-      color: #64748b;
-      line-height: 1.5;
-      margin: 0 0 1.5rem;
-    }
-
-    .delete-modal-actions {
-      display: flex;
-      gap: 12px;
-
-      .delete-cancel-btn {
-        flex: 1;
-        height: 42px;
-        border-radius: 10px;
-        border: 1px solid #cbd5e1;
-        background: #ffffff;
-        color: #334155;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover:not(:disabled) {
-          background: #ffffff;
-          border-color: #94a3b8;
-        }
-
-        &:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-      }
-
-      .delete-confirm-btn {
-        flex: 1;
-        height: 42px;
-        border-radius: 10px;
-        border: none;
-        background: #dc2626;
-        color: #ffffff;
-        font-size: 0.9rem;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 3px 10px rgba(220, 38, 38, 0.25);
-        transition: all 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-
-        &:hover:not(:disabled) {
-          background: #b91c1c;
-          transform: translateY(-1px);
-        }
-
-        &:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-      }
-    }
-  }
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes modalSlideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
   }
 }
 
