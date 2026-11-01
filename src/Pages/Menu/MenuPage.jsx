@@ -995,36 +995,33 @@ const MenuPage = () => {
 
             {/* Add-ons Selection Section */}
             <div className="addon-selection-section">
-              <div className="addon-section-title-wrap">
-                <h4 className="addon-section-title">
-                  {translations.customizableaddons}
-                </h4>
-              </div>
-
-              <div className="addon-options-list">
-                {addonModalItem.addons.map((addon) => {
-                  const addonKey = addon.addonid || addon._id;
-                  const isChecked = selectedAddonIds.includes(addonKey);
-                  return (
-                    <label
-                      key={addonKey}
-                      className={`addon-option-item ${isChecked ? "is-selected" : ""}`}
-                    >
-                      <div className="addon-option-left">
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => toggleAddon(addonKey)}
-                          className="addon-option-checkbox"
-                        />
-                        <span className="addon-option-name">{addon.addonname}</span>
-                      </div>
-                      <span className="addon-option-price">
-                        +{formatPriceFromBranch(addon.price, selectedBranch)}
-                      </span>
-                    </label>
-                  );
-                })}
+              <div className="dish-modal-addons-box">
+                <h5>{translations.customizableaddons}</h5>
+                <div className="addons-list">
+                  {addonModalItem.addons.map((addon) => {
+                    const addonKey = addon.addonid || addon._id;
+                    const isChecked = selectedAddonIds.includes(addonKey);
+                    return (
+                      <label
+                        key={addonKey}
+                        className={`addon-item-row ${isChecked ? "is-selected" : ""}`}
+                      >
+                        <div className="addon-check-label">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleAddon(addonKey)}
+                            className="addon-checkbox-input"
+                          />
+                          <span>{addon.addonname}</span>
+                        </div>
+                        <span className="addon-price">
+                          +{formatPriceFromBranch(addon.price, selectedBranch)}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 

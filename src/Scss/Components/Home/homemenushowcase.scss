@@ -941,100 +941,12 @@
   }
 
   .addon-selection-section {
-    padding: 1rem 1.4rem;
+    padding: 0.85rem 1.4rem 1.15rem;
     overflow-y: auto;
     flex: 1;
 
-    .addon-section-title-wrap {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-
-      .addon-section-title {
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .addon-section-subtitle {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        font-weight: 500;
-      }
-    }
-
-    .addon-options-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .addon-option-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 0.7rem 0.9rem;
-      border-radius: 12px;
-      border: 1.5px solid #e2e8f0;
-      background: #f8fafc;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      user-select: none;
-
-      &:hover {
-        border-color: #cbd5e1;
-        background: #ffffff;
-      }
-
-      &.is-selected {
-        background: #f0fdf4;
-        border-color: #028802;
-        box-shadow: 0 2px 8px rgba(2, 136, 2, 0.12);
-
-        .addon-option-name {
-          color: #0f172a;
-          font-weight: 700;
-        }
-
-        .addon-option-price {
-          color: #028802;
-        }
-      }
-
-      .addon-option-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex: 1;
-        min-width: 0;
-      }
-
-      .addon-option-checkbox {
-        accent-color: #028802;
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-        flex-shrink: 0;
-      }
-
-      .addon-option-name {
-        font-size: 0.88rem;
-        font-weight: 600;
-        color: #334155;
-        line-height: 1.35;
-      }
-
-      .addon-option-price {
-        font-size: 0.88rem;
-        font-weight: 700;
-        color: #64748b;
-        white-space: nowrap;
-      }
+    .dish-modal-addons-box {
+      margin: 0;
     }
   }
 
@@ -1147,6 +1059,7 @@
     transform: scale(1);
   }
 }
+
 /* RTL Support for Showcase Cards */
 [dir="rtl"],
 body.rtl-mode {

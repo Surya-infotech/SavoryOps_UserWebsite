@@ -362,3 +362,84 @@
   }
 }
 
+/* --- Shared Modal Add-ons Box Styles (Used in Detail & Quick Customization Modals) --- */
+.dish-modal-addons-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem;
+
+  h5 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .addons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .addon-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #334155;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.18s ease;
+
+    &:hover {
+      border-color: #cbd5e1;
+    }
+
+    &.is-selected {
+      background: #f0fdf4;
+      border-color: #028802;
+      box-shadow: 0 2px 6px rgba(2, 136, 2, 0.1);
+    }
+
+    &.not-selectable {
+      cursor: default;
+      user-select: none;
+
+      .addon-check-label {
+        cursor: default;
+      }
+
+      &:hover {
+        background: #ffffff;
+        border-color: #e2e8f0;
+        box-shadow: none;
+      }
+    }
+
+    .addon-check-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .addon-checkbox-input {
+      accent-color: #028802;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .addon-price {
+      font-weight: 700;
+      color: #028802;
+    }
+  }
+}
