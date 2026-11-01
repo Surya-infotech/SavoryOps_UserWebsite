@@ -6,7 +6,7 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
-import DishCard, { DietIndicator } from "../../Components/Common/DishCard.jsx";
+import DishCard, { DietIndicator, DishDetailModal } from "../../Components/Common/DishCard.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Offers/offerspage.scss";
@@ -444,99 +444,14 @@ const OffersPage = () => {
         )}
       </div>
 
-      {/* Interactive Detail Modal (matching MenuPage) */}
-      {selectedItemModal && (
-        <div className="dish-modal-overlay" onClick={() => setSelectedItemModal(null)}>
-          <div className="dish-modal-container" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="dish-modal-close-btn"
-              onClick={() => setSelectedItemModal(null)}
-              aria-label={translations.close || "Close"}
-            >
-              <CloseIcon fontSize="small" />
-            </button>
-
-            {/* Hero Image */}
-            <div className="dish-modal-hero">
-              <img
-                src={selectedItemModal.image}
-                alt={selectedItemModal.title}
-              />
-              {selectedItemModal.hasDiet && (selectedItemModal.isVeg || selectedItemModal.isNonVeg) && (
-                <DietIndicator isVeg={selectedItemModal.isVeg} className="dish-modal-diet-badge" />
-              )}
-            </div>
-
-            <div className="dish-modal-body">
-              <div className="dish-modal-header">
-                <div>
-                  <h3 className="dish-modal-title">{selectedItemModal.title}</h3>
-                  <div className="dish-modal-tags">
-                    {selectedItemModal.bundletype && (
-                      <span className={`tag-badge deal-ribbon-badge ${selectedItemModal.bundletype}`} style={{ position: "static" }}>
-                        {selectedItemModal.bundletype === "combo"
-                          ? translations.combo || "COMBO"
-                          : translations.unlimited || "UNLIMITED"}
-                      </span>
-                    )}
-                    {selectedItemModal.preparationtime && Number(selectedItemModal.preparationtime) > 0 && (
-                      <span className="tag-badge">⏱ {selectedItemModal.preparationtime} {translations.min || "min"}</span>
-                    )}
-                  </div>
-                </div>
-
-                <span className="dish-modal-price">
-                  {formatPriceFromBranch(selectedItemModal.price, selectedBranch)}
-                </span>
-              </div>
-
-              {selectedItemModal.desc && (
-                <p className="dish-modal-desc">{selectedItemModal.desc}</p>
-              )}
-
-              {/* Items included in Deals/Bundles */}
-              {selectedItemModal.items && selectedItemModal.items.length > 0 && (
-                <div className="dish-modal-addons-box">
-                  <h5>{translations.includeditems || "Included Items"}</h5>
-                  <div className="addons-list">
-                    {selectedItemModal.items.map((it, idx) => (
-                      <div key={it.itemid || idx} className="addon-item-row">
-                        <span>• {it.itemname || it.name}</span>
-                        {it.quantity && <span className="addon-price">x{it.quantity}</span>}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Addons included in Deals/Bundles */}
-              {selectedItemModal.addons && selectedItemModal.addons.length > 0 && (
-                <div className="dish-modal-addons-box">
-                  <h5>{translations.addons || "Add-ons"}</h5>
-                  <div className="addons-list">
-                    {selectedItemModal.addons.map((addon) => {
-                      const addonKey = addon.addonid || addon._id;
-                      return (
-                        <div key={addonKey} className="addon-item-row not-selectable">
-                          <div className="addon-check-label">
-                            <span>• {addon.addonname}</span>
-                          </div>
-                          {addon.price && Number(addon.price) > 0 && (
-                            <span className="addon-price">
-                              +{formatPriceFromBranch(addon.price, selectedBranch)}
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Centralized Deal Detail Modal */}
+      <DishDetailModal
+        item={selectedItemModal}
+        onClose={() => setSelectedItemModal(null)}
+        selectedBranch={selectedBranch}
+        posPayload={posPayload}
+        selectedOrderType={selectedOrderType}
+      />
     </div>
   );
 };

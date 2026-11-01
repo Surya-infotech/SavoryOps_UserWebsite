@@ -1,0 +1,469 @@
+@use "../../Customize/var.scss" as var;
+
+/* ==========================================================================
+   Centralized Dish Modals (Full Details Modal & Quick Customization Modal)
+   Single source of truth used across Home, Menu, and Offers pages
+   ========================================================================== */
+
+/* --- Full Dish / Deal Details Modal --- */
+.dish-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dish-modal-container {
+  background: #ffffff;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+  }
+
+  .dish-modal-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    border: none;
+    color: #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(15, 23, 42, 0.9);
+      transform: scale(1.08) rotate(90deg);
+    }
+  }
+
+  .dish-modal-hero {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    background: #f8fafc;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dish-modal-diet-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: #ffffff;
+      padding: 4px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+  }
+
+  .dish-modal-no-img-diet {
+    padding: 1.5rem 1.75rem 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .dish-modal-body {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .dish-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .dish-modal-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.3;
+      margin-bottom: 0.35rem;
+    }
+
+    .dish-modal-price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #028802;
+      white-space: nowrap;
+    }
+  }
+
+  .dish-modal-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .tag-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: #475569;
+    }
+  }
+
+  .dish-modal-desc {
+    font-size: 0.925rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .dish-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+    gap: 1rem;
+
+    .quantity-counter {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+
+      button {
+        background: transparent;
+        border: none;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #334155;
+        cursor: pointer;
+        transition: background 0.15s;
+
+        &:hover:not(:disabled) {
+          background: #e2e8f0;
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+
+      span {
+        padding: 0 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        min-width: 24px;
+        text-align: center;
+      }
+    }
+
+    .confirm-add-btn {
+      flex: 1;
+      height: 44px;
+      background: #028802;
+      color: #ffffff;
+      border: none;
+      border-radius: 9999px;
+      padding: 0 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(2, 136, 2, 0.3);
+      transition: background 0.2s, transform 0.15s;
+
+      .confirm-btn-icon,
+      svg {
+        font-size: 1.25rem;
+      }
+
+      &:hover {
+        background: #026b02;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+/* --- Dedicated Quick Addon Customization Modal --- */
+.addon-modal-overlay {
+  z-index: 1050;
+}
+
+.addon-modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 90vh;
+
+  .addon-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 1.25rem 1.4rem;
+    border-bottom: 1px solid #f1f5f9;
+    position: relative;
+
+    .addon-header-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .addon-header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.35rem;
+
+      .addon-header-diet {
+        position: static;
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+
+    .addon-modal-item-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.35;
+      letter-spacing: -0.3px;
+    }
+
+    .addon-modal-price-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .addon-base-price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #028802;
+    }
+
+    .addon-prep-time {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .addon-modal-thumb-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid #e2e8f0;
+
+      .addon-modal-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .addon-modal-close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #64748b;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .addon-modal-desc {
+    padding: 0.75rem 1.4rem 0.25rem;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .addon-selection-section {
+    padding: 0.85rem 1.4rem 1.15rem;
+    overflow-y: auto;
+    flex: 1;
+
+    .dish-modal-addons-box {
+      margin: 0;
+    }
+  }
+
+  .addon-modal-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1.4rem;
+    border-top: 1px solid #f1f5f9;
+    background: #ffffff;
+
+    .addon-quantity-control {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+      background: #f8fafc;
+
+      button {
+        background: transparent;
+        border: none;
+        width: 36px;
+        height: 38px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #334155;
+        cursor: pointer;
+        transition: background 0.15s;
+
+        &:hover:not(:disabled) {
+          background: #e2e8f0;
+          color: #0f172a;
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+
+      .addon-qty-val {
+        padding: 0 10px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+        min-width: 24px;
+        text-align: center;
+      }
+    }
+
+    .addon-add-cart-btn {
+      flex: 1;
+      height: 42px;
+      background: linear-gradient(135deg, #028802 0%, #026b02 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 9999px;
+      padding: 0 1.25rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(2, 136, 2, 0.28);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: linear-gradient(135deg, #029902 0%, #027a02 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(2, 136, 2, 0.35);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      .confirm-btn-icon,
+      svg {
+        font-size: 1.25rem;
+      }
+
+      .addon-total-price {
+        font-weight: 800;
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+

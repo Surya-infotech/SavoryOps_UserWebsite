@@ -13,7 +13,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
-import DishCard, { DietIndicator } from "../../Components/Common/DishCard.jsx";
+import DishCard, { DietIndicator, DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 
@@ -498,51 +498,9 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
 
   const displaySections = dynamicShowcases;
 
-  // 1. Full Item Details Modal State (opened on dish card click)
+  // Modal States
   const [selectedDishModal, setSelectedDishModal] = useState(null);
-  const [modalQuantity, setModalQuantity] = useState(1);
-  const [selectedAddonIds, setSelectedAddonIds] = useState([]);
-
-  // 2. Dedicated Add-on Selection Modal State (opened on '+' dish-addon-btn click)
   const [addonModalDish, setAddonModalDish] = useState(null);
-  const [addonQuantity, setAddonQuantity] = useState(1);
-  const [addonSelectedIds, setAddonSelectedIds] = useState([]);
-
-  // Addon price calculations for Item Details Modal
-  const selectedDishAddonsTotal = useMemo(() => {
-    if (!selectedDishModal || !selectedDishModal.addons) return 0;
-    return selectedDishModal.addons
-      .filter((a) => selectedAddonIds.includes(a.addonid || a._id || a.id))
-      .reduce((sum, a) => sum + Number(a.price || 0), 0);
-  }, [selectedDishModal, selectedAddonIds]);
-
-  const selectedDishEffectivePrice = useMemo(() => {
-    if (!selectedDishModal) return 0;
-    return calculateItemPrice(selectedDishModal, branchSetting, selectedOrderType);
-  }, [selectedDishModal, branchSetting, selectedOrderType]);
-
-  const selectedDishGrandTotal = useMemo(() => {
-    if (!selectedDishModal) return 0;
-    return (selectedDishEffectivePrice + selectedDishAddonsTotal) * modalQuantity;
-  }, [selectedDishEffectivePrice, selectedDishAddonsTotal, modalQuantity]);
-
-  // Addon price calculations for Dedicated Add-on Modal
-  const addonModalAddonsTotal = useMemo(() => {
-    if (!addonModalDish || !addonModalDish.addons) return 0;
-    return addonModalDish.addons
-      .filter((a) => addonSelectedIds.includes(a.addonid || a._id || a.id))
-      .reduce((sum, a) => sum + Number(a.price || 0), 0);
-  }, [addonModalDish, addonSelectedIds]);
-
-  const addonModalEffectivePrice = useMemo(() => {
-    if (!addonModalDish) return 0;
-    return calculateItemPrice(addonModalDish, branchSetting, selectedOrderType);
-  }, [addonModalDish, branchSetting, selectedOrderType]);
-
-  const addonModalGrandTotal = useMemo(() => {
-    if (!addonModalDish) return 0;
-    return (addonModalEffectivePrice + addonModalAddonsTotal) * addonQuantity;
-  }, [addonModalEffectivePrice, addonModalAddonsTotal, addonQuantity]);
 
   // Quick direct add-to-cart (from shopping cart button)
   const handleAddToCart = (e, dish) => {
@@ -571,105 +529,13 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
   // Card click -> Open Item Details Modal
   const handleCardClick = (dish) => {
     setSelectedDishModal(dish);
-    setModalQuantity(cartCounts[dish.id] || 1);
-    setSelectedAddonIds([]);
   };
 
   // '+' Button click -> Open Dedicated Add-on Modal
   const handleOpenAddonModal = (e, dish) => {
     e.stopPropagation();
     setAddonModalDish(dish);
-    setAddonSelectedIds([]);
-    setAddonQuantity(1);
   };
-
-  // Toggle handlers
-  const toggleModalAddon = (addonKey) => {
-    setSelectedAddonIds((prev) =>
-      prev.includes(addonKey) ? prev.filter((id) => id !== addonKey) : [...prev, addonKey]
-    );
-  };
-
-  const toggleAddonModalItem = (addonKey) => {
-    setAddonSelectedIds((prev) =>
-      prev.includes(addonKey) ? prev.filter((id) => id !== addonKey) : [...prev, addonKey]
-    );
-  };
-
-  // Confirm handlers
-  const handleConfirmDishModal = () => {
-    if (!selectedDishModal) return;
-    const effectivePrice = calculateItemPrice(selectedDishModal, branchSetting, selectedOrderType);
-    const dishWithPrice = {
-      ...selectedDishModal,
-      price: effectivePrice,
-    };
-    const selectedAddons = (selectedDishModal.addons || []).map((addon) => {
-      const addonKey = addon.addonid || addon._id || addon.id;
-      const isSelected = selectedAddonIds.includes(addonKey);
-      return {
-        addonid: addon.addonid || addonKey,
-        addonname: addon.addonname || addon.name,
-        price: Number(addon.price ?? addon.addonprice ?? 0),
-        selected: isSelected,
-      };
-    });
-
-    addItemToCart(dishWithPrice, {
-      addons: selectedAddons,
-      availableAddons: selectedDishModal.addons || [],
-      quantity: modalQuantity,
-      image: selectedDishModal.image || selectedDishModal.imageUrl,
-      description: selectedDishModal.desc || selectedDishModal.description,
-      showToast: showSnackbar,
-    });
-
-    setSelectedDishModal(null);
-  };
-
-  const handleConfirmAddonModal = () => {
-    if (!addonModalDish) return;
-    const effectivePrice = calculateItemPrice(addonModalDish, branchSetting, selectedOrderType);
-    const dishWithPrice = {
-      ...addonModalDish,
-      price: effectivePrice,
-    };
-    const selectedAddons = (addonModalDish.addons || []).map((addon) => {
-      const addonKey = addon.addonid || addon._id || addon.id;
-      const isSelected = addonSelectedIds.includes(addonKey);
-      return {
-        addonid: addon.addonid || addonKey,
-        addonname: addon.addonname || addon.name,
-        price: Number(addon.price ?? addon.addonprice ?? 0),
-        selected: isSelected,
-      };
-    });
-
-    addItemToCart(dishWithPrice, {
-      addons: selectedAddons,
-      availableAddons: addonModalDish.addons || [],
-      quantity: addonQuantity,
-      image: addonModalDish.image || addonModalDish.imageUrl,
-      description: addonModalDish.desc || addonModalDish.description,
-      showToast: showSnackbar,
-    });
-
-    setAddonModalDish(null);
-  };
-
-  // Close modals on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        setSelectedDishModal(null);
-        setAddonModalDish(null);
-      }
-    };
-    if (selectedDishModal || addonModalDish) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedDishModal, addonModalDish]);
 
   if (loadingShowcases || displaySections.length === 0) {
     return null;
@@ -694,325 +560,25 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
         ))}
       </div>
 
-      {/* --- 1. Item Details Popup Modal (Exact Parity with Menu Page) --- */}
-      {selectedDishModal && (
-        <div
-          className="dish-modal-overlay"
-          onClick={() => setSelectedDishModal(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="dish-modal-title"
-        >
-          <div className="dish-modal-container" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="dish-modal-close-btn"
-              onClick={() => setSelectedDishModal(null)}
-              aria-label="Close"
-            >
-              <CloseIcon fontSize="small" />
-            </button>
+      {/* Centralized Full Dish / Deal Details Modal */}
+      <DishDetailModal
+        item={selectedDishModal}
+        onClose={() => setSelectedDishModal(null)}
+        selectedBranch={selectedBranch}
+        branchSetting={branchSetting}
+        selectedOrderType={selectedOrderType}
+        initialQuantity={selectedDishModal ? (cartCounts[selectedDishModal.id] || 1) : 1}
+      />
 
-            {/* Hero Image */}
-            {selectedDishModal.image ? (
-              <div className="dish-modal-hero">
-                <img
-                  src={selectedDishModal.image}
-                  alt={selectedDishModal.title}
-                  onError={(e) => {
-                    e.target.style.display = "none";
-                  }}
-                />
-                <DietIndicator isVeg={selectedDishModal.isVeg} className="dish-modal-diet-badge" />
-              </div>
-            ) : (
-              <div className="dish-modal-no-img-diet">
-                <DietIndicator isVeg={selectedDishModal.isVeg} className="dish-modal-diet-badge" />
-              </div>
-            )}
-
-            {/* Modal Body */}
-            <div className="dish-modal-body">
-              <div className="dish-modal-header">
-                <div>
-                  <h3 id="dish-modal-title" className="dish-modal-title">
-                    {selectedDishModal.title}
-                  </h3>
-                  <div className="dish-modal-tags">
-                    {selectedDishModal.isDeal ? (
-                      <span className="tag-badge">
-                        {selectedDishModal.bundletype === "unlimited"
-                          ? (translations.unlimited || "UNLIMITED")
-                          : (translations.combo || "COMBO")}
-                      </span>
-                    ) : (
-                      selectedDishModal.tag && (
-                        <span className="tag-badge">{selectedDishModal.tag}</span>
-                      )
-                    )}
-                    {selectedDishModal.prepTime && (
-                      <span className="tag-badge">⏱ {selectedDishModal.prepTime}</span>
-                    )}
-                    <span className="tag-badge">
-                      {selectedDishModal.isVeg ? (translations.vegetarian || "Vegetarian") : (translations.nonvegetarian || "Non-Vegetarian")}
-                    </span>
-                  </div>
-                </div>
-
-                <span className="dish-modal-price">
-                  {formatPriceFromBranch(selectedDishEffectivePrice, selectedBranch)}
-                </span>
-              </div>
-
-              {selectedDishModal.desc && (
-                <p className="dish-modal-desc">{selectedDishModal.desc}</p>
-              )}
-
-              {/* Combo Included Items */}
-              {selectedDishModal.isDeal && selectedDishModal.includedItems && selectedDishModal.includedItems.length > 0 && (
-                <div className="dish-modal-addons-box">
-                  <div className="dish-modal-addons-title-wrap">
-                    <h5>{translations.includeditems || "INCLUDED ITEMS"}</h5>
-                  </div>
-                  <div className="addons-list">
-                    {selectedDishModal.includedItems.map((item, idx) => (
-                      <div key={idx} className="addon-item-row">
-                        <div className="addon-check-label">
-                          <CheckCircleOutlinedIcon style={{ color: "#028802", fontSize: "1.1rem" }} />
-                          <span>{item}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Customizable Addons List (non-selectable for combo and bundle deals) */}
-              {selectedDishModal.addons && selectedDishModal.addons.length > 0 && (() => {
-                const isComboItem =
-                  selectedDishModal.bundletype === "combo" ||
-                  selectedDishModal.bundletype === "unlimited" ||
-                  selectedDishModal.isDeal;
-
-                return (
-                  <div className="dish-modal-addons-box">
-                    <div className="dish-modal-addons-title-wrap">
-                      <h5>{isComboItem ? (translations?.addons || "Add-ons") : (translations?.customizableaddons || "Customizable Add-ons")}</h5>
-                    </div>
-                    <div className="addons-list">
-                      {selectedDishModal.addons.map((addon) => {
-                        const addonKey = addon.addonid || addon._id || addon.id;
-
-                        if (isComboItem) {
-                          return (
-                            <div
-                              key={addonKey}
-                              className="addon-item-row not-selectable"
-                            >
-                              <div className="addon-check-label">
-                                <span>• {addon.addonname || addon.name}</span>
-                              </div>
-                              <span className="addon-price">
-                                +{formatPriceFromBranch(addon.price, selectedBranch)}
-                              </span>
-                            </div>
-                          );
-                        }
-
-                        const isChecked = selectedAddonIds.includes(addonKey);
-                        return (
-                          <label
-                            key={addonKey}
-                            className={`addon-item-row ${isChecked ? "is-selected" : ""}`}
-                          >
-                            <div className="addon-check-label">
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => toggleModalAddon(addonKey)}
-                                className="addon-checkbox-input"
-                              />
-                              <span>{addon.addonname || addon.name}</span>
-                            </div>
-                            <span className="addon-price">
-                              +{formatPriceFromBranch(addon.price, selectedBranch)}
-                            </span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* Modal Footer with Quantity Counter (hidden on combo and unlimited items - exact MenuPage parity) */}
-              {!(
-                selectedDishModal.bundletype === "combo" ||
-                selectedDishModal.bundletype === "unlimited" ||
-                selectedDishModal.isDeal
-              ) && (
-                  <div className="dish-modal-footer">
-                    <div className="quantity-counter">
-                      <button
-                        type="button"
-                        onClick={() => setModalQuantity((q) => Math.max(1, q - 1))}
-                        aria-label="Decrease quantity"
-                      >
-                        -
-                      </button>
-                      <span>{modalQuantity}</span>
-                      <button
-                        type="button"
-                        onClick={() => setModalQuantity((q) => q + 1)}
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="confirm-add-btn"
-                      onClick={handleConfirmDishModal}
-                      aria-label="Add to Order"
-                    >
-                      <ShoppingCartOutlinedIcon className="confirm-btn-icon" />
-                      <span>{formatPriceFromBranch(selectedDishGrandTotal, selectedBranch)}</span>
-                    </button>
-                  </div>
-                )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* --- 2. Dedicated Add-on Selection Popup Modal (Exact Parity with Menu Page) --- */}
-      {addonModalDish && (
-        <div
-          className="dish-modal-overlay addon-modal-overlay"
-          onClick={() => setAddonModalDish(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="addon-modal-item-title"
-        >
-          <div
-            className="addon-modal-card"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="addon-modal-header">
-              <div className="addon-header-main">
-                <div className="addon-header-title-row">
-                  <DietIndicator isVeg={addonModalDish.isVeg} className="addon-header-diet" />
-                  <h3 id="addon-modal-item-title" className="addon-modal-item-title">
-                    {addonModalDish.title}
-                  </h3>
-                </div>
-                <div className="addon-modal-price-meta">
-                  <span className="addon-base-price">
-                    {formatPriceFromBranch(addonModalEffectivePrice, selectedBranch)}
-                  </span>
-                  {addonModalDish.prepTime && (
-                    <span className="addon-prep-time">
-                      <AccessTimeIcon fontSize="inherit" /> {addonModalDish.prepTime}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {addonModalDish.image && (
-                <div className="addon-modal-thumb-box">
-                  <img
-                    src={addonModalDish.image}
-                    alt={addonModalDish.title}
-                    className="addon-modal-thumb"
-                  />
-                </div>
-              )}
-
-              <button
-                type="button"
-                className="addon-modal-close-btn"
-                onClick={() => setAddonModalDish(null)}
-                aria-label="Close"
-              >
-                <CloseIcon />
-              </button>
-            </div>
-
-            {/* Description if present */}
-            {addonModalDish.desc && (
-              <p className="addon-modal-desc">{addonModalDish.desc}</p>
-            )}
-
-            {/* Add-ons Selection Section */}
-            <div className="addon-selection-section">
-              <div className="dish-modal-addons-box">
-                <h5>{translations.customizableaddons || "Customizable Add-ons"}</h5>
-                <div className="addons-list">
-                  {(addonModalDish.addons || []).map((addon) => {
-                    const addonKey = addon.addonid || addon._id || addon.id;
-                    const isChecked = addonSelectedIds.includes(addonKey);
-                    return (
-                      <label
-                        key={addonKey}
-                        className={`addon-item-row ${isChecked ? "is-selected" : ""}`}
-                      >
-                        <div className="addon-check-label">
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => toggleAddonModalItem(addonKey)}
-                            className="addon-checkbox-input"
-                          />
-                          <span>{addon.addonname || addon.name}</span>
-                        </div>
-                        <span className="addon-price">
-                          +{formatPriceFromBranch(addon.price, selectedBranch)}
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Bottom Sticky Footer */}
-            <div className="addon-modal-footer">
-              <div className="addon-quantity-control">
-                <button
-                  type="button"
-                  onClick={() => setAddonQuantity((q) => Math.max(1, q - 1))}
-                  disabled={addonQuantity <= 1}
-                  aria-label="Decrease quantity"
-                >
-                  -
-                </button>
-                <span className="addon-qty-val">{addonQuantity}</span>
-                <button
-                  type="button"
-                  onClick={() => setAddonQuantity((q) => q + 1)}
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
-
-              <button
-                type="button"
-                className="addon-add-cart-btn"
-                onClick={handleConfirmAddonModal}
-                aria-label={translations.addtocart || "Add to cart"}
-              >
-                <ShoppingCartOutlinedIcon className="confirm-btn-icon" fontSize="small" />
-                <span className="addon-total-price">
-                  {formatPriceFromBranch(addonModalGrandTotal, selectedBranch)}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Centralized Quick Add-on Customization Popup Modal */}
+      <DishAddonModal
+        item={addonModalDish}
+        onClose={() => setAddonModalDish(null)}
+        selectedBranch={selectedBranch}
+        branchSetting={branchSetting}
+        selectedOrderType={selectedOrderType}
+        initialQuantity={1}
+      />
     </section>
   );
 };

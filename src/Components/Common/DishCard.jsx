@@ -238,3 +238,5 @@ const DishCard = ({
 };
 
 export default DishCard;
+export { default as DishDetailModal } from "./DishDetailModal.jsx";
+export { default as DishAddonModal } from "./DishAddonModal.jsx";
