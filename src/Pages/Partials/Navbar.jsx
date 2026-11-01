@@ -34,6 +34,7 @@ import { LanguageDropdown } from "./LanguageDropdown.jsx";
 export { LanguageDropdown };
 import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Pages/Partials/navbar.scss";
+import "../../Scss/Components/General/dropdown.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);
@@ -57,7 +58,7 @@ const getStoredBranch = (branches = []) => {
    1. BranchDropdown Component
    ========================================================================== */
 const BranchDropdown = ({ className = "", onBranchChange }) => {
-  const { translations = {} } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [branches, setBranches] = useState([]);
@@ -68,6 +69,18 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
     return null;
   });
   const dropdownRef = useRef(null);
+  const searchInputRef = useRef(null);
+
+  // Auto focus search input when dropdown is opened
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
+    } else {
+      setSearch("");
+    }
+  }, [isOpen]);
 
   // Fetch branches directly via subdomain API
   useEffect(() => {
@@ -192,7 +205,8 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
   return (
     <div
       ref={dropdownRef}
-      className={`branch-dropdown-wrapper ${className} ${isOpen ? "open" : ""}`}
+      className={`dropdown branch-dropdown-wrapper ${className} ${isOpen ? "open is-open" : ""}`}
+      dir={isRtl ? "rtl" : "ltr"}
     >
       <button
         type="button"
@@ -210,72 +224,80 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
       </button>
 
       {isOpen && (
-        <div className="branch-dropdown-menu" role="listbox">
-          <div className="branch-menu-header">
-            <div className="branch-menu-header-text">
-              <span className="branch-menu-title">{translations.selectbranch}</span>
-              <span className="branch-menu-subtitle">
-                {branches.length} available {branches.length === 1 ? translations.branch : translations.branches}
-              </span>
+        <div
+          className={`dropdown-menu dropdown-menu-panel dropdownul branch-dropdown-menu ${isRtl ? "rtl-dropdownul" : ""}`}
+          role="listbox"
+          dir={isRtl ? "rtl" : "ltr"}
+        >
+          {/* Dedicated Fixed Search Bar Header - Same as Manage Address Dropdown */}
+          <div className="dropdown-search-wrapper" onClick={(e) => e.stopPropagation()}>
+            <div className="dropdown-search-box">
+              <SearchIcon className="dropdown-search-icon" fontSize="small" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="dropdown-search-input"
+                placeholder={translations.searchbranchname || translations.search || "Search branch..."}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                autoComplete="off"
+              />
+              {search && (
+                <button
+                  type="button"
+                  className="dropdown-search-clear-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSearch("");
+                    searchInputRef.current?.focus();
+                  }}
+                  aria-label={translations.clearsearch || "Clear search"}
+                >
+                  <CloseIcon className="dropdown-clear-icon" fontSize="inherit" />
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="branch-search-container">
-            <SearchIcon className="branch-search-icon" fontSize="small" />
-            <input
-              type="text"
-              className="branch-search-input"
-              placeholder={translations.searchbranchname}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              autoFocus
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="branch-list-scroller">
-            {filteredBranches.length === 0 ? (
-              <div className="branch-empty-state">
-                <p>
-                  {search
-                    ? `${translations.nobranchesfound} "${search}"`
-                    : translations.nobranchesfound}
-                </p>
-              </div>
-            ) : (
+          {/* Scrollable Items List - Same as Manage Address Dropdown ul */}
+          <ul className="dropdown-items-list branch-dropdown-items-list" role="listbox">
+            {filteredBranches.length > 0 ? (
               filteredBranches.map((branch) => {
                 const isSelected =
-                  String(selectedBranch?._id) ===
-                  String(branch._id);
+                  String(selectedBranch?._id) === String(branch._id);
                 return (
-                  <div
-                    key={branch._id}
-                    className={`branch-item-card ${isSelected ? "selected" : ""}`}
-                    onClick={() => handleBranchSelect(branch)}
-                    role="option"
-                    aria-selected={isSelected}
-                  >
-                    <div className="branch-item-icon-wrapper">
-                      <StorefrontIcon fontSize="small" />
-                    </div>
-
-                    <div className="branch-item-details">
-                      <span className="branch-item-name">{branch.branchname}</span>
-                      {branch.address && (
-                        <span className="branch-item-address">{branch.address}</span>
-                      )}
-                    </div>
-
-                    {isSelected && (
-                      <div className="branch-item-check">
-                        <CheckIcon fontSize="small" />
+                  <li key={branch._id} role="presentation">
+                    <a
+                      className={`dropdown-item ${isSelected ? "selected" : ""}`}
+                      title={branch.branchname}
+                      onClick={() => handleBranchSelect(branch)}
+                      role="option"
+                      aria-selected={isSelected}
+                    >
+                      <div className="branch-item-row">
+                        <StorefrontIcon className="branch-item-icon" fontSize="small" />
+                        <div className="branch-item-text">
+                          <span className="branch-item-name">{branch.branchname}</span>
+                          {branch.address && (
+                            <span className="branch-item-address">{branch.address}</span>
+                          )}
+                        </div>
+                        {isSelected && (
+                          <CheckIcon className="branch-item-check-icon" fontSize="small" />
+                        )}
                       </div>
-                    )}
-                  </div>
+                    </a>
+                  </li>
                 );
               })
+            ) : (
+              <li className="dropdown-no-record">
+                {search
+                  ? `${translations.nobranchesfound || translations.norecordfound || "No branches found"} "${search}"`
+                  : translations.nobranchesfound || translations.norecordfound || "No branches found"}
+              </li>
             )}
-          </div>
+          </ul>
         </div>
       )}
     </div>
@@ -294,7 +316,7 @@ const getOrderTypeNavIcon = (typeName = "") => {
 };
 
 export const OrderTypeDropdown = ({ className = "" }) => {
-  const { translations = {} } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [orderTypes, setOrderTypes] = useState([]);
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
@@ -463,7 +485,8 @@ export const OrderTypeDropdown = ({ className = "" }) => {
   return (
     <div
       ref={dropdownRef}
-      className={`order-type-dropdown-wrapper ${className} ${isOpen ? "open" : ""}`}
+      className={`dropdown order-type-dropdown-wrapper ${className} ${isOpen ? "open is-open" : ""}`}
+      dir={isRtl ? "rtl" : "ltr"}
     >
       <button
         type="button"
@@ -481,31 +504,35 @@ export const OrderTypeDropdown = ({ className = "" }) => {
       </button>
 
       {isOpen && (
-        <div className="order-type-dropdown-menu" role="listbox">
-          <div className="order-type-list">
+        <div
+          className={`dropdown-menu dropdown-menu-panel dropdownul order-type-dropdown-menu ${isRtl ? "rtl-dropdownul" : ""}`}
+          role="listbox"
+          dir={isRtl ? "rtl" : "ltr"}
+        >
+          <ul className="dropdown-items-list order-type-items-list" role="listbox">
             {orderTypes.map((ot) => {
               const isSelected =
                 activeName.toLowerCase() === ot.ordertypename.toLowerCase();
               return (
-                <button
-                  key={ot.ordertypeid || ot.ordertypename}
-                  type="button"
-                  className={`order-type-menu-item ${isSelected ? "selected" : ""}`}
-                  onClick={() => handleSelect(ot.ordertypename)}
-                  role="option"
-                  aria-selected={isSelected}
-                >
-                  <div className="order-type-item-content">
-                    <div className="order-type-item-icon">
-                      {getOrderTypeNavIcon(ot.ordertypename)}
+                <li key={ot.ordertypeid || ot.ordertypename} role="presentation">
+                  <a
+                    className={`dropdown-item ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleSelect(ot.ordertypename)}
+                    role="option"
+                    aria-selected={isSelected}
+                  >
+                    <div className="order-type-item-row">
+                      <div className="order-type-item-icon">
+                        {getOrderTypeNavIcon(ot.ordertypename)}
+                      </div>
+                      <span className="order-type-item-name">{ot.ordertypename}</span>
+                      {isSelected && <CheckIcon className="order-type-check-icon" fontSize="small" />}
                     </div>
-                    <span className="order-type-item-name">{ot.ordertypename}</span>
-                  </div>
-                  {isSelected && <CheckIcon className="order-type-check-icon" />}
-                </button>
+                  </a>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
       )}
     </div>
@@ -817,7 +844,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
-  
+
   const location = useLocation();
 
   const [selectedBranch, setSelectedBranch] = useState(() => {
