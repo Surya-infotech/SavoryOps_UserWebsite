@@ -1190,32 +1190,16 @@ const Navbar = () => {
                 </div>
               </div>
 
-              <div className="mobile-drawer-footer">
-                <Link
-                  to="/signin"
-                  className="nav-cta-btn mobile-signin-btn"
-                  onClick={() => setMobileMenuOpen(false)}
-                  id="mobile-drawer-signin-btn"
-                >
-                  <LoginIcon fontSize="small" />
-                  <span>{localStorage.getItem("savoryopscustomer_token") ? translations.myaccount : translations.signinwithphone}</span>
-                </Link>
-                <Link
-                  to="/reservation"
-                  className="nav-cta-btn mobile-book-btn"
-                >
-                  <TableRestaurantIcon fontSize="small" />
-                  <span>{translations.booktable}</span>
-                </Link>
-                {displayPhone && (
+              {displayPhone && (
+                <div className="mobile-drawer-footer">
                   <a
                     href={`tel:${displayPhone}`}
                     className="mobile-helpline-link"
                   >
                     📞 {translations.helpline}: {displayPhone}
                   </a>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </>,
           document.body
