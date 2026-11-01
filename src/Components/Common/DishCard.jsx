@@ -115,29 +115,11 @@ const DishCard = ({
     }
   };
 
-  const rawItemType = (
-    dish.itemtype ||
-    dish.itemType ||
-    ""
-  )
-    .trim()
-    .toLowerCase();
-
-  const isNonVeg = Boolean(
-    dish.isNonVeg ||
-    rawItemType.includes("non") ||
-    rawItemType.includes("egg") ||
-    (dish.isVeg === false && dish.isVeg !== undefined)
-  );
-
-  const isVeg = Boolean(
-    dish.isVeg ||
-    (!isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan"))
-  );
-
-  const showDiet = Boolean(
-    dish.hasDiet !== undefined ? dish.hasDiet : (isVeg || isNonVeg)
-  );
+  // Determine Veg / Non-Veg directly from database itemtype field ("Veg" / "Non Veg")
+  const rawType = String(dish.itemtype || dish.itemType || "").trim().toLowerCase();
+  const isNonVeg = rawType.includes("non") || dish.isNonVeg === true || (dish.isVeg === false && dish.isVeg !== undefined);
+  const isVeg = !isNonVeg && (rawType.includes("veg") || dish.isVeg === true);
+  const showDiet = Boolean(isVeg || isNonVeg || dish.hasDiet);
 
   return (
     <div

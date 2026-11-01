@@ -302,10 +302,12 @@ const CarouselRow = ({
                 selectedOrderType
               );
 
-              const rawItemType = (rawDish.itemtype || rawDish.itemType || "").trim().toLowerCase();
-              const isNonVeg = rawItemType.includes("non") || rawItemType.includes("egg") || (rawDish.isVeg === false && rawDish.isVeg !== undefined);
-              const isVeg = !isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan" || Boolean(rawDish.isVeg));
-              const hasDiet = isVeg || isNonVeg || Boolean(rawDish.hasDiet);
+              // Determine Veg / Non-Veg directly from database itemtype field ("Veg" / "Non Veg")
+              const rawItemType = String(rawDish.itemtype || rawDish.itemType || "").trim().toLowerCase();
+              const isNonVeg = rawItemType.includes("non") || (rawDish.isVeg === false && rawDish.isVeg !== undefined) || rawDish.isNonVeg === true;
+              const isVeg = !isNonVeg && (rawItemType.includes("veg") || Boolean(rawDish.isVeg));
+              const hasDiet = isVeg || isNonVeg;
+              const itemtype = rawDish.itemtype || (isVeg ? "Veg" : isNonVeg ? "Non Veg" : "");
 
               const dish = {
                 ...rawDish,
@@ -316,7 +318,7 @@ const CarouselRow = ({
                 hasDiet,
                 isVeg,
                 isNonVeg,
-                itemtype: rawDish.itemtype || (isVeg ? "Veg" : isNonVeg ? "Non-Veg" : ""),
+                itemtype,
                 prepTime: rawDish.preparationtime ? `${rawDish.preparationtime} min` : (rawDish.prepTime || ""),
                 tag: rawDish.itemcategoryname || rawDish.tag || "",
                 isDeal: isDeal,

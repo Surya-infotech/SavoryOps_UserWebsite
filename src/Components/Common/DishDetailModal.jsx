@@ -69,27 +69,11 @@ export const DishDetailModal = ({
     return (effectivePrice + addonsTotal) * quantity;
   }, [effectivePrice, addonsTotal, quantity]);
 
-  const rawItemType = (
-    item?.itemtype ||
-    item?.itemType ||
-    ""
-  ).trim().toLowerCase();
-
-  const isNonVeg = Boolean(
-    item?.isNonVeg ||
-    rawItemType.includes("non") ||
-    rawItemType.includes("egg") ||
-    (item?.isVeg === false && item?.isVeg !== undefined)
-  );
-
-  const isVeg = Boolean(
-    item?.isVeg ||
-    (!isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan"))
-  );
-
-  const showDiet = Boolean(
-    item?.hasDiet !== undefined ? item.hasDiet : (isVeg || isNonVeg)
-  );
+  // Determine Veg / Non-Veg directly from database itemtype field ("Veg" / "Non Veg")
+  const rawType = String(item?.itemtype || item?.itemType || "").trim().toLowerCase();
+  const isNonVeg = rawType.includes("non") || item?.isNonVeg === true || (item?.isVeg === false && item?.isVeg !== undefined);
+  const isVeg = !isNonVeg && (rawType.includes("veg") || item?.isVeg === true);
+  const showDiet = Boolean(isVeg || isNonVeg || item?.hasDiet);
 
   if (!item) return null;
 
