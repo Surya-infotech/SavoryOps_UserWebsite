@@ -950,10 +950,13 @@
 }
 
 /* --- Branch Dropdown --- */
+.branch-dropdown-wrapper.dropdown,
 .branch-dropdown-wrapper {
   position: relative;
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
+  width: auto !important;
+  flex: 0 0 auto !important;
 }
 
 .branch-trigger-btn {
@@ -1626,17 +1629,21 @@
 
 /* --- Nav Brand Selectors Group --- */
 .nav-brand-selectors {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
 }
 
 /* --- Order Type Dropdown (Header) --- */
+.order-type-dropdown-wrapper.dropdown,
 .order-type-dropdown-wrapper {
   position: relative;
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
+  width: auto !important;
+  flex: 0 0 auto !important;
 }
 
 .order-type-trigger-btn {
