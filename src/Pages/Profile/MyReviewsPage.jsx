@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -9,12 +9,8 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
-import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
-import SearchOffIcon from "@mui/icons-material/SearchOff";
 import CircularProgress from "@mui/material/CircularProgress";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -64,9 +60,7 @@ const MyReviewsPage = () => {
   const { translations = {}, isRtl } = useLanguage();
 
   const [reviews, setReviews] = useState([]);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   // Edit Review Modal State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -102,82 +96,55 @@ const MyReviewsPage = () => {
   };
 
   // Fetch reviews from website route
-  const fetchMyReviews = useCallback(
-    async (isManualRefresh = false) => {
-      const customerId = getCustomerId();
-      const token = getToken();
+  const fetchMyReviews = useCallback(async () => {
+    const customerId = getCustomerId();
+    const token = getToken();
 
-      if (!customerId) {
-        setLoading(false);
-        setRefreshing(false);
-        return;
+    if (!customerId) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        "x-user": "customer",
+      };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
       }
 
-      if (isManualRefresh) {
-        setRefreshing(true);
-      }
-
-      try {
-        const headers = {
-          "Content-Type": "application/json",
-          "x-user": "customer",
-        };
-        if (token) {
-          headers["Authorization"] = `Bearer ${token}`;
+      const response = await fetch(
+        `${adminPanelBackendPath}/Website/Profile/GetMyReviews/${customerId}`,
+        {
+          method: "GET",
+          headers,
         }
+      );
 
-        const response = await fetch(
-          `${adminPanelBackendPath}/Website/Profile/GetMyReviews/${customerId}`,
-          {
-            method: "GET",
-            headers,
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          setReviews(Array.isArray(data) ? data : []);
-        } else {
-          showSnackbar(
-            translations.somethingWentWrong || "Failed to load reviews.",
-            "error"
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching my reviews:", error);
+      if (response.ok) {
+        const data = await response.json();
+        setReviews(Array.isArray(data) ? data : []);
+      } else {
         showSnackbar(
-          translations.somethingWentWrong || "Error fetching reviews.",
+          translations.somethingWentWrong || "Failed to load reviews.",
           "error"
         );
-      } finally {
-        setLoading(false);
-        setRefreshing(false);
       }
-    },
-    [showSnackbar, translations.somethingWentWrong]
-  );
+    } catch (error) {
+      console.error("Error fetching my reviews:", error);
+      showSnackbar(
+        translations.somethingWentWrong || "Error fetching reviews.",
+        "error"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [showSnackbar, translations.somethingWentWrong]);
 
   useEffect(() => {
     fetchMyReviews();
   }, [fetchMyReviews]);
-
-  // Client-side search filtering
-  const filteredReviews = useMemo(() => {
-    if (!search.trim()) return reviews;
-    const q = search.trim().toLowerCase();
-    return reviews.filter((item) => {
-      const orderNo = String(item.orderno || "").toLowerCase();
-      const branchName = String(item.branchname || "").toLowerCase();
-      const businessName = String(item.businessname || "").toLowerCase();
-      const reviewText = String(item.review || "").toLowerCase();
-      return (
-        orderNo.includes(q) ||
-        branchName.includes(q) ||
-        businessName.includes(q) ||
-        reviewText.includes(q)
-      );
-    });
-  }, [reviews, search]);
 
   // Open Edit Modal for a review
   const handleOpenEdit = (review) => {
@@ -280,76 +247,8 @@ const MyReviewsPage = () => {
       />
 
       <div className="my-reviews-container">
-        {/* Page Header */}
-        <div className="my-reviews-page-header">
-          <div className="reviews-header-meta">
-            <h1 className="reviews-main-title">
-              {translations.myreviews || "My Reviews"}
-            </h1>
-            <p className="reviews-main-subtitle">
-              {translations.reviewssubtitle ||
-                "Check your past dining reviews, dish ratings, and culinary feedback."}
-            </p>
-          </div>
-        </div>
-
-        {/* Toolbar: Search, Count Badge, Refresh */}
-        {(loading || reviews.length > 0) && (
-          <div className="my-reviews-toolbar">
-            <div className="toolbar-left">
-              {!loading && (
-                <span className="reviews-count-chip">
-                  {filteredReviews.length}{" "}
-                  {filteredReviews.length === 1
-                    ? translations.review || "Review"
-                    : translations.reviews || "Reviews"}
-                </span>
-              )}
-            </div>
-
-            <div className="toolbar-right">
-              {/* Search Box matching OrdersPage */}
-              <div className="reviews-search-box">
-                <SearchIcon className="search-icon" />
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder={
-                    translations.searchreviews ||
-                    "Search by restaurant, order, or feedback..."
-                  }
-                />
-                {search && (
-                  <button
-                    type="button"
-                    className="search-clear-btn"
-                    onClick={() => setSearch("")}
-                    aria-label="Clear search"
-                  >
-                    <CloseIcon fontSize="small" />
-                  </button>
-                )}
-              </div>
-
-              {/* Refresh Button */}
-              <Tooltip title={translations.refresh || "Refresh"} arrow>
-                <button
-                  type="button"
-                  className={`refresh-btn ${refreshing ? "is-refreshing" : ""}`}
-                  onClick={() => fetchMyReviews(true)}
-                  disabled={loading || refreshing}
-                  aria-label="Refresh reviews"
-                >
-                  <RefreshIcon fontSize="small" />
-                </button>
-              </Tooltip>
-            </div>
-          </div>
-        )}
-
         {/* Content Area */}
-        {loading && !refreshing ? (
+        {loading ? (
           /* Shimmer Grid */
           <div className="my-reviews-grid">
             {[1, 2, 3, 4, 5, 6].map((k) => (
@@ -372,29 +271,10 @@ const MyReviewsPage = () => {
               <span>{translations.exploremenu || "Explore Menu"}</span>
             </Link>
           </div>
-        ) : filteredReviews.length === 0 ? (
-          /* Search Empty State */
-          <div className="my-reviews-empty-state search-empty">
-            <div className="empty-icon-wrap search">
-              <SearchOffIcon className="empty-illustration-icon" />
-            </div>
-            <h3>{translations.noreviewsfound || "No reviews found"}</h3>
-            <p>
-              {translations.nosearchresultsfound ||
-                "No reviews match your search criteria. Try a different query."}
-            </p>
-            <button
-              type="button"
-              className="clear-search-btn"
-              onClick={() => setSearch("")}
-            >
-              {translations.clearsearch || "Clear Search Filter"}
-            </button>
-          </div>
         ) : (
           /* Multi-column Responsive Cards Grid */
           <div className="my-reviews-grid">
-            {filteredReviews.map((rev) => (
+            {reviews.map((rev) => (
               <div key={rev._id} className="review-card-tile">
                 {/* Top Gold Accent Bar */}
                 <div className="card-accent-bar" />

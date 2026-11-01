@@ -1,6 +1,6 @@
 /* ==========================================================================
    SavoryOps User Website - My Reviews Page SCSS
-   1:1 Unified Design Parity with OrdersPage, ManageAddress & Profile Pages
+   Clean Grid Design Matching ManageAddress & Offers Pages
    ========================================================================== */
 
 .my-reviews-wrapper {
@@ -16,26 +16,6 @@
   &.is-rtl {
     direction: rtl;
     text-align: right;
-
-    .my-reviews-toolbar {
-      flex-direction: row-reverse;
-
-      .reviews-search-box {
-        .search-icon {
-          left: auto;
-          right: 1.1rem;
-        }
-
-        input {
-          padding: 0.75rem 2.85rem 0.75rem 2.5rem;
-        }
-
-        .search-clear-btn {
-          right: auto;
-          left: 0.85rem;
-        }
-      }
-    }
 
     .review-tile-header {
       flex-direction: row-reverse;
@@ -58,175 +38,7 @@
 .my-reviews-container {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-/* ==========================================================================
-   Page Header
-   ========================================================================== */
-.my-reviews-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.75rem;
-  flex-wrap: wrap;
-
-  .reviews-header-meta {
-    flex: 1;
-    min-width: 260px;
-
-    .reviews-main-title {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0 0 0.35rem;
-      letter-spacing: -0.5px;
-    }
-
-    .reviews-main-subtitle {
-      font-size: 0.95rem;
-      color: #64748b;
-      margin: 0;
-      line-height: 1.5;
-    }
-  }
-}
-
-/* ==========================================================================
-   Toolbar: Count Badge, Search Box, Refresh
-   ========================================================================== */
-.my-reviews-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.75rem;
-  flex-wrap: wrap;
-
-  .toolbar-left {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-
-    .reviews-count-chip {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.4rem 1rem;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 9999px;
-      color: #15803d;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-    }
-  }
-
-  .toolbar-right {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-left: auto;
-
-    .reviews-search-box {
-      width: 100%;
-      min-width: 280px;
-      max-width: 440px;
-      position: relative;
-      display: flex;
-      align-items: center;
-
-      .search-icon {
-        position: absolute;
-        left: 1.1rem;
-        color: #028802;
-        font-size: 1.2rem;
-        pointer-events: none;
-      }
-
-      input {
-        width: 100%;
-        padding: 0.7rem 2.4rem 0.7rem 2.85rem;
-        border-radius: 9999px;
-        border: 1.5px solid #e2e8f0;
-        background: #ffffff;
-        font-size: 0.9rem;
-        color: #0f172a;
-        outline: none;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-        box-sizing: border-box;
-
-        &:focus {
-          border-color: #028802;
-          box-shadow: 0 0 0 3px rgba(2, 136, 2, 0.12);
-        }
-
-        &::placeholder {
-          color: #94a3b8;
-        }
-      }
-
-      .search-clear-btn {
-        position: absolute;
-        right: 0.8rem;
-        background: transparent;
-        border: none;
-        color: #94a3b8;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        padding: 4px;
-        border-radius: 50%;
-        transition: all 0.15s ease;
-
-        &:hover {
-          color: #0f172a;
-          background: #f1f5f9;
-        }
-      }
-    }
-
-    .refresh-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      border: 1.5px solid #e2e8f0;
-      background: #ffffff;
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-
-      &:hover:not(:disabled) {
-        border-color: #cbd5e1;
-        background: #f8fafc;
-        color: #028802;
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      &.is-refreshing svg {
-        animation: spinReview 1s linear infinite;
-      }
-    }
-  }
-}
-
-@keyframes spinReview {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  padding: 0.5rem 1.5rem 0;
 }
 
 /* ==========================================================================
@@ -619,6 +431,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -648,14 +461,6 @@
     .empty-illustration-icon {
       font-size: 2.5rem;
       color: #028802;
-    }
-
-    &.search {
-      background: #f1f5f9;
-
-      .empty-illustration-icon {
-        color: #94a3b8;
-      }
     }
   }
 
@@ -695,23 +500,6 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
       color: #ffffff;
-    }
-  }
-
-  .clear-search-btn {
-    padding: 0.65rem 1.35rem;
-    border: 1px solid #cbd5e1;
-    background: #ffffff;
-    color: #334155;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: #f8fafc;
-      border-color: #94a3b8;
     }
   }
 }
@@ -834,6 +622,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -844,9 +633,9 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
-    opacity: 1;
   }
 }
 
@@ -860,30 +649,6 @@
 }
 
 @media (max-width: 768px) {
-  .my-reviews-page-header {
-    margin-bottom: 1.25rem;
-
-    .reviews-header-meta .reviews-main-title {
-      font-size: 1.65rem;
-    }
-  }
-
-  .my-reviews-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.85rem;
-
-    .toolbar-right {
-      width: 100%;
-      margin-left: 0;
-
-      .reviews-search-box {
-        max-width: 100%;
-        flex: 1;
-      }
-    }
-  }
-
   .my-reviews-grid {
     grid-template-columns: 1fr;
     gap: 1.15rem;
@@ -892,11 +657,7 @@
 
 @media (max-width: 480px) {
   .my-reviews-container {
-    padding: 0 1rem;
-  }
-
-  .my-reviews-page-header .reviews-header-meta .reviews-main-title {
-    font-size: 1.4rem;
+    padding: 0.5rem 1rem 0;
   }
 
   .review-card-tile .review-card-main {
