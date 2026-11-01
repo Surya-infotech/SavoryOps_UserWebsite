@@ -414,6 +414,176 @@
     }
   }
 
+  /* Cancellation Card Component (UserApp Parity - Shared for Order-Level and Item-Level) */
+  .cancellation-card {
+    background-color: #fff5f5;
+    border-radius: 12px;
+    border: 1px solid #fecaca;
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .cancellation-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .cancellation-title-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        .cancellation-icon-badge {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background-color: #fee2e2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #dc2626;
+          font-size: 14px;
+          flex-shrink: 0;
+
+          svg {
+            font-size: 15px;
+          }
+        }
+
+        .cancellation-header-title {
+          font-size: 0.78rem;
+          font-weight: 800;
+          color: #dc2626;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+      }
+
+      .cancellation-status-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.18rem 0.65rem;
+        background: #ef4444;
+        color: #ffffff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border-radius: 9999px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+    }
+
+    .cancellation-meta-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+
+      .cancellation-meta-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #ffffff;
+        padding: 5px 10px;
+        border-radius: 6px;
+        border: 1px solid #ffcdd2;
+        box-shadow: 0 1px 2px rgba(220, 38, 38, 0.03);
+
+        .cancellation-meta-icon {
+          font-size: 15px;
+          color: #dc2626;
+        }
+
+        .cancellation-meta-label {
+          font-size: 0.76rem;
+          color: #616161;
+          font-weight: 600;
+        }
+
+        .cancellation-meta-value {
+          font-size: 0.78rem;
+          color: #dc2626;
+          font-weight: 700;
+        }
+      }
+    }
+
+    .cancellation-reason-container {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #ffcdd2;
+      border-left: 3.5px solid #ef4444;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.03);
+
+      .cancellation-quote-icon {
+        font-size: 18px;
+        color: #ef4444;
+        margin-top: 1px;
+        flex-shrink: 0;
+      }
+
+      .cancellation-reason-content {
+        flex: 1;
+        min-width: 0;
+
+        .cancellation-reason-label {
+          display: block;
+          font-size: 0.74rem;
+          color: #616161;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          margin-bottom: 3px;
+        }
+
+        .cancellation-reason-text {
+          margin: 0;
+          font-size: 0.88rem;
+          font-weight: 600;
+          color: #212121;
+          line-height: 1.45;
+          word-break: break-word;
+        }
+      }
+    }
+
+    /* Mobile / Tablet Overrides for cancellation card */
+    @media (max-width: 768px) {
+      padding: 0.85rem;
+      gap: 0.65rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.75rem 0.65rem;
+      gap: 0.6rem;
+
+      .cancellation-meta-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+
+        .cancellation-meta-badge {
+          width: 100%;
+          box-sizing: border-box;
+        }
+      }
+
+      .cancellation-reason-container {
+        padding: 8px 10px;
+        gap: 6px;
+
+        .cancellation-reason-text {
+          font-size: 0.82rem;
+        }
+      }
+    }
+  }
+
   /* Order Level Cancellation Section & Card */
   .order-cancellation-section {
     .order-cancellation-card {
@@ -725,129 +895,12 @@
           }
         }
 
-        /* Cancellation Card Component (UserApp Parity) */
-        .cancellation-card {
-          background-color: #fff5f5;
-          border-radius: 10px;
-          border: 1px solid #fecaca;
-          padding: 10px 12px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
+        .cancellation-card.item-level {
+          margin-top: 0.5rem;
+          margin-left: 27px;
 
-          &.item-level {
-            margin-top: 0.5rem;
-            margin-left: 27px;
-
-            @media (max-width: 768px) {
-              margin-left: 0;
-            }
-          }
-
-          .cancellation-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .cancellation-title-group {
-              display: flex;
-              align-items: center;
-              gap: 6px;
-
-              .cancellation-icon-badge {
-                width: 22px;
-                height: 22px;
-                border-radius: 11px;
-                background-color: #fee2e2;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #ef4444;
-                font-size: 14px;
-                flex-shrink: 0;
-              }
-
-              .cancellation-header-title {
-                font-size: 0.75rem;
-                font-weight: 700;
-                color: #dc2626;
-                text-transform: uppercase;
-                letter-spacing: 0.6px;
-              }
-            }
-          }
-
-          .cancellation-meta-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-
-            .cancellation-meta-badge {
-              display: inline-flex;
-              align-items: center;
-              gap: 4px;
-              background-color: #ffffff;
-              padding: 5px 8px;
-              border-radius: 6px;
-              border: 1px solid #ffcdd2;
-
-              .cancellation-meta-icon {
-                font-size: 13px;
-                color: #ef4444;
-              }
-
-              .cancellation-meta-label {
-                font-size: 0.75rem;
-                color: #616161;
-                font-weight: 500;
-              }
-
-              .cancellation-meta-value {
-                font-size: 0.75rem;
-                color: #d32f2f;
-                font-weight: 600;
-              }
-            }
-          }
-
-          .cancellation-reason-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 8px 10px;
-            border: 1px solid #ffcdd2;
-            border-left: 3px solid #ef4444;
-            display: flex;
-            align-items: flex-start;
-            gap: 6px;
-
-            .cancellation-quote-icon {
-              font-size: 16px;
-              color: #ef4444;
-              margin-top: 1px;
-              flex-shrink: 0;
-            }
-
-            .cancellation-reason-content {
-              flex: 1;
-              min-width: 0;
-
-              .cancellation-reason-label {
-                display: block;
-                font-size: 0.75rem;
-                color: #616161;
-                font-weight: 500;
-                margin-bottom: 2px;
-              }
-
-              .cancellation-reason-text {
-                margin: 0;
-                font-size: 0.85rem;
-                font-weight: 600;
-                color: #212121;
-                line-height: 18px;
-                word-break: break-word;
-              }
-            }
+          @media (max-width: 768px) {
+            margin-left: 0;
           }
         }
       }
