@@ -10,7 +10,6 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
@@ -543,17 +542,14 @@ const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
 /* ==========================================================================
-   3. ProfileDropdown Component
+   3. Customer Auth Hook & ProfileDropdown Component
    ========================================================================== */
-export const ProfileDropdown = ({ className = "" }) => {
+export const useCustomerAuth = () => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const [customerDetails, setCustomerDetails] = useState(null);
   const { showSnackbar } = useSnackbar();
   const { translations = {} } = useLanguage();
 
-  // Customer Authentication State
+  const [customerDetails, setCustomerDetails] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem(customerTokenName);
     const customerId = localStorage.getItem(customerIdName);
@@ -600,7 +596,6 @@ export const ProfileDropdown = ({ className = "" }) => {
         fetchCustomerDetails(detail.customerId, currentToken);
       } else {
         setCustomerDetails(null);
-        setIsOpen(false);
         setIsLoggedIn(false);
       }
     };
@@ -610,21 +605,6 @@ export const ProfileDropdown = ({ className = "" }) => {
       window.removeEventListener("customerAuthChange", handleAuthChange);
     };
   }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
 
   const handleSignOut = async () => {
     const token = localStorage.getItem(customerTokenName);
@@ -640,7 +620,6 @@ export const ProfileDropdown = ({ className = "" }) => {
     );
 
     setCustomerDetails(null);
-    setIsOpen(false);
     setIsLoggedIn(false);
 
     showSnackbar(translations.signedoutsuccessfully, "success");
@@ -659,18 +638,59 @@ export const ProfileDropdown = ({ className = "" }) => {
     : "";
 
   const displayName = isLoggedIn
-    ? (fullName || translations.myaccount)
-    : translations.guestuser;
+    ? (fullName || translations.myaccount || "My Account")
+    : (translations.guestuser || "Guest User");
 
   const displaySubtitle = isLoggedIn
     ? (customerDetails?.phone || "")
-    : translations.signinwithphone;
+    : (translations.signinwithphone || "Sign In with Phone");
 
+  return {
+    customerDetails,
+    isLoggedIn,
+    handleSignOut,
+    displayName,
+    displaySubtitle,
+    translations,
+  };
+};
+
+export const ProfileDropdown = ({ className = "", auth: externalAuth, onOpenDrawer }) => {
+  const localAuth = useCustomerAuth();
+  const auth = externalAuth || localAuth;
+  const { customerDetails, isLoggedIn, handleSignOut, displayName, displaySubtitle, translations } = auth;
+
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     setImgError(false);
   }, [customerDetails?.profileurl]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleButtonClick = () => {
+    // On mobile & tablet screens (<= 900px), clicking the profile button opens the drawer directly
+    if (typeof window !== "undefined" && window.innerWidth <= 900 && onOpenDrawer) {
+      onOpenDrawer();
+      return;
+    }
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <div
@@ -680,7 +700,7 @@ export const ProfileDropdown = ({ className = "" }) => {
       <button
         type="button"
         className={`nav-profile-btn ${isOpen ? "active" : ""}`}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={handleButtonClick}
         aria-expanded={isOpen}
         aria-haspopup="menu"
         title={displayName}
@@ -903,6 +923,7 @@ const AnnouncementTicker = ({ text }) => {
    5. Main Navbar Component
    ========================================================================== */
 const Navbar = () => {
+  const auth = useCustomerAuth();
   const navigate = useNavigate();
   const { translations = {}, language } = useLanguage();
   const [cartCount, setCartCount] = useState(getCartTotalCount);
@@ -1155,7 +1176,7 @@ const Navbar = () => {
               {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
             </button>
 
-            <ProfileDropdown />
+            <ProfileDropdown auth={auth} onOpenDrawer={() => setMobileMenuOpen(true)} />
 
             <button
               type="button"
@@ -1206,6 +1227,56 @@ const Navbar = () => {
               </div>
 
               <div className="mobile-drawer-content">
+                {/* User Profile Card */}
+                {auth.isLoggedIn ? (
+                  <Link
+                    to="/profile"
+                    className="drawer-profile-card clickable"
+                    onClick={() => setMobileMenuOpen(false)}
+                    title={translations.myaccount}
+                  >
+                    <div className="drawer-avatar">
+                      {auth.customerDetails?.profileurl ? (
+                        <img
+                          src={auth.customerDetails.profileurl}
+                          alt={auth.displayName}
+                          className="drawer-avatar-img"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <PersonOutlinedIcon />
+                      )}
+                    </div>
+                    <div className="drawer-user-meta">
+                      <span className="drawer-user-name">{auth.displayName}</span>
+                      <span className="drawer-user-phone">{auth.displaySubtitle}</span>
+                    </div>
+                    <ChevronRightIcon className="drawer-arrow" />
+                  </Link>
+                ) : (
+                  <Link
+                    to="/signin"
+                    className="drawer-profile-card guest clickable"
+                    onClick={() => setMobileMenuOpen(false)}
+                    title={translations.signinwithphone}
+                  >
+                    <div className="drawer-avatar">
+                      <PersonOutlinedIcon />
+                    </div>
+                    <div className="drawer-user-meta">
+                      <span className="drawer-user-name">{auth.displayName}</span>
+                      <span className="drawer-user-phone">{auth.displaySubtitle}</span>
+                    </div>
+                    <ChevronRightIcon className="drawer-arrow" />
+                  </Link>
+                )}
+
+                {/* Main Navigation Links */}
+                <div className="drawer-section-label">
+                  {translations.exploremenu || "Explore"}
+                </div>
                 <div className="mobile-nav-links">
                   {navLinks.map((link) => {
                     const isActive = location.pathname === link.path;
@@ -1225,18 +1296,96 @@ const Navbar = () => {
                     );
                   })}
                 </div>
+
+                {/* Account / Profile Quick Links */}
+                {auth.isLoggedIn && (
+                  <>
+                    <div className="drawer-section-label">
+                      {translations.myaccount || "My Account"}
+                    </div>
+                    <div className="drawer-account-links">
+                      <Link
+                        to="/orders"
+                        className="drawer-account-item"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <ReceiptLongOutlinedIcon fontSize="small" />
+                        <span>{translations.orders}</span>
+                      </Link>
+
+                      <Link
+                        to="/reservation"
+                        className="drawer-account-item"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <TableRestaurantIcon fontSize="small" />
+                        <span>{translations.tablereservation}</span>
+                      </Link>
+
+                      <Link
+                        to="/manage-address"
+                        className="drawer-account-item"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <LocationOnOutlinedIcon fontSize="small" />
+                        <span>{translations.manageaddress}</span>
+                      </Link>
+
+                      <Link
+                        to="/my-reviews"
+                        className="drawer-account-item"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <RateReviewOutlinedIcon fontSize="small" />
+                        <span>{translations.myreviews}</span>
+                      </Link>
+
+                      <Link
+                        to="/settings"
+                        className="drawer-account-item"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <SettingsOutlinedIcon fontSize="small" />
+                        <span>{translations.settings}</span>
+                      </Link>
+                    </div>
+                  </>
+                )}
               </div>
 
-              {displayPhone && (
-                <div className="mobile-drawer-footer">
+              <div className="mobile-drawer-footer">
+                {auth.isLoggedIn ? (
+                  <button
+                    type="button"
+                    className="drawer-auth-btn logout"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      auth.handleSignOut();
+                    }}
+                  >
+                    <LogoutIcon fontSize="small" />
+                    <span>{translations.logout}</span>
+                  </button>
+                ) : (
+                  <Link
+                    to="/signin"
+                    className="drawer-auth-btn login"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <LoginIcon fontSize="small" />
+                    <span>{translations.signinwithphone}</span>
+                  </Link>
+                )}
+
+                {displayPhone && (
                   <a
                     href={`tel:${displayPhone}`}
                     className="mobile-helpline-link"
                   >
                     📞 {translations.helpline}: {displayPhone}
                   </a>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </>,
           document.body
