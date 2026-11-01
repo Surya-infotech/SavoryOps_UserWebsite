@@ -459,15 +459,9 @@ const OffersPage = () => {
                 </div>
               </div>
 
-              {/* Filter Count & Reset Action */}
-              <div className="filter-actions-wrap">
-                <span className="filter-results-badge">
-                  {filteredDeals.length}{" "}
-                 {filteredDeals.length === 1
-                    ? (translations.deal || "Deal")
-                    : (translations.deals || "Deals")}
-                </span>
-                {isFilterActive && (
+              {/* Filter Reset Action */}
+              {isFilterActive && (
+                <div className="filter-actions-wrap">
                   <button
                     type="button"
                     className="filter-clear-btn"
@@ -477,8 +471,8 @@ const OffersPage = () => {
                     <CloseIcon fontSize="small" />
                     <span>{translations.clear || "Clear"}</span>
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         )}
