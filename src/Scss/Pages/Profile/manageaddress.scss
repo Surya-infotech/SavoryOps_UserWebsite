@@ -282,6 +282,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -357,29 +358,51 @@
 
 /* Address Type Selector Chips */
 .address-type-selector {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   width: 100%;
 
   .type-select-btn {
-    flex: 1;
+    width: 100%;
+    min-width: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 0.6rem 0.75rem;
-    border-radius: 10px;
+    gap: 7px;
+    padding: 0.65rem 0.5rem;
+    border-radius: 12px;
     border: 1.5px solid #cbd5e1;
     background: #ffffff;
     color: #475569;
-    font-size: 0.875rem;
+    font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+
+    svg {
+      font-size: 1.15rem;
+      color: #64748b;
+      transition: color 0.2s ease, transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     &:hover {
-      border-color: #94a3b8;
-      background: #ffffff;
+      border-color: #028802;
+      background: #f0fdf4;
+      color: #028802;
+
+      svg {
+        color: #028802;
+        transform: translateY(-1px);
+      }
     }
 
     &.selected {
@@ -387,7 +410,15 @@
       background: #f0fdf4;
       color: #028802;
       font-weight: 700;
-      box-shadow: 0 0 0 1px #028802;
+      box-shadow: 0 0 0 1.5px #028802;
+
+      svg {
+        color: #028802;
+      }
+    }
+
+    &:active {
+      transform: scale(0.98);
     }
   }
 }
@@ -672,6 +703,7 @@
     transform: translateY(16px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -711,6 +743,36 @@
   }
 
   .address-type-selector {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+
+    .type-select-btn {
+      padding: 0.55rem 0.35rem;
+      font-size: 0.82rem;
+      gap: 5px;
+      border-radius: 10px;
+
+      svg {
+        font-size: 1.05rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  .address-type-selector {
+    gap: 4px;
+
+    .type-select-btn {
+      padding: 0.5rem 0.2rem;
+      font-size: 0.76rem;
+      gap: 3px;
+      border-radius: 8px;
+
+      svg {
+        font-size: 0.95rem;
+      }
+    }
   }
 }
