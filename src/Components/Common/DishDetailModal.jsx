@@ -69,6 +69,28 @@ export const DishDetailModal = ({
     return (effectivePrice + addonsTotal) * quantity;
   }, [effectivePrice, addonsTotal, quantity]);
 
+  const rawItemType = (
+    item?.itemtype ||
+    item?.itemType ||
+    ""
+  ).trim().toLowerCase();
+
+  const isNonVeg = Boolean(
+    item?.isNonVeg ||
+    rawItemType.includes("non") ||
+    rawItemType.includes("egg") ||
+    (item?.isVeg === false && item?.isVeg !== undefined)
+  );
+
+  const isVeg = Boolean(
+    item?.isVeg ||
+    (!isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan"))
+  );
+
+  const showDiet = Boolean(
+    item?.hasDiet !== undefined ? item.hasDiet : (isVeg || isNonVeg)
+  );
+
   if (!item) return null;
 
   const toggleAddon = (addonKey) => {
@@ -128,14 +150,14 @@ export const DishDetailModal = ({
         {item.image ? (
           <div className="dish-modal-hero">
             <img src={item.image} alt={item.title} />
-            {(item.hasDiet || item.isVeg !== undefined) && (item.isVeg || item.isNonVeg) && (
-              <DietIndicator isVeg={item.isVeg} className="dish-modal-diet-badge" />
+            {showDiet && (
+              <DietIndicator isVeg={isVeg} className="dish-modal-diet-badge" />
             )}
           </div>
         ) : (
           <div className="dish-modal-no-img-diet">
-            {(item.hasDiet || item.isVeg !== undefined) && (item.isVeg || item.isNonVeg) && (
-              <DietIndicator isVeg={item.isVeg} className="dish-modal-diet-badge" />
+            {showDiet && (
+              <DietIndicator isVeg={isVeg} className="dish-modal-diet-badge" />
             )}
           </div>
         )}
@@ -154,9 +176,9 @@ export const DishDetailModal = ({
                   </span>
                 )}
                 {prepTime && <span className="tag-badge">⏱ {prepTime}</span>}
-                {(item.hasDiet || item.isVeg !== undefined) && (item.isVeg || item.isNonVeg) && (
+                {showDiet && (
                   <span className="tag-badge">
-                    {item.isVeg ? (translations.veg || "Vegetarian") : (translations.nonveg || "Non-Vegetarian")}
+                    {isVeg ? (translations.veg || "Vegetarian") : (translations.nonveg || "Non-Vegetarian")}
                   </span>
                 )}
               </div>

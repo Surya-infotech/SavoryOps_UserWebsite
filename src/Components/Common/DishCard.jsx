@@ -115,12 +115,29 @@ const DishCard = ({
     }
   };
 
-  const hasDiet =
-    dish.hasDiet ||
-    dish.isVeg !== undefined ||
-    dish.isNonVeg !== undefined ||
-    dish.itemtype;
-  const showDiet = Boolean(hasDiet && (dish.isVeg || dish.isNonVeg));
+  const rawItemType = (
+    dish.itemtype ||
+    dish.itemType ||
+    ""
+  )
+    .trim()
+    .toLowerCase();
+
+  const isNonVeg = Boolean(
+    dish.isNonVeg ||
+    rawItemType.includes("non") ||
+    rawItemType.includes("egg") ||
+    (dish.isVeg === false && dish.isVeg !== undefined)
+  );
+
+  const isVeg = Boolean(
+    dish.isVeg ||
+    (!isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan"))
+  );
+
+  const showDiet = Boolean(
+    dish.hasDiet !== undefined ? dish.hasDiet : (isVeg || isNonVeg)
+  );
 
   return (
     <div
@@ -170,7 +187,7 @@ const DishCard = ({
         )}
 
         {/* Diet Indicator */}
-        {showDiet && <DietIndicator isVeg={dish.isVeg} />}
+        {showDiet && <DietIndicator isVeg={isVeg} />}
       </div>
 
       {/* 2. Dish Content Body */}

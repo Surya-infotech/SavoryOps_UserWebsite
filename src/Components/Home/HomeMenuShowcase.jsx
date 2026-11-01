@@ -302,13 +302,21 @@ const CarouselRow = ({
                 selectedOrderType
               );
 
+              const rawItemType = (rawDish.itemtype || rawDish.itemType || "").trim().toLowerCase();
+              const isNonVeg = rawItemType.includes("non") || rawItemType.includes("egg") || (rawDish.isVeg === false && rawDish.isVeg !== undefined);
+              const isVeg = !isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan" || Boolean(rawDish.isVeg));
+              const hasDiet = isVeg || isNonVeg || Boolean(rawDish.hasDiet);
+
               const dish = {
                 ...rawDish,
                 id: rawDish.itemid ?? rawDish.dealsbundlesid ?? rawDish.id,
                 title: rawDish.itemname || rawDish.dealsbundlesname || rawDish.title || "",
                 desc: rawDish.description || rawDish.desc || "",
                 image: rawDish.imageUrl || rawDish.image || "",
-                isVeg: rawDish.itemtype ? rawDish.itemtype === "Veg" : Boolean(rawDish.isVeg),
+                hasDiet,
+                isVeg,
+                isNonVeg,
+                itemtype: rawDish.itemtype || (isVeg ? "Veg" : isNonVeg ? "Non-Veg" : ""),
                 prepTime: rawDish.preparationtime ? `${rawDish.preparationtime} min` : (rawDish.prepTime || ""),
                 tag: rawDish.itemcategoryname || rawDish.tag || "",
                 isDeal: isDeal,

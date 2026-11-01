@@ -63,6 +63,28 @@ export const DishAddonModal = ({
     return (effectivePrice + addonsTotal) * quantity;
   }, [effectivePrice, addonsTotal, quantity]);
 
+  const rawItemType = (
+    item?.itemtype ||
+    item?.itemType ||
+    ""
+  ).trim().toLowerCase();
+
+  const isNonVeg = Boolean(
+    item?.isNonVeg ||
+    rawItemType.includes("non") ||
+    rawItemType.includes("egg") ||
+    (item?.isVeg === false && item?.isVeg !== undefined)
+  );
+
+  const isVeg = Boolean(
+    item?.isVeg ||
+    (!isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan"))
+  );
+
+  const showDiet = Boolean(
+    item?.hasDiet !== undefined ? item.hasDiet : (isVeg || isNonVeg)
+  );
+
   if (!item) return null;
 
   const toggleAddon = (addonKey) => {
@@ -120,8 +142,8 @@ export const DishAddonModal = ({
         <div className="addon-modal-header">
           <div className="addon-header-main">
             <div className="addon-header-title-row">
-              {(item.hasDiet || item.isVeg !== undefined) && (item.isVeg || item.isNonVeg) && (
-                <DietIndicator isVeg={item.isVeg} className="addon-header-diet" />
+              {showDiet && (
+                <DietIndicator isVeg={isVeg} className="addon-header-diet" />
               )}
               <h3 id="addon-modal-item-title" className="addon-modal-item-title">
                 {item.title}
