@@ -59,22 +59,11 @@ const MyReviewsPage = () => {
   const timeZone = localStorage.getItem("TimeZone") || "Asia/Kolkata";
 
   const getCustomerId = () => {
-    return (
-      localStorage.getItem(customerIdName) ||
-      localStorage.getItem("CUSTOMER_ID") ||
-      localStorage.getItem("customerId") ||
-      localStorage.getItem("customerid") ||
-      ""
-    );
+    return (localStorage.getItem(customerIdName));
   };
 
   const getToken = () => {
-    return (
-      localStorage.getItem(customerTokenName) ||
-      localStorage.getItem("savoryopscustomer_token") ||
-      localStorage.getItem("token") ||
-      ""
-    );
+    return (localStorage.getItem(customerTokenName));
   };
 
   // Fetch reviews from website route
@@ -88,21 +77,10 @@ const MyReviewsPage = () => {
     }
 
     try {
-      const headers = {
-        "Content-Type": "application/json",
-        "x-user": "customer",
-      };
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(
-        `${adminPanelBackendPath}/Website/Profile/GetMyReviews/${customerId}`,
-        {
-          method: "GET",
-          headers,
-        }
-      );
+      const response = await fetch(`${adminPanelBackendPath}/Website/Profile/GetMyReviews/${customerId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "x-user": "customer", "Authorization": `Bearer ${token}`, },
+      });
 
       if (response.ok) {
         const data = await response.json();
