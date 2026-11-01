@@ -33,8 +33,8 @@ import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
 export { LanguageDropdown };
 import { getLanguageOptions } from "../../constants/languages";
-import "../../Scss/Pages/Partials/navbar.scss";
 import "../../Scss/Components/General/dropdown.scss";
+import "../../Scss/Pages/Partials/navbar.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);

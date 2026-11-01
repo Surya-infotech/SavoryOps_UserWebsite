@@ -1021,11 +1021,15 @@
 }
 
 /* --- Branch Dropdown Menu (Manage Address Parity) --- */
+.dropdown.branch-dropdown-wrapper .branch-dropdown-menu,
+.branch-dropdown-wrapper .dropdown-menu-panel,
+.branch-dropdown-wrapper .dropdownul,
 .branch-dropdown-menu {
   position: absolute !important;
   top: calc(100% + 6px) !important;
   left: 0 !important;
-  width: 320px !important;
+  width: 380px !important;
+  min-width: 360px !important;
   max-width: 92vw !important;
   background-color: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
@@ -1211,9 +1215,12 @@
     flex: 1;
   }
 
+  .dropdown-menu-panel,
+  .dropdownul,
   .branch-dropdown-menu {
     position: static !important;
     width: 100% !important;
+    min-width: 100% !important;
     max-width: 100% !important;
     left: auto !important;
     right: auto !important;
@@ -1430,6 +1437,7 @@
     left: 10px !important;
     right: 10px !important;
     width: auto !important;
+    min-width: 0 !important;
     max-width: calc(100vw - 20px) !important;
     max-height: calc(100vh - 75px) !important;
     z-index: 99999 !important;
@@ -1708,11 +1716,15 @@
 }
 
 /* --- Order Type Dropdown Menu (Manage Address Parity) --- */
+.dropdown.order-type-dropdown-wrapper .order-type-dropdown-menu,
+.order-type-dropdown-wrapper .dropdown-menu-panel,
+.order-type-dropdown-wrapper .dropdownul,
 .order-type-dropdown-menu {
   position: absolute !important;
   top: calc(100% + 6px) !important;
   left: 0 !important;
-  width: 200px !important;
+  width: 220px !important;
+  min-width: 200px !important;
   max-width: 90vw !important;
   background-color: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
