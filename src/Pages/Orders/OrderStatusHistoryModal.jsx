@@ -74,22 +74,20 @@ const OrderStatusHistoryModal = ({
                 const isLatest = index === 0;
 
                 return (
-                  <div key={index} className={`timeline-item ${isLatest ? "is-latest" : ""}`}>
+                  <div key={index} className="timeline-item">
                     <div className="timeline-rail">
                       <div
-                        className={`timeline-dot ${isLatest ? "is-latest" : ""}`}
+                        className="timeline-dot"
                         style={{
                           backgroundColor: statusColor,
-                          boxShadow: isLatest
-                            ? `0 0 0 4px ${statusColor}33, 0 0 0 1.5px ${statusColor}`
-                            : `0 0 0 3px #ffffff, 0 0 0 4.5px #e2e8f0`,
+                          boxShadow: `0 0 0 2.5px #ffffff, 0 0 0 4px ${statusColor}40`,
                         }}
                       />
                       {index < sortedStatusLogs.length - 1 && (
                         <div className="timeline-line" />
                       )}
                     </div>
-                    <div className={`timeline-content-card ${isLatest ? "latest-card" : ""}`}>
+                    <div className="timeline-content-card">
                       <div className="timeline-status-header">
                         <span
                           className="status-pill"
