@@ -12,8 +12,8 @@
   justify-content: center;
   padding: 40px 20px;
   background: radial-gradient(circle at 10% 20%, rgba(2, 136, 2, 0.05) 0%, transparent 40%),
-              radial-gradient(circle at 90% 80%, rgba(105, 232, 105, 0.08) 0%, transparent 50%),
-              #f8fafc;
+    radial-gradient(circle at 90% 80%, rgba(105, 232, 105, 0.08) 0%, transparent 50%),
+    #f8fafc;
   overflow: hidden;
 
   /* Ambient Blur Glows */
@@ -321,6 +321,7 @@
 
   /* react-phone-number-input Custom Styling */
   .phone-input-container {
+    position: relative;
     background: #ffffff;
     border: 1px solid #cbd5e1;
     border-radius: 14px;
@@ -335,6 +336,7 @@
     &.has-error {
       border-color: #ef4444;
       background: #fef2f2;
+
       &:focus-within {
         box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
       }
@@ -510,6 +512,7 @@
 
     .resend-timer-text {
       color: #64748b;
+
       strong {
         color: #0f172a;
       }
@@ -675,11 +678,13 @@
 }
 
 @keyframes pulseDot {
+
   0%,
   100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.35;
     transform: scale(0.85);

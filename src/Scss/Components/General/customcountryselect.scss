@@ -1,0 +1,336 @@
+/* ==========================================================================
+   Custom Country Select Component Styles
+   Supports Phone, Tablet & Laptop screen resolutions with search & flag icons
+   ========================================================================== */
+
+.custom-country-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  &::after {
+    content: "";
+    display: inline-block;
+    width: 1.5px;
+    height: 22px;
+    background: #e2e8f0;
+    margin: 0 10px 0 6px;
+    flex-shrink: 0;
+  }
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    &::after {
+      margin: 0 6px 0 10px;
+    }
+  }
+}
+
+.custom-country-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+  outline: none;
+
+  &:hover {
+    background: rgba(2, 136, 2, 0.08);
+  }
+
+  &:focus-visible {
+    background: rgba(2, 136, 2, 0.12);
+    box-shadow: 0 0 0 2px rgba(2, 136, 2, 0.25);
+  }
+
+  .custom-country-arrow {
+    font-size: 1.15rem;
+    color: #64748b;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+    margin-left: -2px;
+
+    &.open {
+      transform: rotate(180deg);
+      color: #028802;
+    }
+
+    [dir="rtl"] &,
+    body.rtl-mode & {
+      margin-left: 0;
+      margin-right: -2px;
+    }
+  }
+}
+
+.custom-country-flag-icon {
+  width: 26px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+  .PhoneInputCountryIcon,
+  img,
+  svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.custom-country-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 330px;
+  max-width: min(330px, calc(100vw - 32px));
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px -4px rgba(15, 23, 42, 0.18), 0 4px 12px rgba(0, 0, 0, 0.06);
+  z-index: 1050;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: countryDropdownFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    left: auto;
+    right: 0;
+  }
+
+  @media (max-width: 480px) {
+    left: -4px;
+    max-width: calc(100vw - 28px);
+
+    [dir="rtl"] &,
+    body.rtl-mode & {
+      left: auto;
+      right: -4px;
+    }
+  }
+}
+
+@keyframes countryDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-country-search-header {
+  padding: 0.65rem 0.75rem;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.custom-country-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.45rem 0.65rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: #028802;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(2, 136, 2, 0.12);
+
+    .country-search-icon {
+      color: #028802;
+    }
+  }
+
+  .country-search-icon {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+
+  .country-search-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: #0f172a;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+  }
+
+  .country-search-clear-btn {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #e2e8f0;
+      color: #334155;
+    }
+  }
+}
+
+.custom-country-list {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 0.4rem;
+  overscroll-behavior: contain;
+
+  /* Polished Scrollbar */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
+
+.custom-country-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.6rem 0.75rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: #1e293b;
+  transition: background 0.15s ease, color 0.15s ease;
+  border-radius: 8px;
+  margin: 1px 0;
+  user-select: none;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    text-align: right;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: #f0fdf4;
+    color: #028802;
+    outline: none;
+
+    .country-item-code {
+      background: #dcfce7;
+      color: #028802;
+    }
+  }
+
+  &.selected {
+    background: #e8f5e9;
+    color: #028802;
+    font-weight: 600;
+
+    .country-item-code {
+      background: #c8e6c9;
+      color: #028802;
+      font-weight: 600;
+    }
+  }
+
+  .country-item-flag {
+    width: 22px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    .PhoneInputCountryIcon,
+    img,
+    svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .country-item-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .country-item-code {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 2px 7px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .country-item-check {
+    font-size: 1.1rem !important;
+    color: #028802;
+    flex-shrink: 0;
+  }
+}
+
+.custom-country-empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+}

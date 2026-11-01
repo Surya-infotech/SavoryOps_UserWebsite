@@ -395,7 +395,10 @@
 
 /* Phone Input Wrapper */
 .phone-input-wrap {
+  position: relative;
+
   .PhoneInput {
+    position: relative;
     display: flex;
     align-items: center;
     background: #ffffff;

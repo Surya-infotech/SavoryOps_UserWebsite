@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import CustomCountrySelect from "../../Components/Common/CustomCountrySelect.jsx";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -645,6 +646,7 @@ const ProfilePage = () => {
                       autoComplete: "off"
                     }}
                     international
+                    countrySelectComponent={CustomCountrySelect}
                     defaultCountry="US"
                     value={mobileNumber}
                     onChange={(val) => {
