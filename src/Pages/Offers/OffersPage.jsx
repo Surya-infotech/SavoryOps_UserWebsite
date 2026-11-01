@@ -290,55 +290,56 @@ const OffersPage = () => {
       <Breadcrumbs currentPage={translations.specialoffers || "Special Offers & Deals"} />
 
       <div className="offers-main-content-container">
-        {/* Filter Bar (matching MenuPage ultra-compact single-row design) */}
+        {/* Filter Bar (matching MenuPage ultra-compact design, fully responsive on mobile/tablet) */}
         {!loading && formattedDeals.length > 0 && (
-          <div className="menu-filters-wrapper">
-            <div className="menu-filter-bar">
-              <div className="filter-controls-group">
-                {/* Category Pills Bar */}
-                <div
-                  className="menu-category-pills-bar"
-                  role="tablist"
-                  aria-label="Deals Categories"
+          <div className="menu-filters-wrapper offers-filters-wrapper">
+            <div className="menu-filter-bar offers-filter-bar">
+              {/* Category Pills Bar (Top row on mobile, left on desktop) */}
+              <div
+                className="menu-category-pills-bar"
+                role="tablist"
+                aria-label="Deals Categories"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedType === "all"}
+                  className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
+                  onClick={() => setSelectedType("all")}
                 >
+                  <span>{translations.alloffers || "All Deals"}</span>
+                  <span className="pill-badge">{formattedDeals.length}</span>
+                </button>
+
+                {comboMeals.length > 0 && (
                   <button
                     type="button"
                     role="tab"
-                    aria-selected={selectedType === "all"}
-                    className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
-                    onClick={() => setSelectedType("all")}
+                    aria-selected={selectedType === "combo"}
+                    className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
+                    onClick={() => setSelectedType("combo")}
                   >
-                    <span>{translations.alloffers || "All Deals"}</span>
-                    <span className="pill-badge">{formattedDeals.length}</span>
+                    <span>{translations.combos || "Combos"}</span>
+                    <span className="pill-badge">{comboMeals.length}</span>
                   </button>
+                )}
 
-                  {comboMeals.length > 0 && (
-                    <button
-                      type="button"
-                      role="tab"
-                      aria-selected={selectedType === "combo"}
-                      className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
-                      onClick={() => setSelectedType("combo")}
-                    >
-                      <span>{translations.combos || "Combos"}</span>
-                      <span className="pill-badge">{comboMeals.length}</span>
-                    </button>
-                  )}
+                {unlimitedMeals.length > 0 && (
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={selectedType === "unlimited"}
+                    className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
+                    onClick={() => setSelectedType("unlimited")}
+                  >
+                    <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
+                    <span className="pill-badge">{unlimitedMeals.length}</span>
+                  </button>
+                )}
+              </div>
 
-                  {unlimitedMeals.length > 0 && (
-                    <button
-                      type="button"
-                      role="tab"
-                      aria-selected={selectedType === "unlimited"}
-                      className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
-                      onClick={() => setSelectedType("unlimited")}
-                    >
-                      <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
-                      <span className="pill-badge">{unlimitedMeals.length}</span>
-                    </button>
-                  )}
-                </div>
-
+              {/* Secondary Controls Group (Row 2 on mobile, right on desktop) */}
+              <div className="filter-controls-right">
                 {/* Diet Filter (Veg / Non-Veg) */}
                 <div className="filter-item-wrap diet-toggle-wrap">
                   <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
@@ -380,22 +381,22 @@ const OffersPage = () => {
                     </button>
                   </div>
                 </div>
-              </div>
 
-              {/* Filter Reset Action */}
-              {isFilterActive && (
-                <div className="filter-actions-wrap">
-                  <button
-                    type="button"
-                    className="filter-clear-btn"
-                    onClick={handleClearFilters}
-                    title="Clear all filters"
-                  >
-                    <CloseIcon fontSize="small" />
-                    <span>{translations.clear || "Clear"}</span>
-                  </button>
-                </div>
-              )}
+                {/* Filter Reset Action */}
+                {isFilterActive && (
+                  <div className="filter-actions-wrap">
+                    <button
+                      type="button"
+                      className="filter-clear-btn"
+                      onClick={handleClearFilters}
+                      title="Clear all filters"
+                    >
+                      <CloseIcon fontSize="small" />
+                      <span>{translations.clear || "Clear"}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
