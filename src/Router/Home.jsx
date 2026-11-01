@@ -8,6 +8,7 @@ import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
 import ProfilePage from "../Pages/Profile/ProfilePage.jsx";
 import ManageAddressPage from "../Pages/Profile/ManageAddressPage.jsx";
+import MyReviewsPage from "../Pages/Profile/MyReviewsPage.jsx";
 import AboutPage from "../Pages/About/AboutPage.jsx";
 import MenuPage from "../Pages/Menu/MenuPage.jsx";
 import OffersPage from "../Pages/Offers/OffersPage.jsx";
@@ -122,11 +123,9 @@ const HomeRouter = () => {
       <Route
         path="/my-reviews"
         element={
-          <SubpagePlaceholder
-            icon="⭐"
-            title={translations.myreviews}
-            subtitle={translations.reviewssubtitle}
-          />
+          <ProtectedRoute>
+            <MyReviewsPage />
+          </ProtectedRoute>
         }
       />
       <Route path="*" element={<PageNotFound />} />
