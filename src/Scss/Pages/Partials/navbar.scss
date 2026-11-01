@@ -102,9 +102,6 @@
   color: #ffffff;
   opacity: 0.95;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
   line-height: 1.3;
 
   strong {
@@ -113,6 +110,120 @@
     background: rgba(0, 0, 0, 0.18);
     padding: 1px 6px;
     border-radius: 4px;
+  }
+}
+
+/* --- Dynamic Announcement Ticker (Scrolls only when overflowing) --- */
+.nav-top-announcement {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+
+  &.is-static {
+    overflow: hidden;
+
+    .nav-top-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &.is-scrolling {
+    overflow: hidden;
+    cursor: default;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14px, #000 calc(100% - 14px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 14px, #000 calc(100% - 14px), transparent 100%);
+
+    &:hover .nav-top-marquee-track,
+    &:active .nav-top-marquee-track {
+      animation-play-state: paused;
+    }
+  }
+}
+
+/* Hidden offscreen measurer to accurately track natural text width against container */
+.nav-top-text-measurer {
+  position: absolute;
+  visibility: hidden;
+  height: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  overflow: visible;
+  left: -9999px;
+  top: -9999px;
+}
+
+.nav-top-marquee-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  width: max-content;
+  will-change: transform;
+  animation: navTopMarquee 22s linear infinite;
+
+  [dir="rtl"] &,
+  body.rtl-mode & {
+    animation-name: navTopMarqueeRtl;
+  }
+}
+
+.nav-top-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+
+  .nav-top-text {
+    display: inline-flex !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: none !important;
+    flex: none !important;
+  }
+}
+
+.nav-top-bullet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1.25rem;
+  opacity: 0.6;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  user-select: none;
+}
+
+@keyframes navTopMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes navTopMarqueeRtl {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-top-marquee-track {
+    animation: none !important;
+  }
+  .nav-top-announcement.is-scrolling {
+    overflow-x: auto;
   }
 }
 

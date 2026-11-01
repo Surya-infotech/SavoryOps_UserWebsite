@@ -826,7 +826,81 @@ export const ProfileDropdown = ({ className = "" }) => {
 };
 
 /* ==========================================================================
-   4. Main Navbar Component
+   4. Announcement Ticker Component (Scrolls only when overflowing)
+   ========================================================================== */
+const AnnouncementTicker = ({ text }) => {
+  const containerRef = useRef(null);
+  const textMeasureRef = useRef(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (containerRef.current && textMeasureRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const textWidth = textMeasureRef.current.scrollWidth;
+        setIsOverflowing(textWidth > containerWidth);
+      }
+    };
+
+    checkOverflow();
+
+    let ro;
+    if (typeof ResizeObserver !== "undefined" && containerRef.current) {
+      ro = new ResizeObserver(() => {
+        checkOverflow();
+      });
+      ro.observe(containerRef.current);
+    }
+
+    window.addEventListener("resize", checkOverflow);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener("resize", checkOverflow);
+    };
+  }, [text]);
+
+  return (
+    <div
+      className={`nav-top-announcement ${isOverflowing ? "is-scrolling" : "is-static"}`}
+      ref={containerRef}
+      title={text}
+    >
+      <span
+        ref={textMeasureRef}
+        className="nav-top-text-measurer"
+        aria-hidden="true"
+      >
+        {text}
+      </span>
+
+      {isOverflowing ? (
+        <div className="nav-top-marquee-track">
+          <span className="nav-top-marquee-item">
+            <span className="nav-top-text">{text}</span>
+            <span className="nav-top-bullet" aria-hidden="true">•</span>
+          </span>
+          <span className="nav-top-marquee-item" aria-hidden="true">
+            <span className="nav-top-text">{text}</span>
+            <span className="nav-top-bullet">•</span>
+          </span>
+          <span className="nav-top-marquee-item" aria-hidden="true">
+            <span className="nav-top-text">{text}</span>
+            <span className="nav-top-bullet">•</span>
+          </span>
+          <span className="nav-top-marquee-item" aria-hidden="true">
+            <span className="nav-top-text">{text}</span>
+            <span className="nav-top-bullet">•</span>
+          </span>
+        </div>
+      ) : (
+        <span className="nav-top-text">{text}</span>
+      )}
+    </div>
+  );
+};
+
+/* ==========================================================================
+   5. Main Navbar Component
    ========================================================================== */
 const Navbar = () => {
   const navigate = useNavigate();
@@ -988,9 +1062,7 @@ const Navbar = () => {
                   {translations.livekitchen || "LIVE KITCHEN"}
                 </span>
                 {announcement.showAnnouncement && announcement.announcementText && (
-                  <span className="nav-top-text">
-                    {announcement.announcementText}
-                  </span>
+                  <AnnouncementTicker text={announcement.announcementText} />
                 )}
               </div>
 
