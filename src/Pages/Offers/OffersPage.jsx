@@ -308,7 +308,6 @@ const OffersPage = () => {
                   onClick={() => setSelectedType("all")}
                 >
                   <span>{translations.alloffers || "All Deals"}</span>
-                  <span className="pill-badge">{formattedDeals.length}</span>
                 </button>
 
                 {comboMeals.length > 0 && (
@@ -320,7 +319,6 @@ const OffersPage = () => {
                     onClick={() => setSelectedType("combo")}
                   >
                     <span>{translations.combos || "Combos"}</span>
-                    <span className="pill-badge">{comboMeals.length}</span>
                   </button>
                 )}
 
@@ -333,7 +331,6 @@ const OffersPage = () => {
                     onClick={() => setSelectedType("unlimited")}
                   >
                     <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
-                    <span className="pill-badge">{unlimitedMeals.length}</span>
                   </button>
                 )}
               </div>
