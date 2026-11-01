@@ -27,6 +27,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import FormatQuoteOutlinedIcon from "@mui/icons-material/FormatQuoteOutlined";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -322,24 +324,19 @@ const OrderDetails = ({ orderId, onBack }) => {
 
           const cancelReason =
             item.cancelreason ||
+            item.cancelReason ||
             item.reason ||
-            (cancelled ? data.cancelreason || "" : "") ||
             "";
           const cancelledBy =
             item.cancelledby ||
-            (cancelled ? data.cancelledby || "" : "") ||
+            item.cancelledBy ||
             "";
           const cancelledAt =
             item.cancelledat ||
             item.cancelledtime ||
             item.cancelledTime ||
             item.cancelledAt ||
-            (cancelled
-              ? data.cancelledat ||
-              data.cancelledtime ||
-              data.cancelledTime ||
-              data.cancelledAt
-              : null);
+            null;
 
           return {
             productname: item.itemname || item.name,
@@ -537,6 +534,14 @@ const OrderDetails = ({ orderId, onBack }) => {
 
         const formattedOrder = {
           ...data,
+          cancelreason: data.cancelreason || data.cancelReason || "",
+          cancelledby: data.cancelledby || data.cancelledBy || "",
+          cancelledat:
+            data.cancelledat ||
+            data.cancelledtime ||
+            data.cancelledTime ||
+            data.cancelledAt ||
+            null,
           tableno: tableno || null,
           areaname: areaname || null,
           products: formattedProducts,
@@ -673,6 +678,8 @@ const OrderDetails = ({ orderId, onBack }) => {
 
   const statusColor = getOrderStatusColor(order.orderstatus);
   const paymentColor = getPaymentStatusColor(order.paymentstatus);
+  const isOrderCancelled =
+    String(order.orderstatus || "").toLowerCase() === "cancelled";
 
   return (
     <div className={`order-details-container ${isRtl ? "is-rtl" : ""}`}>
@@ -856,6 +863,87 @@ const OrderDetails = ({ orderId, onBack }) => {
             </div>
           )}
 
+          {/* Order-Level Cancellation Details (shown when entire order is cancelled) */}
+          {isOrderCancelled && (
+            <div className="order-details-section order-cancellation-section">
+              <div className="section-header-outside">
+                <div className="section-header-left">
+                  <CancelOutlinedIcon className="section-header-icon red" />
+                  <h3>
+                    {translations.cancellationdetails ||
+                      "Cancellation Details"}
+                  </h3>
+                </div>
+              </div>
+              <div className="detail-card order-cancellation-card">
+                <div className="card-top-accent red" />
+                <div className="cancellation-card-body">
+                  <div className="cancellation-card">
+                    <div className="cancellation-header">
+                      <div className="cancellation-title-group">
+                        <div className="cancellation-icon-badge">
+                          <CancelOutlinedIcon fontSize="inherit" />
+                        </div>
+                        <span className="cancellation-header-title">
+                          {translations.cancellationdetails ||
+                            "Cancellation Details"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {(Boolean(order.cancelledby) ||
+                      Boolean(order.cancelledat)) && (
+                      <div className="cancellation-meta-container">
+                        {Boolean(order.cancelledby) && (
+                          <div className="cancellation-meta-badge">
+                            <PersonOutlinedIcon className="cancellation-meta-icon" />
+                            <span className="cancellation-meta-label">
+                              {translations.cancelledby || "Cancelled By"}:
+                            </span>
+                            <span className="cancellation-meta-value">
+                              {order.cancelledby}
+                            </span>
+                          </div>
+                        )}
+                        {Boolean(order.cancelledat) && (
+                          <div className="cancellation-meta-badge">
+                            <AccessTimeIcon className="cancellation-meta-icon" />
+                            <span className="cancellation-meta-label">
+                              {translations.cancelledtime || "Cancelled Time"}:
+                            </span>
+                            <span className="cancellation-meta-value">
+                              {formatOrderDateTime(
+                                order.cancelledat,
+                                dateFormat,
+                                timeFormat,
+                                timeZone
+                              )}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="cancellation-reason-container">
+                      <FormatQuoteOutlinedIcon className="cancellation-quote-icon" />
+                      <div className="cancellation-reason-content">
+                        <span className="cancellation-reason-label">
+                          {translations.cancellationreason ||
+                            "Cancellation Reason"}
+                        </span>
+                        <p className="cancellation-reason-text">
+                          {order.cancelreason ||
+                            translations.notspecified ||
+                            "Not specified"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Item Details Card */}
           <div className="order-details-section items-details-section">
             <div className="section-header-outside">
@@ -975,48 +1063,71 @@ const OrderDetails = ({ orderId, onBack }) => {
                         </div>
                       )}
 
-                      {/* Item Cancellation Details */}
-                      {cancelled && (
-                        <div className="item-cancellation-box">
+                      {/* Item Cancellation Details (only shown when order itself is NOT cancelled, but this item was cancelled) */}
+                      {!isOrderCancelled && cancelled && (
+                        <div className="cancellation-card item-level">
                           <div className="cancellation-header">
-                            <CancelOutlinedIcon fontSize="small" />
-                            <span>
-                              {translations.cancellationdetails ||
-                                "Cancellation Details"}
-                            </span>
-                          </div>
-                          <div className="cancellation-meta">
-                            {product.cancelledby && (
-                              <span className="meta-pill">
-                                <strong>
-                                  {translations.cancelledby || "By"}:
-                                </strong>{" "}
-                                {product.cancelledby}
+                            <div className="cancellation-title-group">
+                              <div className="cancellation-icon-badge">
+                                <CancelOutlinedIcon fontSize="inherit" />
+                              </div>
+                              <span className="cancellation-header-title">
+                                {translations.cancellationdetails ||
+                                  "Cancellation Details"}
                               </span>
-                            )}
-                            {product.cancelledat && (
-                              <span className="meta-pill">
-                                <strong>
-                                  {translations.cancelledtime || "Time"}:
-                                </strong>{" "}
-                                {formatOrderDateTime(
-                                  product.cancelledat,
-                                  dateFormat,
-                                  timeFormat,
-                                  timeZone
-                                )}
-                              </span>
-                            )}
+                            </div>
                           </div>
-                          <div className="cancellation-reason">
-                            <span className="reason-label">
-                              {translations.cancellationreason || "Reason"}:
-                            </span>{" "}
-                            <span className="reason-text">
-                              {product.cancelreason ||
-                                translations.notspecified ||
-                                "Not specified"}
-                            </span>
+
+                          {(Boolean(product.cancelledby) ||
+                            Boolean(product.cancelledat)) && (
+                            <div className="cancellation-meta-container">
+                              {Boolean(product.cancelledby) && (
+                                <div className="cancellation-meta-badge">
+                                  <PersonOutlinedIcon className="cancellation-meta-icon" />
+                                  <span className="cancellation-meta-label">
+                                    {translations.cancelledby ||
+                                      "Cancelled By"}
+                                    :
+                                  </span>
+                                  <span className="cancellation-meta-value">
+                                    {product.cancelledby}
+                                  </span>
+                                </div>
+                              )}
+                              {Boolean(product.cancelledat) && (
+                                <div className="cancellation-meta-badge">
+                                  <AccessTimeIcon className="cancellation-meta-icon" />
+                                  <span className="cancellation-meta-label">
+                                    {translations.cancelledtime ||
+                                      "Cancelled Time"}
+                                    :
+                                  </span>
+                                  <span className="cancellation-meta-value">
+                                    {formatOrderDateTime(
+                                      product.cancelledat,
+                                      dateFormat,
+                                      timeFormat,
+                                      timeZone
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          <div className="cancellation-reason-container">
+                            <FormatQuoteOutlinedIcon className="cancellation-quote-icon" />
+                            <div className="cancellation-reason-content">
+                              <span className="cancellation-reason-label">
+                                {translations.cancellationreason ||
+                                  "Cancellation Reason"}
+                              </span>
+                              <p className="cancellation-reason-text">
+                                {product.cancelreason ||
+                                  translations.notspecified ||
+                                  "Not specified"}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       )}
