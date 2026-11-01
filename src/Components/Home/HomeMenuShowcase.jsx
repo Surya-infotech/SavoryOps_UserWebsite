@@ -13,27 +13,12 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
+import DishCard, { DietIndicator } from "../../Components/Common/DishCard.jsx";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
-/**
- * Pure CSS Veg & Non-Veg FSSAI standard diet badge
- */
-const DietIndicator = ({ isVeg, className = "" }) => {
-  return (
-    <span
-      className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? "Vegetarian" : "Non-Vegetarian"}
-      aria-label={isVeg ? "Vegetarian" : "Non-Vegetarian"}
-    >
-      <span className="diet-box">
-        <span className="diet-dot" />
-      </span>
-    </span>
-  );
-};
 
 /**
  * Rich Default Menu Sections Data (Option 2: Curated Section Carousels)
@@ -340,109 +325,16 @@ const CarouselRow = ({
               const priceFormatted = formatPriceFromBranch(dish.price, selectedBranch);
 
               return (
-                <div
+                <DishCard
                   key={dish.id}
-                  className={`dish-card showcase-dish-card ${isDeal ? "deal-card" : ""} ${isCombo ? "combo-card" : ""} ${isUnlimited ? "unlimited-card" : ""}`}
-                  onClick={() => onCardClick(dish)}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`View details for ${dish.title}`}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      onCardClick(dish);
-                    }
-                  }}
-                >
-                  {/* 1. Image Box (200px height - Exact Menu Page Spec) */}
-                  <div className="dish-img-box">
-                    <img
-                      src={dish.image}
-                      alt={dish.title}
-                      className="dish-img"
-                      loading="lazy"
-                    />
-
-                    {isDeal ? (
-                      isUnlimited ? (
-                        <span className="deal-ribbon-badge unlimited">
-                          {translations.unlimited || "UNLIMITED"}
-                        </span>
-                      ) : (
-                        <span className="deal-ribbon-badge combo">
-                          {translations.combo || "COMBO"}
-                        </span>
-                      )
-                    ) : (
-                      dish.tag && <span className="dish-tag-badge">{dish.tag}</span>
-                    )}
-
-                    {dish.prepTime && (
-                      <span className="dish-prep-time">
-                        <AccessTimeIcon fontSize="inherit" />
-                        {dish.prepTime}
-                      </span>
-                    )}
-
-                    <DietIndicator isVeg={dish.isVeg} />
-                  </div>
-
-                  {/* 2. Dish Content Body */}
-                  <div className="dish-content">
-                    <h3 className="dish-title" title={dish.title}>
-                      {dish.title}
-                    </h3>
-
-                    {dish.desc && (
-                      <p className="dish-desc" title={dish.desc}>
-                        {dish.desc}
-                      </p>
-                    )}
-
-                    {isDeal && dish.includedCount > 0 && (
-                      <div className="deal-items-preview-row">
-                        <span className="deal-items-pill">
-                          🍽️ {dish.includedCount} {dish.includedCount === 1 ? (translations.itemincluded || "item included") : (translations.itemsincluded || "items included")}
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="dish-footer-row">
-                      <div className="dish-price-group">
-                        <span className="dish-price">{priceFormatted}</span>
-                      </div>
-
-                      <div className="dish-card-actions">
-                        {/* Dedicated Add-on Button when customizable addons exist (hidden on combo and unlimited items) */}
-                        {!isComboOrUnlimited && dish.addons && dish.addons.length > 0 && (
-                          <button
-                            type="button"
-                            className="dish-addon-btn"
-                            onClick={(e) => onOpenAddonModal(e, dish)}
-                            title={`Add-ons - ${dish.title}`}
-                            aria-label={`${dish.title} Add-ons`}
-                          >
-                            <AddIcon className="addon-btn-icon" />
-                          </button>
-                        )}
-
-                        {/* Direct Add to Cart Button (hidden on combo and unlimited items) */}
-                        {!isComboOrUnlimited && (
-                          <button
-                            type="button"
-                            className={`dish-add-btn ${count > 0 ? "added" : ""}`}
-                            onClick={(e) => onAddToCart(e, dish)}
-                            aria-label="Add to cart"
-                            title={count > 0 ? `Added (${count})` : "Add to cart"}
-                          >
-                            <ShoppingCartOutlinedIcon fontSize="small" />
-                            {count > 0 && <span className="dish-btn-count-badge">{count}</span>}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  dish={dish}
+                  className="showcase-dish-card"
+                  selectedBranch={selectedBranch}
+                  count={count}
+                  onCardClick={onCardClick}
+                  onAddToCart={onAddToCart}
+                  onOpenAddonModal={onOpenAddonModal}
+                />
               );
             })
           )}

@@ -17,24 +17,6 @@ import "../../Scss/Pages/Menu/menupage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
-/**
- * Standard Veg/Non-Veg FSSAI-compliant diet badge using pure CSS (No SVG)
- */
-const DietIndicator = ({ isVeg, className = "" }) => {
-  const { translations = {} } = useLanguage();
-
-  return (
-    <span
-      className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? translations.veg : translations.nonveg}
-      aria-label={isVeg ? translations.veg : translations.nonveg}
-    >
-      <span className="diet-box">
-        <span className="diet-dot" />
-      </span>
-    </span>
-  );
-};
 
 const MenuPage = () => {
   const { translations = {} } = useLanguage();
@@ -617,103 +599,18 @@ const MenuPage = () => {
     }
   };
 
-  // Reusable card renderer
+  // Centralized card renderer
   const renderDishCard = (dish) => {
-    const count = addedItems[dish.id] || 0;
-    const priceFormatted = formatPriceFromBranch(dish.price, selectedBranch);
-    const isCombo = dish.isDeal && dish.bundletype === "combo";
-    const isUnlimited = dish.isDeal && dish.bundletype === "unlimited";
-
     return (
-      <div
+      <DishCard
         key={dish.id}
-        className={`dish-card ${dish.isDeal ? "deal-card" : ""} ${isCombo ? "combo-card" : ""} ${isUnlimited ? "unlimited-card" : ""}`}
-        onClick={() => handleCardClick(dish)}
-      >
-        <div className="dish-img-box">
-          <img
-            src={dish.image}
-            alt={dish.title}
-            className="dish-img"
-            loading="lazy"
-          />
-
-          {dish.isDeal ? (
-            dish.bundletype ? (
-              <span className={`deal-ribbon-badge ${dish.bundletype}`}>
-                {dish.bundletype === "combo" ? translations.combo : translations.unlimited}
-              </span>
-            ) : null
-          ) : (
-            dish.categoryname && <span className="dish-tag-badge">{dish.categoryname}</span>
-          )}
-
-          {dish.preparationtime && Number(dish.preparationtime) > 0 && (
-            <span className="dish-prep-time">
-              <AccessTimeIcon fontSize="inherit" />
-              {dish.preparationtime} {translations.min}
-            </span>
-          )}
-
-          {dish.hasDiet && (dish.isVeg || dish.isNonVeg) && (
-            <DietIndicator isVeg={dish.isVeg} />
-          )}
-        </div>
-
-        <div className="dish-content">
-          <h3 className="dish-title" title={dish.title}>
-            {dish.title}
-          </h3>
-
-          {dish.desc && (
-            <p className="dish-desc" title={dish.desc}>
-              {dish.desc}
-            </p>
-          )}
-
-          {dish.isDeal && dish.items && dish.items.length > 0 && (
-            <div className="deal-items-preview-row">
-              <span className="deal-items-pill">
-                🍽️ {dish.items.length} {dish.items.length === 1 ? translations.itemincluded : translations.itemsincluded}
-              </span>
-            </div>
-          )}
-
-          <div className="dish-footer-row">
-            <div className="dish-price-group">
-              <span className="dish-price">{priceFormatted}</span>
-            </div>
-
-            <div className="dish-card-actions">
-              {/* Addon Button when addon details are found (hidden on combo and unlimited cards) */}
-              {!isCombo && !isUnlimited && !dish.isDeal && dish.addons && dish.addons.length > 0 && (
-                <button
-                  type="button"
-                  className="dish-addon-btn"
-                  onClick={(e) => handleOpenAddonModal(e, dish)}
-                  title={`${translations.addons} - ${dish.title}`}
-                  aria-label={`${dish.title} ${translations.addons}`}
-                >
-                  <AddIcon className="addon-btn-icon" />
-                </button>
-              )}
-
-              {!isCombo && !isUnlimited && (
-                <button
-                  type="button"
-                  className={`dish-add-btn ${count > 0 ? "added" : ""}`}
-                  onClick={(e) => handleAddToCart(e, dish)}
-                  aria-label={translations.addtocart}
-                  title={count > 0 ? `${translations.added} (${count})` : translations.addtocart}
-                >
-                  <ShoppingCartOutlinedIcon fontSize="small" />
-                  {count > 0 && <span className="dish-btn-count-badge">{count}</span>}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+        dish={dish}
+        selectedBranch={selectedBranch}
+        count={addedItems[dish.id] || 0}
+        onCardClick={handleCardClick}
+        onAddToCart={handleAddToCart}
+        onOpenAddonModal={handleOpenAddonModal}
+      />
     );
   };
 

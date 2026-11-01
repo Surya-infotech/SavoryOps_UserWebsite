@@ -6,30 +6,13 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import DishCard, { DietIndicator } from "../../Components/Common/DishCard.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Offers/offerspage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
-/**
- * Standard Veg/Non-Veg FSSAI-compliant diet badge using pure CSS (matching MenuPage)
- */
-const DietIndicator = ({ isVeg, className = "" }) => {
-  const { translations = {} } = useLanguage();
-
-  return (
-    <span
-      className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? translations.veg : translations.nonveg}
-      aria-label={isVeg ? translations.veg : translations.nonveg}
-    >
-      <span className="diet-box">
-        <span className="diet-dot" />
-      </span>
-    </span>
-  );
-};
 
 const OffersPage = () => {
   const { translations = {}, isRtl } = useLanguage();
@@ -289,75 +272,15 @@ const OffersPage = () => {
 
   const isFilterActive = selectedType !== "all" || selectedDiet !== "all";
 
-  // Reusable deal card renderer (exact same design as MenuPage)
+  // Centralized deal card renderer
   const renderDealCard = (dish) => {
-    const priceFormatted = formatPriceFromBranch(dish.price, selectedBranch);
-    const isCombo = dish.bundletype === "combo";
-    const isUnlimited = dish.bundletype === "unlimited";
-
     return (
-      <div
+      <DishCard
         key={dish.id}
-        className={`dish-card deal-card ${isCombo ? "combo-card" : ""} ${isUnlimited ? "unlimited-card" : ""}`}
-        onClick={() => handleCardClick(dish)}
-      >
-        <div className="dish-img-box">
-          <img
-            src={dish.image}
-            alt={dish.title}
-            className="dish-img"
-            loading="lazy"
-          />
-
-          {dish.bundletype && (
-            <span className={`deal-ribbon-badge ${dish.bundletype}`}>
-              {dish.bundletype === "combo"
-                ? translations.combo || "COMBO"
-                : translations.unlimited || "UNLIMITED"}
-            </span>
-          )}
-
-          {dish.preparationtime && Number(dish.preparationtime) > 0 && (
-            <span className="dish-prep-time">
-              <AccessTimeIcon fontSize="inherit" />
-              {dish.preparationtime} {translations.min || "min"}
-            </span>
-          )}
-
-          {dish.hasDiet && (dish.isVeg || dish.isNonVeg) && (
-            <DietIndicator isVeg={dish.isVeg} />
-          )}
-        </div>
-
-        <div className="dish-content">
-          <h3 className="dish-title" title={dish.title}>
-            {dish.title}
-          </h3>
-
-          {dish.desc && (
-            <p className="dish-desc" title={dish.desc}>
-              {dish.desc}
-            </p>
-          )}
-
-          {dish.items && dish.items.length > 0 && (
-            <div className="deal-items-preview-row">
-              <span className="deal-items-pill">
-                🍽️ {dish.items.length}{" "}
-                {dish.items.length === 1
-                  ? translations.itemincluded || "item included"
-                  : translations.itemsincluded || "items included"}
-              </span>
-            </div>
-          )}
-
-          <div className="dish-footer-row">
-            <div className="dish-price-group">
-              <span className="dish-price">{priceFormatted}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+        dish={dish}
+        selectedBranch={selectedBranch}
+        onCardClick={handleCardClick}
+      />
     );
   };
 
