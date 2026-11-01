@@ -427,87 +427,132 @@
 
         &.is-cancelled {
           background: #fff5f5;
-          border-radius: 10px;
-          padding: 1rem 0.85rem;
-          margin: 0.35rem 0;
-          border: 1px dashed #fca5a5;
+          border-radius: 12px;
+          padding: 1rem 0.95rem;
+          margin: 0.45rem 0;
+          border: 1.5px dashed #fca5a5;
+
+          .product-addons-box {
+            margin-left: 0;
+            background: #ffffff;
+            border: 1px solid #fee2e2;
+            border-left: 3.5px solid #ef4444;
+
+            .addons-title {
+              color: #dc2626;
+            }
+
+            .addon-line {
+              color: #64748b;
+
+              .addon-total {
+                text-decoration: line-through;
+                text-decoration-color: #ef4444;
+                text-decoration-thickness: 1.5px;
+                color: #94a3b8;
+              }
+            }
+          }
+
+          .product-notes-box {
+            margin-left: 0;
+          }
+
+          .item-cancellation-box {
+            margin-left: 0;
+            border: 1px solid #fecaca;
+            border-left: 3.5px solid #ef4444;
+          }
         }
 
         .product-row-top {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          gap: 1rem;
+          gap: 0.75rem;
+
+          .diet-dot-wrap {
+            display: flex;
+            align-items: center;
+            margin-top: 3px;
+            flex-shrink: 0;
+
+            .diet-box {
+              width: 17px;
+              height: 17px;
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 1.5px solid;
+              flex-shrink: 0;
+              box-sizing: border-box;
+
+              &.veg {
+                border-color: #16a34a;
+              }
+
+              &.non-veg {
+                border-color: #dc2626;
+              }
+
+              .diet-dot {
+                width: 7.5px;
+                height: 7.5px;
+                border-radius: 50%;
+
+                &.veg {
+                  background: #16a34a;
+                }
+
+                &.non-veg {
+                  background: #dc2626;
+                }
+              }
+            }
+          }
 
           .product-info-col {
             display: flex;
             flex-direction: column;
             gap: 0.35rem;
             flex: 1;
+            min-width: 0;
 
             .product-title-row {
               display: flex;
               align-items: center;
-              gap: 0.65rem;
+              gap: 0.5rem;
               flex-wrap: wrap;
 
-              .diet-dot-wrap {
-                display: flex;
-                align-items: center;
-
-                .diet-box {
-                  width: 17px;
-                  height: 17px;
-                  border-radius: 4px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  border: 1.5px solid;
-                  flex-shrink: 0;
-
-                  &.veg {
-                    border-color: #16a34a;
-                  }
-
-                  &.non-veg {
-                    border-color: #dc2626;
-                  }
-
-                  .diet-dot {
-                    width: 7.5px;
-                    height: 7.5px;
-                    border-radius: 50%;
-
-                    &.veg {
-                      background: #16a34a;
-                    }
-
-                    &.non-veg {
-                      background: #dc2626;
-                    }
-                  }
-                }
-              }
-
               .product-name {
-                font-size: 1rem;
+                font-size: 0.98rem;
                 font-weight: 700;
                 color: #0f172a;
                 line-height: 1.35;
+                word-break: break-word;
 
                 &.strikethrough {
                   text-decoration: line-through;
-                  color: #94a3b8;
+                  text-decoration-color: #ef4444;
+                  text-decoration-thickness: 1.5px;
+                  color: #64748b;
+                  font-weight: 600;
                 }
               }
 
               .cancelled-pill {
-                padding: 0.15rem 0.5rem;
+                display: inline-flex;
+                align-items: center;
+                padding: 0.15rem 0.55rem;
                 background: #ef4444;
                 color: #ffffff;
                 font-size: 0.7rem;
                 font-weight: 700;
                 border-radius: 9999px;
+                line-height: 1.2;
+                white-space: nowrap;
+                letter-spacing: 0.02em;
               }
             }
 
@@ -515,7 +560,6 @@
               display: flex;
               align-items: center;
               gap: 0.65rem;
-              margin-left: 24px;
               flex-wrap: wrap;
 
               .item-qty-badge {
@@ -528,12 +572,23 @@
                 border-radius: 6px;
                 font-size: 0.78rem;
                 font-weight: 700;
+
+                &.is-cancelled {
+                  background: #fee2e2;
+                  color: #dc2626;
+                }
               }
 
               .unit-price-sub {
                 font-size: 0.84rem;
                 color: #64748b;
                 font-weight: 500;
+
+                &.strikethrough {
+                  text-decoration: line-through;
+                  text-decoration-color: #fca5a5;
+                  color: #94a3b8;
+                }
               }
             }
           }
@@ -549,9 +604,12 @@
               font-weight: 800;
               color: #0f172a;
               letter-spacing: -0.01em;
+              white-space: nowrap;
 
               &.strikethrough {
                 text-decoration: line-through;
+                text-decoration-color: #ef4444;
+                text-decoration-thickness: 1.5px;
                 color: #94a3b8;
               }
             }
@@ -559,7 +617,7 @@
         }
 
         .product-addons-box {
-          margin-left: 24px;
+          margin-left: 27px;
           margin-top: 0.4rem;
           background: #f8fafc;
           border-radius: 8px;
@@ -611,7 +669,7 @@
         }
 
         .product-notes-box {
-          margin-left: 24px;
+          margin-left: 27px;
           margin-top: 0.4rem;
           display: flex;
           flex-direction: column;
@@ -645,52 +703,166 @@
         }
 
         .item-cancellation-box {
-          margin-left: 24px;
-          margin-top: 0.4rem;
-          padding: 0.65rem 0.85rem;
+          margin-left: 27px;
+          margin-top: 0.5rem;
+          padding: 0.75rem 0.9rem;
           background: #ffffff;
           border: 1px solid #fee2e2;
-          border-left: 3px solid #ef4444;
+          border-left: 3.5px solid #ef4444;
           border-radius: 8px;
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.45rem;
 
           .cancellation-header {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.4rem;
             color: #dc2626;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             font-weight: 800;
 
             svg {
-              font-size: 1rem;
+              font-size: 1.1rem;
             }
           }
 
           .cancellation-meta {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 0.5rem;
             flex-wrap: wrap;
 
             .meta-pill {
-              font-size: 0.78rem;
+              font-size: 0.76rem;
               color: #7f1d1d;
               background: #fef2f2;
-              padding: 0.15rem 0.5rem;
+              border: 1px solid #fecaca;
+              padding: 0.2rem 0.55rem;
               border-radius: 6px;
+              line-height: 1.3;
+
+              strong {
+                font-weight: 700;
+                color: #991b1b;
+              }
             }
           }
 
           .cancellation-reason {
-            font-size: 0.8rem;
-            color: #991b1b;
-            line-height: 1.4;
+            font-size: 0.82rem;
+            color: #7f1d1d;
+            background: #fef2f2;
+            border: 1px solid #fee2e2;
+            border-radius: 6px;
+            padding: 0.5rem 0.65rem;
+            line-height: 1.45;
+            word-break: break-word;
 
             .reason-label {
-              font-weight: 700;
+              font-weight: 800;
+              color: #991b1b;
+              margin-right: 0.25rem;
+            }
+
+            .reason-text {
+              color: #450a0a;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      /* Tablet & Mobile Responsiveness */
+      @media (max-width: 768px) {
+        padding: 0.25rem 0.85rem;
+
+        .order-product-item {
+          padding: 0.95rem 0.15rem;
+
+          &.is-cancelled {
+            padding: 0.85rem 0.75rem;
+            margin: 0.35rem 0;
+
+            .product-addons-box,
+            .item-cancellation-box,
+            .product-notes-box {
+              margin-left: 0;
+            }
+          }
+
+          .product-addons-box,
+          .item-cancellation-box,
+          .product-notes-box {
+            margin-left: 0;
+          }
+        }
+      }
+
+      @media (max-width: 480px) {
+        padding: 0.25rem 0.5rem;
+
+        .order-product-item {
+          padding: 0.85rem 0;
+
+          &.is-cancelled {
+            padding: 0.75rem 0.6rem;
+          }
+
+          .product-row-top {
+            gap: 0.5rem;
+
+            .diet-dot-wrap {
+              margin-top: 2px;
+            }
+
+            .product-info-col {
+              .product-title-row {
+                gap: 0.35rem;
+
+                .product-name {
+                  font-size: 0.92rem;
+                }
+
+                .cancelled-pill {
+                  font-size: 0.65rem;
+                  padding: 0.12rem 0.45rem;
+                }
+              }
+
+              .product-meta-subline {
+                gap: 0.45rem;
+
+                .item-qty-badge {
+                  font-size: 0.72rem;
+                  padding: 0.14rem 0.45rem;
+                }
+
+                .unit-price-sub {
+                  font-size: 0.78rem;
+                }
+              }
+            }
+
+            .product-price-col {
+              .product-total-price {
+                font-size: 0.95rem;
+              }
+            }
+          }
+
+          .item-cancellation-box {
+            padding: 0.65rem 0.65rem;
+
+            .cancellation-meta {
+              flex-direction: column;
+              align-items: stretch;
+              gap: 0.35rem;
+
+              .meta-pill {
+                width: 100%;
+                box-sizing: border-box;
+              }
             }
           }
         }

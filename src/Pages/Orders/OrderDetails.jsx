@@ -884,17 +884,18 @@ const OrderDetails = ({ orderId, onBack }) => {
                       className={`order-product-item ${cancelled ? "is-cancelled" : ""}`}
                     >
                       <div className="product-row-top">
+                        <div className="diet-dot-wrap">
+                          <div
+                            className={`diet-box ${isVeg ? "veg" : "non-veg"}`}
+                          >
+                            <div
+                              className={`diet-dot ${isVeg ? "veg" : "non-veg"}`}
+                            />
+                          </div>
+                        </div>
+
                         <div className="product-info-col">
                           <div className="product-title-row">
-                            <div className="diet-dot-wrap">
-                              <div
-                                className={`diet-box ${isVeg ? "veg" : "non-veg"}`}
-                              >
-                                <div
-                                  className={`diet-dot ${isVeg ? "veg" : "non-veg"}`}
-                                />
-                              </div>
-                            </div>
                             <span
                               className={`product-name ${cancelled ? "strikethrough" : ""}`}
                             >
@@ -908,13 +909,17 @@ const OrderDetails = ({ orderId, onBack }) => {
                           </div>
 
                           <div className="product-meta-subline">
-                            <span className="item-qty-badge">
+                            <span
+                              className={`item-qty-badge ${cancelled ? "is-cancelled" : ""}`}
+                            >
                               <ShoppingBasketOutlinedIcon fontSize="inherit" />
                               <span>
                                 {translations.qty || "Qty"}: {product.quantity}
                               </span>
                             </span>
-                            <span className="unit-price-sub">
+                            <span
+                              className={`unit-price-sub ${cancelled ? "strikethrough" : ""}`}
+                            >
                               {formatOrderPrice(product.price, order)}
                             </span>
                           </div>
