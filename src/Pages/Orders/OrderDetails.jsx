@@ -992,7 +992,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                             >
                               {product.productname}
                             </span>
-                            {cancelled && (
+                            {!isOrderCancelled && cancelled && (
                               <span className="cancelled-pill">
                                 {translations.Cancelled || "Cancelled"}
                               </span>
