@@ -1177,15 +1177,6 @@ const Navbar = () => {
             </button>
 
             <ProfileDropdown auth={auth} onOpenDrawer={() => setMobileMenuOpen(true)} />
-
-            <button
-              type="button"
-              className="nav-mobile-toggle"
-              onClick={() => setMobileMenuOpen(true)}
-              aria-label="Open mobile navigation menu"
-            >
-              <MenuIcon />
-            </button>
           </div>
         </nav>
       </header>
