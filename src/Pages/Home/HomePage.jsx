@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
+import { useState, useEffect } from "react";
+import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import HomeBanner from "../../Components/Home/HomeBanner.jsx";
 import HomeFeatures from "../../Components/Home/HomeFeatures.jsx";
 import HomeMenuShowcase from "../../Components/Home/HomeMenuShowcase.jsx";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import PropTypes from "prop-types";
 import { getCountryCallingCode } from "react-phone-number-input";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";

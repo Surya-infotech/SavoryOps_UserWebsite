@@ -1,4 +1,3 @@
-import React from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AddIcon from "@mui/icons-material/Add";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";

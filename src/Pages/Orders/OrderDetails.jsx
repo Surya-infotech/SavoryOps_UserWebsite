@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HistoryIcon from "@mui/icons-material/History";
 import StorefrontIcon from "@mui/icons-material/Storefront";
@@ -8,7 +8,6 @@ import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import BoltIcon from "@mui/icons-material/Bolt";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -25,24 +24,20 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import FormatQuoteOutlinedIcon from "@mui/icons-material/FormatQuoteOutlined";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CloseIcon from "@mui/icons-material/Close";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import {
   getOrderStatusColor,
   getPaymentStatusColor,
-  getItemStatusColor,
   getOrderTypeBackgroundColor,
   isDeliveryOrderType,
-  isDineInOrderType,
   isItemCancelled,
   normalizeLocationDetails,
   formatLocationDetailsLine,

@@ -31,7 +31,6 @@ import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.j
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
 export { LanguageDropdown };
-import { getLanguageOptions } from "../../constants/languages";
 import "../../Scss/Components/General/dropdown.scss";
 import "../../Scss/Pages/Partials/navbar.scss";
 

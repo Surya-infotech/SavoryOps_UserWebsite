@@ -1,13 +1,11 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import DishCard, { DietIndicator, DishDetailModal } from "../../Components/Common/DishCard.jsx";
-import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
+import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Offers/offerspage.scss";
 

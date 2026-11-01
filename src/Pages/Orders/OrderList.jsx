@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
@@ -7,10 +7,8 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";

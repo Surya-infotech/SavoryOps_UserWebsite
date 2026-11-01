@@ -76,7 +76,7 @@ export const calculateItemPrice = (item, posPayload, selectedOrderType = null) =
   const itemTaxOverridesBranch = Boolean(posPayload?.itemTaxOverridesBranch);
   const itemTaxOverridesOrderType = Boolean(posPayload?.itemTaxOverridesOrderType);
 
-  let applicable = [];
+  let applicable;
   if (mode === "branch_level") {
     applicable = branchTaxes;
   } else if (mode === "ordertype_level") {

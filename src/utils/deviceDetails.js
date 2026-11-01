@@ -1,7 +1,7 @@
 export const getBrowserAndDeviceDetails = () => {
     const ua = navigator.userAgent;
     let browser = "Unknown Browser";
-    let device = "Desktop";
+    let device;
     let os = "Unknown OS";
 
     // Detect OS

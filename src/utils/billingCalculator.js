@@ -201,7 +201,7 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
     const itemQty = Number(item.quantity) || 1;
     const lineSub = (Number(item.price) || 0) * itemQty + (item.addons || []).reduce((aSum, a) => (a && a.selected !== false) ? aSum + (Number(a.price) || 0) * itemQty : aSum, 0);
 
-    let applicableTaxes = [];
+    let applicableTaxes;
     if (mode === "branch_level") {
       applicableTaxes = branchTaxes.map((t) => ({ ...t, taxLevel: "branch" }));
     } else if (mode === "ordertype_level") {
@@ -285,7 +285,7 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
       "round_up"
     ).toLowerCase().trim();
 
-    let rType = "round_up";
+    let rType;
     if (rawRoundType === "round_down" || rawRoundType === "down" || rawRoundType.includes("down")) {
       rType = "round_down";
       grandTotal = Math.floor(rawGrand);

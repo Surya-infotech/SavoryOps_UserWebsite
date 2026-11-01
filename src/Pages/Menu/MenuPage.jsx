@@ -1,17 +1,14 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import AddIcon from "@mui/icons-material/Add";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import DishCard, { DietIndicator, DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
-import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
+import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Menu/menupage.scss";
