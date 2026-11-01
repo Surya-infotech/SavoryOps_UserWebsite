@@ -889,9 +889,6 @@ const OrderDetails = ({ orderId, onBack }) => {
                             "Cancellation Details"}
                         </span>
                       </div>
-                      <span className="cancellation-status-pill">
-                        {translations.cancelled || "Cancelled"}
-                      </span>
                     </div>
 
                     {(Boolean(order.cancelledby) ||
