@@ -9,6 +9,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import DishCard, { DietIndicator } from "../../Components/Common/DishCard.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
