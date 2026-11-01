@@ -1377,12 +1377,7 @@
   }
 
   .nav-top-text {
-    display: inline-block;
     font-size: 0.78rem;
-    max-width: calc(100% - 140px);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .top-badge {
@@ -1424,7 +1419,7 @@
   }
 
   .nav-top-left {
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 8px;
     width: 100%;
@@ -1455,15 +1450,8 @@
   }
 
   .nav-top-text {
-    display: inline-block !important;
     font-size: 0.72rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1 1 auto;
-    min-width: 0;
     line-height: 1.2;
-    text-align: left;
   }
 
   .nav-main {
@@ -1696,7 +1684,7 @@
 
   .nav-top-left {
     gap: 6px;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
   }
 
@@ -1715,9 +1703,13 @@
   }
 
   .nav-top-text {
-    display: inline-block !important;
     font-size: 0.68rem;
     line-height: 1.2;
+  }
+
+  .nav-top-bullet {
+    margin: 0 0.85rem;
+    font-size: 0.65rem;
   }
 
   .nav-main {
@@ -1825,6 +1817,7 @@
 
   .nav-top-left {
     gap: 5px;
+    justify-content: flex-start;
   }
 
   .top-badge {
@@ -1840,6 +1833,11 @@
 
   .nav-top-text {
     font-size: 0.64rem;
+  }
+
+  .nav-top-bullet {
+    margin: 0 0.65rem;
+    font-size: 0.6rem;
   }
 
   .nav-main {
