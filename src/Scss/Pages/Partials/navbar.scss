@@ -1219,7 +1219,14 @@
   }
 }
 
-/* Responsive Breakpoints */
+/* Responsive Breakpoints - Mobile, Tablet & Laptop Architecture */
+@media (min-width: 1025px) {
+  .nav-scanner-btn {
+    display: none !important;
+    /* Hidden on laptop & computers */
+  }
+}
+
 @media (max-width: 1080px) {
   .nav-search-box {
     display: none;
@@ -1229,10 +1236,6 @@
 @media (max-width: 900px) {
   .nav-links-container {
     display: none;
-  }
-
-  .nav-main .branch-active-name {
-    max-width: 105px;
   }
 
   .nav-mobile-toggle {
@@ -1246,43 +1249,321 @@
   .nav-top-left .nav-top-text {
     display: none;
   }
-}
 
-@media (max-width: 480px) {
-  .nav-main .branch-dropdown-wrapper {
-    display: none;
+  .nav-main {
+    padding: 0.75rem 1.25rem;
+    gap: 1rem;
+  }
+
+  .nav-brand-name {
+    font-size: 1.15rem;
+  }
+
+  .nav-actions {
+    gap: 0.65rem;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .nav-top-bar {
+    padding: 4px 1rem;
+    font-size: 0.75rem;
+  }
+
   .nav-top-inner {
     justify-content: center;
+    gap: 0.5rem;
   }
 
   .nav-top-right {
     display: none;
   }
 
-  .nav-main {
-    padding: 0.75rem 1rem;
+  .top-badge {
+    font-size: 0.7rem;
+    padding: 2px 7px;
   }
 
-  .nav-brand-name {
-    font-size: 1.2rem;
+  .live-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .nav-main {
+    padding: 0.55rem 0.85rem;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .nav-brand-group {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    gap: 8px;
   }
 
   .nav-brand-logo {
     width: 36px;
     height: 36px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .nav-brand-info {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    gap: 3px;
+  }
+
+  .nav-brand-name-link {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .nav-brand-name {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    max-width: 170px;
+  }
+
+  .nav-brand-selectors {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .branch-trigger-btn,
+  .order-type-trigger-btn {
+    height: 24px;
+    padding: 2px 7px;
+    font-size: 0.72rem;
+    gap: 4px;
+    max-width: 100px;
+    flex-shrink: 0;
+  }
+
+  .branch-active-name,
+  .order-type-active-name {
+    max-width: 65px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.72rem;
+  }
+
+  .branch-icon-pin,
+  .order-type-icon-pin {
+    font-size: 0.82rem !important;
+  }
+
+  .branch-chevron,
+  .order-type-chevron {
+    font-size: 0.85rem !important;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .nav-scanner-btn,
+  .nav-cart-btn,
+  .nav-profile-btn,
+  .nav-mobile-toggle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 8px;
+    padding: 0;
+  }
+
+  .nav-scanner-btn {
+    display: inline-flex !important;
+  }
+
+  .nav-scanner-icon,
+  .nav-profile-icon,
+  .nav-cart-btn svg,
+  .nav-mobile-toggle svg {
+    font-size: 1.2rem !important;
+  }
+
+  .language-dropdown-btn {
+    height: 36px;
+    padding: 0 6px;
+    border-radius: 8px;
+    gap: 3px;
   }
 
   .lang-name-label {
     display: none;
   }
 
-  .language-dropdown-btn {
-    padding: 0.45rem 0.5rem;
+  .cart-count-badge {
+    width: 17px;
+    height: 17px;
+    font-size: 0.65rem;
+    top: -3px;
+    right: -3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-top-bar {
+    padding: 3px 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .top-badge {
+    font-size: 0.65rem;
+    padding: 1px 6px;
+  }
+
+  .nav-main {
+    padding: 0.45rem 0.65rem;
+    gap: 6px;
+  }
+
+  .nav-brand-group {
+    gap: 6px;
+  }
+
+  .nav-brand-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .nav-brand-name {
+    font-size: 0.92rem;
+    max-width: 115px;
+  }
+
+  .branch-trigger-btn,
+  .order-type-trigger-btn {
+    height: 22px;
+    padding: 1px 5px;
+    font-size: 0.66rem;
+    gap: 3px;
+    max-width: 78px;
+  }
+
+  .branch-active-name,
+  .order-type-active-name {
+    max-width: 48px;
+    font-size: 0.66rem;
+  }
+
+  .branch-icon-pin,
+  .order-type-icon-pin {
+    font-size: 0.75rem !important;
+  }
+
+  .branch-chevron,
+  .order-type-chevron {
+    font-size: 0.75rem !important;
+  }
+
+  .nav-actions {
     gap: 4px;
+  }
+
+  .nav-scanner-btn,
+  .nav-cart-btn,
+  .nav-profile-btn,
+  .nav-mobile-toggle {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 7px;
+  }
+
+  .nav-scanner-icon,
+  .nav-profile-icon,
+  .nav-cart-btn svg,
+  .nav-mobile-toggle svg {
+    font-size: 1.1rem !important;
+  }
+
+  .language-dropdown-btn {
+    height: 32px;
+    min-width: 28px;
+    padding: 0 4px;
+    border-radius: 7px;
+    gap: 0;
+
+    .lang-flag-container {
+      width: 18px;
+      height: 12px;
+    }
+
+    .flag-icon {
+      width: 18px !important;
+      height: 12px !important;
+    }
+  }
+
+  .cart-count-badge {
+    width: 15px;
+    height: 15px;
+    font-size: 0.58rem;
+    top: -3px;
+    right: -3px;
+    border-width: 1.5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav-main {
+    padding: 0.4rem 0.5rem;
+    gap: 4px;
+  }
+
+  .nav-brand-name {
+    max-width: 90px;
+    font-size: 0.85rem;
+  }
+
+  .branch-trigger-btn,
+  .order-type-trigger-btn {
+    max-width: 66px;
+    padding: 1px 4px;
+  }
+
+  .branch-active-name,
+  .order-type-active-name {
+    max-width: 40px;
+    font-size: 0.64rem;
+  }
+
+  .nav-actions {
+    gap: 3px;
+  }
+
+  .nav-scanner-btn,
+  .nav-cart-btn,
+  .nav-profile-btn,
+  .nav-mobile-toggle {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
   }
 }
 
@@ -1562,8 +1843,13 @@
 }
 
 @keyframes qrFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .qr-modal-container {
@@ -1581,6 +1867,7 @@
     opacity: 0;
     transform: scale(0.92) translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -1743,9 +2030,11 @@
     top: 6%;
     opacity: 0.7;
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     top: 92%;
     opacity: 0.7;
