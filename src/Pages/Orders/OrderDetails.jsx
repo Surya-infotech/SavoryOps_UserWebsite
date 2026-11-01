@@ -30,6 +30,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -179,11 +180,49 @@ const OrderDetails = ({ orderId, onBack }) => {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isEditReview, setIsEditReview] = useState(false);
+  const [isDeleteReviewModalOpen, setIsDeleteReviewModalOpen] = useState(false);
+  const [isDeletingReview, setIsDeletingReview] = useState(false);
 
   // Settings from localStorage (parity with SettingsPage)
   const dateFormat = localStorage.getItem("DateFormat") || "DD/MM/YYYY";
   const timeFormat = localStorage.getItem("TimeFormat") || "hh:mm A";
   const timeZone = localStorage.getItem("TimeZone") || "Asia/Kolkata";
+
+  const handleDeleteReview = async () => {
+    if (!order?.review?._id) return;
+
+    setIsDeletingReview(true);
+    try {
+      const response = await fetch(
+        `${adminPanelBackendPath}/Website/Order/DeleteOrderReview/${order._id}/${order.ownerid}/${order.review._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "admin",
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        showSnackbar(
+          translations.yourreviewdeleted || "Your review has been deleted successfully.",
+          "success"
+        );
+        setOrder((prev) => (prev ? { ...prev, review: null } : prev));
+        setIsDeleteReviewModalOpen(false);
+      } else {
+        const err = data.message || translations.failedtodeletereview || "Failed to delete review";
+        showSnackbar(err, "error");
+      }
+    } catch (err) {
+      console.error("Error deleting review:", err);
+      showSnackbar(translations.somethingWentWrong || "Something went wrong.", "error");
+    } finally {
+      setIsDeletingReview(false);
+    }
+  };
 
   const fetchOrderReview = useCallback(
     async (currentOrderId) => {
@@ -1219,8 +1258,18 @@ const OrderDetails = ({ orderId, onBack }) => {
                             setIsReviewModalOpen(true);
                           }}
                           title={translations.editreview || "Edit Review"}
+                          aria-label={translations.editreview || "Edit Review"}
                         >
                           <EditOutlinedIcon fontSize="small" />
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-action-btn delete"
+                          onClick={() => setIsDeleteReviewModalOpen(true)}
+                          title={translations.deletereview || "Delete Review"}
+                          aria-label={translations.deletereview || "Delete Review"}
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
                         </button>
                       </div>
                     </div>
@@ -1268,12 +1317,70 @@ const OrderDetails = ({ orderId, onBack }) => {
         onReviewSubmitted={(savedRev) => {
           setOrder((prev) => (prev ? { ...prev, review: savedRev } : prev));
         }}
-        onReviewDeleted={() => {
-          setOrder((prev) => (prev ? { ...prev, review: null } : prev));
-        }}
         showSnackbar={showSnackbar}
         translations={translations}
       />
+
+      {/* Delete Review Confirmation Modal */}
+      {isDeleteReviewModalOpen && (
+        <div
+          className="order-review-modal-backdrop"
+          onClick={() => !isDeletingReview && setIsDeleteReviewModalOpen(false)}
+        >
+          <div
+            className="order-review-modal-dialog delete-dialog"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="modal-header">
+              <div className="modal-title-wrap">
+                <DeleteOutlineIcon className="modal-header-icon delete-icon" />
+                <h3>{translations.deletereview || "Delete Review"}</h3>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setIsDeleteReviewModalOpen(false)}
+                disabled={isDeletingReview}
+                aria-label="Close"
+              >
+                <CloseIcon fontSize="small" />
+              </button>
+            </div>
+            <div className="modal-body">
+              <p className="delete-modal-confirm-msg">
+                {translations.deletereviewconfirm ||
+                  "Are you sure you want to permanently delete your review for this order?"}
+              </p>
+            </div>
+            <div className="modal-footer">
+              <div className="footer-right-actions">
+                <button
+                  type="button"
+                  className="secondary-btn"
+                  onClick={() => setIsDeleteReviewModalOpen(false)}
+                  disabled={isDeletingReview}
+                >
+                  {translations.cancel || "Cancel"}
+                </button>
+                <button
+                  type="button"
+                  className="danger-btn delete-btn"
+                  onClick={handleDeleteReview}
+                  disabled={isDeletingReview}
+                >
+                  {isDeletingReview ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : (
+                    translations.delete || "Delete"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

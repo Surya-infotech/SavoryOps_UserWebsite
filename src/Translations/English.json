@@ -336,6 +336,7 @@
   "writeareview": "Write a Review",
   "editreview": "Edit Review",
   "deletereview": "Delete Review",
+  "deletereviewconfirm": "Are you sure you want to permanently delete your review for this order?",
   "pleaseenterreview": "Please enter a review",
   "pleaseselectrating": "Please select a rating",
   "yourreviewsubmitted": "Your review has been submitted successfully.",
