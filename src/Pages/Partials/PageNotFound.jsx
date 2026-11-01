@@ -1,11 +1,24 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useWebsiteStatus } from "./UnderMaintenance.jsx";
 import "../../Scss/Pages/Partials/pagenotfound.scss";
 
 const PageNotFound = () => {
   const { translations = {} } = useLanguage();
+  const { business } = useWebsiteStatus();
+  const businessDisplayName = business?.businessname || "";
+
+  useEffect(() => {
+    const pageTitle = translations.pagenotfound || "404 Not Found";
+    if (businessDisplayName) {
+      document.title = `${pageTitle} | ${businessDisplayName}`;
+    } else {
+      document.title = pageTitle;
+    }
+  }, [translations, businessDisplayName]);
 
   return (
     <div className="page-not-found-wrapper">

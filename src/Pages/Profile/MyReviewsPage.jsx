@@ -13,6 +13,7 @@ import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { formatOrderDateTime } from "../Orders/orderHelpers.js";
 import "../../Scss/Pages/Profile/myreviewspage.scss";
 
@@ -49,6 +50,41 @@ const ReviewShimmerCard = () => (
 const MyReviewsPage = () => {
   const { showSnackbar } = useSnackbar();
   const { translations = {}, isRtl } = useLanguage();
+  const { business } = useWebsiteStatus();
+  const businessDisplayName = business?.businessname || "";
+
+  // Dynamic document title and dynamic favicon sync - matching other pages
+  useEffect(() => {
+    const pageTitle = translations.myreviews || "My Reviews";
+    if (businessDisplayName) {
+      document.title = `${pageTitle} | ${businessDisplayName}`;
+    } else {
+      document.title = pageTitle;
+    }
+
+    if (business?.imageUrl) {
+      const iconLinks = document.querySelectorAll(
+        "link[rel*='icon'], link[rel='apple-touch-icon']"
+      );
+      if (iconLinks.length > 0) {
+        iconLinks.forEach((link) => {
+          link.href = business.imageUrl;
+        });
+      } else {
+        const link = document.createElement("link");
+        link.rel = "icon";
+        link.type = "image/png";
+        link.href = business.imageUrl;
+        document.head.appendChild(link);
+      }
+    }
+
+    return () => {
+      if (businessDisplayName) {
+        document.title = businessDisplayName;
+      }
+    };
+  }, [translations, businessDisplayName, business?.imageUrl]);
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
