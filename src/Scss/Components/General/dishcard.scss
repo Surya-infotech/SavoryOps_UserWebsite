@@ -72,6 +72,13 @@
   flex-shrink: 0;
   overflow: hidden;
   background: #f8fafc;
+
+  .dish-diet-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+  }
 }
 
 .dish-img {
@@ -144,9 +151,6 @@
 
 /* Pure CSS Veg & Non-Veg Badge (No SVG) */
 .dish-diet-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   background: #ffffff;
   padding: 3px;
   border-radius: 6px;
@@ -154,7 +158,6 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-  z-index: 2;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   line-height: 0;
 

@@ -117,7 +117,7 @@ export const DishDetailModal = ({
       <div className="dish-modal-container" onClick={(e) => e.stopPropagation()}>
         <button
           type="button"
-          className="dish-modal-close-btn"
+          className={`dish-modal-close-btn ${!item.image ? "no-img" : ""}`}
           onClick={onClose}
           aria-label={translations.close || "Close"}
         >

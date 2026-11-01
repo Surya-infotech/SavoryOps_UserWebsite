@@ -67,6 +67,15 @@
       background: rgba(15, 23, 42, 0.9);
       transform: scale(1.08) rotate(90deg);
     }
+
+    &.no-img {
+      background: #f1f5f9;
+      color: #0f172a;
+
+      &:hover {
+        background: #e2e8f0;
+      }
+    }
   }
 
   .dish-modal-hero {
@@ -75,22 +84,31 @@
     height: 280px;
     background: #f8fafc;
     flex-shrink: 0;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    overflow: hidden;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
     }
 
     .dish-modal-diet-badge {
       position: absolute;
       top: 16px;
       left: 16px;
+      right: auto;
+      width: auto;
+      height: auto;
       background: #ffffff;
       padding: 4px;
       border-radius: 6px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+      z-index: 5;
     }
   }
 
@@ -98,6 +116,17 @@
     padding: 1.5rem 1.75rem 0;
     display: flex;
     align-items: center;
+
+    .dish-modal-diet-badge {
+      position: static;
+      top: auto;
+      left: auto;
+      right: auto;
+      width: auto;
+      height: auto;
+      box-shadow: none;
+      padding: 0;
+    }
   }
 
   .dish-modal-body {
@@ -451,6 +480,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -461,9 +491,28 @@
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
 
+/* RTL Support for Modals */
+[dir="rtl"],
+.is-rtl,
+body.rtl-mode {
+  .dish-modal-container {
+    .dish-modal-close-btn {
+      right: auto;
+      left: 16px;
+    }
+
+    .dish-modal-hero {
+      .dish-modal-diet-badge {
+        left: auto;
+        right: 16px;
+      }
+    }
+  }
+}
