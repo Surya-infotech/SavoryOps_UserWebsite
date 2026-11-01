@@ -23,6 +23,8 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
+import QrScannerModal from "./QrScannerModal.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getCartTotalCount } from "../../utils/cartService.js";
@@ -814,6 +816,8 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isScanModalOpen, setIsScanModalOpen] = useState(false);
+  
   const location = useLocation();
 
   const [selectedBranch, setSelectedBranch] = useState(() => {
@@ -1030,6 +1034,15 @@ const Navbar = () => {
 
           {/* Action Buttons: Language, Cart & Profile */}
           <div className="nav-actions">
+            <button
+              type="button"
+              className="nav-scanner-btn"
+              title={translations.scanqr || "Scan QR Code"}
+              onClick={() => setIsScanModalOpen(true)}
+              aria-label={translations.scanqr || "Scan QR Code"}
+            >
+              <QrCodeScannerIcon className="nav-scanner-icon" />
+            </button>
             <LanguageDropdown />
 
             <button
@@ -1058,6 +1071,12 @@ const Navbar = () => {
       </header>
 
       {/* --- Mobile Drawer Navigation (Rendered in Body Portal) --- */}
+      {/* QR Scanner & Table Ordering Modal */}
+      <QrScannerModal
+        isOpen={isScanModalOpen}
+        onClose={() => setIsScanModalOpen(false)}
+      />
+
       {typeof document !== "undefined" &&
         createPortal(
           <>
@@ -1098,17 +1117,31 @@ const Navbar = () => {
                   <OrderTypeDropdown className="mobile-ordertype-dropdown" />
                 </div>
 
-                <form className="mobile-search-box" onSubmit={handleSearchSubmit} autoComplete="off">
-                  <SearchIcon className="nav-search-icon" />
-                  <input
-                    type="text"
-                    className="nav-search-input"
-                    placeholder={translations.searchdishes}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    autoComplete="off"
-                  />
-                </form>
+                <div className="mobile-search-row">
+                  <form className="mobile-search-box" onSubmit={handleSearchSubmit} autoComplete="off">
+                    <SearchIcon className="nav-search-icon" />
+                    <input
+                      type="text"
+                      className="nav-search-input"
+                      placeholder={translations.searchdishes}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      autoComplete="off"
+                    />
+                  </form>
+                  <button
+                    type="button"
+                    className="mobile-scanner-btn"
+                    title={translations.scanqr || "Scan QR Code"}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsScanModalOpen(true);
+                    }}
+                    aria-label={translations.scanqr || "Scan QR Code"}
+                  >
+                    <QrCodeScannerIcon fontSize="small" />
+                  </button>
+                </div>
 
                 <div className="mobile-nav-links">
                   {navLinks.map((link) => {

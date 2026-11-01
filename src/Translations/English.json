@@ -367,5 +367,16 @@
   "activeorders": "Active",
   "completedorders": "Completed",
   "cancelledorders": "Cancelled",
-  "notspecified": "Not specified"
+  "notspecified": "Not specified",
+  "scanqr": "Scan QR Code",
+  "scantabletitle": "Scan Table & Menu QR",
+  "scantablesubtitle": "Scan your dining table's QR code to view the menu and order instantly.",
+  "tablenumberlabel": "Table Number / Name",
+  "entertablenumber": "Enter Table #",
+  "opentablemenu": "Apply & View Menu",
+  "connectedtotable": "Connected to Table",
+  "cleartable": "Clear",
+  "positionqrinframe": "Align QR code within the frame to scan",
+  "cameranotavailable": "Camera access is not supported or was denied. You can enter your table number manually.",
+  "uploadqrphoto": "Upload QR Image"
 }
