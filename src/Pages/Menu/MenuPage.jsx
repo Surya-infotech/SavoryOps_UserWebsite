@@ -1101,9 +1101,6 @@ const MenuPage = () => {
                 <h4 className="addon-section-title">
                   {translations.customizableaddons}
                 </h4>
-                <span className="addon-section-subtitle">
-                  {translations.selectanyaddons}
-                </span>
               </div>
 
               <div className="addon-options-list">

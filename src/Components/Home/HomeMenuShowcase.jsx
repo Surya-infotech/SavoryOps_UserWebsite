@@ -1059,9 +1059,6 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
                 <h4 className="addon-section-title">
                   Customizable Add-ons
                 </h4>
-                <span className="addon-section-subtitle">
-                  Select any add-ons
-                </span>
               </div>
 
               <div className="addon-options-list">
