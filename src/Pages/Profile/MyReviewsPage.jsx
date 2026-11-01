@@ -1,16 +1,20 @@
-import { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { Link } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
+import SearchOffIcon from "@mui/icons-material/SearchOff";
 import CircularProgress from "@mui/material/CircularProgress";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -25,12 +29,42 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
+const ReviewShimmerCard = () => (
+  <div className="review-shimmer-tile">
+    <div className="shimmer-bar top-accent" />
+    <div className="shimmer-tile-main">
+      <div className="shimmer-header">
+        <div className="shimmer-box badge" />
+        <div className="shimmer-box stars" />
+      </div>
+      <div className="shimmer-restaurant-row">
+        <div className="shimmer-avatar" />
+        <div className="shimmer-meta">
+          <div className="shimmer-box title" />
+          <div className="shimmer-box subtitle" />
+        </div>
+      </div>
+      <div className="shimmer-quote-box">
+        <div className="shimmer-box line full" />
+        <div className="shimmer-box line mid" />
+      </div>
+      <div className="shimmer-footer">
+        <div className="shimmer-box date" />
+        <div className="shimmer-actions">
+          <div className="shimmer-box action" />
+          <div className="shimmer-box action" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const MyReviewsPage = () => {
-  const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const { translations = {}, isRtl } = useLanguage();
 
   const [reviews, setReviews] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -49,14 +83,25 @@ const MyReviewsPage = () => {
   const timeZone = localStorage.getItem("TimeZone") || "Asia/Kolkata";
 
   const getCustomerId = () => {
-    return (localStorage.getItem(customerIdName));
+    return (
+      localStorage.getItem(customerIdName) ||
+      localStorage.getItem("CUSTOMER_ID") ||
+      localStorage.getItem("customerId") ||
+      localStorage.getItem("customerid") ||
+      ""
+    );
   };
 
   const getToken = () => {
-    return (localStorage.getItem(customerTokenName));
+    return (
+      localStorage.getItem(customerTokenName) ||
+      localStorage.getItem("savoryopscustomer_token") ||
+      localStorage.getItem("token") ||
+      ""
+    );
   };
 
-  // Fetch reviews using the separate website route powered by the user app's controller
+  // Fetch reviews from website route
   const fetchMyReviews = useCallback(
     async (isManualRefresh = false) => {
       const customerId = getCustomerId();
@@ -73,10 +118,20 @@ const MyReviewsPage = () => {
       }
 
       try {
-        const response = await fetch(`${adminPanelBackendPath}/Website/Profile/GetMyReviews/${customerId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "x-user": "customer", "Authorization": `Bearer ${token}` }
+        const headers = {
+          "Content-Type": "application/json",
+          "x-user": "customer",
+        };
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
         }
+
+        const response = await fetch(
+          `${adminPanelBackendPath}/Website/Profile/GetMyReviews/${customerId}`,
+          {
+            method: "GET",
+            headers,
+          }
         );
 
         if (response.ok) {
@@ -106,7 +161,25 @@ const MyReviewsPage = () => {
     fetchMyReviews();
   }, [fetchMyReviews]);
 
-  // Open Edit Modal for a specific review
+  // Client-side search filtering
+  const filteredReviews = useMemo(() => {
+    if (!search.trim()) return reviews;
+    const q = search.trim().toLowerCase();
+    return reviews.filter((item) => {
+      const orderNo = String(item.orderno || "").toLowerCase();
+      const branchName = String(item.branchname || "").toLowerCase();
+      const businessName = String(item.businessname || "").toLowerCase();
+      const reviewText = String(item.review || "").toLowerCase();
+      return (
+        orderNo.includes(q) ||
+        branchName.includes(q) ||
+        businessName.includes(q) ||
+        reviewText.includes(q)
+      );
+    });
+  }, [reviews, search]);
+
+  // Open Edit Modal for a review
   const handleOpenEdit = (review) => {
     setReviewToEdit(review);
     setIsEditModalOpen(true);
@@ -131,13 +204,13 @@ const MyReviewsPage = () => {
     setReviewToEdit(null);
   };
 
-  // Open Delete Confirmation Modal
+  // Prompt delete review
   const handlePromptDelete = (review) => {
     setReviewToDelete(review);
     setIsDeleteModalOpen(true);
   };
 
-  // Confirm Delete Review
+  // Confirm delete review
   const handleConfirmDelete = async () => {
     if (!reviewToDelete) return;
     setIsDeleting(true);
@@ -147,7 +220,10 @@ const MyReviewsPage = () => {
         `${adminPanelBackendPath}/Website/Order/DeleteOrderReview/${reviewToDelete._id}/${reviewToDelete.ownerid}/${reviewToDelete._id}`,
         {
           method: "DELETE",
-          headers: { "Content-Type": "application/json", "x-user": "admin", },
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "admin",
+          },
         }
       );
 
@@ -194,86 +270,100 @@ const MyReviewsPage = () => {
 
   return (
     <div className={`my-reviews-wrapper ${isRtl ? "is-rtl" : ""}`}>
-      {/* Unified Site Breadcrumbs */}
+      {/* Site-wide Unified Breadcrumbs matching Profile & ManageAddress */}
       <Breadcrumbs
         items={[
           { label: translations.home || "Home", path: "/" },
+          { label: translations.myaccount || "My Account", path: "/profile" },
           { label: translations.myreviews || "My Reviews" },
         ]}
       />
 
       <div className="my-reviews-container">
         {/* Page Header */}
-        <div className="my-reviews-header">
-          <div className="header-titles">
-            <h1 className="page-title">{translations.myreviews || "My Reviews"}</h1>
-            <p className="page-subtitle">
+        <div className="my-reviews-page-header">
+          <div className="reviews-header-meta">
+            <h1 className="reviews-main-title">
+              {translations.myreviews || "My Reviews"}
+            </h1>
+            <p className="reviews-main-subtitle">
               {translations.reviewssubtitle ||
                 "Check your past dining reviews, dish ratings, and culinary feedback."}
             </p>
           </div>
-
-          <div className="header-actions">
-            {!loading && reviews.length > 0 && (
-              <span className="reviews-count-badge">
-                {reviews.length}{" "}
-                {reviews.length === 1
-                  ? translations.review || "Review"
-                  : translations.reviews || "Reviews"}
-              </span>
-            )}
-            <Tooltip title={translations.refresh || "Refresh"} arrow>
-              <button
-                type="button"
-                className={`refresh-btn ${refreshing ? "is-refreshing" : ""}`}
-                onClick={() => fetchMyReviews(true)}
-                disabled={loading || refreshing}
-                aria-label="Refresh reviews"
-              >
-                <RefreshIcon fontSize="small" />
-              </button>
-            </Tooltip>
-          </div>
         </div>
 
-        {/* Content Body */}
-        {loading && !refreshing ? (
-          /* Loading Shimmer State */
-          <div className="my-reviews-shimmer-list">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="review-shimmer-card">
-                <div className="shimmer-header">
-                  <div className="shimmer-business">
-                    <div className="shimmer-icon shimmer-wave" />
-                    <div className="shimmer-text shimmer-wave" />
-                  </div>
-                  <div className="shimmer-stars">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <div key={s} className="shimmer-star shimmer-wave" />
-                    ))}
-                  </div>
-                </div>
-                <div className="shimmer-meta">
-                  <div className="shimmer-order shimmer-wave" />
-                  <div className="shimmer-date shimmer-wave" />
-                </div>
-                <div className="shimmer-body">
-                  <div className="shimmer-line shimmer-line-full shimmer-wave" />
-                  <div className="shimmer-line shimmer-line-partial shimmer-wave" />
-                </div>
+        {/* Toolbar: Search, Count Badge, Refresh */}
+        {(loading || reviews.length > 0) && (
+          <div className="my-reviews-toolbar">
+            <div className="toolbar-left">
+              {!loading && (
+                <span className="reviews-count-chip">
+                  {filteredReviews.length}{" "}
+                  {filteredReviews.length === 1
+                    ? translations.review || "Review"
+                    : translations.reviews || "Reviews"}
+                </span>
+              )}
+            </div>
+
+            <div className="toolbar-right">
+              {/* Search Box matching OrdersPage */}
+              <div className="reviews-search-box">
+                <SearchIcon className="search-icon" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={
+                    translations.searchreviews ||
+                    "Search by restaurant, order, or feedback..."
+                  }
+                />
+                {search && (
+                  <button
+                    type="button"
+                    className="search-clear-btn"
+                    onClick={() => setSearch("")}
+                    aria-label="Clear search"
+                  >
+                    <CloseIcon fontSize="small" />
+                  </button>
+                )}
               </div>
+
+              {/* Refresh Button */}
+              <Tooltip title={translations.refresh || "Refresh"} arrow>
+                <button
+                  type="button"
+                  className={`refresh-btn ${refreshing ? "is-refreshing" : ""}`}
+                  onClick={() => fetchMyReviews(true)}
+                  disabled={loading || refreshing}
+                  aria-label="Refresh reviews"
+                >
+                  <RefreshIcon fontSize="small" />
+                </button>
+              </Tooltip>
+            </div>
+          </div>
+        )}
+
+        {/* Content Area */}
+        {loading && !refreshing ? (
+          /* Shimmer Grid */
+          <div className="my-reviews-grid">
+            {[1, 2, 3, 4, 5, 6].map((k) => (
+              <ReviewShimmerCard key={k} />
             ))}
           </div>
         ) : reviews.length === 0 ? (
-          /* Empty State - Matching User App */
-          <div className="my-reviews-empty-card">
+          /* Empty State - Matching ManageAddress and Orders */
+          <div className="my-reviews-empty-state">
             <div className="empty-icon-wrap">
-              <RateReviewOutlinedIcon className="empty-icon" />
+              <RateReviewOutlinedIcon className="empty-illustration-icon" />
             </div>
-            <h2 className="empty-title">
-              {translations.noReviews || "No Reviews Yet"}
-            </h2>
-            <p className="empty-subtitle">
+            <h3>{translations.noReviews || "No Reviews Yet"}</h3>
+            <p>
               {translations.noReviewsMessage ||
                 "You haven't written any reviews yet. Share your experience with your favorite restaurants!"}
             </p>
@@ -282,72 +372,85 @@ const MyReviewsPage = () => {
               <span>{translations.exploremenu || "Explore Menu"}</span>
             </Link>
           </div>
+        ) : filteredReviews.length === 0 ? (
+          /* Search Empty State */
+          <div className="my-reviews-empty-state search-empty">
+            <div className="empty-icon-wrap search">
+              <SearchOffIcon className="empty-illustration-icon" />
+            </div>
+            <h3>{translations.noreviewsfound || "No reviews found"}</h3>
+            <p>
+              {translations.nosearchresultsfound ||
+                "No reviews match your search criteria. Try a different query."}
+            </p>
+            <button
+              type="button"
+              className="clear-search-btn"
+              onClick={() => setSearch("")}
+            >
+              {translations.clearsearch || "Clear Search Filter"}
+            </button>
+          </div>
         ) : (
-          /* Reviews List - 1:1 Design Parity with User App */
-          <div className="my-reviews-list">
-            {reviews.map((rev) => {
-              const displayName = rev.branchname
-                ? rev.businessname
-                  ? `${rev.branchname} (${rev.businessname})`
-                  : rev.branchname
-                : rev.businessname || "Restaurant Review";
+          /* Multi-column Responsive Cards Grid */
+          <div className="my-reviews-grid">
+            {filteredReviews.map((rev) => (
+              <div key={rev._id} className="review-card-tile">
+                {/* Top Gold Accent Bar */}
+                <div className="card-accent-bar" />
 
-              return (
-                <div key={rev._id} className="review-card">
-                  {/* Card Header */}
-                  <div className="review-card-header">
-                    <div className="business-info">
-                      <StorefrontIcon className="business-icon" />
-                      <h3 className="business-name" title={displayName}>
-                        {displayName}
-                      </h3>
+                <div className="review-card-main">
+                  {/* 1. Header: Order # Badge & Star Rating */}
+                  <div className="review-tile-header">
+                    <div className="order-no-badge">
+                      <ReceiptLongIcon className="order-no-icon" />
+                      <span>#{rev.orderno}</span>
                     </div>
 
-                    <div className="header-meta-group">
-                      <div
-                        className="rating-stars"
-                        aria-label={`Rating: ${rev.rating} out of 5 stars`}
-                      >
+                    <div
+                      className="rating-badge"
+                      title={`${rev.rating} / 5`}
+                      aria-label={`Rating: ${rev.rating} out of 5 stars`}
+                    >
+                      <div className="stars-group">
                         {renderStars(rev.rating)}
                       </div>
-
-                      <div className="card-actions">
-                        <Tooltip title={translations.editreview || "Edit Review"} arrow>
-                          <button
-                            type="button"
-                            className="action-btn edit-btn"
-                            onClick={() => handleOpenEdit(rev)}
-                            aria-label="Edit review"
-                          >
-                            <EditOutlinedIcon fontSize="small" />
-                          </button>
-                        </Tooltip>
-                        <Tooltip title={translations.deletereview || "Delete Review"} arrow>
-                          <button
-                            type="button"
-                            className="action-btn delete-btn"
-                            onClick={() => handlePromptDelete(rev)}
-                            aria-label="Delete review"
-                          >
-                            <DeleteOutlineIcon fontSize="small" />
-                          </button>
-                        </Tooltip>
-                      </div>
+                      <span className="rating-number">{Number(rev.rating).toFixed(1)}</span>
                     </div>
                   </div>
 
-                  {/* Order & Date Info Row */}
-                  <div className="review-order-info">
-                    <div className="order-tag">
-                      <ReceiptLongOutlinedIcon className="meta-icon" />
-                      <span className="order-label">
-                        {translations.order || "Order"}: #{rev.orderno}
-                      </span>
+                  {/* 2. Restaurant & Branch Identity */}
+                  <div className="review-restaurant-row">
+                    <div className="restaurant-avatar-box">
+                      <StorefrontIcon />
                     </div>
+                    <div className="restaurant-meta-col">
+                      <h4 className="restaurant-brand-name" title={rev.branchname}>
+                        {rev.branchname}
+                      </h4>
+                      {rev.businessname && (
+                        <div
+                          className="restaurant-branch-subline"
+                          title={rev.businessname}
+                        >
+                          <LocationOnOutlinedIcon className="branch-pin-icon" />
+                          <span>{rev.businessname}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-                    <div className="date-tag">
-                      <CalendarTodayOutlinedIcon className="meta-icon" />
-                      <span className="date-text">
+                  {/* 3. Review Quote Body */}
+                  <div className="review-quote-box">
+                    <FormatQuoteRoundedIcon className="quote-icon" />
+                    <p className="review-text-content">{rev.review}</p>
+                  </div>
+
+                  {/* 4. Footer: Date & Actions (Edit & Delete) */}
+                  <div className="review-tile-footer">
+                    <div className="review-date-pill">
+                      <CalendarMonthOutlinedIcon />
+                      <span>
                         {formatOrderDateTime(
                           rev.createdAt,
                           dateFormat,
@@ -356,16 +459,33 @@ const MyReviewsPage = () => {
                         )}
                       </span>
                     </div>
-                  </div>
 
-                  {/* Review Text Body */}
-                  <div className="review-content">
-                    <FormatQuoteRoundedIcon className="quote-icon" />
-                    <p className="review-text">{rev.review}</p>
+                    <div className="card-actions-group">
+                      <Tooltip title={translations.editreview || "Edit Review"} arrow>
+                        <button
+                          type="button"
+                          className="card-action-btn edit"
+                          onClick={() => handleOpenEdit(rev)}
+                          aria-label="Edit review"
+                        >
+                          <EditOutlinedIcon fontSize="small" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip title={translations.deletereview || "Delete Review"} arrow>
+                        <button
+                          type="button"
+                          className="card-action-btn delete"
+                          onClick={() => handlePromptDelete(rev)}
+                          aria-label="Delete review"
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </button>
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -394,7 +514,7 @@ const MyReviewsPage = () => {
         />
       )}
 
-      {/* Delete Review Confirmation Modal - Design identical to OrderDetails & ManageAddress */}
+      {/* Delete Review Confirmation Dialog */}
       {isDeleteModalOpen && reviewToDelete && (
         <div
           className="delete-review-modal-overlay"
