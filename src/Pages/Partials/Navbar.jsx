@@ -1134,42 +1134,6 @@ const Navbar = () => {
               </div>
 
               <div className="mobile-drawer-content">
-                {/* Mobile Branch Selector */}
-                <div className="mobile-branch-section">
-                  <span className="mobile-section-label">{translations.selectbranch}</span>
-                  <BranchDropdown className="mobile-branch-dropdown" onBranchChange={setSelectedBranch} />
-                </div>
-                <div className="mobile-ordertype-section">
-                  <span className="mobile-section-label">{translations.ordertype || "Order Type"}</span>
-                  <OrderTypeDropdown className="mobile-ordertype-dropdown" />
-                </div>
-
-                <div className="mobile-search-row">
-                  <form className="mobile-search-box" onSubmit={handleSearchSubmit} autoComplete="off">
-                    <SearchIcon className="nav-search-icon" />
-                    <input
-                      type="text"
-                      className="nav-search-input"
-                      placeholder={translations.searchdishes}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      autoComplete="off"
-                    />
-                  </form>
-                  <button
-                    type="button"
-                    className="mobile-scanner-btn"
-                    title={translations.scanqr || "Scan QR Code"}
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setIsScanModalOpen(true);
-                    }}
-                    aria-label={translations.scanqr || "Scan QR Code"}
-                  >
-                    <QrCodeScannerIcon fontSize="small" />
-                  </button>
-                </div>
-
                 <div className="mobile-nav-links">
                   {navLinks.map((link) => {
                     const isActive = location.pathname === link.path;
@@ -1177,6 +1141,7 @@ const Navbar = () => {
                       <Link
                         key={link.label}
                         to={link.path}
+                        onClick={() => setMobileMenuOpen(false)}
                         className={`mobile-nav-item ${isActive ? "active" : ""}`}
                       >
                         <span className="mobile-nav-link-content">
