@@ -294,7 +294,7 @@ const OffersPage = () => {
         {!loading && formattedDeals.length > 0 && (
           <div className="menu-filters-wrapper offers-filters-wrapper">
             <div className="menu-filter-bar offers-filter-bar">
-              {/* Category Pills Bar (Top row on mobile, left on desktop) */}
+              {/* Category Pills Bar (Left) */}
               <div
                 className="menu-category-pills-bar"
                 role="tablist"
@@ -338,65 +338,62 @@ const OffersPage = () => {
                 )}
               </div>
 
-              {/* Secondary Controls Group (Row 2 on mobile, right on desktop) */}
-              <div className="filter-controls-right">
-                {/* Diet Filter (Veg / Non-Veg) */}
-                <div className="filter-item-wrap diet-toggle-wrap">
-                  <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
-                    <button
-                      type="button"
-                      tabIndex={-1}
-                      className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
-                      onClick={() => setSelectedDiet("all")}
-                      onMouseDown={(e) => e.preventDefault()}
-                      onFocus={(e) => e.target.blur()}
-                    >
-                      <span>{translations.all || "All"}</span>
-                    </button>
-                    <button
-                      type="button"
-                      tabIndex={-1}
-                      className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
-                      onClick={() => setSelectedDiet("veg")}
-                      onMouseDown={(e) => e.preventDefault()}
-                      onFocus={(e) => e.target.blur()}
-                    >
-                      <span className="diet-box">
-                        <span className="diet-dot" />
-                      </span>
-                      <span>{translations.veg || "Veg"}</span>
-                    </button>
-                    <button
-                      type="button"
-                      tabIndex={-1}
-                      className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
-                      onClick={() => setSelectedDiet("nonveg")}
-                      onMouseDown={(e) => e.preventDefault()}
-                      onFocus={(e) => e.target.blur()}
-                    >
-                      <span className="diet-box">
-                        <span className="diet-dot" />
-                      </span>
-                      <span>{translations.nonveg || "Non-Veg"}</span>
-                    </button>
-                  </div>
+              {/* Diet Filter (Veg / Non-Veg) - positioned on left next to Category Pills */}
+              <div className="filter-item-wrap diet-toggle-wrap">
+                <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
+                    onClick={() => setSelectedDiet("all")}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onFocus={(e) => e.target.blur()}
+                  >
+                    <span>{translations.all || "All"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
+                    onClick={() => setSelectedDiet("veg")}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onFocus={(e) => e.target.blur()}
+                  >
+                    <span className="diet-box">
+                      <span className="diet-dot" />
+                    </span>
+                    <span>{translations.veg || "Veg"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
+                    onClick={() => setSelectedDiet("nonveg")}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onFocus={(e) => e.target.blur()}
+                  >
+                    <span className="diet-box">
+                      <span className="diet-dot" />
+                    </span>
+                    <span>{translations.nonveg || "Non-Veg"}</span>
+                  </button>
                 </div>
-
-                {/* Filter Reset Action */}
-                {isFilterActive && (
-                  <div className="filter-actions-wrap">
-                    <button
-                      type="button"
-                      className="filter-clear-btn"
-                      onClick={handleClearFilters}
-                      title="Clear all filters"
-                    >
-                      <CloseIcon fontSize="small" />
-                      <span>{translations.clear || "Clear"}</span>
-                    </button>
-                  </div>
-                )}
               </div>
+
+              {/* Filter Reset Action (Right-aligned) */}
+              {isFilterActive && (
+                <div className="filter-actions-wrap">
+                  <button
+                    type="button"
+                    className="filter-clear-btn"
+                    onClick={handleClearFilters}
+                    title="Clear all filters"
+                  >
+                    <CloseIcon fontSize="small" />
+                    <span>{translations.clear || "Clear"}</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -74,7 +74,6 @@
   .offers-filter-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     width: 100%;
     gap: 0.75rem 1rem;
     flex-wrap: wrap;
@@ -86,22 +85,28 @@
       flex-shrink: 0;
     }
 
-    .filter-controls-right {
+    .diet-toggle-wrap {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .filter-actions-wrap {
       margin-inline-start: auto;
+      flex-shrink: 0;
     }
 
     @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: stretch;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
       gap: 0.65rem;
 
       .menu-category-pills-bar {
         display: flex;
         width: 100%;
         max-width: 100%;
+        flex: 0 0 100%;
         overflow-x: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
@@ -115,21 +120,13 @@
         }
       }
 
-      .filter-controls-right {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        gap: 0.5rem;
-        margin-inline-start: 0;
+      .diet-toggle-wrap {
+        flex-shrink: 0;
+      }
 
-        .diet-toggle-wrap {
-          flex-shrink: 0;
-        }
-
-        .filter-actions-wrap {
-          margin-inline-start: auto;
-        }
+      .filter-actions-wrap {
+        margin-inline-start: auto;
+        flex-shrink: 0;
       }
     }
   }
