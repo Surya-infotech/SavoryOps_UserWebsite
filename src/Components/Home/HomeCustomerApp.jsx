@@ -1,9 +1,6 @@
-import { Link } from "react-router-dom";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
 import PaymentIcon from "@mui/icons-material/Payment";
-import StarIcon from "@mui/icons-material/Star";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/Home/homecustomerapp.scss";
@@ -103,12 +100,6 @@ const HomeCustomerApp = () => {
                     </strong>
                   </div>
                 </a>
-
-                {/* Direct Web Order Button */}
-                <Link to="/menu" className="store-button web-order-btn">
-                  <span>{translations.quickorderweb}</span>
-                  <ArrowForwardIcon fontSize="small" />
-                </Link>
               </div>
 
               {/* 100% Genuine Scannable QR Code Widget */}
@@ -136,18 +127,6 @@ const HomeCustomerApp = () => {
                   </span>
                 </div>
               </a>
-            </div>
-
-            {/* Diner Trust Rating Strip */}
-            <div className="app-trust-rating-strip">
-              <div className="app-rating-stars">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon key={i} className="star-icon-filled" fontSize="inherit" />
-                ))}
-              </div>
-              <span className="app-rating-text">
-                {translations.appratingbadge}
-              </span>
             </div>
           </div>
 
