@@ -2,6 +2,7 @@ import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HistoryIcon from "@mui/icons-material/History";
+import { useLanguage } from "../../Context/useLanguage.js";
 import {
   getOrderStatusColor,
   formatOrderDateTime,
@@ -18,6 +19,8 @@ const OrderStatusHistoryModal = ({
   timeZone,
   translations = {},
 }) => {
+  const { isRtl } = useLanguage();
+
   if (!isOpen || !order) return null;
 
   const sortedStatusLogs = order.statusLogs
@@ -26,22 +29,38 @@ const OrderStatusHistoryModal = ({
       )
     : [];
 
+  const orderNumber = order.orderno || order.orderNumber || (order._id ? order._id.slice(-6).toUpperCase() : "");
+
   return (
-    <div className="order-history-modal-backdrop" onClick={onClose}>
+    <div className={`order-history-modal-backdrop ${isRtl ? "is-rtl" : ""}`} onClick={onClose}>
       <div
         className="order-history-modal-dialog"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-history-title"
       >
         <div className="modal-header">
           <div className="modal-title-wrap">
-            <HistoryIcon className="modal-header-icon" />
-            <h3>{translations.orderstatushistory || "Order Status History"}</h3>
+            <div className="modal-header-icon-box">
+              <HistoryIcon className="modal-header-icon" />
+            </div>
+            <div className="modal-title-text">
+              <h3 id="order-history-title">
+                {translations.orderstatushistory || "Order Status History"}
+              </h3>
+              {orderNumber && (
+                <span className="modal-orderno-badge">
+                  {translations.orderno || "Order"} #{orderNumber}
+                </span>
+              )}
+            </div>
           </div>
           <button
             type="button"
             className="modal-close-btn"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={translations.close || "Close"}
           >
             <CloseIcon fontSize="small" />
           </button>
@@ -55,37 +74,34 @@ const OrderStatusHistoryModal = ({
                 const isLatest = index === 0;
 
                 return (
-                  <div key={index} className="timeline-item">
+                  <div key={index} className={`timeline-item ${isLatest ? "is-latest" : ""}`}>
                     <div className="timeline-rail">
                       <div
                         className={`timeline-dot ${isLatest ? "is-latest" : ""}`}
-                        style={{ backgroundColor: statusColor }}
+                        style={{
+                          backgroundColor: statusColor,
+                          boxShadow: isLatest
+                            ? `0 0 0 4px ${statusColor}33, 0 0 0 1.5px ${statusColor}`
+                            : `0 0 0 3px #ffffff, 0 0 0 4.5px #e2e8f0`,
+                        }}
                       />
                       {index < sortedStatusLogs.length - 1 && (
                         <div className="timeline-line" />
                       )}
                     </div>
-                    <div
-                      className="timeline-content"
-                      style={{ borderLeftColor: statusColor }}
-                    >
-                      <div className="timeline-status-badge">
+                    <div className={`timeline-content-card ${isLatest ? "latest-card" : ""}`}>
+                      <div className="timeline-status-header">
                         <span
                           className="status-pill"
                           style={{
-                            backgroundColor: `${statusColor}18`,
+                            backgroundColor: `${statusColor}14`,
                             color: statusColor,
-                            borderColor: `${statusColor}40`,
+                            borderColor: `${statusColor}35`,
                           }}
                         >
                           <OrderStatusIcon status={log.newStatus} fontSize="inherit" />
                           <span>{translations[log.newStatus] || log.newStatus}</span>
                         </span>
-                        {isLatest && (
-                          <span className="current-badge">
-                            {translations.current || "Current"}
-                          </span>
-                        )}
                       </div>
                       <div className="timeline-timestamp">
                         <AccessTimeIcon fontSize="inherit" />
@@ -115,7 +131,7 @@ const OrderStatusHistoryModal = ({
         </div>
 
         <div className="modal-footer">
-          <button type="button" className="secondary-btn" onClick={onClose}>
+          <button type="button" className="modal-close-submit-btn" onClick={onClose}>
             {translations.close || "Close"}
           </button>
         </div>
