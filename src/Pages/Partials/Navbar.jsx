@@ -985,9 +985,9 @@ const Navbar = () => {
               <div className="nav-top-left">
                 <span className="top-badge">
                   <span className="live-dot"></span>
-                  {translations.livekitchen}
+                  {translations.livekitchen || "LIVE KITCHEN"}
                 </span>
-                {announcement.showAnnouncement && (
+                {announcement.showAnnouncement && announcement.announcementText && (
                   <span className="nav-top-text">
                     {announcement.announcementText}
                   </span>
