@@ -195,14 +195,10 @@ const MyReviewsPage = () => {
                     </div>
 
                     <div
-                      className="rating-badge"
-                      title={`${rev.rating} / 5`}
+                      className="rating-stars-container"
                       aria-label={`Rating: ${rev.rating} out of 5 stars`}
                     >
-                      <div className="stars-group">
-                        {renderStars(rev.rating)}
-                      </div>
-                      <span className="rating-number">{Number(rev.rating).toFixed(1)}</span>
+                      {renderStars(rev.rating)}
                     </div>
                   </div>
 

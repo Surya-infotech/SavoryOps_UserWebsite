@@ -111,37 +111,21 @@
       }
     }
 
-    .rating-badge {
+    .rating-stars-container {
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
-      background: #fefce8;
-      border: 1px solid #fef08a;
-      padding: 0.25rem 0.65rem;
-      border-radius: 9999px;
+      gap: 2px;
 
-      .stars-group {
-        display: flex;
-        align-items: center;
-        gap: 1px;
-
-        .star-icon {
-          font-size: 1.05rem;
-        }
-
-        .star-filled {
-          color: #f59e0b;
-        }
-
-        .star-empty {
-          color: #cbd5e1;
-        }
+      .star-icon {
+        font-size: 1.15rem;
       }
 
-      .rating-number {
-        font-size: 0.8rem;
-        font-weight: 800;
-        color: #b45309;
+      .star-filled {
+        color: #f59e0b;
+      }
+
+      .star-empty {
+        color: #cbd5e1;
       }
     }
   }
