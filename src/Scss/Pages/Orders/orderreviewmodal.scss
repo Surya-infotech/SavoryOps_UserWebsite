@@ -24,26 +24,6 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
   animation: reviewModalScaleIn 0.2s ease-out;
 
-  &.delete-dialog {
-    max-width: 440px;
-
-    .modal-header-icon.delete-icon {
-      color: #ef4444 !important;
-    }
-
-    .delete-modal-confirm-msg {
-      margin: 0;
-      color: #475569;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .danger-btn.delete-btn {
-      padding: 0.65rem 1.4rem;
-      font-size: 0.88rem;
-    }
-  }
-
   .modal-header {
     padding: 1.25rem 1.5rem;
     display: flex;

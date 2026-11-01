@@ -1321,62 +1321,52 @@ const OrderDetails = ({ orderId, onBack }) => {
         translations={translations}
       />
 
-      {/* Delete Review Confirmation Modal */}
+      {/* Delete Review Confirmation Modal (matching ManageAddress delete modal design) */}
       {isDeleteReviewModalOpen && (
         <div
-          className="order-review-modal-backdrop"
+          className="delete-review-modal-overlay"
           onClick={() => !isDeletingReview && setIsDeleteReviewModalOpen(false)}
         >
           <div
-            className="order-review-modal-dialog delete-dialog"
+            className="delete-modal-dialog"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
           >
-            <div className="modal-header">
-              <div className="modal-title-wrap">
-                <DeleteOutlineIcon className="modal-header-icon delete-icon" />
-                <h3>{translations.deletereview || "Delete Review"}</h3>
-              </div>
+            <div className="delete-icon-box">
+              <DeleteOutlineIcon className="delete-icon" />
+            </div>
+            <h3 className="delete-modal-title">
+              {translations.deletereviewtitle || "Delete Review?"}
+            </h3>
+            <p className="delete-modal-text">
+              {translations.deletereviewconfirm ||
+                "Are you sure you want to delete this review? This action cannot be undone."}
+            </p>
+            <div className="delete-modal-actions">
               <button
                 type="button"
-                className="modal-close-btn"
+                className="delete-cancel-btn"
                 onClick={() => setIsDeleteReviewModalOpen(false)}
                 disabled={isDeletingReview}
-                aria-label="Close"
               >
-                <CloseIcon fontSize="small" />
+                {translations.cancel || "Cancel"}
               </button>
-            </div>
-            <div className="modal-body">
-              <p className="delete-modal-confirm-msg">
-                {translations.deletereviewconfirm ||
-                  "Are you sure you want to permanently delete your review for this order?"}
-              </p>
-            </div>
-            <div className="modal-footer">
-              <div className="footer-right-actions">
-                <button
-                  type="button"
-                  className="secondary-btn"
-                  onClick={() => setIsDeleteReviewModalOpen(false)}
-                  disabled={isDeletingReview}
-                >
-                  {translations.cancel || "Cancel"}
-                </button>
-                <button
-                  type="button"
-                  className="danger-btn delete-btn"
-                  onClick={handleDeleteReview}
-                  disabled={isDeletingReview}
-                >
-                  {isDeletingReview ? (
-                    <CircularProgress size={18} color="inherit" />
-                  ) : (
-                    translations.delete || "Delete"
-                  )}
-                </button>
-              </div>
+              <button
+                type="button"
+                className="delete-confirm-btn"
+                onClick={handleDeleteReview}
+                disabled={isDeletingReview}
+              >
+                {isDeletingReview ? (
+                  <>
+                    <CircularProgress size={16} color="inherit" />
+                    <span>{translations.deleting || "Deleting..."}</span>
+                  </>
+                ) : (
+                  translations.delete || "Delete"
+                )}
+              </button>
             </div>
           </div>
         </div>
