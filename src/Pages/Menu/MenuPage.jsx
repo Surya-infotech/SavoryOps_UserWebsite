@@ -812,15 +812,9 @@ const MenuPage = () => {
                 </div>
               </div>
 
-              {/* Filter Count & Reset Action */}
-              <div className="filter-actions-wrap">
-                <span className="filter-results-badge">
-                  {filteredItems.length}{" "}
-                  {filteredItems.length === 1
-                    ? (translations.dish || "Dish")
-                    : (translations.dishes || "Dishes")}
-                </span>
-                {isFilterActive && (
+              {/* Filter Reset Action */}
+              {isFilterActive && (
+                <div className="filter-actions-wrap">
                   <button
                     type="button"
                     className="filter-clear-btn"
@@ -830,8 +824,8 @@ const MenuPage = () => {
                     <CloseIcon fontSize="small" />
                     <span>{translations.clear || "Clear"}</span>
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         )}
