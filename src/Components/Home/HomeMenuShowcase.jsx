@@ -1005,9 +1005,9 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
                 type="button"
                 className="addon-add-cart-btn"
                 onClick={handleConfirmAddonModal}
+                aria-label={translations.addtocart || "Add to cart"}
               >
-                <span>Add to cart</span>
-                <span className="addon-btn-separator">•</span>
+                <ShoppingCartOutlinedIcon className="confirm-btn-icon" fontSize="small" />
                 <span className="addon-total-price">
                   {formatPriceFromBranch(addonModalGrandTotal, selectedBranch)}
                 </span>

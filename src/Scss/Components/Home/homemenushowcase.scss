@@ -1114,8 +1114,9 @@
         transform: translateY(0);
       }
 
-      .addon-btn-separator {
-        opacity: 0.6;
+      .confirm-btn-icon,
+      svg {
+        font-size: 1.25rem;
       }
 
       .addon-total-price {
