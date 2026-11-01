@@ -982,8 +982,10 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
                       type="button"
                       className="confirm-add-btn"
                       onClick={handleConfirmDishModal}
+                      aria-label="Add to Order"
                     >
-                      Add to Order • {formatPriceFromBranch(selectedDishGrandTotal, selectedBranch)}
+                      <ShoppingCartOutlinedIcon className="confirm-btn-icon" />
+                      <span>{formatPriceFromBranch(selectedDishGrandTotal, selectedBranch)}</span>
                     </button>
                   </div>
                 )}

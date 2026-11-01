@@ -1022,8 +1022,10 @@ const MenuPage = () => {
                     type="button"
                     className="confirm-add-btn"
                     onClick={handleConfirmModalAdd}
+                    aria-label={translations.addtocart || "Add to cart"}
                   >
-                    {translations.addtocart} • {formatPriceFromBranch(selectedItemGrandTotal, selectedBranch)}
+                    <ShoppingCartOutlinedIcon className="confirm-btn-icon" />
+                    <span>{formatPriceFromBranch(selectedItemGrandTotal, selectedBranch)}</span>
                   </button>
                 </div>
               )}
