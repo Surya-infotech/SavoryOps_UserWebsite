@@ -261,5 +261,6 @@
   "itemsincluded": "itens incluídos",
   "itemincluded": "item incluído",
   "nodishesfound": "Nenhum prato encontrado nesta seleção.",
-  "grandtotal": "Total Geral"
+  "grandtotal": "Total Geral",
+  "invoice": "FATURA"
 }

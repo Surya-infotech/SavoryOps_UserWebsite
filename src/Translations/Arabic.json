@@ -281,5 +281,6 @@
   "addnewaddress": "إضافة عنوان جديد",
   "selectdeliveryorpickup": "يرجى اختيار التوصيل أو الاستلام للمتابعة إلى الدفع",
   "pleasesignintoorder": "يرجى تسجيل الدخول للمتابعة إلى إتمام الطلب",
-  "orderitems": "عناصر الطلب"
+  "orderitems": "عناصر الطلب",
+  "invoice": "فاتورة"
 }

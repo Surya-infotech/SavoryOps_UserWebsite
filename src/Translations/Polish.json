@@ -261,5 +261,6 @@
   "itemsincluded": "pozycji w zestawie",
   "itemincluded": "pozycja w zestawie",
   "nodishesfound": "Nie znaleziono dań w tym wyborze.",
-  "grandtotal": "Suma całkowita"
+  "grandtotal": "Suma całkowita",
+  "invoice": "FAKTURA"
 }

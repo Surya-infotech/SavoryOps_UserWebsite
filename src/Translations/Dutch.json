@@ -261,5 +261,6 @@
   "itemsincluded": "artikelen inbegrepen",
   "itemincluded": "artikel inbegrepen",
   "nodishesfound": "Geen gerechten gevonden in deze selectie.",
-  "grandtotal": "Totaalbedrag"
+  "grandtotal": "Totaalbedrag",
+  "invoice": "FACTUUR"
 }

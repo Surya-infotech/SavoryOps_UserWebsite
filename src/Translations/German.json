@@ -261,5 +261,6 @@
   "itemsincluded": "Artikel enthalten",
   "itemincluded": "Artikel enthalten",
   "nodishesfound": "Keine Gerichte in dieser Auswahl gefunden.",
-  "grandtotal": "Gesamtsumme"
+  "grandtotal": "Gesamtsumme",
+  "invoice": "RECHNUNG"
 }
