@@ -420,7 +420,6 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     "Select Location"
                   }
                   required={true}
-                  direction="down"
                   placeholder={
                     translations.selectlocationplaceholder ||
                     translations.selectbranch ||
@@ -511,7 +510,6 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                       id="reservation-area-dropdown"
                       label={translations.selectarea || "Select Area"}
                       required={true}
-                      direction="down"
                       placeholder={
                         translations.selectareaplaceholder ||
                         translations.selectarea ||
@@ -550,7 +548,6 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     id="reservation-table-dropdown"
                     label={translations.selecttable || "Select Table"}
                     required={true}
-                    direction="down"
                     placeholder={
                       !selectedArea
                         ? (translations.pleaseselectareafirst || "Please Select Area First")
