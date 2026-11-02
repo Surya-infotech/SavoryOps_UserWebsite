@@ -2,225 +2,363 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { formatOrderDateTime, formatOrderPrice } from "./orderHelpers.js";
 
-const escapeHtmlAttr = (value) =>
+const escapeHtml = (value) =>
   String(value || "")
     .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
+/**
+ * Loads an image URL as base64 data URL to prevent cross-origin canvas tainting in html2canvas.
+ */
+const loadLogoAsBase64 = async (url) => {
+  if (!url || typeof url !== "string") return null;
+  if (url.startsWith("data:")) return url;
+
+  try {
+    const response = await fetch(url, { mode: "cors" });
+    if (!response.ok) throw new Error("Fetch failed");
+    const blob = await response.blob();
+    return await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    try {
+      return await new Promise((resolve) => {
+        const img = new window.Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL("image/png"));
+          } catch {
+            resolve(null);
+          }
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    } catch {
+      return null;
+    }
+  }
+};
+
+/**
+ * CSS stylesheet exactly matching SavoryOps_UserApp/src/utils/invoiceTemplate.js
+ */
 export const generateInvoiceStyles = () => `
+  @page {
+    size: A4;
+    margin-top: 10mm;
+    margin-bottom: 10mm;
+  }
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
   }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
-    padding: 24px;
-    background-color: #f8fafc;
-    color: #1e293b;
-    font-size: 13px;
-    line-height: 1.45;
+    padding: 12px;
+    background-color: #f8f8f8;
+    color: #333333;
+    font-size: 12px;
+    line-height: 1.35;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
-  .invoice-container {
-    max-width: 800px;
+  .invoice-wrapper {
+    width: 100%;
+    max-width: 794px;
     margin: 0 auto;
-    background: #ffffff;
-    padding: 32px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    background-color: #f8f8f8;
+    padding: 12px;
     box-sizing: border-box;
-    color: #1e293b;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 13px;
-    line-height: 1.45;
   }
   .header {
-    border-bottom: 2px solid #028802;
-    padding-bottom: 16px;
-    margin-bottom: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    text-align: center;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    position: relative;
+    min-height: 80px;
+    box-sizing: border-box;
   }
-  .header-left h1 {
-    color: #028802;
+  .logo {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .header-content {
+    margin: 0 85px;
+  }
+  .header-content.no-logo {
+    margin: 0 auto;
+  }
+  .header h1 {
+    color: #28a745;
+    margin: 0 0 5px 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: capitalize;
+    letter-spacing: 0.2px;
+  }
+  .header h2 {
+    color: #333333;
     margin: 0 0 6px 0;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
-  .header-left h2 {
-    color: #0f172a;
-    margin: 0 0 4px 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
   }
-  .header-left p {
+  .header p {
     margin: 0;
-    color: #64748b;
-    font-size: 12px;
+    font-size: 11px;
+    color: #666666;
   }
-  .header-right {
+  .header-date {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
     text-align: right;
+    font-size: 11px;
+    color: #444444;
   }
-  .order-pill {
-    display: inline-block;
-    background: #e8f5e9;
-    color: #028802;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 6px;
+  .customer-info {
+    margin-bottom: 15px;
   }
-  .invoice-date {
-    font-size: 12px;
-    color: #64748b;
-  }
-  .info-grid {
+  .customer-info-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 24px;
+    gap: 15px;
+  }
+  .customer-info-row .info-item {
+    flex: 1 1 30%;
+    min-width: 120px;
+  }
+  .info-row-wrapper {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
   }
   .info-card {
-    flex: 1;
-    min-width: 220px;
-    background: #f8fafc;
+    flex: 1 1 0;
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 6px;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    min-width: 0;
     box-sizing: border-box;
   }
   .info-card h3 {
-    color: #028802;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 6px;
+    color: #28a745;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 5px;
     margin: 0 0 10px 0;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
   .info-item {
     display: flex;
+    align-items: center;
+    padding: 2px 0;
+    font-size: 11px;
+  }
+  .order-info-row {
     justify-content: space-between;
-    padding: 4px 0;
-    font-size: 12px;
+    gap: 10px;
+  }
+  .info-pair {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .info-pair-right {
+    justify-content: flex-end;
   }
   .info-label {
-    font-weight: 600;
-    color: #64748b;
+    font-weight: bold;
+    color: #555555;
+    font-size: 11px;
   }
   .info-value {
-    font-weight: 500;
-    color: #0f172a;
-    text-align: right;
+    color: #333333;
+    font-size: 11px;
+    margin-left: 5px;
   }
   .status-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 700;
-    color: #fff;
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 5px;
+    text-transform: capitalize;
   }
-  .status-paid { background-color: #4caf50; }
-  .status-unpaid { background-color: #f44336; }
-  .status-completed { background-color: #2e7d32; }
-  .status-delivered { background-color: #028802; }
+  .status-pending {
+    background-color: #ffc107;
+    color: #333333;
+  }
+  .status-completed {
+    background-color: #28a745;
+    color: #ffffff;
+  }
+  .status-unpaid {
+    background-color: #dc3545;
+    color: #ffffff;
+  }
+  .status-paid {
+    background-color: #28a745;
+    color: #ffffff;
+  }
+  .status-refunded {
+    background-color: #8b5cf6;
+    color: #ffffff;
+  }
+  .status-void {
+    background-color: #64748b;
+    color: #ffffff;
+  }
+  .items-section-title {
+    color: #28a745;
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: bold;
+  }
   .items-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 24px;
-    font-size: 12px;
-  }
-  .items-table th {
-    background-color: #028802;
-    color: #ffffff;
-    padding: 10px 12px;
-    text-align: left;
-    font-weight: 600;
-    text-transform: uppercase;
+    margin-bottom: 15px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #dddddd;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     font-size: 11px;
-    letter-spacing: 0.5px;
   }
+  .items-table th,
   .items-table td {
-    border-bottom: 1px solid #e2e8f0;
-    padding: 10px 12px;
+    border: 1px solid #dddddd;
+    padding: 6px 8px;
+    text-align: left;
     vertical-align: top;
   }
-  .items-table tr:nth-child(even) td {
-    background-color: #f8fafc;
+  .price-column,
+  .amount-column {
+    text-align: right !important;
   }
-  .price-column, .amount-column {
-    text-align: right;
+  .items-table th {
+    background-color: #28a745;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 11px;
+  }
+  .items-table tr:nth-child(even) {
+    background-color: #f9f9f9;
   }
   .addon-item {
-    color: #64748b;
-    font-size: 11px;
-    margin-top: 3px;
-    padding-left: 8px;
-    border-left: 2px solid #cbd5e1;
+    margin-left: 15px;
+    font-style: italic;
+    color: #666666;
+    font-size: 10px;
+    display: block;
+    margin-top: 2px;
   }
   .special-instructions {
-    color: #dc2626;
-    font-size: 11px;
-    margin-top: 4px;
+    color: #dc3545;
     font-style: italic;
+    margin-top: 3px;
+    font-size: 10px;
+    display: block;
   }
-  .bill-summary {
-    max-width: 380px;
-    margin-left: auto;
-    background: #f8fafc;
+  .summary {
+    margin-top: 15px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
   }
-  .bill-summary h3 {
-    color: #028802;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 6px;
+  .summary h3 {
+    color: #28a745;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 5px;
     margin: 0 0 10px 0;
-    font-size: 13px;
-    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
   }
   .summary-row {
     display: flex;
     justify-content: space-between;
-    padding: 4px 0;
-    font-size: 12px;
-    color: #475569;
+    margin-bottom: 5px;
+    padding: 2px 0;
+    font-size: 11px;
+    color: #444444;
   }
-  .grand-total-row {
-    display: flex;
-    justify-content: space-between;
-    border-top: 2px solid #028802;
+  .total-row {
+    font-weight: bold;
+    font-size: 14px;
+    border-top: 2px solid #28a745;
     padding-top: 8px;
     margin-top: 8px;
-    font-size: 15px;
-    font-weight: 800;
-    color: #028802;
+    color: #28a745;
   }
   .footer {
-    border-top: 1px dashed #cbd5e1;
-    padding-top: 16px;
+    margin-top: 15px;
     text-align: center;
-    color: #94a3b8;
-    font-size: 11px;
+    color: #666666;
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-size: 10px;
+    box-sizing: border-box;
+  }
+  .footer p {
+    margin: 3px 0;
   }
   @media print {
     body {
-      background: #fff;
+      background-color: #ffffff;
+      padding: 0;
+      margin: 0;
+    }
+    .invoice-wrapper {
       padding: 0;
     }
-    .invoice-container {
+    .header,
+    .info-card,
+    .summary,
+    .footer {
       box-shadow: none;
-      padding: 0;
+      border: 1px solid #dddddd;
     }
     .no-print {
       display: none !important;
@@ -228,13 +366,17 @@ export const generateInvoiceStyles = () => `
   }
 `;
 
+/**
+ * Builds the inner invoice HTML matching SavoryOps_UserApp/src/utils/invoiceTemplate.js
+ */
 export const generateInvoiceBodyHTML = (
   orderData,
   dateFormat = "DD/MM/YYYY",
   timeFormat = "hh:mm A",
   timeZone = "Asia/Kolkata",
   translations = {},
-  invoiceGeneratedAt = new Date().toISOString()
+  invoiceGeneratedAt = new Date().toISOString(),
+  logoBase64Uri = null
 ) => {
   const getTranslation = (key) => translations[key] || key;
   const formatPrice = (price) => formatOrderPrice(price, orderData);
@@ -245,7 +387,7 @@ export const generateInvoiceBodyHTML = (
     return normalized === "" ? "N/A" : normalized;
   };
 
-  // Build table details HTML
+  // Table details from areatabledetails or tableno/areaname (matching UserApp)
   const getTableDetailsHTML = () => {
     const areaDetails = orderData.areatabledetails;
     if (Array.isArray(areaDetails) && areaDetails.length > 0) {
@@ -255,12 +397,12 @@ export const generateInvoiceBodyHTML = (
             area.tables && area.tables.length
               ? area.tables.map((t) => t.tableno).join(", ")
               : "";
-          return `<div class="info-item"><span class="info-label">${escapeHtmlAttr(area.areaname || "")}:</span><span class="info-value">${escapeHtmlAttr(tableNos || "-")}</span></div>`;
+          return `<div class="info-item"><span class="info-label">${escapeHtml(area.areaname || "")}:</span><span class="info-value">${escapeHtml(tableNos || "-")}</span></div>`;
         })
         .join("");
     }
     if (orderData.tableno || orderData.areaname) {
-      return `<div class="info-item"><span class="info-label">${escapeHtmlAttr(getTranslation("tableno"))}:</span><span class="info-value">${escapeHtmlAttr(orderData.tableno || "")} ${orderData.areaname ? `(${escapeHtmlAttr(orderData.areaname)})` : ""}</span></div>`;
+      return `<div class="info-item"><span class="info-label">${escapeHtml(getTranslation("tableno") || "Table No")}:</span><span class="info-value">${escapeHtml(orderData.tableno || "")} ${orderData.areaname ? `(${escapeHtml(orderData.areaname)})` : ""}</span></div>`;
     }
     return "";
   };
@@ -272,6 +414,11 @@ export const generateInvoiceBodyHTML = (
     timeFormat,
     timeZone
   );
+
+  const rawLogoUrl = logoBase64Uri || orderData?.logourl || orderData?.imageUrl || "";
+  const invoiceLogoHtml = rawLogoUrl
+    ? `<img class="logo" src="${escapeHtml(rawLogoUrl)}" alt="Logo" />`
+    : "";
 
   const rawCustomerEmail = orderData?.customerEmail ?? orderData?.customer?.email ?? "";
   const customerEmail =
@@ -288,55 +435,61 @@ export const generateInvoiceBodyHTML = (
   const activeProducts = (
     Array.isArray(orderData.products) && orderData.products.length > 0
       ? orderData.products
-      : orderData.items || []
-  ).filter((product) => !isItemCancelled(product));
+      : Array.isArray(orderData.items)
+      ? orderData.items
+      : []
+  ).filter((p) => !isItemCancelled(p));
 
   let itemsRows = "";
-  activeProducts.forEach((product) => {
-    const productName = product.productname || product.itemname || product.name || "Item";
-    const quantity = product.quantity || product.qty || 1;
-    const price = product.price || 0;
-    const amount = product.amount !== undefined ? product.amount : price * quantity;
-    const specialInstructions = product.specialInstructions || "";
-    const hasAddons = Array.isArray(product.addons) && product.addons.length > 0;
+  if (activeProducts.length > 0) {
+    activeProducts.forEach((product) => {
+      const productName = product.productname || product.itemname || product.name || "Item";
+      const productPrice = product.price || 0;
+      const productQuantity = product.quantity || product.qty || 1;
+      const productAmount =
+        product.amount !== undefined ? product.amount : (parseFloat(productPrice) || 0) * productQuantity;
 
-    let addonsHTML = "";
-    if (hasAddons) {
-      addonsHTML = product.addons
-        .map(
-          (addon) =>
-            `<div class="addon-item">+ ${escapeHtmlAttr(addon.addonname || addon.name)} (${formatPrice(addon.addonprice || addon.price || 0)} x ${quantity}) = ${formatPrice((addon.addonprice || addon.price || 0) * quantity)}</div>`
-        )
-        .join("");
-    }
+      let addonsHtml = "";
+      if (Array.isArray(product.addons) && product.addons.length > 0) {
+        product.addons.forEach((addon) => {
+          const addonName = addon.addonname || addon.name || "";
+          const addonPrice = addon.addonprice || addon.price || 0;
+          addonsHtml += `<span class="addon-item">+ ${escapeHtml(addonName)} (${formatPrice(addonPrice)})</span>`;
+        });
+      }
 
-    let specialInstructionsHTML = "";
-    if (specialInstructions && specialInstructions.trim()) {
-      specialInstructionsHTML = `<div class="special-instructions"><strong>${escapeHtmlAttr(getTranslation("specialinstructions"))}:</strong> ${escapeHtmlAttr(specialInstructions)}</div>`;
-    }
+      let specialInstructionsHtml = "";
+      if (product.specialInstructions) {
+        specialInstructionsHtml = `<span class="special-instructions">${escapeHtml(getTranslation("specialinstructions") || "Special Instructions")}: ${escapeHtml(product.specialInstructions)}</span>`;
+      }
 
-    itemsRows += `
+      itemsRows += `
+        <tr>
+          <td>
+            <strong>${escapeHtml(productName)}</strong>
+            ${addonsHtml}
+            ${specialInstructionsHtml}
+          </td>
+          <td style="text-align: center;">${productQuantity}</td>
+          <td class="price-column">${formatPrice(productPrice)}</td>
+          <td class="amount-column">${formatPrice(productAmount)}</td>
+        </tr>
+      `;
+    });
+  } else {
+    itemsRows = `
       <tr>
-        <td>
-          <div style="font-weight: 600;">${escapeHtmlAttr(productName)}</div>
-          ${addonsHTML}
-          ${specialInstructionsHTML}
+        <td colspan="4" style="text-align: center; color: #888888; padding: 12px;">
+          ${escapeHtml(getTranslation("noitemfound") || "No items found")}
         </td>
-        <td style="text-align: center;">${quantity}</td>
-        <td class="price-column">${formatPrice(price)}</td>
-        <td class="amount-column">${formatPrice(amount)}</td>
       </tr>
     `;
-  });
+  }
 
-  // Calculate bill breakdown
-  const effectiveSubtotal = Number(orderData.subtotalprice ?? orderData.subtotalPrice ?? 0);
-  const beforeTaxCharges = (orderData.additionalCharges || [])
-    .concat(orderData.specialDayCharges || [])
+  // Before-tax charges
+  const beforeTaxCharges = (orderData?.additionalCharges || [])
+    .concat(orderData?.specialDayCharges || [])
     .filter((c) => c.applicationtiming === "before_tax");
-  const afterTaxCharges = (orderData.additionalCharges || [])
-    .concat(orderData.specialDayCharges || [])
-    .filter((c) => c.applicationtiming === "after_tax");
 
   let beforeTaxRows = "";
   beforeTaxCharges.forEach((chg) => {
@@ -351,17 +504,61 @@ export const generateInvoiceBodyHTML = (
         : "";
     beforeTaxRows += `
       <div class="summary-row">
-        <span>${escapeHtmlAttr(chg.name || chg.chargename || chg.eventname || "Charge")}${valLabel}:</span>
+        <span>${escapeHtml(chg.name || chg.chargename || chg.eventname || "Charge")}${valLabel}</span>
         <span>${formatPrice(chg.amount || 0)}</span>
       </div>
     `;
   });
 
+  // Deduplicated Exclusive Taxes (parity with UserApp invoiceTemplate.js)
+  const invoiceTaxes = (() => {
+    let list = [];
+    if (Array.isArray(orderData.taxes) && orderData.taxes.length > 0) {
+      list = [...orderData.taxes];
+    } else {
+      const branch = Array.isArray(orderData.branchTaxes) ? orderData.branchTaxes : [];
+      const orderType = Array.isArray(orderData.orderTypeTaxes) ? orderData.orderTypeTaxes : [];
+      const itemLvl = Array.isArray(orderData.itemTaxes) ? orderData.itemTaxes : [];
+      list = [...branch, ...orderType, ...itemLvl];
+    }
+    if (list.length === 0 && Array.isArray(orderData.items)) {
+      const itemTaxMap = new Map();
+      for (const item of orderData.items || []) {
+        if (isItemCancelled(item)) continue;
+        const itemTaxesList =
+          item.appliedTaxes && item.appliedTaxes.length > 0 ? item.appliedTaxes : item.taxes || [];
+        for (const t of itemTaxesList) {
+          if (!t || !t.taxname) continue;
+          const key = t.taxid ?? t.taxname;
+          if (itemTaxMap.has(key)) {
+            const existing = itemTaxMap.get(key);
+            existing.calculatedAmount =
+              (existing.calculatedAmount || 0) + (t.calculatedAmount || t.amount || 0);
+          } else {
+            itemTaxMap.set(key, { ...t });
+          }
+        }
+      }
+      list = Array.from(itemTaxMap.values());
+    }
+    const valid = list.filter(
+      (t) =>
+        t &&
+        t.taxname &&
+        String(t.taxname).trim() !== "" &&
+        String(t.taxcomputation ?? "exclusive").toLowerCase() !== "inclusive"
+    );
+    return Array.from(new Map(valid.map((t) => [t.taxid ?? t.taxname, t])).values());
+  })();
+
   let taxesRows = "";
-  const taxesList = Array.isArray(orderData.taxes) ? orderData.taxes : [];
-  taxesList.forEach((tax) => {
-    const taxName = tax.taxname || "Tax";
-    const taxAmount = tax.calculatedAmount ?? tax.amount ?? 0;
+  invoiceTaxes.forEach((tax) => {
+    const taxAmount =
+      tax.calculatedAmount != null && Number(tax.calculatedAmount) > 0
+        ? Number(tax.calculatedAmount)
+        : tax.amount != null
+        ? Number(tax.amount)
+        : Number(tax.price || 0);
     const rateLabel =
       tax.taxtype === "percentage"
         ? ` (${tax.price ?? tax.rate}%)`
@@ -370,11 +567,16 @@ export const generateInvoiceBodyHTML = (
         : "";
     taxesRows += `
       <div class="summary-row">
-        <span>${escapeHtmlAttr(taxName)}${rateLabel}:</span>
+        <span>${escapeHtml(tax.taxname)}${rateLabel}</span>
         <span>${formatPrice(taxAmount)}</span>
       </div>
     `;
   });
+
+  // After-tax charges
+  const afterTaxCharges = (orderData?.additionalCharges || [])
+    .concat(orderData?.specialDayCharges || [])
+    .filter((c) => c.applicationtiming === "after_tax");
 
   let afterTaxRows = "";
   afterTaxCharges.forEach((chg) => {
@@ -389,123 +591,161 @@ export const generateInvoiceBodyHTML = (
         : "";
     afterTaxRows += `
       <div class="summary-row">
-        <span>${escapeHtmlAttr(chg.name || chg.chargename || chg.eventname || "Charge")}${valLabel}:</span>
+        <span>${escapeHtml(chg.name || chg.chargename || chg.eventname || "Charge")}${valLabel}</span>
         <span>${formatPrice(chg.amount || 0)}</span>
       </div>
     `;
   });
 
+  // Round off
   const roundoffAmount = Number(orderData?.roundoff?.roundedAmount ?? orderData?.roundoffAmount ?? 0);
-  const showRoundoff = orderData?.roundoff?.status || roundoffAmount !== 0;
-  const grandTotal = Number(orderData.totalprice ?? 0);
+  let roundoffRow = "";
+  if (orderData?.roundoff?.status || roundoffAmount !== 0) {
+    const roundoffDisplay =
+      roundoffAmount > 0
+        ? `+${formatPrice(roundoffAmount)}`
+        : roundoffAmount < 0
+        ? `-${formatPrice(Math.abs(roundoffAmount))}`
+        : formatPrice(0);
+    roundoffRow = `
+      <div class="summary-row">
+        <span>${escapeHtml(getTranslation("roundoff") || "Round Off")}</span>
+        <span>${roundoffDisplay}</span>
+      </div>
+    `;
+  }
+
+  const paymentStatus = String(orderData.paymentstatus || "paid").toLowerCase().replace(/\s+/g, "-");
+  const paymentStatusLabel = getTranslation(orderData.paymentstatus) || orderData.paymentstatus || "Paid";
 
   return `
-  <div class="invoice-container">
-    <div class="header">
-      <div class="header-left">
-        <h1>${escapeHtmlAttr(getTranslation("invoice") || "INVOICE")}</h1>
-        <h2>${escapeHtmlAttr(orderData.businessname || "SavoryOps Restaurant")}</h2>
-        <p>${escapeHtmlAttr(orderData.branchname || "")}</p>
+    <div class="invoice-wrapper">
+      <!-- Header Card with UserApp parity -->
+      <div class="header">
+        ${invoiceLogoHtml}
+        <div class="header-content${!invoiceLogoHtml ? " no-logo" : ""}">
+          <h1>${escapeHtml(getTranslation("invoice") || "Invoice")}</h1>
+          <h2>${escapeHtml(orderData.businessname || "SavoryOps Restaurant")}</h2>
+          ${orderData.branchname ? `<p>${escapeHtml(orderData.branchname)}</p>` : ""}
+        </div>
+        <div class="header-date">
+          <span>${formattedInvoiceGeneratedAt}</span>
+        </div>
       </div>
-      <div class="header-right">
-        <div class="order-pill">Order #${escapeHtmlAttr(orderData.orderno || "")}</div>
-        <div class="invoice-date">${formattedInvoiceGeneratedAt}</div>
+
+      <!-- Customer Info Card -->
+      <div class="customer-info info-card">
+        <h3>${escapeHtml(getTranslation("customerinfo") || "Customer Information")}</h3>
+        <div class="customer-info-row">
+          <div class="info-item">
+            <span class="info-label">${escapeHtml(getTranslation("customername") || "Customer Name")}:</span>
+            <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerName))}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">${escapeHtml(getTranslation("customerphone") || "Phone Number")}:</span>
+            <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerPhone))}</span>
+          </div>
+          ${
+            hasCustomerEmail
+              ? `<div class="info-item">
+                  <span class="info-label">${escapeHtml(getTranslation("customeremail") || "Email")}:</span>
+                  <span class="info-value">${escapeHtml(customerEmail)}</span>
+                </div>`
+              : ""
+          }
+        </div>
+      </div>
+
+      <!-- Business Info & Order Info Cards Side-by-Side -->
+      <div class="info-row-wrapper">
+        <div class="business-info info-card">
+          <h3>${escapeHtml(getTranslation("businessinfo") || "Business Information")}</h3>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-label">${escapeHtml(getTranslation("branch") || "Branch")}:</span>
+              <span class="info-value">${escapeHtml(orderData.branchname || "Main Branch")}</span>
+            </div>
+            ${
+              tableDetailsHTML
+                ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
+                    <div class="info-item" style="margin-bottom: 6px;"><span class="info-label" style="font-weight: bold; color: #28a745;">${escapeHtml(getTranslation("tabledetails") || "Table Details")}</span></div>
+                    ${tableDetailsHTML}
+                  </div>`
+                : ""
+            }
+          </div>
+        </div>
+
+        <div class="order-info info-card">
+          <h3>${escapeHtml(getTranslation("orderinfo") || "Order Information")}</h3>
+          <div class="info-list">
+            <div class="info-item order-info-row">
+              <div class="info-pair">
+                <span class="info-label">${escapeHtml(getTranslation("orderno") || "Order No")}:</span>
+                <span class="info-value">#${escapeHtml(orderData.orderno || "")}</span>
+              </div>
+              <div class="info-pair info-pair-right">
+                <span class="info-label">${escapeHtml(getTranslation("ordertype") || "Order Type")}:</span>
+                <span class="info-value">${escapeHtml(getTranslation(orderData.ordertype) || orderData.ordertype || "")}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-label">${escapeHtml(getTranslation("orderdate") || "Order Date")}:</span>
+              <span class="info-value">${formatOrderDateTime(orderData.createdAt, dateFormat, timeFormat, timeZone)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">${escapeHtml(getTranslation("payment") || "Payment")}:</span>
+              <span class="status-badge status-${paymentStatus}">${escapeHtml(paymentStatusLabel)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Section -->
+      <h3 class="items-section-title">${escapeHtml(getTranslation("itemordered") || "Item Ordered")}</h3>
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>${escapeHtml(getTranslation("items") || "Items")}</th>
+            <th style="text-align: center;">${escapeHtml(getTranslation("qty") || "Qty")}</th>
+            <th class="price-column">${escapeHtml(getTranslation("price") || "Price")}</th>
+            <th class="amount-column">${escapeHtml(getTranslation("total") || "Total")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsRows}
+        </tbody>
+      </table>
+
+      <!-- Bill Summary Card -->
+      <div class="summary">
+        <h3>${escapeHtml(getTranslation("billsummary") || "Bill Summary")}</h3>
+        <div class="summary-row">
+          <span>${escapeHtml(getTranslation("subtotal") || "Subtotal")}</span>
+          <span>${formatPrice(orderData.subtotalprice)}</span>
+        </div>
+        ${beforeTaxRows}
+        ${taxesRows}
+        ${afterTaxRows}
+        ${roundoffRow}
+        <div class="summary-row total-row">
+          <span>${escapeHtml(getTranslation("grandtotal") || "Grand Total")}</span>
+          <span>${formatPrice(orderData.totalprice)}</span>
+        </div>
+      </div>
+
+      <!-- Footer Card -->
+      <div class="footer">
+        <p><strong>${escapeHtml(getTranslation("thankyouforyourorder") || "Thank you for your order!")}</strong></p>
+        <p>${escapeHtml(getTranslation("computerbasedgeneratedinvoice") || "This is a computer-generated invoice.")}</p>
       </div>
     </div>
-
-    <div class="info-grid">
-      <div class="info-card">
-        <h3>${escapeHtmlAttr(getTranslation("customerinfo") || "Customer Details")}</h3>
-        <div class="info-item">
-          <span class="info-label">${escapeHtmlAttr(getTranslation("customername") || "Name")}:</span>
-          <span class="info-value">${escapeHtmlAttr(formatCustomerField(orderData.customerName))}</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">${escapeHtmlAttr(getTranslation("customerphone") || "Phone")}:</span>
-          <span class="info-value">${escapeHtmlAttr(formatCustomerField(orderData.customerPhone))}</span>
-        </div>
-        ${
-          hasCustomerEmail
-            ? `<div class="info-item"><span class="info-label">${escapeHtmlAttr(getTranslation("customeremail") || "Email")}:</span><span class="info-value">${escapeHtmlAttr(customerEmail)}</span></div>`
-            : ""
-        }
-      </div>
-
-      <div class="info-card">
-        <h3>${escapeHtmlAttr(getTranslation("orderinfo") || "Order Details")}</h3>
-        <div class="info-item">
-          <span class="info-label">${escapeHtmlAttr(getTranslation("ordertype") || "Type")}:</span>
-          <span class="info-value">${escapeHtmlAttr(getTranslation(orderData.ordertype) || orderData.ordertype)}</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">${escapeHtmlAttr(getTranslation("orderdate") || "Date")}:</span>
-          <span class="info-value">${formatOrderDateTime(orderData.createdAt, dateFormat, timeFormat, timeZone)}</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">${escapeHtmlAttr(getTranslation("orderstatus") || "Status")}:</span>
-          <span class="info-value">
-            <span class="status-badge status-${String(orderData.orderstatus || "").toLowerCase().replace(/\s+/g, "-")}">${escapeHtmlAttr(getTranslation(orderData.orderstatus) || orderData.orderstatus)}</span>
-          </span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">${escapeHtmlAttr(getTranslation("payment") || "Payment")}:</span>
-          <span class="info-value">
-            <span class="status-badge status-${String(orderData.paymentstatus || "").toLowerCase().replace(/\s+/g, "-")}">${escapeHtmlAttr(getTranslation(orderData.paymentstatus) || orderData.paymentstatus)}</span>
-          </span>
-        </div>
-      </div>
-
-      ${
-        tableDetailsHTML
-          ? `<div class="info-card">
-              <h3>${escapeHtmlAttr(getTranslation("tabledetails") || "Table Details")}</h3>
-              ${tableDetailsHTML}
-            </div>`
-          : ""
-      }
-    </div>
-
-    <table class="items-table">
-      <thead>
-        <tr>
-          <th>${escapeHtmlAttr(getTranslation("items") || "Items")}</th>
-          <th style="text-align: center;">${escapeHtmlAttr(getTranslation("qty") || "Qty")}</th>
-          <th class="price-column">${escapeHtmlAttr(getTranslation("price") || "Price")}</th>
-          <th class="amount-column">${escapeHtmlAttr(getTranslation("total") || "Total")}</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${itemsRows}
-      </tbody>
-    </table>
-
-    <div class="bill-summary">
-      <h3>${escapeHtmlAttr(getTranslation("billsummary") || "Bill Summary")}</h3>
-      <div class="summary-row">
-        <span>${escapeHtmlAttr(getTranslation("subtotal") || "Subtotal")}:</span>
-        <span>${formatPrice(effectiveSubtotal)}</span>
-      </div>
-      ${beforeTaxRows}
-      ${taxesRows}
-      ${afterTaxRows}
-      ${
-        showRoundoff
-          ? `<div class="summary-row"><span>${escapeHtmlAttr(getTranslation("roundoff") || "Round Off")}:</span><span>${roundoffAmount > 0 ? "+" : ""}${formatPrice(roundoffAmount)}</span></div>`
-          : ""
-      }
-      <div class="grand-total-row">
-        <span>${escapeHtmlAttr(getTranslation("grandtotal") || "Grand Total")}:</span>
-        <span>${formatPrice(grandTotal)}</span>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p><strong>${escapeHtmlAttr(getTranslation("thankyouforyourorder") || "Thank you for your order!")}</strong></p>
-      <p>${escapeHtmlAttr(getTranslation("computerbasedgeneratedinvoice") || "This is a computer-generated invoice.")}</p>
-    </div>
-  </div>`;
+  `;
 };
 
+/**
+ * Generate full HTML document for preview or print.
+ */
 export const generateInvoiceHTML = (
   orderData,
   dateFormat = "DD/MM/YYYY",
@@ -552,7 +792,7 @@ export const generateInvoiceHTML = (
 };
 
 /**
- * Directly downloads the Order Invoice as a crisp, formatted PDF file in the browser.
+ * Directly downloads the Order Invoice matching UserApp design as a high-quality PDF in the browser.
  */
 export const downloadOrderInvoicePDF = async (
   orderData,
@@ -565,13 +805,20 @@ export const downloadOrderInvoicePDF = async (
     throw new Error("Order data is required to download invoice");
   }
 
-  // Create an off-screen render container
+  // Pre-load restaurant logo as base64 to avoid canvas tainting
+  const logoUrl = orderData?.logourl || orderData?.imageUrl || "";
+  let logoBase64 = null;
+  if (logoUrl) {
+    logoBase64 = await loadLogoAsBase64(logoUrl);
+  }
+
+  // Render container matching A4 standard width (794px @ 96DPI)
   const container = document.createElement("div");
   container.style.position = "fixed";
   container.style.left = "-9999px";
   container.style.top = "0";
-  container.style.width = "800px";
-  container.style.backgroundColor = "#ffffff";
+  container.style.width = "794px";
+  container.style.backgroundColor = "#f8f8f8";
   container.style.zIndex = "-9999";
   container.style.boxSizing = "border-box";
 
@@ -581,34 +828,34 @@ export const downloadOrderInvoicePDF = async (
     dateFormat,
     timeFormat,
     timeZone,
-    translations
+    translations,
+    new Date().toISOString(),
+    logoBase64
   );
 
   container.innerHTML = `
     <style>${styles}</style>
-    <div style="background: #ffffff; padding: 24px; box-sizing: border-box; width: 800px;">
-      ${body}
-    </div>
+    ${body}
   `;
 
   document.body.appendChild(container);
 
   try {
-    // Wait for DOM painting
+    // Wait for layout and image rendering
     await new Promise((resolve) =>
       requestAnimationFrame(() => requestAnimationFrame(resolve))
     );
-    await new Promise((resolve) => setTimeout(resolve, 80));
+    await new Promise((resolve) => setTimeout(resolve, 120));
 
     const captureHeight = container.scrollHeight || container.offsetHeight || 900;
     const canvas = await html2canvas(container, {
       scale: 2,
       useCORS: true,
       logging: false,
-      backgroundColor: "#ffffff",
-      width: 800,
+      backgroundColor: "#f8f8f8",
+      width: 794,
       height: captureHeight,
-      windowWidth: 800,
+      windowWidth: 794,
       windowHeight: captureHeight,
     });
 
@@ -619,11 +866,11 @@ export const downloadOrderInvoicePDF = async (
       compress: true,
     });
 
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 10;
-    const contentW = pageW - margin * 2;
-    const contentH = pageH - margin * 2;
+    const pageW = doc.internal.pageSize.getWidth(); // 210
+    const pageH = doc.internal.pageSize.getHeight(); // 297
+    const margin = 8;
+    const contentW = pageW - margin * 2; // 194
+    const contentH = pageH - margin * 2; // 281
 
     const imgW = contentW;
     const imgH = (canvas.height * imgW) / canvas.width;
@@ -648,7 +895,7 @@ export const downloadOrderInvoicePDF = async (
         pageCanvas.width = canvas.width;
         pageCanvas.height = sourceHeight;
         const pctx = pageCanvas.getContext("2d");
-        pctx.fillStyle = "#ffffff";
+        pctx.fillStyle = "#f8f8f8";
         pctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
         pctx.drawImage(
           canvas,
