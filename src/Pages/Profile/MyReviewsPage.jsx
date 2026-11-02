@@ -9,6 +9,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -170,24 +171,27 @@ const MyReviewsPage = () => {
       <div className="my-reviews-container">
         {/* Content Area */}
         {loading ? (
-          /* Shimmer Grid */
-          <div className="my-reviews-grid">
-            {[1, 2, 3, 4, 5, 6].map((k) => (
-              <ReviewShimmerCard key={k} />
-            ))}
+          <div className="address-loading-wrap my-reviews-loading-wrap">
+            <CircularProgress size={40} sx={{ color: "#028802" }} />
+            <p>{translations.loading || "Loading..."}</p>
           </div>
         ) : reviews.length === 0 ? (
-          /* Empty State - Matching ManageAddress and Orders */
-          <div className="my-reviews-empty-state">
+          /* Empty State - Unified parity with Manage Address and Orders */
+          <div className="address-empty-card my-reviews-empty-state">
             <div className="empty-icon-wrap">
-              <RateReviewOutlinedIcon className="empty-illustration-icon" />
+              <RateReviewOutlinedIcon className="empty-icon" />
             </div>
-            <h3>{translations.noReviews || "No Reviews Yet"}</h3>
-            <p>
-              {translations.noReviewsMessage ||
+            <h2 className="empty-title">
+              {translations.noreviewsfound ||
+                translations.noReviews ||
+                "No reviews written yet."}
+            </h2>
+            <p className="empty-subtitle">
+              {translations.noreviewsdescription ||
+                translations.noReviewsMessage ||
                 "You haven't written any reviews yet. Share your experience with your favorite restaurants!"}
             </p>
-            <Link to="/menu" className="empty-action-btn">
+            <Link to="/menu" className="empty-add-btn">
               <RestaurantMenuIcon fontSize="small" />
               <span>{translations.exploremenu || "Explore Menu"}</span>
             </Link>

@@ -30,6 +30,22 @@
 }
 
 /* ==========================================================================
+   Loading State (Unified brand spinner)
+   ========================================================================== */
+.my-reviews-loading-wrap,
+.address-loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  gap: 1rem;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* ==========================================================================
    Reviews Grid (Matching OrdersPage & ManageAddress)
    ========================================================================== */
 .my-reviews-grid {
@@ -367,68 +383,86 @@
 }
 
 /* ==========================================================================
-   Empty States (Matching Orders & ManageAddress)
+   Empty States (Unified Parity with Manage Address & Orders)
    ========================================================================== */
-.my-reviews-empty-state {
+.address-empty-card,
+.my-reviews-empty-state,
+.my-reviews-empty-card {
   background: #ffffff;
-  border: 1.5px dashed #cbd5e1;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
   padding: 4rem 2rem;
   text-align: center;
-  margin: 1.5rem 0;
+  box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.05);
+  width: 100%;
+  margin: 0 auto;
+  transition: all 0.2s ease;
 
   .empty-icon-wrap {
-    width: 80px;
-    height: 80px;
+    width: 84px;
+    height: 84px;
     border-radius: 50%;
-    background: rgba(2, 136, 2, 0.08);
-    display: flex;
+    background: linear-gradient(
+      135deg,
+      rgba(2, 136, 2, 0.1) 0%,
+      rgba(34, 197, 94, 0.18) 100%
+    );
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1.25rem;
+    margin: 0 auto 1.5rem;
 
+    .empty-icon,
     .empty-illustration-icon {
-      font-size: 2.5rem;
+      font-size: 2.75rem !important;
       color: #028802;
     }
   }
 
+  .empty-title,
+  h2,
   h3 {
-    font-size: 1.35rem;
+    font-size: 1.45rem;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
   }
 
+  .empty-subtitle,
   p {
     font-size: 0.95rem;
     color: #64748b;
-    margin: 0 0 1.5rem;
     max-width: 440px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
+    margin: 0 auto 1.75rem;
+    line-height: 1.55;
   }
 
+  .empty-add-btn,
   .empty-action-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 0.8rem 1.6rem;
+    padding: 0.75rem 1.75rem;
     background: #028802;
     color: #ffffff;
     font-weight: 700;
     font-size: 0.95rem;
     border-radius: 12px;
     text-decoration: none;
-    transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+    transition: all 0.2s ease;
 
     &:hover {
-      background: #026b02;
+      background: #016b01;
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
       color: #ffffff;
+    }
+
+    svg {
+      font-size: 1.25rem;
     }
   }
 }
