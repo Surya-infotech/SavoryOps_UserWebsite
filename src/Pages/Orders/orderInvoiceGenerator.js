@@ -58,31 +58,23 @@ const loadLogoAsBase64 = async (url) => {
 export const generateInvoiceStyles = () => `
   @page {
     size: A4;
-    margin-top: 10mm;
-    margin-bottom: 10mm;
+    margin: 0;
   }
-  * {
+  .invoice-wrapper {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  body {
     font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    margin: 0;
-    padding: 12px;
+    margin: 0 auto;
+    padding: 8px 10px;
     background-color: #f8f8f8;
     color: #333333;
     font-size: 12px;
     line-height: 1.35;
+    width: 100%;
+    max-width: 794px;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .invoice-wrapper {
-    width: 100%;
-    max-width: 794px;
-    margin: 0 auto;
-    background-color: #f8f8f8;
-    padding: 12px;
+  .invoice-wrapper * {
     box-sizing: border-box;
   }
   .header {
@@ -345,13 +337,9 @@ export const generateInvoiceStyles = () => `
     margin: 3px 0;
   }
   @media print {
-    body {
-      background-color: #ffffff;
-      padding: 0;
-      margin: 0;
-    }
     .invoice-wrapper {
       padding: 0;
+      background-color: #ffffff;
     }
     .header,
     .info-card,
@@ -378,7 +366,8 @@ export const generateInvoiceBodyHTML = (
   invoiceGeneratedAt = new Date().toISOString(),
   logoBase64Uri = null
 ) => {
-  const getTranslation = (key) => translations[key] || key;
+  const getTranslation = (key, fallback = "") =>
+    (translations && translations[key]) || fallback || "";
   const formatPrice = (price) => formatOrderPrice(price, orderData);
 
   const formatCustomerField = (value) => {
@@ -702,14 +691,14 @@ export const generateInvoiceBodyHTML = (
       </div>
 
       <!-- Items Section -->
-      <h3 class="items-section-title">${escapeHtml(getTranslation("itemordered") || "Item Ordered")}</h3>
+      <h3 class="items-section-title">${escapeHtml(getTranslation("itemordered", "Items Ordered") || "Items Ordered")}</h3>
       <table class="items-table">
         <thead>
           <tr>
-            <th>${escapeHtml(getTranslation("items") || "Items")}</th>
-            <th style="text-align: center;">${escapeHtml(getTranslation("qty") || "Qty")}</th>
-            <th class="price-column">${escapeHtml(getTranslation("price") || "Price")}</th>
-            <th class="amount-column">${escapeHtml(getTranslation("total") || "Total")}</th>
+            <th>${escapeHtml(getTranslation("items", "Items") || "Items")}</th>
+            <th style="text-align: center;">${escapeHtml(getTranslation("qty", "Qty") || "Qty")}</th>
+            <th class="price-column">${escapeHtml(getTranslation("price", "Price") || "Price")}</th>
+            <th class="amount-column">${escapeHtml(getTranslation("total", "Total") || "Total")}</th>
           </tr>
         </thead>
         <tbody>
@@ -721,7 +710,7 @@ export const generateInvoiceBodyHTML = (
       <div class="summary">
         <h3>${escapeHtml(getTranslation("billsummary") || "Bill Summary")}</h3>
         <div class="summary-row">
-          <span>${escapeHtml(getTranslation("subtotal") || "Subtotal")}</span>
+          <span>${escapeHtml(getTranslation("subtotal", "Subtotal") || "Subtotal")}</span>
           <span>${formatPrice(orderData.subtotalprice)}</span>
         </div>
         ${beforeTaxRows}
@@ -729,7 +718,7 @@ export const generateInvoiceBodyHTML = (
         ${afterTaxRows}
         ${roundoffRow}
         <div class="summary-row total-row">
-          <span>${escapeHtml(getTranslation("grandtotal") || "Grand Total")}</span>
+          <span>${escapeHtml(getTranslation("grandtotal", "Grand Total") || "Grand Total")}</span>
           <span>${formatPrice(orderData.totalprice)}</span>
         </div>
       </div>
@@ -781,6 +770,7 @@ export const generateInvoiceHTML = (
   <meta charset="UTF-8">
   <title>Invoice - Order #${orderData.orderno || ""}</title>
   <style>
+    html, body { margin: 0; padding: 0; background-color: #f8f8f8; }
     ${styles}
   </style>
 </head>
@@ -859,61 +849,23 @@ export const downloadOrderInvoicePDF = async (
       windowHeight: captureHeight,
     });
 
+    const pageW = 210; // Standard 210mm A4 width
+    const pageH = (canvas.height * pageW) / canvas.width;
+
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: "a4",
+      format: [pageW, pageH],
       compress: true,
     });
 
-    const pageW = doc.internal.pageSize.getWidth(); // 210
-    const pageH = doc.internal.pageSize.getHeight(); // 297
-    const margin = 8;
-    const contentW = pageW - margin * 2; // 194
-    const contentH = pageH - margin * 2; // 281
-
-    const imgW = contentW;
-    const imgH = (canvas.height * imgW) / canvas.width;
-
-    if (imgH <= contentH) {
-      // Single page
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      doc.addImage(imgData, "PNG", margin, margin, imgW, imgH);
-    } else {
-      // Multi-page slice
-      const pageHeightPx = Math.floor((contentH / imgW) * canvas.width);
-      const totalPages = Math.ceil(canvas.height / pageHeightPx);
-
-      for (let i = 0; i < totalPages; i++) {
-        if (i > 0) {
-          doc.addPage();
-        }
-        const sourceY = i * pageHeightPx;
-        const sourceHeight = Math.min(pageHeightPx, canvas.height - sourceY);
-
-        const pageCanvas = document.createElement("canvas");
-        pageCanvas.width = canvas.width;
-        pageCanvas.height = sourceHeight;
-        const pctx = pageCanvas.getContext("2d");
-        pctx.fillStyle = "#f8f8f8";
-        pctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-        pctx.drawImage(
-          canvas,
-          0,
-          sourceY,
-          canvas.width,
-          sourceHeight,
-          0,
-          0,
-          canvas.width,
-          sourceHeight
-        );
-
-        const pageImgData = pageCanvas.toDataURL("image/png", 1.0);
-        const pageImgH = (sourceHeight * imgW) / canvas.width;
-        doc.addImage(pageImgData, "PNG", margin, margin, imgW, pageImgH);
-      }
+    if (pageH < pageW) {
+      doc.internal.pageSize.width = pageW;
+      doc.internal.pageSize.height = pageH;
     }
+
+    const imgData = canvas.toDataURL("image/png", 1.0);
+    doc.addImage(imgData, "PNG", 0, 0, pageW, pageH, undefined, "FAST");
 
     const orderIdentifier =
       orderData.orderno ||
