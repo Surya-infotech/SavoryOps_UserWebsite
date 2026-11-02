@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import SearchOffIcon from "@mui/icons-material/SearchOff";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
@@ -413,26 +416,46 @@ const OffersPage = () => {
             {filteredDeals.map(renderDealCard)}
           </div>
         ) : formattedDeals.length > 0 ? (
-          <div className="menu-filter-empty-state">
-            <div className="filter-empty-icon-wrap">
-              <LocalOfferOutlinedIcon />
+          /* Filter Empty State - Exact parity with Manage Address */
+          <div className="address-empty-card menu-filter-empty-state">
+            <div className="empty-icon-wrap search">
+              <SearchOffIcon className="empty-icon" />
             </div>
-            <h3>{translations.nomatchingitems || "No matching deals found"}</h3>
-            <p>{translations.tryadjustingfilters || "Try adjusting your filters to find what you are looking for."}</p>
+            <h2 className="empty-title">
+              {translations.nomatchingitems || "No matching deals found"}
+            </h2>
+            <p className="empty-subtitle">
+              {translations.tryadjustingfilters ||
+                "Try adjusting your filters to find what you are looking for."}
+            </p>
             {isFilterActive && (
               <button
                 type="button"
-                className="reset-filter-btn"
+                className="empty-add-btn"
                 onClick={handleClearFilters}
               >
-                {translations.resetfilters || "Reset Filters"}
+                <CloseIcon fontSize="small" />
+                <span>{translations.resetfilters || "Reset Filters"}</span>
               </button>
             )}
           </div>
         ) : (
-          <div className="no-dishes-state">
-            <LocalOfferOutlinedIcon className="no-dishes-icon" />
-            <h4>{translations.nodealsfound || "No special offers available at this branch right now."}</h4>
+          /* Empty State (No Deals at Branch) - Exact parity with Manage Address */
+          <div className="address-empty-card no-dishes-state">
+            <div className="empty-icon-wrap">
+              <LocalOfferOutlinedIcon className="empty-icon" />
+            </div>
+            <h2 className="empty-title">
+              {translations.nodealsfound || "No special offers available at this branch right now."}
+            </h2>
+            <p className="empty-subtitle">
+              {translations.nodealsdescription ||
+                "There are currently no active offers or combo deals for this branch. Explore our main menu to discover delicious treats!"}
+            </p>
+            <Link to="/menu" className="empty-add-btn">
+              <RestaurantMenuIcon fontSize="small" />
+              <span>{translations.exploremenu || "Explore Menu"}</span>
+            </Link>
           </div>
         )}
       </div>

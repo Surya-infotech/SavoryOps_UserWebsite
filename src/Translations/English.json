@@ -391,5 +391,8 @@
   "quickseatdesc": "Fast booking by guest count",
   "keepbooking": "Keep Reservation",
   "confirmcancellation": "Confirm Cancellation",
-  "cancellationconfirmdesc": "Are you sure you want to cancel this booking? Please provide a brief reason."
+  "cancellationconfirmdesc": "Are you sure you want to cancel this booking? Please provide a brief reason.",
+  "nodishesdescription": "There are currently no dishes available in this menu. Explore our special offers or check back soon!",
+  "nodealsfound": "No special offers available at this branch right now.",
+  "nodealsdescription": "There are currently no active offers or combo deals for this branch. Explore our main menu to discover delicious treats!"
 }
