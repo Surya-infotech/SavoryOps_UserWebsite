@@ -46,7 +46,7 @@ import {
   formatOrderDateTime,
   formatOrderPrice,
 } from "./orderHelpers.js";
-import { printOrderInvoice, downloadOrderInvoicePDF } from "./orderInvoiceGenerator.js";
+import { downloadOrderInvoicePDF } from "./orderInvoiceGenerator.js";
 import OrderStatusIcon from "./OrderStatusIcon.jsx";
 import "../../Scss/Pages/Orders/orderdetails.scss";
 import OrderStatusHistoryModal from "./OrderStatusHistoryModal.jsx";
@@ -413,7 +413,7 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
           const isP =
             String(taxObj.taxtype ?? "percentage").toLowerCase() ===
             "percentage";
-          let amt = 0;
+          let amt;
           if (isP) {
             amt = (taxBaseForInit * r) / 100;
           } else {

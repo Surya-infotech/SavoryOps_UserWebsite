@@ -14,7 +14,6 @@ const QrScannerModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   const [cameraError, setCameraError] = useState(null);
-  const [isScanning, setIsScanning] = useState(false);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -38,7 +37,6 @@ const QrScannerModal = ({ isOpen, onClose }) => {
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
-    setIsScanning(false);
   }, []);
 
   // Handle successful QR detection
@@ -137,7 +135,6 @@ const QrScannerModal = ({ isOpen, onClose }) => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
-        setIsScanning(true);
       }
 
       // Check if native BarcodeDetector is supported
@@ -210,7 +207,6 @@ const QrScannerModal = ({ isOpen, onClose }) => {
           "Camera permission was denied. Please allow camera permissions in your browser to scan QR codes.";
       }
       setCameraError(errorMsg);
-      setIsScanning(false);
     }
   }, [handleQrSuccess, stopCamera, translations]);
 

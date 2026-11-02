@@ -22,7 +22,6 @@ import {
   saveCart,
   updateCartItemQuantity,
   removeCartItem,
-  clearCart,
   updateCartItemInstructions,
   updateCartItemAddons,
 } from "../../utils/cartService.js";
@@ -204,14 +203,6 @@ const CartPage = () => {
     }
   };
 
-  const handleClearCart = () => {
-    if (window.confirm(translations.clearcartconfirm || "Are you sure you want to clear your cart?")) {
-      clearCart();
-      if (typeof showSnackbar === "function") {
-        showSnackbar("Cart cleared", "info", 2500);
-      }
-    }
-  };
 
   const toggleInstructions = (cartItemId) => {
     setOpenNotesMap((prev) => ({
@@ -269,7 +260,6 @@ const CartPage = () => {
     return computeCartBilling(cartItems, posPayload, selectedOrderType);
   }, [cartItems, posPayload, selectedOrderType]);
 
-  const subtotal = billingSummary.subtotal;
   const grandTotal = billingSummary.grandTotal;
 
   const totalQuantity = useMemo(() => {

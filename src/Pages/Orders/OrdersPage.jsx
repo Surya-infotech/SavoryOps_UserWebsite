@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
@@ -11,7 +11,6 @@ const OrdersPage = () => {
   const { orderId: paramOrderId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const { translations = {}, isRtl } = useLanguage();
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname || "";

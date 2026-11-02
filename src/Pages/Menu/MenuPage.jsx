@@ -6,7 +6,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
-import DishCard, { DietIndicator, DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
+import DishCard, { DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
@@ -27,7 +27,6 @@ const MenuPage = () => {
 
   // Raw API data from owner database
   const [rawCategories, setRawCategories] = useState([]);
-  const [rawDealsBundles, setRawDealsBundles] = useState([]);
   const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
@@ -238,57 +237,6 @@ const MenuPage = () => {
     return list;
   }, [rawCategories, branchCurrencySymbol, posPayload, selectedOrderType]);
 
-  const formattedDeals = useMemo(() => {
-    return rawDealsBundles.map((b) => {
-      const rawItemType = (b.itemtype || b.itemType || "").trim().toLowerCase();
-      const isNonVeg = rawItemType.includes("non") || rawItemType.includes("egg");
-      const isVeg = !isNonVeg && (rawItemType.includes("veg") || rawItemType === "vegan");
-      const hasDiet = isVeg || isNonVeg;
-      const bundleTypeLower = (b.bundletype || "").toLowerCase();
-
-      const rawPrice = Number(b.rawPrice ?? b.price ?? 0);
-      const effectivePrice = calculateItemPrice(
-        {
-          ...b,
-          price: rawPrice,
-          rawPrice: rawPrice,
-          taxes: b.taxes || [],
-        },
-        posPayload,
-        selectedOrderType
-      );
-
-      return {
-        id: `deal-${b.dealsbundlesid}`,
-        dealsbundlesid: b.dealsbundlesid,
-        categoryid: "deals",
-        categoryname:
-          bundleTypeLower === "combo"
-            ? translations.combos
-            : bundleTypeLower === "unlimited"
-              ? translations.unlimitedmeals
-              : "",
-        bundletype: bundleTypeLower,
-        title: b.dealsbundlesname || "",
-        desc: b.description || "",
-        price: effectivePrice,
-        rawPrice: rawPrice,
-        taxes: b.taxes || [],
-        currency: b.currency || "",
-        currencysymbol: b.currencysymbol || branchCurrencySymbol || "",
-        image: b.imageUrl || "",
-        hasDiet,
-        isVeg,
-        isNonVeg,
-        itemtype: b.itemtype || (isVeg ? "Veg" : isNonVeg ? "Non-Veg" : ""),
-        preparationtime: b.preparationtime,
-        items: b.items || [],
-        addons: b.addons || [],
-        isDeal: true,
-        filterType: bundleTypeLower === "combo" ? "combos" : "unlimited",
-      };
-    });
-  }, [rawDealsBundles, branchCurrencySymbol, translations, posPayload, selectedOrderType]);
 
   // Unified list of standard dishes (combos and unlimited moved to Offers page)
   const allCombinedItems = useMemo(() => {

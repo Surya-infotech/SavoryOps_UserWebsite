@@ -1,4 +1,3 @@
-import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HistoryIcon from "@mui/icons-material/History";
@@ -71,7 +70,6 @@ const OrderStatusHistoryModal = ({
             <div className="status-timeline">
               {sortedStatusLogs.map((log, index) => {
                 const statusColor = getOrderStatusColor(log.newStatus);
-                const isLatest = index === 0;
 
                 return (
                   <div key={index} className="timeline-item">

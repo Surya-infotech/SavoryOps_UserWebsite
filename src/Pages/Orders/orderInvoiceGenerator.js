@@ -501,7 +501,7 @@ export const generateInvoiceBodyHTML = (
 
   // Deduplicated Exclusive Taxes (parity with UserApp invoiceTemplate.js)
   const invoiceTaxes = (() => {
-    let list = [];
+    let list;
     if (Array.isArray(orderData.taxes) && orderData.taxes.length > 0) {
       list = [...orderData.taxes];
     } else {

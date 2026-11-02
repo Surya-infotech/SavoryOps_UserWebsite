@@ -1,5 +1,4 @@
 import moment from "moment-timezone";
-import { formatCurrency } from "../../utils/formatCurrency.js";
 
 export const getOrderStatusColor = (status) => {
   const norm = String(status || "").trim();

@@ -7,8 +7,8 @@ import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
-import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
-import DishCard, { DietIndicator, DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
+import { getActiveBranch } from "../../utils/formatCurrency.js";
+import DishCard, { DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 
@@ -34,7 +34,7 @@ const CarouselRow = ({
   branchSetting,
   selectedOrderType,
 }) => {
-  const { translations = {}, isRtl } = useLanguage();
+  const { isRtl } = useLanguage();
   const navigate = useNavigate();
   const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -283,7 +283,6 @@ const CarouselRow = ({
               const isDeal = Boolean(rawDish.bundletype || rawDish.dealsbundlesid || rawDish.isDeal || section.type === "combo" || section.type === "unlimited");
               const isCombo = isDeal && (bundleTypeLower === "combo" || section.type === "combo" || (!bundleTypeLower && section.type !== "unlimited"));
               const isUnlimited = isDeal && (bundleTypeLower === "unlimited" || section.type === "unlimited");
-              const isComboOrUnlimited = isCombo || isUnlimited || isDeal;
 
               const rawBasePrice = Number(rawDish.rawPrice ?? rawDish.price ?? 0);
               const effectivePrice = calculateItemPrice(
@@ -327,7 +326,6 @@ const CarouselRow = ({
                 addons: rawDish.addons || [],
               };
               const count = cartCounts[dish.id] || 0;
-              const priceFormatted = formatPriceFromBranch(dish.price, selectedBranch);
 
               return (
                 <DishCard
@@ -353,7 +351,6 @@ const CarouselRow = ({
  * Main Home Menu Showcase Section Component
  */
 const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
-  const { translations = {} } = useLanguage();
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const { showSnackbar } = useSnackbar();
 

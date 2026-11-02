@@ -4,7 +4,7 @@ import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
-import DishCard, { DietIndicator, DishDetailModal } from "../../Components/Common/DishCard.jsx";
+import DishCard, { DishDetailModal } from "../../Components/Common/DishCard.jsx";
 import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import "../../Scss/Pages/Offers/offerspage.scss";

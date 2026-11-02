@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import FlagModule from "react-world-flags";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CheckIcon from "@mui/icons-material/Check";
@@ -35,7 +34,6 @@ import "../../Scss/Components/General/dropdown.scss";
 import "../../Scss/Pages/Partials/navbar.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);
 
 /**
  * Helper to retrieve stored branch or default to first available branch
@@ -56,7 +54,7 @@ const getStoredBranch = (branches = []) => {
    1. BranchDropdown Component
    ========================================================================== */
 const BranchDropdown = ({ className = "", onBranchChange }) => {
-  const { translations = {}, isRtl } = useLanguage();
+  const { isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [branches, setBranches] = useState([]);
@@ -314,7 +312,6 @@ const getOrderTypeNavIcon = (typeName = "") => {
 };
 
 export const OrderTypeDropdown = ({ className = "" }) => {
-  const { translations = {}, isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [orderTypes, setOrderTypes] = useState([]);
   const [selectedOrderType, setSelectedOrderType] = useState(() => {

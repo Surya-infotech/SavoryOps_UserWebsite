@@ -7,7 +7,6 @@ import HomeCustomerApp from "../../Components/Home/HomeCustomerApp.jsx";
 import HomeReviews from "../../Components/Home/HomeReviews.jsx";
 import "../../Scss/Pages/Home/homepage.scss";
 
-const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 const HomePage = () => {
   const { business } = useWebsiteStatus();

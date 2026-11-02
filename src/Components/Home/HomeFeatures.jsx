@@ -79,7 +79,7 @@ const HomeFeatures = ({ hasBanner = false }) => {
     if (!Array.isArray(featuresList)) return [];
     return featuresList
       .filter((item) => (item?.title && item.title.trim()) || (item?.desc && item.desc.trim()))
-      .map((item, idx) => ({
+      .map((item) => ({
         _id: item._id,
         title: item.title || "",
         desc: item.desc || "",
