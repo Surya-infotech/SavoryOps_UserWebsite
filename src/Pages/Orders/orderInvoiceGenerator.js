@@ -64,8 +64,8 @@ export const generateInvoiceStyles = () => `
     box-sizing: border-box;
     font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0 auto;
-    padding: 12px;
-    background-color: #f8f8f8;
+    padding: 0;
+    background-color: #ffffff;
     color: #333333;
     font-size: 12px;
     line-height: 1.35;
@@ -768,7 +768,7 @@ export const generateInvoiceHTML = (
   <meta charset="UTF-8">
   <title>Invoice - Order #${orderData.orderno || ""}</title>
   <style>
-    html, body { margin: 0; padding: 0; background-color: #f8f8f8; }
+    html, body { margin: 0; padding: 0; background-color: #ffffff; }
     ${styles}
   </style>
 </head>
@@ -836,7 +836,7 @@ export const downloadOrderInvoicePDF = async (
             html, body {
               margin: 0;
               padding: 0;
-              background-color: #f8f8f8;
+              background-color: #ffffff;
             }
             ${styles}
           </style>
@@ -861,7 +861,7 @@ export const downloadOrderInvoicePDF = async (
       scale: 2,
       useCORS: true,
       logging: false,
-      backgroundColor: "#f8f8f8",
+      backgroundColor: "#ffffff",
       width: 794,
       height: captureHeight,
       windowWidth: 794,
@@ -904,7 +904,7 @@ export const downloadOrderInvoicePDF = async (
         pageCanvas.width = canvas.width;
         pageCanvas.height = sourceHeight;
         const pctx = pageCanvas.getContext("2d");
-        pctx.fillStyle = "#f8f8f8";
+        pctx.fillStyle = "#ffffff";
         pctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
         pctx.drawImage(
           canvas,
