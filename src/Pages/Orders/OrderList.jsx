@@ -190,13 +190,15 @@ const OrderList = ({ onSelectOrder }) => {
           <div className="empty-icon-wrap">
             <ReceiptLongIcon className="empty-illustration-icon" />
           </div>
-          <h3>{translations.noorderfound || "No orders found"}</h3>
-          <p>
+          <h2 className="empty-title">{translations.noorderfound || "No orders found"}</h2>
+          <p className="empty-description">
             {translations.noorderdescription ||
-              "Your order history will appear here once you place your first order."}
+              "Your order history will appear here once you place your first order. Explore our menu to discover our chef's specials and delicious treats!"}
           </p>
           <Link to="/menu" className="empty-action-btn">
-            {translations.ordernow || "Explore Menu & Order"}
+            <ShoppingBagOutlinedIcon fontSize="small" />
+            <span>{translations.ordernow || "Order Now"}</span>
+            <ArrowForwardIcon fontSize="small" />
           </Link>
         </div>
       ) : filteredOrders.length === 0 ? (
@@ -204,8 +206,8 @@ const OrderList = ({ onSelectOrder }) => {
           <div className="empty-icon-wrap search">
             <SearchOffIcon className="empty-illustration-icon" />
           </div>
-          <h3>{translations.noorderfound || "No orders found"}</h3>
-          <p>
+          <h2 className="empty-title">{translations.noorderfound || "No orders found"}</h2>
+          <p className="empty-description">
             {translations.nosearchresultsfound ||
               "No orders match your search criteria. Try a different query."}
           </p>
@@ -214,7 +216,8 @@ const OrderList = ({ onSelectOrder }) => {
             className="secondary-btn"
             onClick={() => setSearch("")}
           >
-            {translations.clearsearch || "Clear Search Filter"}
+            <CloseIcon fontSize="small" />
+            <span>{translations.clearsearch || "Clear Search Filter"}</span>
           </button>
         </div>
       ) : (

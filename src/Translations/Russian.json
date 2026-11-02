@@ -264,5 +264,9 @@
   "grandtotal": "Общий итог",
   "invoice": "СЧЕТ",
   "branchphone": "Номер телефона",
-  "branchaddress": "Адрес"
+  "branchaddress": "Адрес",
+  "freshandhot": "Свежее и горячее",
+  "fastdelivery": "Быстрая доставка",
+  "ordertracking": "Отслеживание онлайн",
+  "noorderdescription": "История заказов появится здесь после первого заказа. Ознакомьтесь с нашим меню!"
 }

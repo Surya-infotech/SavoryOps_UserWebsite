@@ -264,5 +264,9 @@
   "grandtotal": "Total general",
   "invoice": "FACTURA",
   "branchphone": "Número de teléfono",
-  "branchaddress": "Dirección"
+  "branchaddress": "Dirección",
+  "freshandhot": "Fresco y caliente",
+  "fastdelivery": "Entrega rápida",
+  "ordertracking": "Seguimiento en vivo",
+  "noorderdescription": "Tu historial de pedidos aparecerá aquí una vez que realices tu primer pedido. ¡Explora nuestro menú para descubrir nuestras especialidades!"
 }

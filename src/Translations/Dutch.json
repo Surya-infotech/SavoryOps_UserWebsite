@@ -264,5 +264,9 @@
   "grandtotal": "Totaalbedrag",
   "invoice": "FACTUUR",
   "branchphone": "Telefoonnummer",
-  "branchaddress": "Adres"
+  "branchaddress": "Adres",
+  "freshandhot": "Vers & Heet",
+  "fastdelivery": "Snelle bezorging",
+  "ordertracking": "Live volgen",
+  "noorderdescription": "Uw bestelgeschiedenis verschijnt hier zodra u uw eerste bestelling plaatst. Ontdek ons menu!"
 }

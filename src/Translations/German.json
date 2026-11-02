@@ -264,5 +264,9 @@
   "grandtotal": "Gesamtsumme",
   "invoice": "RECHNUNG",
   "branchphone": "Telefonnummer",
-  "branchaddress": "Adresse"
+  "branchaddress": "Adresse",
+  "freshandhot": "Frisch & Heiß",
+  "fastdelivery": "Schnelle Lieferung",
+  "ordertracking": "Live-Verfolgung",
+  "noorderdescription": "Ihre Bestellübersicht erscheint hier, sobald Sie Ihre erste Bestellung aufgeben. Entdecken Sie unsere Speisekarte!"
 }

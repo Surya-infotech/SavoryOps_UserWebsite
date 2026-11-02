@@ -284,5 +284,9 @@
   "orderitems": "عناصر الطلب",
   "invoice": "فاتورة",
   "branchphone": "رقم الهاتف",
-  "branchaddress": "العنوان"
+  "branchaddress": "العنوان",
+  "freshandhot": "طازج وساخن",
+  "fastdelivery": "توصيل سريع",
+  "ordertracking": "تتبع مباشر",
+  "noorderdescription": "سوف يظهر سجل طلباتك هنا بمجرد تقديم طلبك الأول. استكشف قائمتنا اللذيذة!"
 }
