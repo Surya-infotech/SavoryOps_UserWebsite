@@ -6,7 +6,7 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import ReservationList from "./ReservationList.jsx";
 import AddReservationModal from "./AddReservationModal.jsx";
 import ReservationDetailsModal from "./ReservationDetailsModal.jsx";
-import "../../Scss/Pages/Reservation/reservationpage.scss";
+import "../../Scss/Pages/Reservation/tablereservation.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;

@@ -31,7 +31,7 @@ const StatusIcon = ({ iconType, fontSize = "inherit" }) => {
     case "schedule":
       return <ScheduleIcon fontSize={fontSize} />;
     case "check":
-      return <CheckCircleOutlineIcon fontSize={fontSize} />;
+      return <CheckCircleOutlinedIcon fontSize={fontSize} />;
     case "seat":
       return <EventSeatIcon fontSize={fontSize} />;
     case "cancel":

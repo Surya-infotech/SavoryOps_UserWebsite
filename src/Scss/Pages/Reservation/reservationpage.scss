@@ -46,40 +46,19 @@
 
 .reservations-header-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 1.5rem;
-  flex-wrap: wrap;
-
-  .header-meta {
-    flex: 1;
-    min-width: 260px;
-  }
-
-  .reservations-main-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 0.35rem;
-    letter-spacing: -0.5px;
-  }
-
-  .reservations-main-subtitle {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin: 0;
-    line-height: 1.5;
-    max-width: 600px;
-  }
+  margin-bottom: 0.5rem;
 
   .add-reservation-primary-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.72rem 1.45rem;
     background: linear-gradient(135deg, #028802 0%, #026b02 100%);
     color: #ffffff;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     font-weight: 700;
     border: none;
     border-radius: 12px;
@@ -90,7 +69,7 @@
     &:hover {
       background: linear-gradient(135deg, #029902 0%, #027a02 100%);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(2, 136, 2, 0.38);
+      box-shadow: 0 6px 18px rgba(2, 136, 2, 0.35);
     }
   }
 }

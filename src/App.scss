@@ -4,6 +4,7 @@
    ========================================================================== */
 
 @use "Scss/Customize/var.scss" as var;
+@use "Scss/Pages/Reservation/tablereservation.scss" as *;
 
 .user-app-container {
   min-height: 100vh;

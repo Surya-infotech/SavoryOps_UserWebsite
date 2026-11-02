@@ -22,13 +22,14 @@ import {
   getReservationStatusConfig,
   formatReservationDate,
 } from "./reservationHelpers.js";
+import "../../Scss/Pages/Reservation/tablereservation.scss";
 
 const StatusBadgeIcon = ({ iconType, fontSize = "inherit" }) => {
   switch (iconType) {
     case "schedule":
       return <ScheduleIcon fontSize={fontSize} />;
     case "check":
-      return <CheckCircleOutlineIcon fontSize={fontSize} />;
+      return <CheckCircleOutlinedIcon fontSize={fontSize} />;
     case "seat":
       return <EventSeatIcon fontSize={fontSize} />;
     case "cancel":
@@ -117,16 +118,6 @@ const ReservationList = ({
     <div className="reservations-list-wrapper">
       {/* Page Header & Action Bar */}
       <div className="reservations-header-row">
-        <div className="header-meta">
-          <h1 className="reservations-main-title">
-            {translations.tablereservation || "Table Reservations"}
-          </h1>
-          <p className="reservations-main-subtitle">
-            {translations.bookingsubtitle ||
-              "Reserve your table online in seconds with instant confirmation and contactless dining preferences."}
-          </p>
-        </div>
-
         <button
           type="button"
           className="add-reservation-primary-btn"
