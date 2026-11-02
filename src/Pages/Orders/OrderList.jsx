@@ -4,6 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -186,34 +187,39 @@ const OrderList = ({ onSelectOrder }) => {
           ))}
         </div>
       ) : orders.length === 0 ? (
-        <div className="orders-empty-state">
+        /* Empty State (No Orders Placed - matching Manage Address) */
+        <div className="address-empty-card orders-empty-state">
           <div className="empty-icon-wrap">
-            <ReceiptLongIcon className="empty-illustration-icon" />
+            <ReceiptLongOutlinedIcon className="empty-icon" />
           </div>
-          <h2 className="empty-title">{translations.noorderfound || "No orders found"}</h2>
-          <p className="empty-description">
+          <h2 className="empty-title">
+            {translations.noorderfound || "No Orders Placed Yet"}
+          </h2>
+          <p className="empty-subtitle">
             {translations.noorderdescription ||
               "Your order history will appear here once you place your first order. Explore our menu to discover our chef's specials and delicious treats!"}
           </p>
-          <Link to="/menu" className="empty-action-btn">
+          <Link to="/menu" className="empty-add-btn">
             <ShoppingBagOutlinedIcon fontSize="small" />
             <span>{translations.ordernow || "Order Now"}</span>
-            <ArrowForwardIcon fontSize="small" />
           </Link>
         </div>
       ) : filteredOrders.length === 0 ? (
-        <div className="orders-empty-state search-empty">
+        /* Search Empty State */
+        <div className="orders-empty-state address-empty-card search-empty">
           <div className="empty-icon-wrap search">
-            <SearchOffIcon className="empty-illustration-icon" />
+            <SearchOffIcon className="empty-icon" />
           </div>
-          <h2 className="empty-title">{translations.noorderfound || "No orders found"}</h2>
-          <p className="empty-description">
-            {translations.nosearchresultsfound ||
+          <h2 className="empty-title">
+            {translations.nosearchresultsfound || "No orders found"}
+          </h2>
+          <p className="empty-subtitle">
+            {translations.noordersmatchsearch ||
               "No orders match your search criteria. Try a different query."}
           </p>
           <button
             type="button"
-            className="secondary-btn"
+            className="empty-add-btn secondary"
             onClick={() => setSearch("")}
           >
             <CloseIcon fontSize="small" />

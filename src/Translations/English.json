@@ -284,7 +284,7 @@
   "orderitems": "Order Items",
   "itemdetails": "Item Details",
   "specialinstructions": "Special Instructions",
-  "noorderfound": "No order found",
+  "noorderfound": "No Orders Placed Yet",
   "noorderdescription": "Your order history will appear here once you place your first order. Explore our menu to discover our chef's specials and delicious treats!",
   "nosearchresultsfound": "No orders matched your search criteria",
   "cannotdownloadinvoice": "Order details not loaded. Cannot download invoice.",
