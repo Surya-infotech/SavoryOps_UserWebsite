@@ -33,7 +33,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
   const [selectedTable, setSelectedTable] = useState(null);
   const [selectedDate, setSelectedDate] = useState(getTodayDateInputString);
   const [selectedTime, setSelectedTime] = useState("19:00");
-  const [guestCount, setGuestCount] = useState(2);
+  const [guestCount, setGuestCount] = useState("");
   const [specialNotes, setSpecialNotes] = useState("");
 
   // Data State
@@ -52,7 +52,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
     if (isOpen) {
       setSelectedDate(getTodayDateInputString());
       setSelectedTime("19:00");
-      setGuestCount(2);
+      setGuestCount("");
       setSpecialNotes("");
       setErrors({});
       fetchBranches();
@@ -603,29 +603,27 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 <input
                   id="reservation-guests-input"
                   type="number"
-                  className={`form-input ${errors.guests ? "has-error" : ""}`}
+                  className={`form-input guest-input ${errors.guests ? "has-error" : ""}`}
                   min="1"
                   max="100"
                   placeholder={
-                    translations.enterguestcount ||
-                    translations.guest ||
-                    "Enter number of guests"
+                    translations.enterguestcount || "Enter Guest Count"
                   }
                   value={guestCount}
+                  onKeyDown={(e) => {
+                    if (["e", "E", "+", "-", "."].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   onChange={(e) => {
                     const val = e.target.value;
                     if (val === "") {
                       setGuestCount("");
                     } else {
                       const num = parseInt(val, 10);
-                      setGuestCount(isNaN(num) ? "" : num);
+                      setGuestCount(isNaN(num) || num <= 0 ? "" : num);
                     }
                     setErrors((prev) => ({ ...prev, guests: null }));
-                  }}
-                  onBlur={() => {
-                    if (!guestCount || Number(guestCount) < 1) {
-                      setGuestCount(1);
-                    }
                   }}
                 />
                 {errors.guests && (

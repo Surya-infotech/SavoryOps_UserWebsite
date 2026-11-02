@@ -841,6 +841,19 @@
       }
     }
 
+    .form-input.guest-input,
+    .form-input[type="number"],
+    .guest-input {
+      -moz-appearance: textfield !important;
+      appearance: textfield !important;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
+      }
+    }
+
     .form-textarea {
       resize: vertical;
       line-height: 1.5;
