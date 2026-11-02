@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import StorefrontIcon from "@mui/icons-material/Storefront";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
 import BoltIcon from "@mui/icons-material/Bolt";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
@@ -401,17 +400,8 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
         {/* Modal Form */}
         <form onSubmit={handleSubmit} className="reservation-form">
           <div className="modal-scroll-body">
-            {/* 1. Branch Selector (Dropdown matching other dropdowns) */}
+            {/* 1. Branch Selector (Dropdown matching ManageAddress dropdown design) */}
             <div className="form-group branch-form-group">
-              <label className="form-label" htmlFor="reservation-branch-dropdown">
-                <StorefrontIcon fontSize="small" className="label-icon" />
-                <span>
-                  {translations.selectlocation ||
-                    translations.selectbranch ||
-                    "Select Location"}
-                </span>
-                <span className="req">*</span>
-              </label>
               {loadingBranches ? (
                 <div className="field-loading-placeholder">
                   <CircularProgress size={18} />
@@ -424,6 +414,12 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               ) : (
                 <Dropdown
                   id="reservation-branch-dropdown"
+                  label={
+                    translations.selectlocation ||
+                    translations.selectbranch ||
+                    "Select Location"
+                  }
+                  required={true}
                   direction="down"
                   placeholder={
                     translations.selectlocationplaceholder ||
@@ -445,7 +441,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 />
               )}
               {errors.branch && (
-                <span className="error-message">{errors.branch}</span>
+                <span className="field-error-msg">{errors.branch}</span>
               )}
             </div>
 
@@ -498,12 +494,8 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             {/* 3. Seating Options: Pick Spot (Area & Table) vs Quick Seat (Guests) */}
             {reservationType === "pickspot" ? (
               <div className="pick-spot-fields">
-                {/* Area Selector (Dropdown instead of tabs) */}
+                {/* Area Selector (Dropdown matching ManageAddress dropdown design) */}
                 <div className="form-group area-form-group">
-                  <label className="form-label" htmlFor="reservation-area-dropdown">
-                    <span>{translations.selectarea || "Select Area"}</span>
-                    <span className="req">*</span>
-                  </label>
                   {loadingTables ? (
                     <div className="field-loading-placeholder">
                       <CircularProgress size={18} />
@@ -517,6 +509,8 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   ) : (
                     <Dropdown
                       id="reservation-area-dropdown"
+                      label={translations.selectarea || "Select Area"}
+                      required={true}
                       direction="down"
                       placeholder={
                         translations.selectareaplaceholder ||
@@ -546,50 +540,40 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     />
                   )}
                   {errors.area && (
-                    <span className="error-message">{errors.area}</span>
+                    <span className="field-error-msg">{errors.area}</span>
                   )}
                 </div>
 
-                {/* Table Selector (Dropdown same as Area dropdown) */}
+                {/* Table Selector (Dropdown matching ManageAddress dropdown design) */}
                 <div className="form-group table-form-group">
-                  <label className="form-label" htmlFor="reservation-table-dropdown">
-                    <span>{translations.selecttable || "Select Table"}</span>
-                    <span className="req">*</span>
-                  </label>
-                  {!selectedArea ? (
-                    <div className="notice-chip">
-                      {translations.pleaseselectareafirst ||
-                        "Please select an area first."}
-                    </div>
-                  ) : tablesInArea.length === 0 ? (
-                    <div className="notice-chip">
-                      {translations.notablefound || "No tables found in this area."}
-                    </div>
-                  ) : (
-                    <Dropdown
-                      id="reservation-table-dropdown"
-                      direction="down"
-                      placeholder={
-                        translations.selecttableplaceholder ||
-                        translations.selecttable ||
-                        "Select Table"
-                      }
-                      options={tableOptions}
-                      labelKey="displayLabel"
-                      valueKey="tableid"
-                      selectedValue={selectedTable?.tableid || ""}
-                      onValueChange={(newTableId) => {
-                        const chosen = tablesInArea.find(
-                          (t) => String(t.tableid) === String(newTableId)
-                        );
-                        setSelectedTable(chosen || null);
-                        setErrors((prev) => ({ ...prev, table: null }));
-                      }}
-                      showSearch={tableOptions.length > 5}
-                    />
-                  )}
+                  <Dropdown
+                    id="reservation-table-dropdown"
+                    label={translations.selecttable || "Select Table"}
+                    required={true}
+                    direction="down"
+                    placeholder={
+                      !selectedArea
+                        ? (translations.pleaseselectareafirst || "Please Select Area First")
+                        : tablesInArea.length === 0
+                          ? (translations.notablefound || "No Tables in This Area")
+                          : (translations.selecttableplaceholder || translations.selecttable || "Select Table")
+                    }
+                    options={tableOptions}
+                    labelKey="displayLabel"
+                    valueKey="tableid"
+                    selectedValue={selectedTable?.tableid || ""}
+                    onValueChange={(newTableId) => {
+                      const chosen = tablesInArea.find(
+                        (t) => String(t.tableid) === String(newTableId)
+                      );
+                      setSelectedTable(chosen || null);
+                      setErrors((prev) => ({ ...prev, table: null }));
+                    }}
+                    disabled={!selectedArea || tablesInArea.length === 0}
+                    showSearch={tableOptions.length > 5}
+                  />
                   {errors.table && (
-                    <span className="error-message">{errors.table}</span>
+                    <span className="field-error-msg">{errors.table}</span>
                   )}
                 </div>
               </div>
