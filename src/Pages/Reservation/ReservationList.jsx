@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StorefrontIcon from "@mui/icons-material/Storefront";
@@ -124,7 +124,7 @@ const ReservationList = ({
           onClick={onOpenAddModal}
         >
           <AddIcon fontSize="small" />
-          <span>{translations.addreservation || "Book a Table"}</span>
+          <span>{translations.addreservation || "Add Table Reservation"}</span>
         </button>
       </div>
 
@@ -182,44 +182,43 @@ const ReservationList = ({
           ))}
         </div>
       ) : reservations.length === 0 ? (
-        /* Empty State (No Reservations at all) */
-        <div className="reservations-empty-state">
+        /* Empty State (No Reservations at all - matching Manage Address) */
+        <div className="address-empty-card reservations-empty-state">
           <div className="empty-icon-wrap">
-            <TableRestaurantIcon className="empty-illustration-icon" />
+            <TableRestaurantOutlinedIcon className="empty-icon" />
           </div>
           <h2 className="empty-title">
-            {translations.noTableReservations || "No Table Reservation"}
+            {translations.noTableReservations || "No Table Reservations Saved"}
           </h2>
-          <p className="empty-description">
+          <p className="empty-subtitle">
             {translations.noTableReservationsMessage ||
-              "You haven't made any table reservations yet. Book your table now for a great dining experience!"}
+              "Save your favorite tables and book in advance for a faster and smoother dining experience."}
           </p>
           <button
             type="button"
-            className="empty-action-btn"
+            className="empty-add-btn"
             onClick={onOpenAddModal}
           >
             <AddIcon fontSize="small" />
-            <span>{translations.addreservation || "Book a Table"}</span>
-            <ArrowForwardIcon fontSize="small" />
+            <span>{translations.addreservation || "Add Table Reservation"}</span>
           </button>
         </div>
       ) : filteredReservations.length === 0 ? (
         /* Filter / Search Empty State */
         <div className="reservations-empty-state search-empty">
           <div className="empty-icon-wrap search">
-            <SearchOffIcon className="empty-illustration-icon" />
+            <SearchOffIcon className="empty-icon" />
           </div>
           <h2 className="empty-title">
             {translations.noreservationfound || "No reservations found"}
           </h2>
-          <p className="empty-description">
+          <p className="empty-subtitle">
             {translations.nosearchresultsfound ||
               "No reservations match your search or filter criteria. Try adjusting your filter."}
           </p>
           <button
             type="button"
-            className="secondary-btn"
+            className="empty-add-btn secondary"
             onClick={() => {
               setSearch("");
               setStatusFilter("all");
