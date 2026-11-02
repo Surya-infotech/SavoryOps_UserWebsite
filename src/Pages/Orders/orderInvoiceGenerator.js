@@ -64,7 +64,7 @@ export const generateInvoiceStyles = () => `
     box-sizing: border-box;
     font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0 auto;
-    padding: 8px 10px;
+    padding: 12px;
     background-color: #f8f8f8;
     color: #333333;
     font-size: 12px;
@@ -849,23 +849,61 @@ export const downloadOrderInvoicePDF = async (
       windowHeight: captureHeight,
     });
 
-    const pageW = 210; // Standard 210mm A4 width
-    const pageH = (canvas.height * pageW) / canvas.width;
-
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: [pageW, pageH],
+      format: "a4",
       compress: true,
     });
 
-    if (pageH < pageW) {
-      doc.internal.pageSize.width = pageW;
-      doc.internal.pageSize.height = pageH;
-    }
+    const pageW = doc.internal.pageSize.getWidth(); // 210
+    const pageH = doc.internal.pageSize.getHeight(); // 297
+    const margin = 8; // 8mm padding on top, bottom, left, right
+    const contentW = pageW - margin * 2; // 194
+    const contentH = pageH - margin * 2; // 281
 
-    const imgData = canvas.toDataURL("image/png", 1.0);
-    doc.addImage(imgData, "PNG", 0, 0, pageW, pageH, undefined, "FAST");
+    const imgW = contentW;
+    const imgH = (canvas.height * imgW) / canvas.width;
+
+    if (imgH <= contentH) {
+      // Single page: draw centered with top/left/right/bottom padding
+      const imgData = canvas.toDataURL("image/png", 1.0);
+      doc.addImage(imgData, "PNG", margin, margin, imgW, imgH, undefined, "FAST");
+    } else {
+      // Multi-page slice
+      const pageHeightPx = Math.floor((contentH / imgW) * canvas.width);
+      const totalPages = Math.ceil(canvas.height / pageHeightPx);
+
+      for (let i = 0; i < totalPages; i++) {
+        if (i > 0) {
+          doc.addPage();
+        }
+        const sourceY = i * pageHeightPx;
+        const sourceHeight = Math.min(pageHeightPx, canvas.height - sourceY);
+
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sourceHeight;
+        const pctx = pageCanvas.getContext("2d");
+        pctx.fillStyle = "#f8f8f8";
+        pctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+        pctx.drawImage(
+          canvas,
+          0,
+          sourceY,
+          canvas.width,
+          sourceHeight,
+          0,
+          0,
+          canvas.width,
+          sourceHeight
+        );
+
+        const pageImgData = pageCanvas.toDataURL("image/png", 1.0);
+        const pageImgH = (sourceHeight * imgW) / canvas.width;
+        doc.addImage(pageImgData, "PNG", margin, margin, imgW, pageImgH, undefined, "FAST");
+      }
+    }
 
     const orderIdentifier =
       orderData.orderno ||
