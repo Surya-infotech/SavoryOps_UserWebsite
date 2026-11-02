@@ -923,6 +923,17 @@
       }
     }
   }
+  /* Seating Area & Table Dropdowns */
+  .area-form-group {
+    position: relative;
+    z-index: 25;
+  }
+
+  .table-form-group {
+    position: relative;
+    z-index: 20;
+  }
+
   /* Area Pills (Legacy fallback) */
   .pill-selector-row {
     display: flex;

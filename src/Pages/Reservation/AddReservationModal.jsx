@@ -202,13 +202,14 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
         const tablesArray = Array.isArray(data) ? data : [];
         setAllTables(tablesArray);
 
-        // Pre-select first area if available
+        // Pre-select first area & table if available
         const firstTable = tablesArray[0];
         if (firstTable?.areaid && firstTable?.areaname) {
           setSelectedArea({
             areaid: firstTable.areaid,
             areaname: firstTable.areaname,
           });
+          setSelectedTable(firstTable);
         }
       }
     } catch (err) {
@@ -238,6 +239,22 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
     if (!selectedArea) return [];
     return allTables.filter((t) => t.areaid === selectedArea.areaid);
   }, [allTables, selectedArea]);
+
+  // Table options formatted for Dropdown
+  const tableOptions = useMemo(() => {
+    return tablesInArea.map((table) => ({
+      ...table,
+      displayLabel: `${table.tableno}${
+        table.capacity
+          ? ` (${table.capacity} ${
+              table.capacity === 1
+                ? translations.seat || "seat"
+                : translations.seats || "seats"
+            })`
+          : ""
+      }`,
+    }));
+  }, [tablesInArea, translations]);
 
   // Form Validation
   const validateForm = () => {
@@ -527,8 +544,15 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                           (a) => String(a.areaid) === String(newAreaId)
                         );
                         setSelectedArea(chosen || null);
-                        setSelectedTable(null);
-                        setErrors((prev) => ({ ...prev, area: null }));
+                        const tablesInNewArea = allTables.filter(
+                          (t) => String(t.areaid) === String(newAreaId)
+                        );
+                        setSelectedTable(tablesInNewArea[0] || null);
+                        setErrors((prev) => ({
+                          ...prev,
+                          area: null,
+                          table: null,
+                        }));
                       }}
                       showSearch={areas.length > 5}
                     />
@@ -538,50 +562,47 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   )}
                 </div>
 
-                {/* Table Selector */}
-                {selectedArea && (
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span>{translations.selecttable || "Select Table"}</span>
-                    </label>
-                    {tablesInArea.length === 0 ? (
-                      <div className="notice-chip">
-                        {translations.notablefound || "No tables found in this area."}
-                      </div>
-                    ) : (
-                      <div className="table-cards-grid">
-                        {tablesInArea.map((table) => {
-                          const isSelected =
-                            selectedTable?.tableid === table.tableid;
-                          return (
-                            <button
-                              key={table.tableid}
-                              type="button"
-                              className={`table-select-card ${isSelected ? "selected" : ""
-                                }`}
-                              onClick={() => {
-                                setSelectedTable(table);
-                                setErrors((prev) => ({ ...prev, table: null }));
-                              }}
-                            >
-                              <TableRestaurantIcon className="table-card-icon" />
-                              <span className="table-card-no">
-                                {table.tableno}
-                              </span>
-                              <span className="table-card-cap">
-                                {table.capacity}{" "}
-                                {table.capacity === 1 ? "seat" : "seats"}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                    {errors.table && (
-                      <span className="error-message">{errors.table}</span>
-                    )}
-                  </div>
-                )}
+                {/* Table Selector (Dropdown same as Area dropdown) */}
+                <div className="form-group table-form-group">
+                  <label className="form-label" htmlFor="reservation-table-dropdown">
+                    <span>{translations.selecttable || "Select Table"}</span>
+                    <span className="req">*</span>
+                  </label>
+                  {!selectedArea ? (
+                    <div className="notice-chip">
+                      {translations.pleaseselectareafirst ||
+                        "Please select an area first."}
+                    </div>
+                  ) : tablesInArea.length === 0 ? (
+                    <div className="notice-chip">
+                      {translations.notablefound || "No tables found in this area."}
+                    </div>
+                  ) : (
+                    <Dropdown
+                      id="reservation-table-dropdown"
+                      placeholder={
+                        translations.selecttableplaceholder ||
+                        translations.selecttable ||
+                        "Select Table"
+                      }
+                      options={tableOptions}
+                      labelKey="displayLabel"
+                      valueKey="tableid"
+                      selectedValue={selectedTable?.tableid || ""}
+                      onValueChange={(newTableId) => {
+                        const chosen = tablesInArea.find(
+                          (t) => String(t.tableid) === String(newTableId)
+                        );
+                        setSelectedTable(chosen || null);
+                        setErrors((prev) => ({ ...prev, table: null }));
+                      }}
+                      showSearch={tableOptions.length > 5}
+                    />
+                  )}
+                  {errors.table && (
+                    <span className="error-message">{errors.table}</span>
+                  )}
+                </div>
               </div>
             ) : (
               /* Quick Seat: Guest Counter */
