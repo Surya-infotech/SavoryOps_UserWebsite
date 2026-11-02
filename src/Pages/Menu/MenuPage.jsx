@@ -91,16 +91,13 @@ const MenuPage = () => {
 
       if (!response.ok) {
         setRawCategories([]);
-        setRawDealsBundles([]);
         return;
       }
 
       const data = await response.json();
       const categories = Array.isArray(data.itemCategories) ? data.itemCategories : [];
-      const bundles = Array.isArray(data.dealsBundles) ? data.dealsBundles : [];
 
       setRawCategories(categories);
-      setRawDealsBundles(bundles);
       setPosPayload(data.branchSetting || data);
       if (data.branchSetting && typeof window !== "undefined") {
         window.__branchSetting = data.branchSetting;
@@ -124,7 +121,6 @@ const MenuPage = () => {
     } catch (err) {
       console.error("Error fetching menu details for website:", err);
       setRawCategories([]);
-      setRawDealsBundles([]);
     } finally {
       isFetchingRef.current = false;
       setLoading(false);
