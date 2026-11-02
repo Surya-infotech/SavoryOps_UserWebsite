@@ -598,6 +598,7 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
         businessname: order.businessname,
         logourl: order.logourl,
         logobase64: order.logobase64 || null,
+        branchdetails: order.branchdetails,
       };
       await downloadOrderInvoicePDF(
         orderToDownload,
