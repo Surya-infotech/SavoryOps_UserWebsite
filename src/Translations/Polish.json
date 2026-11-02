@@ -291,5 +291,6 @@
   "unlimitedmeals": "Dania bez limitu",
   "itemsincluded": "pozycji w zestawie",
   "itemincluded": "pozycja w zestawie",
-  "nodishesfound": "Nie znaleziono dań w tym wyborze."
+  "nodishesfound": "Nie znaleziono dań w tym wyborze.",
+  "grandtotal": "Suma całkowita"
 }

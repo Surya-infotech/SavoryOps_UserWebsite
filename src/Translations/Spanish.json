@@ -291,5 +291,6 @@
   "unlimitedmeals": "Comidas ilimitadas",
   "itemsincluded": "artículos incluidos",
   "itemincluded": "artículo incluido",
-  "nodishesfound": "No se encontraron platos en esta selección."
+  "nodishesfound": "No se encontraron platos en esta selección.",
+  "grandtotal": "Total general"
 }

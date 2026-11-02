@@ -291,5 +291,6 @@
   "unlimitedmeals": "Безлимитные блюда",
   "itemsincluded": "позиций включено",
   "itemincluded": "позиция включена",
-  "nodishesfound": "Блюда в этой категории не найдены."
+  "nodishesfound": "Блюда в этой категории не найдены.",
+  "grandtotal": "Общий итог"
 }
