@@ -343,6 +343,10 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
             amount:
               item.amount !== undefined ? item.amount : baseAmount + addonsAmount,
             itemtype: item.itemtype || "Veg",
+            isDeal: Boolean(item.isDeal),
+            dealsbundlesid: item.dealsbundlesid != null ? Number(item.dealsbundlesid) : null,
+            bundletype: item.bundletype || null,
+            bundleItems: Array.isArray(item.bundleItems) ? item.bundleItems : [],
             addons: addonsForProduct.map((addon) => ({
               addonname: addon.addonname || addon.name,
               addonprice: addon.addonprice || addon.price || 0,
@@ -1000,6 +1004,11 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
                             >
                               {product.productname}
                             </span>
+                            {product.isDeal && (
+                              <span className="order-deal-tag">
+                                {product.bundletype || "Deal"}
+                              </span>
+                            )}
                             {!isOrderCancelled && cancelled && (
                               <span className="cancelled-pill">
                                 {translations.Cancelled || "Cancelled"}
@@ -1053,6 +1062,25 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
                                 <span className="addon-total">
                                   {formatOrderPrice(addon.amount, order)}
                                 </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Bundle Items List for Combos / Unlimited Deals */}
+                      {product.isDeal && Array.isArray(product.bundleItems) && product.bundleItems.length > 0 && (
+                        <div className="product-bundle-box">
+                          <div className="bundle-box-heading">
+                            <span className="bundle-box-dot"></span>
+                            <strong>{translations.includeditems || "Included Items"}</strong>
+                            <span className="bundle-count-pill">{product.bundleItems.length}</span>
+                          </div>
+                          <div className="bundle-items-flow">
+                            {product.bundleItems.map((bi, biIdx) => (
+                              <div key={biIdx} className="bundle-item-row">
+                                <span className="bundle-pill-qty">{bi.qty || 1}x</span>
+                                <span className="bundle-item-name">{bi.itemname}</span>
                               </div>
                             ))}
                           </div>

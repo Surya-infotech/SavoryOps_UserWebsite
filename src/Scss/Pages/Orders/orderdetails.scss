@@ -796,6 +796,88 @@
           }
         }
 
+        .order-deal-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 2px 7px;
+          border-radius: 5px;
+          font-size: 0.68rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          background: #fef3c7;
+          color: #d97706;
+          border: 1px solid #fde68a;
+          margin-left: 6px;
+          white-space: nowrap;
+        }
+
+        .product-bundle-box {
+          margin-left: 27px;
+          margin-top: 0.45rem;
+          background: #f8fafc;
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          border-left: 3px solid #3b82f6;
+          padding: 0.6rem 0.85rem;
+
+          .bundle-box-heading {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 6px;
+
+            .bundle-box-dot {
+              width: 6px;
+              height: 6px;
+              border-radius: 50%;
+              background: #3b82f6;
+            }
+
+            .bundle-count-pill {
+              background: #dbeafe;
+              color: #1d4ed8;
+              font-size: 0.65rem;
+              padding: 1px 5px;
+              border-radius: 999px;
+            }
+          }
+
+          .bundle-items-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+
+            .bundle-item-row {
+              display: inline-flex;
+              align-items: center;
+              gap: 5px;
+              background: #ffffff;
+              border: 1px solid #e2e8f0;
+              border-radius: 6px;
+              padding: 3px 8px;
+              font-size: 0.76rem;
+              color: #1e293b;
+
+              .bundle-pill-qty {
+                font-weight: 700;
+                color: #2563eb;
+                font-size: 0.72rem;
+              }
+
+              .bundle-item-name {
+                font-weight: 500;
+              }
+            }
+          }
+        }
+
         .product-addons-box {
           margin-left: 27px;
           margin-top: 0.4rem;
