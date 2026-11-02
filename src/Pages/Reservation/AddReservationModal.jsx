@@ -142,6 +142,15 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
     return allBranches;
   }, [allBranches, business]);
 
+  // Branch options formatted for Dropdown
+  const branchOptions = useMemo(() => {
+    return availableBranches.map((branch) => ({
+      ...branch,
+      displayLabel: `${branch.branchname}${branch.address ? ` — ${branch.address}` : ""
+        }`,
+    }));
+  }, [availableBranches]);
+
   // When selected branch changes, load branch hours/timezone and tables
   useEffect(() => {
     if (selectedBranch?.branchid && selectedBranch?.ownerid) {
@@ -244,15 +253,13 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
   const tableOptions = useMemo(() => {
     return tablesInArea.map((table) => ({
       ...table,
-      displayLabel: `${table.tableno}${
-        table.capacity
-          ? ` (${table.capacity} ${
-              table.capacity === 1
-                ? translations.seat || "seat"
-                : translations.seats || "seats"
-            })`
-          : ""
-      }`,
+      displayLabel: `${table.tableno}${table.capacity
+        ? ` (${table.capacity} ${table.capacity === 1
+          ? translations.seat || "seat"
+          : translations.seats || "seats"
+        })`
+        : ""
+        }`,
     }));
   }, [tablesInArea, translations]);
 
@@ -380,27 +387,16 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
         className="reservation-modal-card add-reservation-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
+        {/* Modal Header (Matching Manage Address modal header design) */}
         <div className="modal-header">
-          <div className="header-left">
-            <div className="modal-icon-badge">
-              <TableRestaurantIcon />
-            </div>
-            <div>
-              <h3 className="modal-title">
-                {translations.addreservation || "Book a Table"}
-              </h3>
-              <p className="modal-subtitle">
-                {translations.bookingsubtitle ||
-                  "Reserve your spot online with instant confirmation."}
-              </p>
-            </div>
-          </div>
+          <h2 className="modal-title">
+            {translations.addreservation || "Add Table Reservation"}
+          </h2>
           <button
             type="button"
             className="modal-close-btn"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="Close dialog"
           >
             <CloseIcon />
           </button>
@@ -409,39 +405,48 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
         {/* Modal Form */}
         <form onSubmit={handleSubmit} className="reservation-form">
           <div className="modal-scroll-body">
-            {/* 1. Branch Selector */}
-            <div className="form-group">
-              <label className="form-label">
+            {/* 1. Branch Selector (Dropdown matching other dropdowns) */}
+            <div className="form-group branch-form-group">
+              <label className="form-label" htmlFor="reservation-branch-dropdown">
                 <StorefrontIcon fontSize="small" className="label-icon" />
-                <span>{translations.selectbranch || "Select Branch"}</span>
+                <span>
+                  {translations.selectlocation ||
+                    translations.selectbranch ||
+                    "Select Location"}
+                </span>
+                <span className="req">*</span>
               </label>
               {loadingBranches ? (
                 <div className="field-loading-placeholder">
                   <CircularProgress size={18} />
-                  <span>Loading branches...</span>
+                  <span>Loading locations...</span>
+                </div>
+              ) : availableBranches.length === 0 ? (
+                <div className="notice-chip">
+                  {translations.nobranchfound || "No branches found."}
                 </div>
               ) : (
-                <select
-                  className={`form-select ${errors.branch ? "has-error" : ""}`}
-                  value={selectedBranch?.branchid || ""}
-                  onChange={(e) => {
+                <Dropdown
+                  id="reservation-branch-dropdown"
+                  direction="down"
+                  placeholder={
+                    translations.selectlocationplaceholder ||
+                    translations.selectbranch ||
+                    "Select Location"
+                  }
+                  options={branchOptions}
+                  labelKey="displayLabel"
+                  valueKey="branchid"
+                  selectedValue={selectedBranch?.branchid || ""}
+                  onValueChange={(newBranchId) => {
                     const found = availableBranches.find(
-                      (b) => String(b.branchid) === String(e.target.value)
+                      (b) => String(b.branchid) === String(newBranchId)
                     );
                     setSelectedBranch(found || null);
                     setErrors((prev) => ({ ...prev, branch: null }));
                   }}
-                >
-                  <option value="" disabled>
-                    {translations.selectbranch || "Choose a branch..."}
-                  </option>
-                  {availableBranches.map((branch) => (
-                    <option key={branch.branchid} value={branch.branchid}>
-                      {branch.branchname}{" "}
-                      {branch.address ? `— ${branch.address}` : ""}
-                    </option>
-                  ))}
-                </select>
+                  showSearch={branchOptions.length > 5}
+                />
               )}
               {errors.branch && (
                 <span className="error-message">{errors.branch}</span>
@@ -470,14 +475,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     <span className="type-name">
                       {translations.pickspot || "Pick Spot"}
                     </span>
-                    <span className="type-desc">
-                      {translations.pickspotdesc ||
-                        "Choose your preferred dining area & table"}
-                    </span>
                   </div>
-                  {reservationType === "pickspot" && (
-                    <CheckCircleIcon className="check-indicator" fontSize="small" />
-                  )}
                 </button>
 
                 <button
@@ -496,14 +494,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     <span className="type-name">
                       {translations.quickseat || "Quick Seat"}
                     </span>
-                    <span className="type-desc">
-                      {translations.quickseatdesc ||
-                        "Fast booking by guest count"}
-                    </span>
                   </div>
-                  {reservationType === "quickseat" && (
-                    <CheckCircleIcon className="check-indicator" fontSize="small" />
-                  )}
                 </button>
               </div>
             </div>
@@ -530,6 +521,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   ) : (
                     <Dropdown
                       id="reservation-area-dropdown"
+                      direction="down"
                       placeholder={
                         translations.selectareaplaceholder ||
                         translations.selectarea ||
@@ -580,6 +572,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   ) : (
                     <Dropdown
                       id="reservation-table-dropdown"
+                      direction="down"
                       placeholder={
                         translations.selecttableplaceholder ||
                         translations.selecttable ||
@@ -653,7 +646,11 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     fontSize="small"
                     className="label-icon"
                   />
-                  <span>{translations.date || "Date"}</span>
+                  <span>
+                    {translations.date === "Update"
+                      ? "Date"
+                      : translations.date || "Date"}
+                  </span>
                 </label>
                 <input
                   type="date"
@@ -674,7 +671,11 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               <div className="form-group">
                 <label className="form-label">
                   <AccessTimeIcon fontSize="small" className="label-icon" />
-                  <span>{translations.time || "Time"}</span>
+                  <span>
+                    {translations.time === "Date & Time"
+                      ? "Time"
+                      : translations.time || "Time"}
+                  </span>
                 </label>
                 <input
                   type="time"
@@ -696,10 +697,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             {branchTimezone && (
               <div className="branch-timezone-badge">
                 <PublicIcon fontSize="inherit" />
-                <span>
-                  {translations.timezone || "Branch Timezone"}:{" "}
-                  <strong>{branchTimezone}</strong>
-                </span>
+                <span>{branchTimezone}</span>
               </div>
             )}
 

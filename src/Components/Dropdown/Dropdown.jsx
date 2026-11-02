@@ -23,6 +23,7 @@ const Dropdown = ({
   showSearch = true,
   className = "",
   id,
+  direction,
 }) => {
   const [selected, setSelected] = useState(selectedValue || null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -55,7 +56,11 @@ const Dropdown = ({
         window.dispatchEvent(
           new CustomEvent("close-other-dropdowns", { detail: { id: instanceId } })
         );
-        if (dropdownRef.current) {
+        if (direction === "down") {
+          setOpenUpward(false);
+        } else if (direction === "up") {
+          setOpenUpward(true);
+        } else if (dropdownRef.current) {
           const rect = dropdownRef.current.getBoundingClientRect();
           const spaceBelow = window.innerHeight - rect.bottom;
           const spaceAbove = rect.top;
