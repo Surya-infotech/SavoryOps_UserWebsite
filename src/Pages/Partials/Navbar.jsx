@@ -54,7 +54,7 @@ const getStoredBranch = (branches = []) => {
    1. BranchDropdown Component
    ========================================================================== */
 const BranchDropdown = ({ className = "", onBranchChange }) => {
-  const { isRtl } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [branches, setBranches] = useState([]);
@@ -304,7 +304,7 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
    2. OrderTypeDropdown Component
    ========================================================================== */
 const getOrderTypeNavIcon = (typeName = "") => {
-  const lower = String(typeName).toLowerCase().replace(/[\s_\-]+/g, "");
+  const lower = String(typeName).toLowerCase().replace(/[\s_-]+/g, "");
   if (lower.includes("delivery")) return <DeliveryDiningIcon className="order-type-icon-pin" />;
   if (lower.includes("pickup")) return <StorefrontIcon className="order-type-icon-pin" />;
   if (lower.includes("dine")) return <TableRestaurantIcon className="order-type-icon-pin" />;
@@ -312,6 +312,7 @@ const getOrderTypeNavIcon = (typeName = "") => {
 };
 
 export const OrderTypeDropdown = ({ className = "" }) => {
+  const { isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [orderTypes, setOrderTypes] = useState([]);
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
