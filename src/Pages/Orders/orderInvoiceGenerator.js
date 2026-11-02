@@ -1,3 +1,5 @@
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import { formatOrderDateTime, formatOrderPrice } from "./orderHelpers.js";
 
 const escapeHtmlAttr = (value) =>
@@ -7,7 +9,226 @@ const escapeHtmlAttr = (value) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-export const generateInvoiceHTML = (
+export const generateInvoiceStyles = () => `
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 24px;
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .invoice-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .header {
+    border-bottom: 2px solid #028802;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .header-left h1 {
+    color: #028802;
+    margin: 0 0 6px 0;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .header-left h2 {
+    color: #0f172a;
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .header-left p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .order-pill {
+    display: inline-block;
+    background: #e8f5e9;
+    color: #028802;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .invoice-date {
+    font-size: 12px;
+    color: #64748b;
+  }
+  .info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .info-card {
+    flex: 1;
+    min-width: 220px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+  }
+  .info-card h3 {
+    color: #028802;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 6px;
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12px;
+  }
+  .info-label {
+    font-weight: 600;
+    color: #64748b;
+  }
+  .info-value {
+    font-weight: 500;
+    color: #0f172a;
+    text-align: right;
+  }
+  .status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .status-paid { background-color: #4caf50; }
+  .status-unpaid { background-color: #f44336; }
+  .status-completed { background-color: #2e7d32; }
+  .status-delivered { background-color: #028802; }
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    font-size: 12px;
+  }
+  .items-table th {
+    background-color: #028802;
+    color: #ffffff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  .items-table td {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    vertical-align: top;
+  }
+  .items-table tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+  .price-column, .amount-column {
+    text-align: right;
+  }
+  .addon-item {
+    color: #64748b;
+    font-size: 11px;
+    margin-top: 3px;
+    padding-left: 8px;
+    border-left: 2px solid #cbd5e1;
+  }
+  .special-instructions {
+    color: #dc2626;
+    font-size: 11px;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .bill-summary {
+    max-width: 380px;
+    margin-left: auto;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+  }
+  .bill-summary h3 {
+    color: #028802;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 6px;
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12px;
+    color: #475569;
+  }
+  .grand-total-row {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid #028802;
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #028802;
+  }
+  .footer {
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 16px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 11px;
+  }
+  @media print {
+    body {
+      background: #fff;
+      padding: 0;
+    }
+    .invoice-container {
+      box-shadow: none;
+      padding: 0;
+    }
+    .no-print {
+      display: none !important;
+    }
+  }
+`;
+
+export const generateInvoiceBodyHTML = (
   orderData,
   dateFormat = "DD/MM/YYYY",
   timeFormat = "hh:mm A",
@@ -16,7 +237,6 @@ export const generateInvoiceHTML = (
   invoiceGeneratedAt = new Date().toISOString()
 ) => {
   const getTranslation = (key) => translations[key] || key;
-
   const formatPrice = (price) => formatOrderPrice(price, orderData);
 
   const formatCustomerField = (value) => {
@@ -177,225 +397,9 @@ export const generateInvoiceHTML = (
 
   const roundoffAmount = Number(orderData?.roundoff?.roundedAmount ?? orderData?.roundoffAmount ?? 0);
   const showRoundoff = orderData?.roundoff?.status || roundoffAmount !== 0;
-
   const grandTotal = Number(orderData.totalprice ?? 0);
 
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Invoice - Order #${orderData.orderno}</title>
-  <style>
-    @page {
-      size: A4;
-      margin: 12mm;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      margin: 0;
-      padding: 24px;
-      background-color: #f8fafc;
-      color: #1e293b;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .invoice-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 32px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    }
-    .header {
-      border-bottom: 2px solid #028802;
-      padding-bottom: 16px;
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .header-left h1 {
-      color: #028802;
-      margin: 0 0 6px 0;
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .header-left h2 {
-      color: #0f172a;
-      margin: 0 0 4px 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .header-left p {
-      margin: 0;
-      color: #64748b;
-      font-size: 12px;
-    }
-    .header-right {
-      text-align: right;
-    }
-    .order-pill {
-      display: inline-block;
-      background: #e8f5e9;
-      color: #028802;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .invoice-date {
-      font-size: 12px;
-      color: #64748b;
-    }
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .info-card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 14px 16px;
-    }
-    .info-card h3 {
-      color: #028802;
-      border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 6px;
-      margin: 0 0 10px 0;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 3px 0;
-      font-size: 12px;
-    }
-    .info-label {
-      font-weight: 600;
-      color: #64748b;
-    }
-    .info-value {
-      font-weight: 500;
-      color: #0f172a;
-      text-align: right;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #fff;
-    }
-    .status-paid { background-color: #4caf50; }
-    .status-unpaid { background-color: #f44336; }
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 24px;
-      font-size: 12px;
-    }
-    .items-table th {
-      background-color: #028802;
-      color: #ffffff;
-      padding: 10px 12px;
-      text-align: left;
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 0.5px;
-    }
-    .items-table td {
-      border-bottom: 1px solid #e2e8f0;
-      padding: 10px 12px;
-      vertical-align: top;
-    }
-    .items-table tr:nth-child(even) td {
-      background-color: #f8fafc;
-    }
-    .price-column, .amount-column {
-      text-align: right;
-    }
-    .addon-item {
-      color: #64748b;
-      font-size: 11px;
-      margin-top: 3px;
-      padding-left: 8px;
-      border-left: 2px solid #cbd5e1;
-    }
-    .special-instructions {
-      color: #dc2626;
-      font-size: 11px;
-      margin-top: 4px;
-      font-style: italic;
-    }
-    .bill-summary {
-      max-width: 360px;
-      margin-left: auto;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
-    .bill-summary h3 {
-      color: #028802;
-      border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 6px;
-      margin: 0 0 10px 0;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px 0;
-      font-size: 12px;
-      color: #475569;
-    }
-    .grand-total-row {
-      display: flex;
-      justify-content: space-between;
-      border-top: 2px solid #028802;
-      padding-top: 8px;
-      margin-top: 8px;
-      font-size: 15px;
-      font-weight: 800;
-      color: #028802;
-    }
-    .footer {
-      border-top: 1px dashed #cbd5e1;
-      padding-top: 16px;
-      text-align: center;
-      color: #94a3b8;
-      font-size: 11px;
-    }
-    @media print {
-      body {
-        background: #fff;
-        padding: 0;
-      }
-      .invoice-container {
-        box-shadow: none;
-        padding: 0;
-      }
-      .no-print {
-        display: none !important;
-      }
-    }
-  </style>
-</head>
-<body>
+  return `
   <div class="invoice-container">
     <div class="header">
       <div class="header-left">
@@ -404,7 +408,7 @@ export const generateInvoiceHTML = (
         <p>${escapeHtmlAttr(orderData.branchname || "")}</p>
       </div>
       <div class="header-right">
-        <div class="order-pill">Order #${orderData.orderno}</div>
+        <div class="order-pill">Order #${escapeHtmlAttr(orderData.orderno || "")}</div>
         <div class="invoice-date">${formattedInvoiceGeneratedAt}</div>
       </div>
     </div>
@@ -436,6 +440,12 @@ export const generateInvoiceHTML = (
         <div class="info-item">
           <span class="info-label">${escapeHtmlAttr(getTranslation("orderdate") || "Date")}:</span>
           <span class="info-value">${formatOrderDateTime(orderData.createdAt, dateFormat, timeFormat, timeZone)}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">${escapeHtmlAttr(getTranslation("orderstatus") || "Status")}:</span>
+          <span class="info-value">
+            <span class="status-badge status-${String(orderData.orderstatus || "").toLowerCase().replace(/\s+/g, "-")}">${escapeHtmlAttr(getTranslation(orderData.orderstatus) || orderData.orderstatus)}</span>
+          </span>
         </div>
         <div class="info-item">
           <span class="info-label">${escapeHtmlAttr(getTranslation("payment") || "Payment")}:</span>
@@ -493,16 +503,186 @@ export const generateInvoiceHTML = (
       <p><strong>${escapeHtmlAttr(getTranslation("thankyouforyourorder") || "Thank you for your order!")}</strong></p>
       <p>${escapeHtmlAttr(getTranslation("computerbasedgeneratedinvoice") || "This is a computer-generated invoice.")}</p>
     </div>
-  </div>
-  <script>
+  </div>`;
+};
+
+export const generateInvoiceHTML = (
+  orderData,
+  dateFormat = "DD/MM/YYYY",
+  timeFormat = "hh:mm A",
+  timeZone = "Asia/Kolkata",
+  translations = {},
+  invoiceGeneratedAt = new Date().toISOString(),
+  autoPrint = false
+) => {
+  const styles = generateInvoiceStyles();
+  const body = generateInvoiceBodyHTML(
+    orderData,
+    dateFormat,
+    timeFormat,
+    timeZone,
+    translations,
+    invoiceGeneratedAt
+  );
+
+  const printScript = autoPrint
+    ? `<script>
     window.onload = function() {
       setTimeout(function() {
         window.print();
       }, 350);
     };
-  </script>
+  </script>`
+    : "";
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice - Order #${orderData.orderno || ""}</title>
+  <style>
+    ${styles}
+  </style>
+</head>
+<body>
+  ${body}
+  ${printScript}
 </body>
 </html>`;
+};
+
+/**
+ * Directly downloads the Order Invoice as a crisp, formatted PDF file in the browser.
+ */
+export const downloadOrderInvoicePDF = async (
+  orderData,
+  dateFormat = "DD/MM/YYYY",
+  timeFormat = "hh:mm A",
+  timeZone = "Asia/Kolkata",
+  translations = {}
+) => {
+  if (!orderData) {
+    throw new Error("Order data is required to download invoice");
+  }
+
+  // Create an off-screen render container
+  const container = document.createElement("div");
+  container.style.position = "fixed";
+  container.style.left = "-9999px";
+  container.style.top = "0";
+  container.style.width = "800px";
+  container.style.backgroundColor = "#ffffff";
+  container.style.zIndex = "-9999";
+  container.style.boxSizing = "border-box";
+
+  const styles = generateInvoiceStyles();
+  const body = generateInvoiceBodyHTML(
+    orderData,
+    dateFormat,
+    timeFormat,
+    timeZone,
+    translations
+  );
+
+  container.innerHTML = `
+    <style>${styles}</style>
+    <div style="background: #ffffff; padding: 24px; box-sizing: border-box; width: 800px;">
+      ${body}
+    </div>
+  `;
+
+  document.body.appendChild(container);
+
+  try {
+    // Wait for DOM painting
+    await new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))
+    );
+    await new Promise((resolve) => setTimeout(resolve, 80));
+
+    const captureHeight = container.scrollHeight || container.offsetHeight || 900;
+    const canvas = await html2canvas(container, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+      width: 800,
+      height: captureHeight,
+      windowWidth: 800,
+      windowHeight: captureHeight,
+    });
+
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+      compress: true,
+    });
+
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 10;
+    const contentW = pageW - margin * 2;
+    const contentH = pageH - margin * 2;
+
+    const imgW = contentW;
+    const imgH = (canvas.height * imgW) / canvas.width;
+
+    if (imgH <= contentH) {
+      // Single page
+      const imgData = canvas.toDataURL("image/png", 1.0);
+      doc.addImage(imgData, "PNG", margin, margin, imgW, imgH);
+    } else {
+      // Multi-page slice
+      const pageHeightPx = Math.floor((contentH / imgW) * canvas.width);
+      const totalPages = Math.ceil(canvas.height / pageHeightPx);
+
+      for (let i = 0; i < totalPages; i++) {
+        if (i > 0) {
+          doc.addPage();
+        }
+        const sourceY = i * pageHeightPx;
+        const sourceHeight = Math.min(pageHeightPx, canvas.height - sourceY);
+
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sourceHeight;
+        const pctx = pageCanvas.getContext("2d");
+        pctx.fillStyle = "#ffffff";
+        pctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+        pctx.drawImage(
+          canvas,
+          0,
+          sourceY,
+          canvas.width,
+          sourceHeight,
+          0,
+          0,
+          canvas.width,
+          sourceHeight
+        );
+
+        const pageImgData = pageCanvas.toDataURL("image/png", 1.0);
+        const pageImgH = (sourceHeight * imgW) / canvas.width;
+        doc.addImage(pageImgData, "PNG", margin, margin, imgW, pageImgH);
+      }
+    }
+
+    const orderIdentifier =
+      orderData.orderno ||
+      orderData.orderNo ||
+      orderData.invoiceNo ||
+      String(orderData._id || "order").slice(-6);
+    const safeOrderNo = String(orderIdentifier).replace(/[^\w-]/g, "");
+    const fileName = `Invoice_Order_${safeOrderNo || "Receipt"}.pdf`;
+
+    doc.save(fileName);
+    return true;
+  } finally {
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
+    }
+  }
 };
 
 export const printOrderInvoice = (
@@ -517,7 +697,9 @@ export const printOrderInvoice = (
     dateFormat,
     timeFormat,
     timeZone,
-    translations
+    translations,
+    new Date().toISOString(),
+    true
   );
   const printWindow = window.open("", "_blank", "width=850,height=900");
   if (printWindow) {
@@ -541,7 +723,9 @@ export const printOrderInvoice = (
       doc.document.close();
     }
     setTimeout(() => {
-      document.body.removeChild(iframe);
+      if (document.body.contains(iframe)) {
+        document.body.removeChild(iframe);
+      }
     }, 60000);
   }
 };

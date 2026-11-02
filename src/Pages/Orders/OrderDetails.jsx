@@ -32,6 +32,7 @@ import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import {
   getOrderStatusColor,
@@ -45,7 +46,7 @@ import {
   formatOrderDateTime,
   formatOrderPrice,
 } from "./orderHelpers.js";
-import { printOrderInvoice } from "./orderInvoiceGenerator.js";
+import { printOrderInvoice, downloadOrderInvoicePDF } from "./orderInvoiceGenerator.js";
 import OrderStatusIcon from "./OrderStatusIcon.jsx";
 import "../../Scss/Pages/Orders/orderdetails.scss";
 import OrderStatusHistoryModal from "./OrderStatusHistoryModal.jsx";
@@ -164,7 +165,9 @@ const OrderDetailsShimmer = () => (
   </div>
 );
 
-const OrderDetails = ({ orderId, onBack }) => {
+const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName = "" }) => {
+  const { business } = useWebsiteStatus();
+  const businessDisplayName = propBusinessName || business?.businessname || "";
   const { translations = {}, isRtl } = useLanguage();
   const { showSnackbar } = useSnackbar();
 
@@ -576,7 +579,7 @@ const OrderDetails = ({ orderId, onBack }) => {
     fetchOrderDetail();
   }, [fetchOrderDetail]);
 
-  const handlePrintInvoice = () => {
+  const handlePrintInvoice = async () => {
     if (!order) {
       showSnackbar(
         translations.cannotdownloadinvoice || "Cannot download invoice",
@@ -586,9 +589,21 @@ const OrderDetails = ({ orderId, onBack }) => {
     }
     setIsInvoicePrinting(true);
     try {
-      printOrderInvoice(order, dateFormat, timeFormat, timeZone, translations);
+      const orderToDownload = {
+        ...order,
+        businessname: order.businessname || businessDisplayName || "SavoryOps",
+      };
+      await downloadOrderInvoicePDF(
+        orderToDownload,
+        dateFormat,
+        timeFormat,
+        timeZone,
+        translations
+      );
       showSnackbar(
-        translations.invoicepdfgenerated || "Invoice ready for print/download",
+        translations.invoicepdfsaved ||
+          translations.invoicepdfgenerated ||
+          "Invoice PDF downloaded successfully!",
         "success"
       );
     } catch (err) {
@@ -1304,7 +1319,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                       <DownloadOutlinedIcon fontSize="small" />
                     )}
                     <span>
-                      {translations.generatepdfinvoice || "Download / Print Invoice"}
+                      {isInvoicePrinting ? (translations.loading || "Downloading...") : (translations.generatepdfinvoice || "Download Invoice")}
                     </span>
                   </button>
                 </div>
