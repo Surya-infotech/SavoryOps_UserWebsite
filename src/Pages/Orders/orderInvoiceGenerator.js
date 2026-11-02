@@ -10,14 +10,64 @@ const escapeHtml = (value) =>
     .replace(/>/g, "&gt;");
 
 /**
+ * Normalizes a base64 string or data URI into a valid data URI.
+ */
+export const normalizeBase64Image = (base64) => {
+  if (!base64 || typeof base64 !== "string") return null;
+  const trimmed = base64.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith("data:")) return trimmed;
+
+  // Detect mime type from raw base64 header or default to png
+  let mime = "image/png";
+  if (trimmed.startsWith("/9j/")) {
+    mime = "image/jpeg";
+  } else if (trimmed.startsWith("iVBOR")) {
+    mime = "image/png";
+  } else if (trimmed.startsWith("R0lGOD")) {
+    mime = "image/gif";
+  } else if (trimmed.startsWith("UklGR")) {
+    mime = "image/webp";
+  } else if (trimmed.startsWith("PHN2Zy") || trimmed.startsWith("PD94b")) {
+    mime = "image/svg+xml";
+  }
+
+  return `data:${mime};base64,${trimmed}`;
+};
+
+/**
+ * Extracts and resolves the base64 logo from orderData if provided by the backend.
+ */
+export const getLogoBase64FromOrder = (orderData) => {
+  if (!orderData || typeof orderData !== "object") return null;
+
+  const candidate =
+    orderData.logobase64 ||
+    orderData.logoBase64 ||
+    orderData.logo_base64 ||
+    orderData.logoData ||
+    (typeof orderData.logo === "string" && orderData.logo.startsWith("data:")
+      ? orderData.logo
+      : null);
+
+  if (candidate && typeof candidate === "string" && candidate.trim()) {
+    return normalizeBase64Image(candidate);
+  }
+
+  return null;
+};
+
+/**
  * Loads an image URL as base64 data URL to prevent cross-origin canvas tainting in html2canvas.
  */
-const loadLogoAsBase64 = async (url) => {
+export const loadLogoAsBase64 = async (url) => {
   if (!url || typeof url !== "string") return null;
-  if (url.startsWith("data:")) return url;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith("data:")) return normalizeBase64Image(trimmed);
 
   try {
-    const response = await fetch(url, { mode: "cors" });
+    const response = await fetch(trimmed, { mode: "cors" });
     if (!response.ok) throw new Error("Fetch failed");
     const blob = await response.blob();
     return await new Promise((resolve) => {
@@ -44,7 +94,7 @@ const loadLogoAsBase64 = async (url) => {
           }
         };
         img.onerror = () => resolve(null);
-        img.src = url;
+        img.src = trimmed;
       });
     } catch {
       return null;
@@ -88,7 +138,7 @@ export const generateInvoiceStyles = () => `
     border: 1px solid #e2e8f0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     position: relative;
-    min-height: 80px;
+    min-height: 95px;
     box-sizing: border-box;
   }
   .invoice-wrapper .logo {
@@ -97,14 +147,21 @@ export const generateInvoiceStyles = () => `
     top: 15px;
     width: 70px;
     height: 70px;
+    max-width: 70px;
+    max-height: 70px;
     object-fit: contain;
     border-radius: 4px;
+    display: block;
   }
   .invoice-wrapper .header-content {
-    margin: 0 85px;
+    margin: 0 95px;
+    min-height: 65px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .invoice-wrapper .header-content.no-logo {
-    margin: 0 auto;
+    margin: 0 95px;
   }
   .invoice-wrapper .header h1 {
     color: #28a745;
@@ -404,9 +461,12 @@ export const generateInvoiceBodyHTML = (
     timeZone
   );
 
-  const rawLogoUrl = logoBase64Uri || orderData?.logourl || orderData?.imageUrl || "";
-  const invoiceLogoHtml = rawLogoUrl
-    ? `<img class="logo" src="${escapeHtml(rawLogoUrl)}" alt="Logo" />`
+  // Resolve restaurant logo (explicit base64 argument -> backend logobase64 on order -> logourl/imageUrl fallback)
+  const resolvedLogoUrl =
+    (logoBase64Uri ? (normalizeBase64Image(logoBase64Uri) || logoBase64Uri) : null) ||
+    getLogoBase64FromOrder(orderData) || orderData?.logourl;
+  const invoiceLogoHtml = resolvedLogoUrl
+    ? `<img class="logo" src="${escapeHtml(resolvedLogoUrl)}" alt="Logo" onerror="this.style.display='none'" />`
     : "";
 
   const rawCustomerEmail = orderData?.customerEmail ?? orderData?.customer?.email ?? "";
@@ -740,8 +800,13 @@ export const generateInvoiceHTML = (
   timeZone = "Asia/Kolkata",
   translations = {},
   invoiceGeneratedAt = new Date().toISOString(),
-  autoPrint = false
+  autoPrint = false,
+  logoBase64Uri = null
 ) => {
+  const resolvedLogo =
+    (logoBase64Uri ? (normalizeBase64Image(logoBase64Uri) || logoBase64Uri) : null) ||
+    getLogoBase64FromOrder(orderData) ||
+    null;
   const styles = generateInvoiceStyles();
   const body = generateInvoiceBodyHTML(
     orderData,
@@ -749,7 +814,8 @@ export const generateInvoiceHTML = (
     timeFormat,
     timeZone,
     translations,
-    invoiceGeneratedAt
+    invoiceGeneratedAt,
+    resolvedLogo
   );
 
   const printScript = autoPrint
@@ -793,11 +859,21 @@ export const downloadOrderInvoicePDF = async (
     throw new Error("Order data is required to download invoice");
   }
 
-  // Pre-load restaurant logo as base64 to avoid canvas tainting
-  const logoUrl = orderData?.logourl || "";
-  let logoBase64 = null;
-  if (logoUrl) {
-    logoBase64 = await loadLogoAsBase64(logoUrl);
+  // 1. First priority: Use base64 logo provided directly by backend with orderData
+  let logoBase64 = getLogoBase64FromOrder(orderData);
+
+  // 2. Second priority: If backend didn't supply base64, attempt to load logourl as base64
+  if (!logoBase64) {
+    const fallbackLogoUrl =
+      orderData?.logourl ||
+      orderData?.logoUrl ||
+      orderData?.imageUrl ||
+      orderData?.businessLogo ||
+      orderData?.businessImageUrl ||
+      "";
+    if (fallbackLogoUrl) {
+      logoBase64 = await loadLogoAsBase64(fallbackLogoUrl);
+    }
   }
 
   const styles = generateInvoiceStyles();
@@ -847,6 +923,31 @@ export const downloadOrderInvoicePDF = async (
       </html>
     `);
     iframeDoc.close();
+
+    // Ensure all images (including base64 logo) are fully painted and decoded before html2canvas capture
+    const images = Array.from(iframeDoc.images || []);
+    if (images.length > 0) {
+      await Promise.all(
+        images.map((img) => {
+          if (img.complete) {
+            if (typeof img.decode === "function") {
+              return img.decode().catch(() => { });
+            }
+            return Promise.resolve();
+          }
+          return new Promise((resolve) => {
+            img.onload = () => {
+              if (typeof img.decode === "function") {
+                img.decode().catch(() => { }).then(resolve);
+              } else {
+                resolve();
+              }
+            };
+            img.onerror = () => resolve();
+          });
+        })
+      );
+    }
 
     // Wait for layout, fonts, and images to paint inside the iframe
     await new Promise((resolve) =>
@@ -948,6 +1049,7 @@ export const printOrderInvoice = (
   timeZone = "Asia/Kolkata",
   translations = {}
 ) => {
+  const logoBase64 = getLogoBase64FromOrder(orderData);
   const html = generateInvoiceHTML(
     orderData,
     dateFormat,
@@ -955,7 +1057,8 @@ export const printOrderInvoice = (
     timeZone,
     translations,
     new Date().toISOString(),
-    true
+    true,
+    logoBase64
   );
   const printWindow = window.open("", "_blank", "width=850,height=900");
   if (printWindow) {
