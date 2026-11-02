@@ -591,8 +591,8 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
     try {
       const orderToDownload = {
         ...order,
-        businessname: order.businessname || businessDisplayName || "SavoryOps",
-        logourl: order.logourl || business?.imageUrl || "",
+        businessname: order.businessname,
+        logourl: order.logourl,
       };
       await downloadOrderInvoicePDF(
         orderToDownload,
@@ -603,8 +603,8 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
       );
       showSnackbar(
         translations.invoicepdfsaved ||
-          translations.invoicepdfgenerated ||
-          "Invoice PDF downloaded successfully!",
+        translations.invoicepdfgenerated ||
+        "Invoice PDF downloaded successfully!",
         "success"
       );
     } catch (err) {
@@ -904,36 +904,36 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
 
                     {(Boolean(order.cancelledby) ||
                       Boolean(order.cancelledat)) && (
-                      <div className="cancellation-meta-container">
-                        {Boolean(order.cancelledby) && (
-                          <div className="cancellation-meta-badge">
-                            <PersonOutlinedIcon className="cancellation-meta-icon" />
-                            <span className="cancellation-meta-label">
-                              {translations.cancelledby || "Cancelled By"}:
-                            </span>
-                            <span className="cancellation-meta-value">
-                              {order.cancelledby}
-                            </span>
-                          </div>
-                        )}
-                        {Boolean(order.cancelledat) && (
-                          <div className="cancellation-meta-badge">
-                            <AccessTimeIcon className="cancellation-meta-icon" />
-                            <span className="cancellation-meta-label">
-                              {translations.cancelledtime || "Cancelled Time"}:
-                            </span>
-                            <span className="cancellation-meta-value">
-                              {formatOrderDateTime(
-                                order.cancelledat,
-                                dateFormat,
-                                timeFormat,
-                                timeZone
-                              )}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                        <div className="cancellation-meta-container">
+                          {Boolean(order.cancelledby) && (
+                            <div className="cancellation-meta-badge">
+                              <PersonOutlinedIcon className="cancellation-meta-icon" />
+                              <span className="cancellation-meta-label">
+                                {translations.cancelledby || "Cancelled By"}:
+                              </span>
+                              <span className="cancellation-meta-value">
+                                {order.cancelledby}
+                              </span>
+                            </div>
+                          )}
+                          {Boolean(order.cancelledat) && (
+                            <div className="cancellation-meta-badge">
+                              <AccessTimeIcon className="cancellation-meta-icon" />
+                              <span className="cancellation-meta-label">
+                                {translations.cancelledtime || "Cancelled Time"}:
+                              </span>
+                              <span className="cancellation-meta-value">
+                                {formatOrderDateTime(
+                                  order.cancelledat,
+                                  dateFormat,
+                                  timeFormat,
+                                  timeZone
+                                )}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                     <div className="cancellation-reason-container">
                       <FormatQuoteOutlinedIcon className="cancellation-quote-icon" />
@@ -1091,40 +1091,40 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
 
                           {(Boolean(product.cancelledby) ||
                             Boolean(product.cancelledat)) && (
-                            <div className="cancellation-meta-container">
-                              {Boolean(product.cancelledby) && (
-                                <div className="cancellation-meta-badge">
-                                  <PersonOutlinedIcon className="cancellation-meta-icon" />
-                                  <span className="cancellation-meta-label">
-                                    {translations.cancelledby ||
-                                      "Cancelled By"}
-                                    :
-                                  </span>
-                                  <span className="cancellation-meta-value">
-                                    {product.cancelledby}
-                                  </span>
-                                </div>
-                              )}
-                              {Boolean(product.cancelledat) && (
-                                <div className="cancellation-meta-badge">
-                                  <AccessTimeIcon className="cancellation-meta-icon" />
-                                  <span className="cancellation-meta-label">
-                                    {translations.cancelledtime ||
-                                      "Cancelled Time"}
-                                    :
-                                  </span>
-                                  <span className="cancellation-meta-value">
-                                    {formatOrderDateTime(
-                                      product.cancelledat,
-                                      dateFormat,
-                                      timeFormat,
-                                      timeZone
-                                    )}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          )}
+                              <div className="cancellation-meta-container">
+                                {Boolean(product.cancelledby) && (
+                                  <div className="cancellation-meta-badge">
+                                    <PersonOutlinedIcon className="cancellation-meta-icon" />
+                                    <span className="cancellation-meta-label">
+                                      {translations.cancelledby ||
+                                        "Cancelled By"}
+                                      :
+                                    </span>
+                                    <span className="cancellation-meta-value">
+                                      {product.cancelledby}
+                                    </span>
+                                  </div>
+                                )}
+                                {Boolean(product.cancelledat) && (
+                                  <div className="cancellation-meta-badge">
+                                    <AccessTimeIcon className="cancellation-meta-icon" />
+                                    <span className="cancellation-meta-label">
+                                      {translations.cancelledtime ||
+                                        "Cancelled Time"}
+                                      :
+                                    </span>
+                                    <span className="cancellation-meta-value">
+                                      {formatOrderDateTime(
+                                        product.cancelledat,
+                                        dateFormat,
+                                        timeFormat,
+                                        timeZone
+                                      )}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            )}
 
                           <div className="cancellation-reason-container">
                             <FormatQuoteOutlinedIcon className="cancellation-quote-icon" />

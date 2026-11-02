@@ -794,7 +794,7 @@ export const downloadOrderInvoicePDF = async (
   }
 
   // Pre-load restaurant logo as base64 to avoid canvas tainting
-  const logoUrl = orderData?.logourl || orderData?.imageUrl || "";
+  const logoUrl = orderData?.logourl || "";
   let logoBase64 = null;
   if (logoUrl) {
     logoBase64 = await loadLogoAsBase64(logoUrl);
