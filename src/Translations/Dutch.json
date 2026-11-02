@@ -262,5 +262,7 @@
   "itemincluded": "artikel inbegrepen",
   "nodishesfound": "Geen gerechten gevonden in deze selectie.",
   "grandtotal": "Totaalbedrag",
-  "invoice": "FACTUUR"
+  "invoice": "FACTUUR",
+  "branchphone": "Telefoonnummer",
+  "branchaddress": "Adres"
 }

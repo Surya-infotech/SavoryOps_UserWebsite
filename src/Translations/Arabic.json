@@ -282,5 +282,7 @@
   "selectdeliveryorpickup": "يرجى اختيار التوصيل أو الاستلام للمتابعة إلى الدفع",
   "pleasesignintoorder": "يرجى تسجيل الدخول للمتابعة إلى إتمام الطلب",
   "orderitems": "عناصر الطلب",
-  "invoice": "فاتورة"
+  "invoice": "فاتورة",
+  "branchphone": "رقم الهاتف",
+  "branchaddress": "العنوان"
 }

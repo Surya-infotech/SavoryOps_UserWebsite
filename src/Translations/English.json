@@ -337,5 +337,7 @@
   "scanqr": "Scan QR Code",
   "positionqrinframe": "Align QR code within the frame to scan",
   "cameranotavailable": "Camera access is not supported or was denied. Please allow camera permissions in your browser settings to scan QR codes.",
-  "invoice": "INVOICE"
+  "invoice": "INVOICE",
+  "branchphone": "Phone Number",
+  "branchaddress": "Address"
 }

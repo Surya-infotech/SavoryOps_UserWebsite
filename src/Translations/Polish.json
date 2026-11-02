@@ -262,5 +262,7 @@
   "itemincluded": "pozycja w zestawie",
   "nodishesfound": "Nie znaleziono dań w tym wyborze.",
   "grandtotal": "Suma całkowita",
-  "invoice": "FAKTURA"
+  "invoice": "FAKTURA",
+  "branchphone": "Numer telefonu",
+  "branchaddress": "Adres"
 }

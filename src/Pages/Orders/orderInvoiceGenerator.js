@@ -40,20 +40,10 @@ export const normalizeBase64Image = (base64) => {
  */
 export const getLogoBase64FromOrder = (orderData) => {
   if (!orderData || typeof orderData !== "object") return null;
-
-  const candidate =
-    orderData.logobase64 ||
-    orderData.logoBase64 ||
-    orderData.logo_base64 ||
-    orderData.logoData ||
-    (typeof orderData.logo === "string" && orderData.logo.startsWith("data:")
-      ? orderData.logo
-      : null);
-
+  const candidate = orderData.logobase64;
   if (candidate && typeof candidate === "string" && candidate.trim()) {
     return normalizeBase64Image(candidate);
   }
-
   return null;
 };
 
@@ -233,9 +223,10 @@ export const generateInvoiceStyles = () => `
   }
   .invoice-wrapper .info-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 2px 0;
     font-size: 11px;
+    line-height: 1.35;
   }
   .invoice-wrapper .order-info-row {
     justify-content: space-between;
@@ -253,11 +244,13 @@ export const generateInvoiceStyles = () => `
     font-weight: bold;
     color: #555555;
     font-size: 11px;
+    flex-shrink: 0;
   }
   .invoice-wrapper .info-value {
     color: #333333;
     font-size: 11px;
     margin-left: 5px;
+    word-break: break-word;
   }
   .invoice-wrapper .status-badge {
     background-color: #28a745;
@@ -461,10 +454,34 @@ export const generateInvoiceBodyHTML = (
     timeZone
   );
 
-  // Resolve restaurant logo (explicit base64 argument -> backend logobase64 on order -> logourl/imageUrl fallback)
+  const branchdetails = orderData?.branchdetails;
+  const branchPhoneDisplay = formatCustomerField(branchdetails?.phone);
+
+  const formatBranchAddress = (details) => {
+    if (!details || typeof details !== "object") return "N/A";
+    const address = (details.address || "").trim();
+    const cityname = (details.cityname || "").trim();
+    const statename = (details.statename || "").trim();
+    const postalcode = (details.postalcode || "").trim();
+    const countryname = (details.countryname || "").trim();
+
+    let cityStateZip = [cityname, statename].filter(Boolean).join(", ");
+    if (postalcode) {
+      cityStateZip = cityStateZip ? `${cityStateZip} - ${postalcode}` : postalcode;
+    }
+
+    const parts = [address, cityStateZip, countryname].filter(Boolean);
+    return parts.length > 0 ? parts.join(", ") : "N/A";
+  };
+
+  const branchAddressDisplay = formatBranchAddress(branchdetails);
+
+  // Restaurant logo (explicit base64 -> backend logobase64 -> logourl fallback)
   const resolvedLogoUrl =
     (logoBase64Uri ? (normalizeBase64Image(logoBase64Uri) || logoBase64Uri) : null) ||
-    getLogoBase64FromOrder(orderData) || orderData?.logourl;
+    getLogoBase64FromOrder(orderData) ||
+    orderData?.logourl ||
+    "";
   const invoiceLogoHtml = resolvedLogoUrl
     ? `<img class="logo" src="${escapeHtml(resolvedLogoUrl)}" alt="Logo" onerror="this.style.display='none'" />`
     : "";
@@ -710,8 +727,12 @@ export const generateInvoiceBodyHTML = (
           <h3>${escapeHtml(getTranslation("businessinfo") || "Business Information")}</h3>
           <div class="info-list">
             <div class="info-item">
-              <span class="info-label">${escapeHtml(getTranslation("branch") || "Branch")}:</span>
-              <span class="info-value">${escapeHtml(orderData.branchname || "Main Branch")}</span>
+              <span class="info-label">${escapeHtml(getTranslation("branchphone") || getTranslation("phonenumber") || getTranslation("customerphone") || "Phone Number")}:</span>
+              <span class="info-value">${escapeHtml(branchPhoneDisplay)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">${escapeHtml(getTranslation("branchaddress") || getTranslation("address") || "Address")}:</span>
+              <span class="info-value">${escapeHtml(branchAddressDisplay)}</span>
             </div>
             ${tableDetailsHTML
       ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
@@ -863,17 +884,8 @@ export const downloadOrderInvoicePDF = async (
   let logoBase64 = getLogoBase64FromOrder(orderData);
 
   // 2. Second priority: If backend didn't supply base64, attempt to load logourl as base64
-  if (!logoBase64) {
-    const fallbackLogoUrl =
-      orderData?.logourl ||
-      orderData?.logoUrl ||
-      orderData?.imageUrl ||
-      orderData?.businessLogo ||
-      orderData?.businessImageUrl ||
-      "";
-    if (fallbackLogoUrl) {
-      logoBase64 = await loadLogoAsBase64(fallbackLogoUrl);
-    }
+  if (!logoBase64 && orderData?.logourl) {
+    logoBase64 = await loadLogoAsBase64(orderData.logourl);
   }
 
   const styles = generateInvoiceStyles();

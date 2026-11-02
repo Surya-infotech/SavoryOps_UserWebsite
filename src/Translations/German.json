@@ -262,5 +262,7 @@
   "itemincluded": "Artikel enthalten",
   "nodishesfound": "Keine Gerichte in dieser Auswahl gefunden.",
   "grandtotal": "Gesamtsumme",
-  "invoice": "RECHNUNG"
+  "invoice": "RECHNUNG",
+  "branchphone": "Telefonnummer",
+  "branchaddress": "Adresse"
 }

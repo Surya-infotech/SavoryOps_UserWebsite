@@ -262,5 +262,7 @@
   "itemincluded": "artículo incluido",
   "nodishesfound": "No se encontraron platos en esta selección.",
   "grandtotal": "Total general",
-  "invoice": "FACTURA"
+  "invoice": "FACTURA",
+  "branchphone": "Número de teléfono",
+  "branchaddress": "Dirección"
 }

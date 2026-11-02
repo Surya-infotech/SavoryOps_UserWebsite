@@ -262,5 +262,7 @@
   "itemincluded": "είδος περιλαμβάνεται",
   "nodishesfound": "Δεν βρέθηκαν πιάτα σε αυτήν την επιλογή.",
   "grandtotal": "Γενικό Σύνολο",
-  "invoice": "ΤΙΜΟΛΟΓΙΟ"
+  "invoice": "ΤΙΜΟΛΟΓΙΟ",
+  "branchphone": "Αριθμός τηλεφώνου",
+  "branchaddress": "Διεύθυνση"
 }

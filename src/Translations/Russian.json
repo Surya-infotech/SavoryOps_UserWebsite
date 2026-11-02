@@ -262,5 +262,7 @@
   "itemincluded": "позиция включена",
   "nodishesfound": "Блюда в этой категории не найдены.",
   "grandtotal": "Общий итог",
-  "invoice": "СЧЕТ"
+  "invoice": "СЧЕТ",
+  "branchphone": "Номер телефона",
+  "branchaddress": "Адрес"
 }
