@@ -16,6 +16,8 @@ import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import BoltIcon from "@mui/icons-material/Bolt";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -152,7 +154,7 @@ const OrderList = ({ onSelectOrder }) => {
   return (
     <div className={`orders-list-wrapper ${isRtl ? "is-rtl" : ""}`}>
       {/* Search Toolbar - Parity with UserApp */}
-      {(loading || orders.length > 0) && (
+      {!loading && orders.length > 0 && (
         <div className="orders-toolbar">
           <div className="orders-search-box">
             <SearchIcon className="search-icon" />
@@ -179,39 +181,38 @@ const OrderList = ({ onSelectOrder }) => {
         </div>
       )}
 
-      {/* Main Content Area */}
+      {/* Main Content Area - Parity with Offers Page & Manage Address */}
       {loading ? (
-        <div className="orders-grid">
-          {[1, 2, 3, 4, 5, 6].map((k) => (
-            <ShimmerCard key={k} />
-          ))}
+        <div className="address-loading-wrap orders-loading-wrap">
+          <CircularProgress size={40} sx={{ color: "#028802" }} />
+          <p>{translations.loading || "Loading..."}</p>
         </div>
       ) : orders.length === 0 ? (
-        /* Empty State (No Orders Placed - matching Manage Address) */
+        /* Empty State (No Orders Placed) - Exact parity with Offers Page */
         <div className="address-empty-card orders-empty-state">
           <div className="empty-icon-wrap">
             <ReceiptLongOutlinedIcon className="empty-icon" />
           </div>
           <h2 className="empty-title">
-            {translations.noorderfound || "No Orders Placed Yet"}
+            {translations.noorderfound || "No orders placed yet."}
           </h2>
           <p className="empty-subtitle">
             {translations.noorderdescription ||
-              "Your order history will appear here once you place your first order. Explore our menu to discover our chef's specials and delicious treats!"}
+              "Your order history will appear here once you place your first order. Explore our main menu to discover delicious treats!"}
           </p>
           <Link to="/menu" className="empty-add-btn">
-            <ShoppingBagOutlinedIcon fontSize="small" />
-            <span>{translations.ordernow || "Order Now"}</span>
+            <RestaurantMenuIcon fontSize="small" />
+            <span>{translations.exploremenu || "Explore Menu"}</span>
           </Link>
         </div>
       ) : filteredOrders.length === 0 ? (
         /* Search Empty State */
-        <div className="orders-empty-state address-empty-card search-empty">
+        <div className="address-empty-card orders-empty-state search-empty">
           <div className="empty-icon-wrap search">
             <SearchOffIcon className="empty-icon" />
           </div>
           <h2 className="empty-title">
-            {translations.nosearchresultsfound || "No orders found"}
+            {translations.nosearchresultsfound || "No matching orders found"}
           </h2>
           <p className="empty-subtitle">
             {translations.noordersmatchsearch ||

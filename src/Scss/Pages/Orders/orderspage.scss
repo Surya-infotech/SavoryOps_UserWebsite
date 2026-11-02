@@ -67,6 +67,19 @@
    Order List Section
    ========================================================================== */
 
+.orders-loading-wrap,
+.address-loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  gap: 1rem;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
 .orders-list-wrapper {
   display: flex;
   flex-direction: column;
@@ -519,6 +532,7 @@
   }
 }
 
+.address-empty-card,
 .orders-empty-state,
 .orders-empty-card {
   background: #ffffff;
@@ -526,12 +540,9 @@
   border-radius: 20px;
   padding: 4rem 2rem;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.05);
   width: 100%;
   margin: 0 auto;
-  box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.05);
   transition: all 0.2s ease;
 
   .empty-icon-wrap {
