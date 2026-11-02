@@ -15,6 +15,7 @@ import OffersPage from "../Pages/Offers/OffersPage.jsx";
 import CartPage from "../Pages/Cart/CartPage.jsx";
 import CheckoutPage from "../Pages/Cart/CheckoutPage.jsx";
 import OrdersPage from "../Pages/Orders/OrdersPage.jsx";
+import ReservationPage from "../Pages/Reservation/ReservationPage.jsx";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -54,11 +55,17 @@ const HomeRouter = () => {
       <Route
         path="/reservation"
         element={
-          <SubpagePlaceholder
-            icon="🍷"
-            title={translations.tablebooking}
-            subtitle={translations.bookingsubtitle}
-          />
+          <ProtectedRoute>
+            <ReservationPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reservation/:reservationId"
+        element={
+          <ProtectedRoute>
+            <ReservationPage />
+          </ProtectedRoute>
         }
       />
       <Route path="/about" element={<AboutPage />} />
