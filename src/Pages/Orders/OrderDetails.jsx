@@ -343,10 +343,21 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
             amount:
               item.amount !== undefined ? item.amount : baseAmount + addonsAmount,
             itemtype: item.itemtype || "Veg",
-            isDeal: Boolean(item.isDeal),
+            isDeal: Boolean(
+              item.isDeal ||
+              item.isdeal ||
+              item.bundletype ||
+              item.bundleType ||
+              (Array.isArray(item.bundleItems) && item.bundleItems.length > 0) ||
+              (Array.isArray(item.bundleitems) && item.bundleitems.length > 0)
+            ),
             dealsbundlesid: item.dealsbundlesid != null ? Number(item.dealsbundlesid) : null,
-            bundletype: item.bundletype || null,
-            bundleItems: Array.isArray(item.bundleItems) ? item.bundleItems : [],
+            bundletype: item.bundletype || item.bundleType || null,
+            bundleItems: Array.isArray(item.bundleItems)
+              ? item.bundleItems
+              : Array.isArray(item.bundleitems)
+                ? item.bundleitems
+                : [],
             addons: addonsForProduct.map((addon) => ({
               addonname: addon.addonname || addon.name,
               addonprice: addon.addonprice || addon.price || 0,

@@ -515,6 +515,56 @@ export const generateInvoiceBodyHTML = (
       const productAmount =
         product.amount !== undefined ? product.amount : (parseFloat(productPrice) || 0) * productQuantity;
 
+      const isDeal = Boolean(
+        product.isDeal ||
+        product.isdeal ||
+        product.bundletype ||
+        product.bundleType ||
+        (Array.isArray(product.bundleItems) && product.bundleItems.length > 0) ||
+        (Array.isArray(product.bundleitems) && product.bundleitems.length > 0)
+      );
+      const bundletype = product.bundletype || product.bundleType || (isDeal ? "Deal" : null);
+      const bundleItems = Array.isArray(product.bundleItems)
+        ? product.bundleItems
+        : Array.isArray(product.bundleitems)
+          ? product.bundleitems
+          : [];
+
+      let dealTagHtml = "";
+      if (isDeal) {
+        const dealLabel = bundletype
+          ? getTranslation(bundletype.toLowerCase()) || bundletype
+          : getTranslation("deal") || "DEAL";
+        dealTagHtml = ` <span style="display: inline-block; background-color: #FEF3C7; color: #D97706; border: 1px solid #FCD34D; border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: bold; margin-left: 4px; text-transform: uppercase;">${escapeHtml(dealLabel)}</span>`;
+      }
+
+      let bundleItemsHtml = "";
+      if (bundleItems.length > 0) {
+        const includedItemsLabel = getTranslation("includeditems") || "INCLUDED ITEMS";
+        bundleItemsHtml = `
+          <div style="margin-top: 6px; padding: 6px 8px; background-color: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 6px;">
+            <div style="font-size: 9px; font-weight: bold; color: #166534; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+              <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background-color: #16A34A; margin-right: 4px;"></span>
+              ${escapeHtml(includedItemsLabel)} (${bundleItems.length})
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 3px;">
+              ${bundleItems
+                .map((bi) => {
+                  const biQty = bi.qty || bi.quantity || 1;
+                  const biName = bi.itemname || bi.name || bi.productname || "";
+                  return `
+                    <div style="display: flex; align-items: center; gap: 5px; font-size: 10px; color: #374151; background: #ffffff; border: 1px solid #E5E7EB; border-radius: 4px; padding: 2px 6px;">
+                      <span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>
+                      <span>${escapeHtml(biName)}</span>
+                    </div>
+                  `;
+                })
+                .join("")}
+            </div>
+          </div>
+        `;
+      }
+
       let addonsHtml = "";
       if (Array.isArray(product.addons) && product.addons.length > 0) {
         product.addons.forEach((addon) => {
@@ -532,7 +582,8 @@ export const generateInvoiceBodyHTML = (
       itemsRows += `
         <tr>
           <td>
-            <strong>${escapeHtml(productName)}</strong>
+            <strong>${escapeHtml(productName)}</strong>${dealTagHtml}
+            ${bundleItemsHtml}
             ${addonsHtml}
             ${specialInstructionsHtml}
           </td>
