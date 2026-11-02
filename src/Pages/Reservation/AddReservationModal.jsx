@@ -10,9 +10,6 @@ import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import NotesOutlinedIcon from "@mui/icons-material/NotesOutlined";
 import PublicIcon from "@mui/icons-material/Public";
 import CircularProgress from "@mui/material/CircularProgress";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -288,7 +285,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
     }
 
     if (reservationType === "quickseat") {
-      if (!guestCount || guestCount < 1) {
+      if (!guestCount || Number(guestCount) < 1) {
         newErrors.guests = translations.pleaseenterguest || "Please enter number of guests";
       }
     }
@@ -597,40 +594,40 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 </div>
               </div>
             ) : (
-              /* Quick Seat: Guest Counter */
-              <div className="form-group">
-                <label className="form-label">
+              /* Quick Seat: Guest Input */
+              <div className="form-group guest-form-group">
+                <label className="form-label" htmlFor="reservation-guests-input">
                   <GroupsOutlinedIcon fontSize="small" className="label-icon" />
-                  <span>{translations.guest || "Number of Guests"}</span>
+                  <span>{translations.guest || "Guest"}</span>
                 </label>
-                <div className="guest-stepper-box">
-                  <button
-                    type="button"
-                    className="stepper-btn"
-                    disabled={guestCount <= 1}
-                    onClick={() =>
-                      setGuestCount((prev) => Math.max(1, prev - 1))
+                <input
+                  id="reservation-guests-input"
+                  type="number"
+                  className={`form-input ${errors.guests ? "has-error" : ""}`}
+                  min="1"
+                  max="100"
+                  placeholder={
+                    translations.enterguestcount ||
+                    translations.guest ||
+                    "Enter number of guests"
+                  }
+                  value={guestCount}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      setGuestCount("");
+                    } else {
+                      const num = parseInt(val, 10);
+                      setGuestCount(isNaN(num) ? "" : num);
                     }
-                  >
-                    <RemoveIcon fontSize="small" />
-                  </button>
-                  <div className="stepper-value-display">
-                    <span className="count-number">{guestCount}</span>
-                    <span className="count-label">
-                      {guestCount === 1 ? "Guest" : "Guests"}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    className="stepper-btn"
-                    disabled={guestCount >= 20}
-                    onClick={() =>
-                      setGuestCount((prev) => Math.min(20, prev + 1))
+                    setErrors((prev) => ({ ...prev, guests: null }));
+                  }}
+                  onBlur={() => {
+                    if (!guestCount || Number(guestCount) < 1) {
+                      setGuestCount(1);
                     }
-                  >
-                    <AddIcon fontSize="small" />
-                  </button>
-                </div>
+                  }}
+                />
                 {errors.guests && (
                   <span className="error-message">{errors.guests}</span>
                 )}
