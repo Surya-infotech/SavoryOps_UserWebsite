@@ -19,6 +19,7 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { formatTime12h, getTodayDateInputString } from "./reservationHelpers.js";
+import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -493,40 +494,44 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             {/* 3. Seating Options: Pick Spot (Area & Table) vs Quick Seat (Guests) */}
             {reservationType === "pickspot" ? (
               <div className="pick-spot-fields">
-                {/* Area Selector */}
-                <div className="form-group">
-                  <label className="form-label">
-                    <span>{translations.selectarea || "Dining Area"}</span>
+                {/* Area Selector (Dropdown instead of tabs) */}
+                <div className="form-group area-form-group">
+                  <label className="form-label" htmlFor="reservation-area-dropdown">
+                    <span>{translations.selectarea || "Select Area"}</span>
+                    <span className="req">*</span>
                   </label>
                   {loadingTables ? (
                     <div className="field-loading-placeholder">
                       <CircularProgress size={18} />
-                      <span>Loading areas and tables...</span>
+                      <span>{translations.loadingareas || "Loading dining areas..."}</span>
                     </div>
                   ) : areas.length === 0 ? (
                     <div className="notice-chip">
-                      No specific dining areas configured for this branch.
+                      {translations.noareafound ||
+                        "No specific dining areas configured for this branch."}
                     </div>
                   ) : (
-                    <div className="pill-selector-row">
-                      {areas.map((a) => {
-                        const isSelected = selectedArea?.areaid === a.areaid;
-                        return (
-                          <button
-                            key={a.areaid}
-                            type="button"
-                            className={`area-pill ${isSelected ? "selected" : ""}`}
-                            onClick={() => {
-                              setSelectedArea(a);
-                              setSelectedTable(null);
-                              setErrors((prev) => ({ ...prev, area: null }));
-                            }}
-                          >
-                            <span>{a.areaname}</span>
-                          </button>
+                    <Dropdown
+                      id="reservation-area-dropdown"
+                      placeholder={
+                        translations.selectareaplaceholder ||
+                        translations.selectarea ||
+                        "Select Area"
+                      }
+                      options={areas}
+                      labelKey="areaname"
+                      valueKey="areaid"
+                      selectedValue={selectedArea?.areaid || ""}
+                      onValueChange={(newAreaId) => {
+                        const chosen = areas.find(
+                          (a) => String(a.areaid) === String(newAreaId)
                         );
-                      })}
-                    </div>
+                        setSelectedArea(chosen || null);
+                        setSelectedTable(null);
+                        setErrors((prev) => ({ ...prev, area: null }));
+                      }}
+                      showSearch={areas.length > 5}
+                    />
                   )}
                   {errors.area && (
                     <span className="error-message">{errors.area}</span>
