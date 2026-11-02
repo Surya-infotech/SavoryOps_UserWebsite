@@ -501,6 +501,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -862,32 +863,36 @@
   .type-toggle-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
+    gap: 0.75rem;
 
     .type-toggle-card {
       position: relative;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.85rem 1rem;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.55rem 0.85rem;
       border-radius: 12px;
-      border: 1.5px solid #e2e8f0;
+      border: 1.5px solid #cbd5e1;
       background: #ffffff;
       cursor: pointer;
-      text-align: left;
-      transition: all 0.2s ease;
+      color: #475569;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
       .type-icon-circle {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
         background: rgba(2, 136, 2, 0.08);
         color: #028802;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2rem;
         flex-shrink: 0;
+
+        svg {
+          font-size: 1.05rem;
+        }
 
         &.quick {
           background: rgba(245, 158, 11, 0.12);
@@ -897,39 +902,46 @@
 
       .type-text-meta {
         display: flex;
-        flex-direction: column;
+        align-items: center;
 
         .type-name {
-          font-size: 0.95rem;
-          font-weight: 700;
-          color: #0f172a;
-        }
-
-        .type-desc {
-          font-size: 0.75rem;
-          color: #64748b;
-          line-height: 1.3;
+          font-size: 0.88rem;
+          font-weight: 600;
+          color: inherit;
         }
       }
 
-      .check-indicator {
-        position: absolute;
-        top: 0.6rem;
-        right: 0.6rem;
-        color: #028802;
+      &:hover:not(.active) {
+        border-color: #94a3b8;
+        background: #f8fafc;
+        color: #0f172a;
       }
 
       &.active {
         border-color: #028802;
-        background: rgba(2, 136, 2, 0.04);
+        background: #ffffff;
+        color: #028802;
         box-shadow: 0 0 0 1px #028802;
-      }
 
-      &:hover:not(.active) {
-        border-color: #cbd5e1;
-        background: #f8fafc;
+        .type-text-meta .type-name {
+          font-weight: 700;
+          color: #028802;
+        }
+
+        .type-icon-circle {
+          background: rgba(2, 136, 2, 0.14);
+          color: #028802;
+        }
       }
     }
+  }
+
+  /* Seating Options Container */
+  .pick-spot-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
   }
 
   /* Seating Branch, Area & Table Dropdowns */
@@ -962,8 +974,10 @@
 
   /* Ensure dropdown menus inside the modal open downward and never get clipped off-screen */
   .dropdown {
+
     &.dropup,
     &.open-upward {
+
       .dropdown-menu-panel,
       .dropdownul {
         top: calc(100% + 5px) !important;
@@ -1576,6 +1590,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -1586,9 +1601,9 @@
     opacity: 0;
     transform: scale(0.96) translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
 }
-

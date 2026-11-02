@@ -146,8 +146,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
   const branchOptions = useMemo(() => {
     return availableBranches.map((branch) => ({
       ...branch,
-      displayLabel: `${branch.branchname}${branch.address ? ` — ${branch.address}` : ""
-        }`,
+      displayLabel: branch.branchname || branch.name || "",
     }));
   }, [availableBranches]);
 
