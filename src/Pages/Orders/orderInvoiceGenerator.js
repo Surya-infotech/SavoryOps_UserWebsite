@@ -77,7 +77,7 @@ export const generateInvoiceStyles = () => `
   .invoice-wrapper * {
     box-sizing: border-box;
   }
-  .header {
+  .invoice-wrapper .header {
     text-align: center;
     border-bottom: 2px solid #28a745;
     padding-bottom: 10px;
@@ -91,7 +91,7 @@ export const generateInvoiceStyles = () => `
     min-height: 80px;
     box-sizing: border-box;
   }
-  .logo {
+  .invoice-wrapper .logo {
     position: absolute;
     left: 15px;
     top: 15px;
@@ -100,13 +100,13 @@ export const generateInvoiceStyles = () => `
     object-fit: contain;
     border-radius: 4px;
   }
-  .header-content {
+  .invoice-wrapper .header-content {
     margin: 0 85px;
   }
-  .header-content.no-logo {
+  .invoice-wrapper .header-content.no-logo {
     margin: 0 auto;
   }
-  .header h1 {
+  .invoice-wrapper .header h1 {
     color: #28a745;
     margin: 0 0 5px 0;
     font-size: 20px;
@@ -114,18 +114,18 @@ export const generateInvoiceStyles = () => `
     text-transform: capitalize;
     letter-spacing: 0.2px;
   }
-  .header h2 {
+  .invoice-wrapper .header h2 {
     color: #333333;
     margin: 0 0 6px 0;
     font-size: 16px;
     font-weight: 600;
   }
-  .header p {
+  .invoice-wrapper .header p {
     margin: 0;
     font-size: 11px;
     color: #666666;
   }
-  .header-date {
+  .invoice-wrapper .header-date {
     position: absolute;
     right: 15px;
     bottom: 15px;
@@ -133,25 +133,25 @@ export const generateInvoiceStyles = () => `
     font-size: 11px;
     color: #444444;
   }
-  .customer-info {
+  .invoice-wrapper .customer-info {
     margin-bottom: 15px;
   }
-  .customer-info-row {
+  .invoice-wrapper .customer-info-row {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
   }
-  .customer-info-row .info-item {
+  .invoice-wrapper .customer-info-row .info-item {
     flex: 1 1 30%;
     min-width: 120px;
   }
-  .info-row-wrapper {
+  .invoice-wrapper .info-row-wrapper {
     display: flex;
     gap: 15px;
     margin-bottom: 15px;
     flex-wrap: wrap;
   }
-  .info-card {
+  .invoice-wrapper .info-card {
     flex: 1 1 0;
     background-color: #ffffff;
     padding: 12px;
@@ -161,7 +161,7 @@ export const generateInvoiceStyles = () => `
     min-width: 0;
     box-sizing: border-box;
   }
-  .info-card h3 {
+  .invoice-wrapper .info-card h3 {
     color: #28a745;
     border-bottom: 1px solid #eeeeee;
     padding-bottom: 5px;
@@ -169,40 +169,40 @@ export const generateInvoiceStyles = () => `
     font-size: 14px;
     font-weight: 600;
   }
-  .info-list {
+  .invoice-wrapper .info-list {
     display: flex;
     flex-direction: column;
     gap: 3px;
   }
-  .info-item {
+  .invoice-wrapper .info-item {
     display: flex;
     align-items: center;
     padding: 2px 0;
     font-size: 11px;
   }
-  .order-info-row {
+  .invoice-wrapper .order-info-row {
     justify-content: space-between;
     gap: 10px;
   }
-  .info-pair {
+  .invoice-wrapper .info-pair {
     display: flex;
     align-items: center;
     gap: 5px;
   }
-  .info-pair-right {
+  .invoice-wrapper .info-pair-right {
     justify-content: flex-end;
   }
-  .info-label {
+  .invoice-wrapper .info-label {
     font-weight: bold;
     color: #555555;
     font-size: 11px;
   }
-  .info-value {
+  .invoice-wrapper .info-value {
     color: #333333;
     font-size: 11px;
     margin-left: 5px;
   }
-  .status-badge {
+  .invoice-wrapper .status-badge {
     background-color: #28a745;
     color: #ffffff;
     padding: 2px 6px;
@@ -212,37 +212,37 @@ export const generateInvoiceStyles = () => `
     margin-left: 5px;
     text-transform: capitalize;
   }
-  .status-pending {
+  .invoice-wrapper .status-pending {
     background-color: #ffc107;
     color: #333333;
   }
-  .status-completed {
+  .invoice-wrapper .status-completed {
     background-color: #28a745;
     color: #ffffff;
   }
-  .status-unpaid {
+  .invoice-wrapper .status-unpaid {
     background-color: #dc3545;
     color: #ffffff;
   }
-  .status-paid {
+  .invoice-wrapper .status-paid {
     background-color: #28a745;
     color: #ffffff;
   }
-  .status-refunded {
+  .invoice-wrapper .status-refunded {
     background-color: #8b5cf6;
     color: #ffffff;
   }
-  .status-void {
+  .invoice-wrapper .status-void {
     background-color: #64748b;
     color: #ffffff;
   }
-  .items-section-title {
+  .invoice-wrapper .items-section-title {
     color: #28a745;
     margin: 0 0 10px 0;
     font-size: 14px;
     font-weight: bold;
   }
-  .items-table {
+  .invoice-wrapper .items-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 15px;
@@ -253,27 +253,27 @@ export const generateInvoiceStyles = () => `
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     font-size: 11px;
   }
-  .items-table th,
-  .items-table td {
+  .invoice-wrapper .items-table th,
+  .invoice-wrapper .items-table td {
     border: 1px solid #dddddd;
     padding: 6px 8px;
     text-align: left;
     vertical-align: top;
   }
-  .price-column,
-  .amount-column {
+  .invoice-wrapper .price-column,
+  .invoice-wrapper .amount-column {
     text-align: right !important;
   }
-  .items-table th {
+  .invoice-wrapper .items-table th {
     background-color: #28a745;
     color: #ffffff;
     font-weight: bold;
     font-size: 11px;
   }
-  .items-table tr:nth-child(even) {
+  .invoice-wrapper .items-table tr:nth-child(even) {
     background-color: #f9f9f9;
   }
-  .addon-item {
+  .invoice-wrapper .addon-item {
     margin-left: 15px;
     font-style: italic;
     color: #666666;
@@ -281,14 +281,14 @@ export const generateInvoiceStyles = () => `
     display: block;
     margin-top: 2px;
   }
-  .special-instructions {
+  .invoice-wrapper .special-instructions {
     color: #dc3545;
     font-style: italic;
     margin-top: 3px;
     font-size: 10px;
     display: block;
   }
-  .summary {
+  .invoice-wrapper .summary {
     margin-top: 15px;
     background-color: #ffffff;
     padding: 15px;
@@ -297,7 +297,7 @@ export const generateInvoiceStyles = () => `
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
   }
-  .summary h3 {
+  .invoice-wrapper .summary h3 {
     color: #28a745;
     border-bottom: 1px solid #eeeeee;
     padding-bottom: 5px;
@@ -305,7 +305,7 @@ export const generateInvoiceStyles = () => `
     font-size: 14px;
     font-weight: 600;
   }
-  .summary-row {
+  .invoice-wrapper .summary-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 5px;
@@ -313,7 +313,7 @@ export const generateInvoiceStyles = () => `
     font-size: 11px;
     color: #444444;
   }
-  .total-row {
+  .invoice-wrapper .total-row {
     font-weight: bold;
     font-size: 14px;
     border-top: 2px solid #28a745;
@@ -321,7 +321,7 @@ export const generateInvoiceStyles = () => `
     margin-top: 8px;
     color: #28a745;
   }
-  .footer {
+  .invoice-wrapper .footer {
     margin-top: 15px;
     text-align: center;
     color: #666666;
@@ -333,7 +333,7 @@ export const generateInvoiceStyles = () => `
     font-size: 10px;
     box-sizing: border-box;
   }
-  .footer p {
+  .invoice-wrapper .footer p {
     margin: 3px 0;
   }
   @media print {
@@ -341,10 +341,10 @@ export const generateInvoiceStyles = () => `
       padding: 0;
       background-color: #ffffff;
     }
-    .header,
-    .info-card,
-    .summary,
-    .footer {
+    .invoice-wrapper .header,
+    .invoice-wrapper .info-card,
+    .invoice-wrapper .summary,
+    .invoice-wrapper .footer {
       box-shadow: none;
       border: 1px solid #dddddd;
     }
@@ -414,8 +414,8 @@ export const generateInvoiceBodyHTML = (
     typeof rawCustomerEmail === "string"
       ? rawCustomerEmail.trim()
       : rawCustomerEmail
-      ? String(rawCustomerEmail).trim()
-      : "";
+        ? String(rawCustomerEmail).trim()
+        : "";
   const hasCustomerEmail = customerEmail !== "" && customerEmail.toLowerCase() !== "n/a";
 
   const isItemCancelled = (it) =>
@@ -425,8 +425,8 @@ export const generateInvoiceBodyHTML = (
     Array.isArray(orderData.products) && orderData.products.length > 0
       ? orderData.products
       : Array.isArray(orderData.items)
-      ? orderData.items
-      : []
+        ? orderData.items
+        : []
   ).filter((p) => !isItemCancelled(p));
 
   let itemsRows = "";
@@ -488,8 +488,8 @@ export const generateInvoiceBodyHTML = (
         ? chg.chargetype === "percentage"
           ? ` (${rawVal}%)`
           : chg.chargetype === "fixed"
-          ? ` (${formatPrice(rawVal)})`
-          : ` (${rawVal})`
+            ? ` (${formatPrice(rawVal)})`
+            : ` (${rawVal})`
         : "";
     beforeTaxRows += `
       <div class="summary-row">
@@ -546,14 +546,14 @@ export const generateInvoiceBodyHTML = (
       tax.calculatedAmount != null && Number(tax.calculatedAmount) > 0
         ? Number(tax.calculatedAmount)
         : tax.amount != null
-        ? Number(tax.amount)
-        : Number(tax.price || 0);
+          ? Number(tax.amount)
+          : Number(tax.price || 0);
     const rateLabel =
       tax.taxtype === "percentage"
         ? ` (${tax.price ?? tax.rate}%)`
         : tax.taxtype === "fixed"
-        ? ` (${formatPrice(tax.price ?? tax.rate)})`
-        : "";
+          ? ` (${formatPrice(tax.price ?? tax.rate)})`
+          : "";
     taxesRows += `
       <div class="summary-row">
         <span>${escapeHtml(tax.taxname)}${rateLabel}</span>
@@ -575,8 +575,8 @@ export const generateInvoiceBodyHTML = (
         ? chg.chargetype === "percentage"
           ? ` (${rawVal}%)`
           : chg.chargetype === "fixed"
-          ? ` (${formatPrice(rawVal)})`
-          : ` (${rawVal})`
+            ? ` (${formatPrice(rawVal)})`
+            : ` (${rawVal})`
         : "";
     afterTaxRows += `
       <div class="summary-row">
@@ -594,8 +594,8 @@ export const generateInvoiceBodyHTML = (
       roundoffAmount > 0
         ? `+${formatPrice(roundoffAmount)}`
         : roundoffAmount < 0
-        ? `-${formatPrice(Math.abs(roundoffAmount))}`
-        : formatPrice(0);
+          ? `-${formatPrice(Math.abs(roundoffAmount))}`
+          : formatPrice(0);
     roundoffRow = `
       <div class="summary-row">
         <span>${escapeHtml(getTranslation("roundoff") || "Round Off")}</span>
@@ -634,14 +634,13 @@ export const generateInvoiceBodyHTML = (
             <span class="info-label">${escapeHtml(getTranslation("customerphone") || "Phone Number")}:</span>
             <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerPhone))}</span>
           </div>
-          ${
-            hasCustomerEmail
-              ? `<div class="info-item">
+          ${hasCustomerEmail
+      ? `<div class="info-item">
                   <span class="info-label">${escapeHtml(getTranslation("customeremail") || "Email")}:</span>
                   <span class="info-value">${escapeHtml(customerEmail)}</span>
                 </div>`
-              : ""
-          }
+      : ""
+    }
         </div>
       </div>
 
@@ -654,14 +653,13 @@ export const generateInvoiceBodyHTML = (
               <span class="info-label">${escapeHtml(getTranslation("branch") || "Branch")}:</span>
               <span class="info-value">${escapeHtml(orderData.branchname || "Main Branch")}</span>
             </div>
-            ${
-              tableDetailsHTML
-                ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
+            ${tableDetailsHTML
+      ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
                     <div class="info-item" style="margin-bottom: 6px;"><span class="info-label" style="font-weight: bold; color: #28a745;">${escapeHtml(getTranslation("tabledetails") || "Table Details")}</span></div>
                     ${tableDetailsHTML}
                   </div>`
-                : ""
-            }
+      : ""
+    }
           </div>
         </div>
 
@@ -802,16 +800,6 @@ export const downloadOrderInvoicePDF = async (
     logoBase64 = await loadLogoAsBase64(logoUrl);
   }
 
-  // Render container matching A4 standard width (794px @ 96DPI)
-  const container = document.createElement("div");
-  container.style.position = "fixed";
-  container.style.left = "-9999px";
-  container.style.top = "0";
-  container.style.width = "794px";
-  container.style.backgroundColor = "#f8f8f8";
-  container.style.zIndex = "-9999";
-  container.style.boxSizing = "border-box";
-
   const styles = generateInvoiceStyles();
   const body = generateInvoiceBodyHTML(
     orderData,
@@ -823,22 +811,53 @@ export const downloadOrderInvoicePDF = async (
     logoBase64
   );
 
-  container.innerHTML = `
-    <style>${styles}</style>
-    ${body}
-  `;
-
-  document.body.appendChild(container);
+  // Use a completely isolated off-screen iframe to prevent ANY style leakage into the Order Details page
+  const iframe = document.createElement("iframe");
+  iframe.style.position = "fixed";
+  iframe.style.left = "-9999px";
+  iframe.style.top = "0";
+  iframe.style.width = "794px";
+  iframe.style.height = "1200px";
+  iframe.style.border = "none";
+  iframe.style.opacity = "0";
+  iframe.style.pointerEvents = "none";
+  iframe.style.zIndex = "-99999";
+  document.body.appendChild(iframe);
 
   try {
-    // Wait for layout and image rendering
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            html, body {
+              margin: 0;
+              padding: 0;
+              background-color: #f8f8f8;
+            }
+            ${styles}
+          </style>
+        </head>
+        <body>
+          ${body}
+        </body>
+      </html>
+    `);
+    iframeDoc.close();
+
+    // Wait for layout, fonts, and images to paint inside the iframe
     await new Promise((resolve) =>
       requestAnimationFrame(() => requestAnimationFrame(resolve))
     );
-    await new Promise((resolve) => setTimeout(resolve, 120));
+    await new Promise((resolve) => setTimeout(resolve, 150));
 
-    const captureHeight = container.scrollHeight || container.offsetHeight || 900;
-    const canvas = await html2canvas(container, {
+    const targetElement = iframeDoc.querySelector(".invoice-wrapper") || iframeDoc.body;
+    const captureHeight = targetElement.scrollHeight || targetElement.offsetHeight || 900;
+
+    const canvas = await html2canvas(targetElement, {
       scale: 2,
       useCORS: true,
       logging: false,
@@ -916,8 +935,8 @@ export const downloadOrderInvoicePDF = async (
     doc.save(fileName);
     return true;
   } finally {
-    if (document.body.contains(container)) {
-      document.body.removeChild(container);
+    if (document.body.contains(iframe)) {
+      document.body.removeChild(iframe);
     }
   }
 };
