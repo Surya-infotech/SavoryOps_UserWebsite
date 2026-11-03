@@ -65,7 +65,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
 
         if (result && result.success && result.tableNo) {
           const branchPart = result.branchName ? ` (${result.branchName})` : "";
-          const msg = `${translations.connectedtotable || "Connected to Table"} ${result.tableNo}!${branchPart}`;
+          const msg = `${translations.connectedtotable} ${result.tableNo}!${branchPart}`;
           showSnackbar(msg, "success");
 
           // If user was on the cart page, remain on cart page so they see updated table card & branch
@@ -89,7 +89,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
         }
       } catch (err) {
         console.error("Error processing scanned QR code:", err);
-        showSnackbar(translations.somethingwentwrong || "Error processing table QR code", "error");
+        showSnackbar(translations.errorprocessingtableqrcode || translations.somethingwentwrong, "error");
       } finally {
         setTimeout(() => {
           isProcessingRef.current = false;
@@ -276,7 +276,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
                   onClick={startCamera}
                 >
                   <RefreshIcon fontSize="small" />
-                  <span>Try Again</span>
+                  <span>{translations.tryagain}</span>
                 </button>
               </div>
             ) : (

@@ -809,7 +809,7 @@ const CheckoutPage = () => {
                   </div>
                   <div className="option-info">
                     <span className="option-title">{translations.online}</span>
-                    <span className="option-subtitle">Credit / Debit Card / Netbanking</span>
+                    <span className="option-subtitle">{translations.creditdebitcardnetbanking}</span>
                   </div>
                   {selectedPaymentMethod === "Online" && (
                     <CheckCircleIcon className="option-check-icon" />
@@ -828,7 +828,7 @@ const CheckoutPage = () => {
                   </h3>
                 </div>
                 <Link to="/cart" className="card-header-action-btn">
-                  <span>Edit Cart</span>
+                  <span>{translations.editcart}</span>
                 </Link>
               </div>
 

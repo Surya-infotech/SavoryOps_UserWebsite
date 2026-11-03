@@ -334,7 +334,7 @@ const AboutPage = () => {
                 )}
                 <div>
                   <h3 className="brand-name">{businessName}</h3>
-                  <span className="brand-badge">Official Restaurant Details</span>
+                  <span className="brand-badge">{translations.officialrestaurantdetails}</span>
                 </div>
               </div>
 
@@ -354,7 +354,7 @@ const AboutPage = () => {
               {/* Social Media Row */}
               {Array.isArray(socialMedia) && socialMedia.length > 0 && (
                 <div className="about-social-block">
-                  <h4 className="social-block-title">Follow Our Culinary Journey</h4>
+                  <h4 className="social-block-title">{translations.followourculinaryjourney}</h4>
                   <div className="social-links-list">
                     {socialMedia.map((social, idx) => {
                       const url = social.url
@@ -387,7 +387,7 @@ const AboutPage = () => {
             <div className="details-right-col">
               <div className="contact-info-card">
                 <div className="contact-card-header">
-                  <span className="contact-kicker">CURRENT BRANCH LOCATION</span>
+                  <span className="contact-kicker">{translations.currentbranchlocation}</span>
                   <h3 className="contact-branch-name">
                     {selectedBranch?.branchname || "Selected Branch"}
                   </h3>
@@ -400,7 +400,7 @@ const AboutPage = () => {
                         <LocationOnIcon fontSize="small" />
                       </div>
                       <div className="row-content">
-                        <span className="row-label">Address</span>
+                        <span className="row-label">{translations.branchaddress}</span>
                         <span className="row-value">{fullAddress}</span>
                       </div>
                     </div>
@@ -412,7 +412,7 @@ const AboutPage = () => {
                         <PhoneIcon fontSize="small" />
                       </div>
                       <div className="row-content">
-                        <span className="row-label">Phone & Helpline</span>
+                        <span className="row-label">{translations.phoneandhelpline}</span>
                         <a href={`tel:${branchPhone}`} className="row-link">
                           {branchPhone}
                         </a>
@@ -426,7 +426,7 @@ const AboutPage = () => {
                         <EmailOutlinedIcon fontSize="small" />
                       </div>
                       <div className="row-content">
-                        <span className="row-label">Email Support</span>
+                        <span className="row-label">{translations.emailsupport}</span>
                         <a href={`mailto:${businessEmail}`} className="row-link">
                           {businessEmail}
                         </a>
