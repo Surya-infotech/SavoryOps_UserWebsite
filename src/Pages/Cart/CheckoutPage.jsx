@@ -461,11 +461,11 @@ const CheckoutPage = () => {
         await fetchAddresses(newId);
       } else {
         const data = await response.json().catch(() => ({}));
-        showSnackbar(data.message || "Failed to save address", "error");
+        showSnackbar(data.message || translations.failedtosaveaddress, "error");
       }
     } catch (err) {
       console.error("Error saving address:", err);
-      showSnackbar("Failed to save address", "error");
+      showSnackbar(translations.failedtosaveaddress, "error");
     } finally {
       setIsSavingAddress(false);
     }
@@ -502,7 +502,7 @@ const CheckoutPage = () => {
 
     const branchId = selectedBranch?.branchid;
     if (!branchId) {
-      showSnackbar("Branch information not found. Please try again.", "error");
+      showSnackbar(translations.branchinformationnotfound, "error");
       return;
     }
 
@@ -653,7 +653,7 @@ const CheckoutPage = () => {
       }
     } catch (err) {
       console.error("Order submission error:", err);
-      showSnackbar("An unexpected error occurred while placing order.", "error", 4000);
+      showSnackbar(translations.unexpectedordererror, "error", 4000);
     } finally {
       setIsSubmitting(false);
     }
@@ -691,7 +691,7 @@ const CheckoutPage = () => {
                 <span>
                   {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
                     ? selectedTableNo
-                    : `${translations.table || "Table"} ${selectedTableNo}`}
+                    : `${translations.tablelabel} ${selectedTableNo}`}
                 </span>
               </div>
             )}
@@ -732,7 +732,7 @@ const CheckoutPage = () => {
                   {loadingAddresses ? (
                     <div className="address-loading-wrap">
                       <CircularProgress size={24} color="inherit" />
-                      <span>Loading addresses...</span>
+                      <span>{translations.loadingaddresses}</span>
                     </div>
                   ) : selectedAddress ? (
                     <div
@@ -790,7 +790,7 @@ const CheckoutPage = () => {
                     </div>
                     <div className="option-info">
                       <span className="option-title">{translations.cash}</span>
-                      <span className="option-subtitle">Pay at counter</span>
+                      <span className="option-subtitle">{translations.payatcounter}</span>
                     </div>
                     {selectedPaymentMethod === "Cash" && (
                       <CheckCircleIcon className="option-check-icon" />

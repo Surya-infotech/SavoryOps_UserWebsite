@@ -310,7 +310,13 @@ const CartPage = () => {
 
     updateCartItemAddons(editingCartItem.cartItemId, updatedAddons);
     if (typeof showSnackbar === "function") {
-      showSnackbar(`Add-ons updated for ${editingCartItem.name}`, "success", 2500);
+      showSnackbar(
+        editingCartItem?.name
+          ? `${editingCartItem.name} - ${translations.addonsupdated}`
+          : translations.addonsupdated,
+        "success",
+        2500
+      );
     }
     setEditingCartItem(null);
   };
@@ -352,7 +358,7 @@ const CartPage = () => {
     setCurrentOrderId(null);
     setSelectedTableNo(null);
     if (typeof showSnackbar === "function") {
-      showSnackbar("Order update cancelled. You are now creating a new order.", "info", 3000);
+      showSnackbar(translations.orderupdatecancelled, "info", 3000);
     }
   };
 
@@ -430,7 +436,7 @@ const CartPage = () => {
     const branchId = selectedBranch?.branchid || localStorage.getItem("selectedBranchid");
     if (!branchId) {
       if (typeof showSnackbar === "function") {
-        showSnackbar("Branch information not found. Please try again.", "error");
+        showSnackbar(translations.branchinformationnotfound, "error");
       }
       return;
     }
@@ -521,7 +527,7 @@ const CartPage = () => {
       } catch (err) {
         console.error("Order update error:", err);
         if (typeof showSnackbar === "function") {
-          showSnackbar("An unexpected error occurred while updating order.", "error", 4000);
+          showSnackbar(translations.unexpectedupdateerror, "error", 4000);
         }
       } finally {
         setIsSubmitting(false);
@@ -538,8 +544,7 @@ const CartPage = () => {
       if (!storedTableId || !storedTableNo) {
         if (typeof showSnackbar === "function") {
           showSnackbar(
-            translations.tablenotfoundpleasescanthetableqrcode ||
-              "Table No. not found. Please Scan the Table Qr Code",
+            translations.tablenotfoundpleasescanthetableqrcode,
             "warning",
             4000
           );
@@ -609,7 +614,7 @@ const CartPage = () => {
 
           if (typeof showSnackbar === "function") {
             showSnackbar(
-              translations.orderplacedsuccessfully || "Order placed successfully!",
+              translations.orderplacedsuccessfully,
               "success",
               4000
             );
@@ -624,20 +629,16 @@ const CartPage = () => {
         } else {
           const errorMessages = {
             "Table No. not found. Please Scan the Table Qr Code":
-              translations.tablenotfoundpleasescanthetableqrcode ||
-              "Table No. not found. Please Scan the Table Qr Code",
+              translations.tablenotfoundpleasescanthetableqrcode,
             "This table is already Occupied, you cannot add a new order":
-              translations.thistableisalreadyoccupiedyoucannotaddaneworder ||
-              "This table is already Occupied, you cannot add a new order",
+              translations.thistableisalreadyoccupiedyoucannotaddaneworder,
             "Table is not available for ordering. Please select another table":
-              translations.tableisnotavailablefororderingpleaseselectanothertable ||
-              "Table is not available for ordering. Please select another table",
+              translations.tableisnotavailablefororderingpleaseselectanothertable,
             "This table is already added to the order":
-              translations.thistableisalreadyaddedtotheorder ||
-              "This table is already added to the order",
+              translations.thistableisalreadyaddedtotheorder,
           };
           const errorMsg =
-            errorMessages[data?.message] || data?.message || "Failed to place Dine-in order.";
+            errorMessages[data?.message] || data?.message || translations.failedtoplacedineinorder;
           if (typeof showSnackbar === "function") {
             showSnackbar(errorMsg, "error", 4000);
           }
@@ -645,7 +646,7 @@ const CartPage = () => {
       } catch (err) {
         console.error("Dine-in order submission error:", err);
         if (typeof showSnackbar === "function") {
-          showSnackbar("An unexpected error occurred while placing order.", "error", 4000);
+          showSnackbar(translations.unexpectedordererror, "error", 4000);
         }
       } finally {
         setIsSubmitting(false);
@@ -713,7 +714,7 @@ const CartPage = () => {
                     <span className="cart-info-value">
                       {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
                         ? selectedTableNo
-                        : `${selectedTableNo}`}
+                        : `${translations.tablelabel} ${selectedTableNo}`}
                     </span>
                   </div>
                 </div>
@@ -1080,27 +1081,27 @@ const CartPage = () => {
                         <CircularProgress size={18} color="inherit" />
                         <span>
                           {currentOrderNo
-                            ? translations.updatingorder || "Updating Order..."
+                            ? translations.updatingorder
                             : isDineIn
-                            ? translations.processing || "Placing Order..."
-                            : translations.processing || "Processing..."}
+                            ? translations.placingorder
+                            : translations.processing}
                         </span>
                       </>
                     ) : currentOrderNo ? (
                       <>
                         <span>
-                          {translations.additemstoorder || "Add Items to Order"} #{currentOrderNo}
+                          {translations.additemstoorder} #{currentOrderNo}
                         </span>
                         <AddIcon fontSize="small" />
                       </>
                     ) : isDineIn ? (
                       <>
-                        <span>{translations.addorder || "Add Order"}</span>
+                        <span>{translations.addorder}</span>
                         <TableRestaurantIcon fontSize="small" />
                       </>
                     ) : (
                       <>
-                        <span>{translations.proceedtocheckout || "Proceed to Checkout"}</span>
+                        <span>{translations.proceedtocheckout}</span>
                         <ArrowForwardIcon fontSize="small" />
                       </>
                     )}
