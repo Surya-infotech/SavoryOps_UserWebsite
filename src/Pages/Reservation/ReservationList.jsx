@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutlined";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StorefrontIcon from "@mui/icons-material/Storefront";
