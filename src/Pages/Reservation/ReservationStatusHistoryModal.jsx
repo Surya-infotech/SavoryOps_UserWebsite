@@ -130,7 +130,10 @@ const ReservationStatusHistoryModal = ({
                           />
                           <span>{statusConfig.label}</span>
                         </span>
-                        <span className="timeline-time">
+                      </div>
+                      <div className="timeline-timestamp">
+                        <AccessTimeIcon fontSize="inherit" />
+                        <span>
                           {formatReservationDateTime(
                             log.updatedAt,
                             dateFormat,
@@ -145,14 +148,24 @@ const ReservationStatusHistoryModal = ({
               })}
             </div>
           ) : (
-            <div className="modal-empty-state">
-              <AccessTimeIcon className="modal-empty-icon" />
+            <div className="empty-history-state">
+              <AccessTimeIcon className="empty-history-icon" />
               <p>
                 {translations.nostatushistory ||
                   "No status history recorded yet."}
               </p>
             </div>
           )}
+        </div>
+
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="modal-close-submit-btn"
+            onClick={onClose}
+          >
+            {translations.close || "Close"}
+          </button>
         </div>
       </div>
     </div>
