@@ -1252,17 +1252,21 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
                       {order.taxes.map((tax, idx) => {
                         const rateLabel =
                           tax.taxtype === "percentage"
-                            ? ` (${tax.price ?? tax.rate}%)`
+                            ? `(${tax.price ?? tax.rate}%)`
                             : tax.taxtype === "fixed"
-                              ? ` (${formatOrderPrice(tax.price ?? tax.rate, order)})`
+                              ? `(${formatOrderPrice(tax.price ?? tax.rate, order)})`
                               : "";
                         return (
                           <div key={`tax-${idx}`} className="tax-card-row">
-                            <span className="tax-label">
+                            <div className="tax-label">
                               <span className="tax-bullet">+</span>
-                              <span className="tax-name">{tax.taxname}</span>
-                              {rateLabel && <span className="tax-rate">{rateLabel}</span>}
-                            </span>
+                              <span className="tax-name">
+                                {tax.taxname}
+                                {rateLabel && (
+                                  <span className="tax-rate">{rateLabel}</span>
+                                )}
+                              </span>
+                            </div>
                             <span className="tax-value">
                               {formatOrderPrice(
                                 tax.calculatedAmount ?? tax.amount ?? 0,

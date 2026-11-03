@@ -1083,6 +1083,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 0.75rem;
         font-size: 0.9rem;
         color: #475569;
 
@@ -1091,6 +1092,7 @@
           display: inline-flex;
           align-items: center;
           gap: 0.4rem;
+          min-width: 0;
 
           .rate-badge {
             font-size: 0.76rem;
@@ -1100,12 +1102,17 @@
             padding: 0.1rem 0.45rem;
             border-radius: 6px;
             letter-spacing: 0.01em;
+            white-space: nowrap;
+            flex-shrink: 0;
           }
         }
 
         .value {
           font-weight: 600;
           color: #0f172a;
+          white-space: nowrap;
+          flex-shrink: 0;
+          text-align: right;
         }
 
         &.subtotal-row {
@@ -1188,36 +1195,50 @@
 
           .tax-card-row {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
+            gap: 0.75rem;
             font-size: 0.86rem;
 
             .tax-label {
-              display: inline-flex;
-              align-items: center;
+              display: flex;
+              align-items: flex-start;
               gap: 0.35rem;
+              min-width: 0;
+              flex: 1;
 
               .tax-bullet {
                 color: #94a3b8;
                 font-size: 0.85rem;
                 font-weight: 700;
-                line-height: 1;
+                line-height: 1.35;
+                flex-shrink: 0;
               }
 
               .tax-name {
                 font-weight: 500;
                 color: #475569;
-              }
+                line-height: 1.35;
+                word-break: break-word;
 
-              .tax-rate {
-                color: #94a3b8;
-                font-size: 0.78rem;
+                .tax-rate {
+                  color: #64748b;
+                  font-size: 0.78rem;
+                  font-weight: 600;
+                  margin-left: 0.35rem;
+                  white-space: nowrap;
+                  display: inline-block;
+                }
               }
             }
 
             .tax-value {
               font-weight: 600;
               color: #1e293b;
+              white-space: nowrap;
+              flex-shrink: 0;
+              text-align: right;
+              line-height: 1.35;
             }
           }
         }
@@ -1226,6 +1247,7 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 0.75rem;
           padding-top: 0.45rem;
           border-top: 1px dashed #cbd5e1;
           font-size: 0.88rem;
@@ -1238,6 +1260,9 @@
           .total-tax-value {
             font-weight: 700;
             color: #0f172a;
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-align: right;
           }
         }
       }
@@ -1907,6 +1932,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -1917,6 +1943,7 @@
     opacity: 0;
     transform: translateY(16px) scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
