@@ -9,7 +9,6 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
-import CircularProgress from "@mui/material/CircularProgress";
 
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -171,9 +170,10 @@ const MyReviewsPage = () => {
       <div className="my-reviews-container">
         {/* Content Area */}
         {loading ? (
-          <div className="address-loading-wrap my-reviews-loading-wrap">
-            <CircularProgress size={40} sx={{ color: "#028802" }} />
-            <p>{translations.loading || "Loading..."}</p>
+          <div className="my-reviews-grid">
+            {[1, 2, 3, 4, 5, 6].map((k) => (
+              <ReviewShimmerCard key={k} />
+            ))}
           </div>
         ) : reviews.length === 0 ? (
           /* Empty State - Unified parity with Manage Address and Orders */
