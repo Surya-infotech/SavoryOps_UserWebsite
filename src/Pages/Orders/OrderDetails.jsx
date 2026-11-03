@@ -979,10 +979,6 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
                 <ShoppingBasketOutlinedIcon className="section-header-icon" />
                 <h3>{translations.itemdetails || "Item Details"}</h3>
               </div>
-              <span className="item-count-badge">
-                {order.products?.length || 0}{" "}
-                {translations.items || "Items"}
-              </span>
             </div>
             <div className="detail-card items-details-card">
               <div className="card-top-accent green" />
