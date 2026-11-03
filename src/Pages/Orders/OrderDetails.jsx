@@ -34,7 +34,6 @@ import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import {
   getOrderStatusColor,
@@ -168,10 +167,8 @@ const OrderDetailsShimmer = () => (
   </div>
 );
 
-const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName = "" }) => {
+const OrderDetails = ({ orderId, onBack }) => {
   const navigate = useNavigate();
-  const { business } = useWebsiteStatus();
-  const businessDisplayName = propBusinessName || business?.businessname || "";
   const { translations = {}, isRtl } = useLanguage();
   const { showSnackbar } = useSnackbar();
 

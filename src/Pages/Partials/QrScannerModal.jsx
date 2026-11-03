@@ -143,8 +143,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
       let barcodeDetector = null;
       if (hasBarcodeDetector) {
         try {
-          // eslint-disable-next-line no-undef
-          barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
+          barcodeDetector = new window.BarcodeDetector({ formats: ["qr_code"] });
         } catch {
           barcodeDetector = null;
         }
