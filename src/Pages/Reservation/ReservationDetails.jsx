@@ -31,6 +31,7 @@ import {
   getStoredTimeZone,
 } from "./reservationHelpers.js";
 import ReservationStatusHistoryModal from "./ReservationStatusHistoryModal.jsx";
+import ReservationCancelModal from "./ReservationCancelModal.jsx";
 import "../../Scss/Pages/Orders/orderdetails.scss";
 import "../../Scss/Pages/Reservation/tablereservation.scss";
 
@@ -126,8 +127,7 @@ const ReservationDetails = ({
   const [reservation, setReservation] = useState(initialReservation);
   const [loading, setLoading] = useState(!initialReservation && Boolean(reservationId));
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
-  const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
-  const [cancellationReason, setCancellationReason] = useState("");
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
   const activeDateFormat = dateFormat || getStoredDateFormat();
@@ -172,19 +172,17 @@ const ReservationDetails = ({
 
   useEffect(() => {
     if (reservationId) {
-      setIsCancelConfirmOpen(false);
-      setCancellationReason("");
+      setIsCancelModalOpen(false);
       fetchDetails();
     }
   }, [reservationId, fetchDetails]);
 
   // Handle Cancel Reservation
-  const handleCancelSubmit = async (e) => {
-    e.preventDefault();
-    if (!cancellationReason.trim()) {
+  const handleCancelReservation = async (reason) => {
+    if (!reason?.trim()) {
       showSnackbar(
         translations.pleaseentercancellationreason ||
-        "Please enter a reason for cancellation.",
+          "Please enter a reason for cancellation.",
         "warning"
       );
       return;
@@ -201,7 +199,7 @@ const ReservationDetails = ({
             "x-user": "admin",
           },
           body: JSON.stringify({
-            cancellationreason: cancellationReason.trim(),
+            cancellationreason: reason.trim(),
           }),
         }
       );
@@ -211,18 +209,17 @@ const ReservationDetails = ({
       if (response.ok) {
         showSnackbar(
           translations.reservationcancelled ||
-          "Reservation cancelled successfully.",
+            "Reservation cancelled successfully.",
           "success"
         );
-        setIsCancelConfirmOpen(false);
-        setCancellationReason("");
+        setIsCancelModalOpen(false);
         await fetchDetails();
         if (onReservationUpdated) onReservationUpdated();
       } else {
         showSnackbar(
           resData?.message ||
-          translations.somethingWentWrong ||
-          "Failed to cancel reservation.",
+            translations.somethingWentWrong ||
+            "Failed to cancel reservation.",
           "error"
         );
       }
@@ -582,76 +579,20 @@ const ReservationDetails = ({
           </div>
         )}
 
-        {/* Cancel Reservation Section (when Pending or Confirmed) */}
+        {/* Cancel Reservation Action Row (when Pending or Confirmed) */}
         {isCancellable && (
-          <div className="cancel-action-wrapper" style={{ marginTop: "0.5rem" }}>
-            {!isCancelConfirmOpen ? (
-              <button
-                type="button"
-                className="cancel-trigger-btn"
-                onClick={() => setIsCancelConfirmOpen(true)}
-              >
-                <CancelOutlinedIcon fontSize="small" />
-                <span>
-                  {translations.cancelreservation || "Cancel Reservation"}
-                </span>
-              </button>
-            ) : (
-              <form onSubmit={handleCancelSubmit} className="cancel-form-box">
-                <h5>
-                  {translations.cancelreservation || "Cancel Reservation"}
-                </h5>
-                <p className="cancel-prompt">
-                  {translations.cancellationconfirmdesc ||
-                    "Are you sure you want to cancel this booking? Please provide a brief reason."}
-                </p>
-                <textarea
-                  className="cancel-textarea"
-                  rows={3}
-                  placeholder={
-                    translations.entercancellationreason ||
-                    "e.g. Schedule conflict, feeling unwell, change of plans..."
-                  }
-                  value={cancellationReason}
-                  onChange={(e) => setCancellationReason(e.target.value)}
-                  required
-                  disabled={isCancelling}
-                />
-                <div className="cancel-form-actions">
-                  <button
-                    type="button"
-                    className="cancel-dismiss-btn"
-                    onClick={() => {
-                      setIsCancelConfirmOpen(false);
-                      setCancellationReason("");
-                    }}
-                    disabled={isCancelling}
-                  >
-                    {translations.keepbooking || "Keep Reservation"}
-                  </button>
-                  <button
-                    type="submit"
-                    className="cancel-submit-danger-btn"
-                    disabled={isCancelling}
-                  >
-                    {isCancelling ? (
-                      <>
-                        <CircularProgress size={16} color="inherit" />
-                        <span>
-                          {translations.cancellingreservation ||
-                            "Cancelling..."}
-                        </span>
-                      </>
-                    ) : (
-                      <span>
-                        {translations.confirmcancellation ||
-                          "Confirm Cancellation"}
-                      </span>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
+          <div className="cancel-reservation-action-row">
+            <button
+              type="button"
+              className="cancel-reservation-btn"
+              onClick={() => setIsCancelModalOpen(true)}
+              title={translations.cancelreservation || "Cancel Reservation"}
+            >
+              <CancelOutlinedIcon className="cancel-btn-icon" />
+              <span>
+                {translations.cancelreservation || "Cancel Reservation"}
+              </span>
+            </button>
           </div>
         )}
       </div>
@@ -664,6 +605,16 @@ const ReservationDetails = ({
         dateFormat={activeDateFormat}
         timeFormat={activeTimeFormat}
         timeZone={activeTimeZone}
+        translations={translations}
+      />
+
+      {/* Reservation Cancel Confirmation Modal */}
+      <ReservationCancelModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={handleCancelReservation}
+        reservationNo={reservation.reservationid}
+        isCancelling={isCancelling}
         translations={translations}
       />
     </div>

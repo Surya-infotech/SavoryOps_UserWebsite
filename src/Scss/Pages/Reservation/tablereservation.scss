@@ -1915,4 +1915,281 @@
       }
     }
   }
+
+  /* Cancel Reservation Action Row & Trigger Button */
+  .cancel-reservation-action-row {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0 0.5rem;
+
+    .cancel-reservation-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.35rem;
+      background: #ffffff;
+      border: 1.5px solid #fecaca;
+      border-radius: 9999px;
+      color: #dc2626;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.08);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+      .cancel-btn-icon {
+        font-size: 1.2rem;
+        color: #dc2626;
+        transition: transform 0.2s ease;
+      }
+
+      &:hover {
+        background: #fef2f2;
+        border-color: #ef4444;
+        color: #b91c1c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.16);
+
+        .cancel-btn-icon {
+          transform: scale(1.1);
+        }
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   Cancel Reservation Modal Dialog
+   ========================================================================== */
+
+.cancel-reservation-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  animation: historyBackdropFade 0.2s ease;
+
+  &.is-rtl {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+.cancel-reservation-modal-dialog {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  animation: historyModalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+
+  .modal-header {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f1f5f9;
+
+    .modal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .modal-header-icon-box.danger {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #fee2e2;
+        color: #dc2626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .modal-header-icon {
+          font-size: 1.45rem;
+        }
+      }
+
+      .modal-title-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        h3 {
+          margin: 0;
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: #0f172a;
+          line-height: 1.25;
+        }
+
+        .modal-orderno-badge {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #64748b;
+        }
+      }
+    }
+
+    .modal-close-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+
+      &:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+        transform: scale(1.06);
+      }
+    }
+  }
+
+  .cancel-modal-body {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+
+    .cancel-modal-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      font-size: 0.86rem;
+      line-height: 1.45;
+
+      svg {
+        font-size: 1.2rem;
+        color: #dc2626;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+    }
+
+    .cancel-reason-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+
+      label {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #334155;
+
+        .required-star {
+          color: #dc2626;
+          margin-left: 3px;
+        }
+      }
+
+      .cancel-reason-textarea {
+        width: 100%;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.75rem 0.95rem;
+        font-size: 0.9rem;
+        color: #0f172a;
+        outline: none;
+        resize: vertical;
+        font-family: inherit;
+        transition: all 0.2s ease;
+
+        &::placeholder {
+          color: #94a3b8;
+        }
+
+        &:focus {
+          background: #ffffff;
+          border-color: #dc2626;
+          box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+        }
+      }
+    }
+
+    .modal-footer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #f1f5f9;
+
+      .dismiss-btn {
+        padding: 0.65rem 1.25rem;
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover:not(:disabled) {
+          background: #f8fafc;
+          border-color: #94a3b8;
+          color: #0f172a;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .confirm-danger-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.65rem 1.4rem;
+        border-radius: 10px;
+        border: none;
+        background: #dc2626;
+        color: #ffffff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+
+        &:hover:not(:disabled) {
+          background: #b91c1c;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
 }
