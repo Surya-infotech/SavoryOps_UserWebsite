@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import jsQR from "jsqr";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -15,10 +16,43 @@ const QrScannerModal = ({ isOpen, onClose }) => {
 
   const [cameraError, setCameraError] = useState(null);
 
-  const videoRef = useRef(null);
+    const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  // Fallback: Scan QR from photo taken directly with phone camera
+  const handleFileScan = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        const imageData = ctx.getImageData(0, 0, img.width, img.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "dontInvert",
+        });
+
+        if (code && code.data) {
+          handleQrSuccess(code.data);
+        } else {
+          showSnackbar("No QR code detected in the photo. Please ensure good lighting and try again.", "warning");
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    // Reset input so same image can be reselected if needed
+    event.target.value = "";
+  };
 
   // Stop camera stream & scan loop cleanly
   const stopCamera = useCallback(() => {
