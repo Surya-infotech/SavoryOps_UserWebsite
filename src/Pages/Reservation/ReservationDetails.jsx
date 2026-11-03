@@ -365,7 +365,7 @@ const ReservationDetails = ({
                       </div>
                     </>
                   ) : (
-                    <div className="info-cell full-span">
+                    <div className={`info-cell ${!reservation.timezone ? "full-span" : ""}`}>
                       <GroupsOutlinedIcon className="cell-icon highlight" />
                       <div className="cell-value highlight">
                         {reservation.guest || 1}{" "}
@@ -376,7 +376,11 @@ const ReservationDetails = ({
 
                   {/* Timezone */}
                   {reservation.timezone && (
-                    <div className="info-cell full-span">
+                    <div
+                      className={`info-cell ${
+                        reservation.reservationtype === "pickspot" ? "full-span" : ""
+                      }`}
+                    >
                       <PublicIcon className="cell-icon" />
                       <div className="cell-value text-muted">
                         {reservation.timezone}
