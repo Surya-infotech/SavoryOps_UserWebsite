@@ -452,81 +452,101 @@ const ReservationDetails = ({
             </div>
           </div>
           <div className="detail-card booking-info-card">
+            <div className="card-top-accent green" />
             <div
               className="booking-info-content"
               style={{ padding: "1.25rem" }}
             >
-              <div className="info-grid-two">
+              <div
+                className={`booking-info-grid ${reservation.reservationtype === "pickspot"
+                  ? "five-items"
+                  : "four-items"
+                  }`}
+              >
                 {/* Date */}
-                <div className="info-cell">
-                  <CalendarMonthOutlinedIcon className="cell-icon" />
-                  <div className="cell-value">
-                    {formatReservationDate(
-                      reservation.reservationdate,
-                      activeDateFormat,
-                      activeTimeZone
-                    )}
+                <div className="booking-tile">
+                  <div className="tile-icon-wrap blue">
+                    <CalendarMonthOutlinedIcon fontSize="small" />
+                  </div>
+                  <div className="tile-text">
+                    <span>
+                      {formatReservationDate(
+                        reservation.reservationdate,
+                        activeDateFormat,
+                        activeTimeZone
+                      )}
+                    </span>
                   </div>
                 </div>
 
                 {/* Time */}
-                <div className="info-cell">
-                  <AccessTimeIcon className="cell-icon" />
-                  <div className="cell-value">
-                    {formatReservationTime(
-                      reservation.reservationtime,
-                      activeTimeFormat,
-                      activeTimeZone
-                    )}
+                <div className="booking-tile">
+                  <div className="tile-icon-wrap amber">
+                    <AccessTimeIcon fontSize="small" />
+                  </div>
+                  <div className="tile-text">
+                    <span>
+                      {formatReservationTime(
+                        reservation.reservationtime,
+                        activeTimeFormat,
+                        activeTimeZone
+                      )}
+                    </span>
                   </div>
                 </div>
 
                 {/* Seating Details */}
                 {reservation.reservationtype === "pickspot" ? (
                   <>
-                    <div className="info-cell">
-                      <EventSeatIcon className="cell-icon" />
-                      <div className="cell-value">
-                        {reservation.areaname || "Main Area"}
+                    <div className="booking-tile">
+                      <div className="tile-icon-wrap indigo">
+                        <EventSeatIcon fontSize="small" />
+                      </div>
+                      <div className="tile-text">
+                        <span>{reservation.areaname || "Main Area"}</span>
                       </div>
                     </div>
 
-                    <div className="info-cell">
-                      <TableRestaurantIcon className="cell-icon highlight" />
-                      <div className="cell-value highlight">
-                        {reservation.tableno}
+                    <div className="booking-tile">
+                      <div className="tile-icon-wrap green">
+                        <TableRestaurantIcon fontSize="small" />
+                      </div>
+                      <div className="tile-text">
+                        <span className="table-highlight">
+                          {reservation.tableno}
+                        </span>
                         {reservation.capacity ? (
-                          <span className="sub-cap">
-                            ({reservation.capacity} seats)
+                          <span className="cap-badge">
+                            {reservation.capacity} seats
                           </span>
                         ) : null}
                       </div>
                     </div>
                   </>
                 ) : (
-                  <div
-                    className={`info-cell ${!reservation.timezone ? "full-span" : ""
-                      }`}
-                  >
-                    <GroupsOutlinedIcon className="cell-icon highlight" />
-                    <div className="cell-value highlight">
-                      {reservation.guest || 1}{" "}
-                      {reservation.guest === 1 ? "Guest" : "Guests"}
+                  <div className="booking-tile">
+                    <div className="tile-icon-wrap green">
+                      <GroupsOutlinedIcon fontSize="small" />
+                    </div>
+                    <div className="tile-text">
+                      <span className="guest-highlight">
+                        {reservation.guest || 1}{" "}
+                        {reservation.guest === 1 ? "Guest" : "Guests"}
+                      </span>
                     </div>
                   </div>
                 )}
 
                 {/* Timezone */}
                 {reservation.timezone && (
-                  <div
-                    className={`info-cell ${reservation.reservationtype === "pickspot"
-                      ? "full-span"
-                      : ""
-                      }`}
-                  >
-                    <PublicIcon className="cell-icon" />
-                    <div className="cell-value text-muted">
-                      {reservation.timezone}
+                  <div className="booking-tile">
+                    <div className="tile-icon-wrap teal">
+                      <PublicIcon fontSize="small" />
+                    </div>
+                    <div className="tile-text">
+                      <span className="text-muted">
+                        {reservation.timezone}
+                      </span>
                     </div>
                   </div>
                 )}
