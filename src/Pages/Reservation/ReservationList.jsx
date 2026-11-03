@@ -182,8 +182,8 @@ const ReservationList = ({
           ))}
         </div>
       ) : reservations.length === 0 ? (
-        /* Empty State (No Reservations at all - matching Manage Address) */
-        <div className="address-empty-card reservations-empty-state">
+        /* Empty State (No Reservations at all) */
+        <div className="reservations-empty-state">
           <div className="empty-icon-wrap">
             <TableRestaurantOutlinedIcon className="empty-icon" />
           </div>
