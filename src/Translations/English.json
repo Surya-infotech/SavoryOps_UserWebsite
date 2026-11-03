@@ -2,6 +2,8 @@
   "livekitchen": "Live Kitchen",
   "helpline": "Helpline",
   "selectbranch": "Select Location",
+  "selectbranchlabel": "Select Branch",
+  "selectbranchplaceholder": "Select Branch",
   "branch": "Branch",
   "searchbranchname": "Search branch or area...",
   "nobranchesfound": "No branches found",

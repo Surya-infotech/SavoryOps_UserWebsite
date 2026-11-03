@@ -405,7 +405,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               {loadingBranches ? (
                 <div className="field-loading-placeholder">
                   <CircularProgress size={18} />
-                  <span>Loading locations...</span>
+                  <span>{translations.loadingbranches || "Loading branches..."}</span>
                 </div>
               ) : availableBranches.length === 0 ? (
                 <div className="notice-chip">
@@ -415,15 +415,16 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 <Dropdown
                   id="reservation-branch-dropdown"
                   label={
-                    translations.selectlocation ||
-                    translations.selectbranch ||
-                    "Select Location"
+                    translations.selectbranchlabel ||
+                    translations.selectBranch ||
+                    "Select Branch"
                   }
                   required={true}
                   placeholder={
-                    translations.selectlocationplaceholder ||
-                    translations.selectbranch ||
-                    "Select Location"
+                    translations.selectbranchplaceholder ||
+                    translations.selectbranchlabel ||
+                    translations.selectBranch ||
+                    "Select Branch"
                   }
                   options={branchOptions}
                   labelKey="displayLabel"
