@@ -253,7 +253,13 @@ const CartPage = () => {
   const handleRemove = (cartItemId, itemName) => {
     removeCartItem(cartItemId);
     if (typeof showSnackbar === "function") {
-      showSnackbar(`${itemName || "Item"} removed from cart`, "info", 2500);
+      showSnackbar(
+        itemName
+          ? `${itemName} - ${translations.itemremovedfromcart}`
+          : translations.itemremovedfromcart,
+        "info",
+        2500
+      );
     }
   };
 
