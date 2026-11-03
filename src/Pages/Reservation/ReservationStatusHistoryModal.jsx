@@ -46,8 +46,8 @@ const ReservationStatusHistoryModal = ({
 
   const sortedStatusLogs = reservation.statusLogs
     ? [...reservation.statusLogs].sort(
-        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
-      )
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    )
     : [];
 
   const reservationNo = reservation.reservationid || "";
@@ -139,12 +139,6 @@ const ReservationStatusHistoryModal = ({
                           )}
                         </span>
                       </div>
-                      {log.updatedByEmployeeName && (
-                        <div className="timeline-actor">
-                          <span>{translations.updatedby || "Updated by"}</span>
-                          <strong>{log.updatedByEmployeeName}</strong>
-                        </div>
-                      )}
                     </div>
                   </div>
                 );
