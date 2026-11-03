@@ -6,7 +6,6 @@ import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AddIcon from "@mui/icons-material/Add";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -314,35 +313,6 @@ const ReservationList = ({
                         </span>
                         <span className="value">{res.reservationtime}</span>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Seating Details Footer Preview */}
-                  <div className="seating-preview-row">
-                    {res.reservationtype === "quickseat" ? (
-                      <div className="seating-chip quick">
-                        <BoltIcon fontSize="inherit" />
-                        <span>
-                          {translations.quickseat || "Quick Seat"} •{" "}
-                          {res.guest || 1}{" "}
-                          {res.guest === 1 ? "Guest" : "Guests"}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="seating-chip spot">
-                        <EventSeatIcon fontSize="inherit" />
-                        <span>
-                          {res.areaname || "Main Area"} • {res.tableno}{" "}
-                          {res.capacity ? `(${res.capacity} Seats)` : ""}
-                        </span>
-                      </div>
-                    )}
-
-                    <div
-                      className="card-action-circle"
-                      title={translations.viewdetails || "View Details"}
-                    >
-                      <ArrowForwardIcon className="arrow-icon" fontSize="small" />
                     </div>
                   </div>
                 </div>
