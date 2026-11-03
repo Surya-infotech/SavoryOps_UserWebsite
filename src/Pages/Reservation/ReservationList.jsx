@@ -175,9 +175,6 @@ const ReservationList = ({
                         <CalendarMonthOutlinedIcon fontSize="small" />
                       </div>
                       <div className="schedule-texts">
-                        <span className="label">
-                          {translations.date || "Date"}
-                        </span>
                         <span className="value">
                           {formatReservationDate(res.reservationdate, dateFormat, timeZone)}
                         </span>
@@ -189,9 +186,6 @@ const ReservationList = ({
                         <AccessTimeIcon fontSize="small" />
                       </div>
                       <div className="schedule-texts">
-                        <span className="label">
-                          {translations.time || "Time"}
-                        </span>
                         <span className="value">
                           {formatReservationTime(res.reservationtime, timeFormat, timeZone)}
                         </span>
