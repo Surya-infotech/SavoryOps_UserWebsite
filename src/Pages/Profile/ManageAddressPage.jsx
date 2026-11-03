@@ -22,6 +22,25 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
+const ShimmerCard = () => (
+  <div className="address-card address-shimmer-card">
+    <div className="shimmer-header">
+      <div className="shimmer-line shimmer-badge" />
+      <div className="shimmer-actions">
+        <div className="shimmer-line shimmer-circle" />
+        <div className="shimmer-line shimmer-circle" />
+      </div>
+    </div>
+    <div className="shimmer-body">
+      <div className="shimmer-line street-line" />
+      <div className="shimmer-line city-line" />
+    </div>
+    <div className="shimmer-footer">
+      <div className="shimmer-line postal-chip" />
+    </div>
+  </div>
+);
+
 const ADDRESS_TYPES = [
   { id: "home", label: "Home", icon: HomeOutlinedIcon },
   { id: "work", label: "Work", icon: WorkOutlineOutlinedIcon },
@@ -429,9 +448,10 @@ const ManageAddressPage = () => {
 
         {/* Content Area */}
         {loading ? (
-          <div className="address-loading-wrap">
-            <CircularProgress size={40} sx={{ color: "#028802" }} />
-            <p>{translations.loading}</p>
+          <div className="address-cards-grid">
+            {[1, 2, 3, 4, 5, 6].map((k) => (
+              <ShimmerCard key={k} />
+            ))}
           </div>
         ) : addresses.length === 0 ? (
           /* Empty State */
