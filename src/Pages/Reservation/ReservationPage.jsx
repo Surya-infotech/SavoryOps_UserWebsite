@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import ReservationList from "./ReservationList.jsx";
 import AddReservationModal from "./AddReservationModal.jsx";
-import ReservationDetailsModal from "./ReservationDetailsModal.jsx";
+import ReservationDetails from "./ReservationDetails.jsx";
 import {
   getStoredDateFormat,
   getStoredTimeFormat,
@@ -18,10 +18,14 @@ const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
 const ReservationPage = () => {
   const { reservationId: paramReservationId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { translations = {}, isRtl } = useLanguage();
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname || "";
+
+  // Selected reservation id from param or query param
+  const selectedReservationId = paramReservationId || searchParams.get("id") || null;
 
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,17 +63,18 @@ const ReservationPage = () => {
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   // Set document title
   useEffect(() => {
-    const pageTitle = translations.tablereservation || "Table Reservations";
+    const pageTitle = selectedReservationId
+      ? translations.reservationdetails || "Reservation Details"
+      : translations.tablereservation || "Table Reservations";
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {
       document.title = pageTitle;
     }
-  }, [translations, businessDisplayName]);
+  }, [selectedReservationId, translations, businessDisplayName]);
 
   // Fetch reservations from server
   const fetchReservations = useCallback(async () => {
@@ -110,36 +115,42 @@ const ReservationPage = () => {
     fetchReservations();
   }, [fetchReservations]);
 
-  // If a reservationId is passed in URL, open details modal
-  useEffect(() => {
-    if (paramReservationId) {
-      const match = reservations.find((r) => r._id === paramReservationId);
-      if (match) {
-        setSelectedReservation(match);
-      } else {
-        setSelectedReservation({ _id: paramReservationId });
-      }
-      setIsDetailsModalOpen(true);
-    }
-  }, [paramReservationId, reservations]);
-
   const handleSelectReservation = (reservation) => {
     setSelectedReservation(reservation);
-    setIsDetailsModalOpen(true);
+    const id = reservation?._id || reservation?.reservationid;
+    navigate(`/reservation/${id}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleCloseDetailsModal = () => {
-    setIsDetailsModalOpen(false);
+  const handleBackToList = () => {
     setSelectedReservation(null);
-    if (paramReservationId) {
-      navigate("/reservation", { replace: true });
-    }
+    navigate("/reservation");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const breadcrumbItems = [
-    { label: translations.home || "Home", path: "/" },
-    { label: translations.tablereservation || "Table Reservations" },
-  ];
+  const matchedReservation =
+    selectedReservation ||
+    (selectedReservationId
+      ? reservations.find(
+          (r) =>
+            r._id === selectedReservationId ||
+            String(r.reservationid) === String(selectedReservationId)
+        )
+      : null);
+
+  const breadcrumbItems = selectedReservationId
+    ? [
+        { label: translations.home || "Home", path: "/" },
+        {
+          label: translations.tablereservation || "Table Reservations",
+          path: "/reservation",
+        },
+        { label: translations.reservationdetails || "Reservation Details" },
+      ]
+    : [
+        { label: translations.home || "Home", path: "/" },
+        { label: translations.tablereservation || "Table Reservations" },
+      ];
 
   return (
     <div className={`reservation-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
@@ -147,15 +158,29 @@ const ReservationPage = () => {
       <Breadcrumbs items={breadcrumbItems} />
 
       <div className="reservation-page-container">
-        <ReservationList
-          reservations={reservations}
-          loading={loading}
-          dateFormat={dateFormat}
-          timeFormat={timeFormat}
-          timeZone={timeZone}
-          onSelectReservation={handleSelectReservation}
-          onOpenAddModal={() => setIsAddModalOpen(true)}
-        />
+        {selectedReservationId ? (
+          <ReservationDetails
+            reservationId={selectedReservationId}
+            initialReservation={matchedReservation}
+            dateFormat={dateFormat}
+            timeFormat={timeFormat}
+            timeZone={timeZone}
+            onBack={handleBackToList}
+            onReservationUpdated={() => {
+              fetchReservations();
+            }}
+          />
+        ) : (
+          <ReservationList
+            reservations={reservations}
+            loading={loading}
+            dateFormat={dateFormat}
+            timeFormat={timeFormat}
+            timeZone={timeZone}
+            onSelectReservation={handleSelectReservation}
+            onOpenAddModal={() => setIsAddModalOpen(true)}
+          />
+        )}
       </div>
 
       {/* Add Table Reservation Modal */}
@@ -163,20 +188,6 @@ const ReservationPage = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSuccess={() => {
-          fetchReservations();
-        }}
-      />
-
-      {/* Reservation Details Modal */}
-      <ReservationDetailsModal
-        isOpen={isDetailsModalOpen}
-        reservationId={selectedReservation?._id}
-        initialReservation={selectedReservation}
-        dateFormat={dateFormat}
-        timeFormat={timeFormat}
-        timeZone={timeZone}
-        onClose={handleCloseDetailsModal}
-        onReservationUpdated={() => {
           fetchReservations();
         }}
       />

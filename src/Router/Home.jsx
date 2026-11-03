@@ -68,6 +68,14 @@ const HomeRouter = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/reservationdetails/:reservationId"
+        element={
+          <ProtectedRoute>
+            <ReservationPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/about" element={<AboutPage />} />
       <Route
         path="/contact"
