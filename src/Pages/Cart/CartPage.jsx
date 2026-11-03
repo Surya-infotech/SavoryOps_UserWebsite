@@ -372,64 +372,68 @@ const CartPage = () => {
       return;
     }
 
+    // Helper to format items for Order payload matching SavoryOps_UserApp structure
+    const buildProcessedItems = () => {
+      return cartItems.map((item) => {
+        const itemQuantity = Number(item.quantity || 1);
+        const itemPrice = Number(item.price || 0);
+        const itemRawPrice = Number(item.rawPrice !== undefined ? item.rawPrice : itemPrice);
+
+        const selectedAddons = (item.addons || [])
+          .filter((a) => a && a.selected !== false)
+          .map((addon) => {
+            const rawAddonId = addon.addonid != null ? addon.addonid : (addon.id != null ? addon.id : addon._id);
+            const addonPrice = Number(addon.price || addon.addonprice || 0);
+            return {
+              addonid: rawAddonId != null && !isNaN(Number(rawAddonId)) ? Number(rawAddonId) : rawAddonId,
+              id: rawAddonId,
+              addonname: addon.addonname || addon.name,
+              name: addon.addonname || addon.name,
+              addonprice: addonPrice,
+              price: addonPrice,
+              selected: true,
+            };
+          });
+
+        const itemAddonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * itemQuantity, 0);
+        const itemAmount = Number((itemPrice * itemQuantity + itemAddonsTotal).toFixed(2));
+        const resolvedItemId = item.itemid != null ? item.itemid : (item.itemId || item.id || item._id);
+
+        return {
+          ...item,
+          cartItemId: item.cartItemId,
+          itemid: resolvedItemId != null && !isNaN(Number(resolvedItemId)) ? Number(resolvedItemId) : resolvedItemId,
+          itemId: resolvedItemId,
+          id: resolvedItemId,
+          name: item.name || item.itemname,
+          itemname: item.name || item.itemname,
+          quantity: itemQuantity,
+          qty: itemQuantity,
+          price: itemPrice,
+          rawPrice: itemRawPrice,
+          amount: itemAmount,
+          addons: selectedAddons,
+          taxes: item.taxes || [],
+          appliedTaxes: item.appliedTaxes || item.taxes || [],
+          itemtype: item.itemtype || (item.isVeg ? "Veg" : "Non-Veg"),
+          specialInstructions: item.specialInstructions || "",
+        };
+      });
+    };
+
+    const branchId = selectedBranch?.branchid || localStorage.getItem("selectedBranchid");
+    if (!branchId) {
+      if (typeof showSnackbar === "function") {
+        showSnackbar("Branch information not found. Please try again.", "error");
+      }
+      return;
+    }
+
     // Direct Order Update when adding more items to an existing order (same as UserApp)
     if (currentOrderNo) {
-      const branchId = selectedBranch?.branchid || localStorage.getItem("selectedBranchid");
-      if (!branchId) {
-        if (typeof showSnackbar === "function") {
-          showSnackbar("Branch information not found. Please try again.", "error");
-        }
-        return;
-      }
-
       setIsSubmitting(true);
       try {
-        const processedItems = cartItems.map((item) => {
-          const itemQuantity = Number(item.quantity || 1);
-          const itemPrice = Number(item.price || 0);
-          const itemRawPrice = Number(item.rawPrice !== undefined ? item.rawPrice : itemPrice);
-
-          const selectedAddons = (item.addons || [])
-            .filter((a) => a && a.selected !== false)
-            .map((addon) => {
-              const rawAddonId = addon.addonid != null ? addon.addonid : (addon.id != null ? addon.id : addon._id);
-              const addonPrice = Number(addon.price || addon.addonprice || 0);
-              return {
-                addonid: rawAddonId != null && !isNaN(Number(rawAddonId)) ? Number(rawAddonId) : rawAddonId,
-                id: rawAddonId,
-                addonname: addon.addonname || addon.name,
-                name: addon.addonname || addon.name,
-                addonprice: addonPrice,
-                price: addonPrice,
-                selected: true,
-              };
-            });
-
-          const itemAddonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * itemQuantity, 0);
-          const itemAmount = Number((itemPrice * itemQuantity + itemAddonsTotal).toFixed(2));
-          const resolvedItemId = item.itemid != null ? item.itemid : (item.itemId || item.id || item._id);
-
-          return {
-            ...item,
-            cartItemId: item.cartItemId,
-            itemid: resolvedItemId != null && !isNaN(Number(resolvedItemId)) ? Number(resolvedItemId) : resolvedItemId,
-            itemId: resolvedItemId,
-            id: resolvedItemId,
-            name: item.name || item.itemname,
-            itemname: item.name || item.itemname,
-            quantity: itemQuantity,
-            qty: itemQuantity,
-            price: itemPrice,
-            rawPrice: itemRawPrice,
-            amount: itemAmount,
-            addons: selectedAddons,
-            taxes: item.taxes || [],
-            appliedTaxes: item.appliedTaxes || item.taxes || [],
-            itemtype: item.itemtype || (item.isVeg ? "Veg" : "Non-Veg"),
-            specialInstructions: item.specialInstructions || "",
-          };
-        });
-
+        const processedItems = buildProcessedItems();
         const orderData = {
           items: processedItems,
           subtotal: billingSummary.subtotal,
@@ -519,7 +523,131 @@ const CartPage = () => {
       return;
     }
 
-    // Normal checkout flow
+    // Direct Dine-in Order Placement from Cart Page (same as UserApp)
+    if (isDineIn) {
+      const storedTableId = localStorage.getItem("selectedTableId");
+      const storedTableNo =
+        localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
+
+      if (!storedTableId || !storedTableNo) {
+        if (typeof showSnackbar === "function") {
+          showSnackbar(
+            translations.tablenotfoundpleasescanthetableqrcode ||
+              "Table No. not found. Please Scan the Table Qr Code",
+            "warning",
+            4000
+          );
+        }
+        return;
+      }
+
+      setIsSubmitting(true);
+      try {
+        const processedItems = buildProcessedItems();
+        const orderData = {
+          items: processedItems,
+          subtotal: billingSummary.subtotal,
+          subtotalprice: billingSummary.subtotal,
+          beforeTaxCharges: billingSummary.beforeTaxCharges,
+          taxes: billingSummary.taxRows,
+          branchTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "branch"),
+          orderTypeTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "ordertype"),
+          itemTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "item"),
+          totalExclusiveTax: billingSummary.totalExclusiveTax,
+          totaltax: billingSummary.totalExclusiveTax,
+          afterTaxCharges: billingSummary.afterTaxCharges,
+          additionalCharges: billingSummary.additionalCharges,
+          specialDayCharges: billingSummary.specialDayCharges,
+          additional_charges: billingSummary.additionalCharges,
+          special_charges: billingSummary.specialDayCharges,
+          specialdaycharges: billingSummary.specialDayCharges,
+          roundoff: billingSummary.roundoff,
+          roundoffAmount: billingSummary.roundoff?.roundedAmount ?? 0,
+          grandTotal: billingSummary.grandTotal,
+          totalprice: billingSummary.grandTotal,
+          currency: selectedBranch?.currency || selectedBranch?.currencysymbol || "$",
+          currencySymbol: selectedBranch?.currencysymbol || "$",
+          ordertype: "Dine-in",
+          tableid: storedTableId,
+          tableno: storedTableNo,
+          paymentmethod: "Cash",
+          taxApplicationMode: posPayload?.taxApplicationMode || "apply_all",
+          inclusiveTaxIncreasesPrice: Boolean(posPayload?.inclusiveTaxIncreasesPrice),
+          itemTaxOverridesBranch: Boolean(posPayload?.itemTaxOverridesBranch),
+          itemTaxOverridesOrderType: Boolean(posPayload?.itemTaxOverridesOrderType),
+          orderTypeTaxOverridesBranch: Boolean(posPayload?.orderTypeTaxOverridesBranch),
+        };
+
+        const response = await fetch(
+          `${adminPanelBackendPath}/Website/Order/AddOrder/${customerId}/${branchId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user": "admin",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(orderData),
+          }
+        );
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          clearCart();
+          localStorage.removeItem("currentOrderNo");
+          localStorage.removeItem("currentOrderId");
+          localStorage.removeItem("orderType");
+          setCurrentOrderNo(null);
+          setCurrentOrderId(null);
+
+          if (typeof showSnackbar === "function") {
+            showSnackbar(
+              translations.orderplacedsuccessfully || "Order placed successfully!",
+              "success",
+              4000
+            );
+          }
+
+          const targetOrderId = data?.customerOrder?._id || data?.order?._id;
+          if (targetOrderId) {
+            navigate(`/orderdetails/${targetOrderId}`);
+          } else {
+            navigate("/orders");
+          }
+        } else {
+          const errorMessages = {
+            "Table No. not found. Please Scan the Table Qr Code":
+              translations.tablenotfoundpleasescanthetableqrcode ||
+              "Table No. not found. Please Scan the Table Qr Code",
+            "This table is already Occupied, you cannot add a new order":
+              translations.thistableisalreadyoccupiedyoucannotaddaneworder ||
+              "This table is already Occupied, you cannot add a new order",
+            "Table is not available for ordering. Please select another table":
+              translations.tableisnotavailablefororderingpleaseselectanothertable ||
+              "Table is not available for ordering. Please select another table",
+            "This table is already added to the order":
+              translations.thistableisalreadyaddedtotheorder ||
+              "This table is already added to the order",
+          };
+          const errorMsg =
+            errorMessages[data?.message] || data?.message || "Failed to place Dine-in order.";
+          if (typeof showSnackbar === "function") {
+            showSnackbar(errorMsg, "error", 4000);
+          }
+        }
+      } catch (err) {
+        console.error("Dine-in order submission error:", err);
+        if (typeof showSnackbar === "function") {
+          showSnackbar("An unexpected error occurred while placing order.", "error", 4000);
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // Normal checkout flow for Delivery and Pickup
     const orderTypeStr = typeof selectedOrderType === "object"
       ? String(selectedOrderType?.ordertypename || selectedOrderType?.name || "").trim()
       : String(selectedOrderType || "").trim();
@@ -527,9 +655,8 @@ const CartPage = () => {
 
     const isDelivery = normalized === "delivery";
     const isPickup = normalized === "pickup";
-    const isDineIn = normalized.includes("dine");
 
-    if (isDelivery || isPickup || isDineIn) {
+    if (isDelivery || isPickup) {
       navigate("/checkout");
     } else {
       if (typeof showSnackbar === "function") {
@@ -935,7 +1062,7 @@ const CartPage = () => {
                     </span>
                   </div>
 
-                  {/* Proceed to Checkout CTA / Update Order CTA */}
+                  {/* Proceed to Checkout CTA / Add Order CTA / Update Order CTA */}
                   <button
                     type="button"
                     className="cart-checkout-btn"
@@ -945,16 +1072,29 @@ const CartPage = () => {
                     {isSubmitting ? (
                       <>
                         <CircularProgress size={18} color="inherit" />
-                        <span>{translations.updatingorder}</span>
+                        <span>
+                          {currentOrderNo
+                            ? translations.updatingorder || "Updating Order..."
+                            : isDineIn
+                            ? translations.processing || "Placing Order..."
+                            : translations.processing || "Processing..."}
+                        </span>
                       </>
                     ) : currentOrderNo ? (
                       <>
-                        <span>{translations.additemstoorder} #{currentOrderNo}</span>
+                        <span>
+                          {translations.additemstoorder || "Add Items to Order"} #{currentOrderNo}
+                        </span>
                         <AddIcon fontSize="small" />
+                      </>
+                    ) : isDineIn ? (
+                      <>
+                        <span>{translations.addorder || "Add Order"}</span>
+                        <TableRestaurantIcon fontSize="small" />
                       </>
                     ) : (
                       <>
-                        <span>{translations.proceedtocheckout}</span>
+                        <span>{translations.proceedtocheckout || "Proceed to Checkout"}</span>
                         <ArrowForwardIcon fontSize="small" />
                       </>
                     )}
