@@ -436,7 +436,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     setSelectedBranch(found || null);
                     setErrors((prev) => ({ ...prev, branch: null }));
                   }}
-                  showSearch={branchOptions.length > 5}
+                  showSearch={true}
                 />
               )}
               {errors.branch && (
@@ -534,7 +534,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                           table: null,
                         }));
                       }}
-                      showSearch={areas.length > 5}
+                      showSearch={true}
                     />
                   )}
                   {errors.area && (
@@ -567,7 +567,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                       setErrors((prev) => ({ ...prev, table: null }));
                     }}
                     disabled={!selectedArea || tablesInArea.length === 0}
-                    showSearch={tableOptions.length > 5}
+                    showSearch={true}
                   />
                   {errors.table && (
                     <span className="field-error-msg">{errors.table}</span>
