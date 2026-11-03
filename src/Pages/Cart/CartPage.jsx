@@ -14,6 +14,10 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
+import { isDineInOrderType } from "../Orders/orderHelpers.js";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -71,6 +75,14 @@ const getDietInfo = (item) => {
   return { hasDiet: false, isVeg: false };
 };
 
+const getOrderTypeIcon = (orderType) => {
+  const norm = String(orderType || "").toLowerCase().replace(/[-\s_]/g, "");
+  if (norm.includes("dine")) return <TableRestaurantIcon fontSize="small" />;
+  if (norm.includes("pickup") || norm.includes("takeaway")) return <TakeoutDiningIcon fontSize="small" />;
+  if (norm.includes("delivery")) return <DeliveryDiningIcon fontSize="small" />;
+  return <TableRestaurantIcon fontSize="small" />;
+};
+
 const CartPage = () => {
   const navigate = useNavigate();
   const { translations = {}, isRtl } = useLanguage();
@@ -86,6 +98,7 @@ const CartPage = () => {
   });
   const [currentOrderNo, setCurrentOrderNo] = useState(() => localStorage.getItem("currentOrderNo"));
   const [currentOrderId, setCurrentOrderId] = useState(() => localStorage.getItem("currentOrderId"));
+  const [selectedTableNo, setSelectedTableNo] = useState(() => localStorage.getItem("selectedTableNo"));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [posPayload, setPosPayload] = useState(() => {
@@ -183,6 +196,20 @@ const CartPage = () => {
       saveCart(updated);
     }
   }, [posPayload, selectedOrderType, cartItems]);
+
+  const effectiveOrderType = useMemo(() => {
+    if (currentOrderNo) {
+      return localStorage.getItem("orderType") || "Dine-in";
+    }
+    if (typeof selectedOrderType === "object" && selectedOrderType !== null) {
+      return selectedOrderType?.ordertypename || selectedOrderType?.name || "";
+    }
+    return String(selectedOrderType || "").trim();
+  }, [currentOrderNo, selectedOrderType]);
+
+  const isDineIn = useMemo(() => {
+    return isDineInOrderType(effectiveOrderType);
+  }, [effectiveOrderType]);
 
   // Dynamic document title
   useEffect(() => {
@@ -298,6 +325,7 @@ const CartPage = () => {
     localStorage.removeItem("selectedTableNo");
     setCurrentOrderNo(null);
     setCurrentOrderId(null);
+    setSelectedTableNo(null);
     if (typeof showSnackbar === "function") {
       showSnackbar("Order update cancelled. You are now creating a new order.", "info", 3000);
     }
@@ -440,6 +468,7 @@ const CartPage = () => {
           localStorage.removeItem("selectedTableNo");
           setCurrentOrderNo(null);
           setCurrentOrderId(null);
+          setSelectedTableNo(null);
 
           if (typeof showSnackbar === "function") {
             showSnackbar(
@@ -504,6 +533,69 @@ const CartPage = () => {
       />
 
       <div className="cart-container">
+        {/* Info Cards Row (Order Type, Table No, Order No) - Matches SavoryOps_UserApp */}
+        {(effectiveOrderType || (selectedTableNo && isDineIn) || currentOrderNo) && (
+          <div className="cart-info-cards-row">
+            {effectiveOrderType && (
+              <div className="cart-info-card-wrapper">
+                <div className="cart-info-card order-type-card">
+                  <div className="cart-info-icon-box">
+                    {getOrderTypeIcon(effectiveOrderType)}
+                  </div>
+                  <div className="cart-info-text-box">
+                    <span className="cart-info-label">
+                      {translations.ordertype || "Order Type"}
+                    </span>
+                    <span className="cart-info-value">
+                      {translations[effectiveOrderType] || effectiveOrderType}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {selectedTableNo && (isDineIn || currentOrderNo) && (
+              <div className="cart-info-card-wrapper">
+                <div className="cart-info-card table-no-card">
+                  <div className="cart-info-icon-box">
+                    <TableRestaurantIcon fontSize="small" />
+                  </div>
+                  <div className="cart-info-text-box">
+                    <span className="cart-info-label">
+                      {translations.tableno || "Table No"}
+                    </span>
+                    <span className="cart-info-value">{selectedTableNo}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {currentOrderNo && (
+              <div className="cart-info-card-wrapper">
+                <div className="cart-info-card order-no-card">
+                  <div className="cart-info-icon-box">
+                    <ReceiptLongOutlinedIcon fontSize="small" />
+                  </div>
+                  <div className="cart-info-text-box">
+                    <span className="cart-info-label">
+                      {translations.orderno || "Order No"}
+                    </span>
+                    <span className="cart-info-value">#{currentOrderNo}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="cart-info-cancel-btn"
+                    onClick={handleCancelOrderUpdate}
+                    title={translations.cancelupdate || "Cancel adding items to this order"}
+                    aria-label="Cancel update"
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         {/* Empty State */}
         {cartItems.length === 0 ? (
           <div className="cart-empty-state">
