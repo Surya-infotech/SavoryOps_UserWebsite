@@ -308,7 +308,7 @@
   "capacity": "Kapazität",
   "cancelreservation": "Reservierung Stornieren",
   "cancellingreservation": "Reservierung Wird Storniert...",
-  "cancellationreason": "Abbrechen-Grund eingeben...",
+  "cancellationreason": "Stornierungsgrund",
   "rejectionreason": "Ablehnungs-Grund",
   "reservationcancelled": "Reservierung Erfolgreich Storniert",
   "reservationnotfound": "Reservierung Nicht Gefunden.",

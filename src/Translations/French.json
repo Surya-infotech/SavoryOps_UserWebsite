@@ -304,7 +304,7 @@
   "capacity": "Capacité",
   "cancelreservation": "Annuler la Réservation",
   "cancellingreservation": "Annulation de la Réservation...",
-  "cancellationreason": "Entrez la raison de l'annulation...",
+  "cancellationreason": "Raison de l'annulation",
   "rejectionreason": "Raison du Rejet",
   "reservationcancelled": "Réservation annulée avec succès",
   "reservationnotfound": "Réservation introuvable.",

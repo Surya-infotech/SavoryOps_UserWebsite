@@ -182,7 +182,7 @@ const ReservationDetails = ({
     if (!reason?.trim()) {
       showSnackbar(
         translations.pleaseentercancellationreason ||
-          "Please enter a reason for cancellation.",
+        "Please enter a reason for cancellation.",
         "warning"
       );
       return;
@@ -209,7 +209,7 @@ const ReservationDetails = ({
       if (response.ok) {
         showSnackbar(
           translations.reservationcancelled ||
-            "Reservation cancelled successfully.",
+          "Reservation cancelled successfully.",
           "success"
         );
         setIsCancelModalOpen(false);
@@ -218,8 +218,8 @@ const ReservationDetails = ({
       } else {
         showSnackbar(
           resData?.message ||
-            translations.somethingWentWrong ||
-            "Failed to cancel reservation.",
+          translations.somethingWentWrong ||
+          "Failed to cancel reservation.",
           "error"
         );
       }
