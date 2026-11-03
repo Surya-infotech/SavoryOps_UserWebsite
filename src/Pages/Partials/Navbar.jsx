@@ -29,7 +29,6 @@ import { getCartTotalCount } from "../../utils/cartService.js";
 import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
-export { LanguageDropdown };
 import "../../Scss/Components/General/dropdown.scss";
 import "../../Scss/Pages/Partials/navbar.scss";
 
@@ -345,7 +344,7 @@ const getOrderTypeNavIcon = (typeName = "") => {
   return <RestaurantMenuIcon className="order-type-icon-pin" />;
 };
 
-export const OrderTypeDropdown = ({ className = "" }) => {
+const OrderTypeDropdown = ({ className = "" }) => {
   const { isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [orderTypes, setOrderTypes] = useState([]);
@@ -575,7 +574,7 @@ const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 /* ==========================================================================
    3. Customer Auth Hook & ProfileDropdown Component
    ========================================================================== */
-export const useCustomerAuth = () => {
+const useCustomerAuth = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const { translations = {} } = useLanguage();
@@ -686,7 +685,7 @@ export const useCustomerAuth = () => {
   };
 };
 
-export const ProfileDropdown = ({ className = "", auth: externalAuth, onOpenDrawer }) => {
+const ProfileDropdown = ({ className = "", auth: externalAuth, onOpenDrawer }) => {
   const localAuth = useCustomerAuth();
   const auth = externalAuth || localAuth;
   const { customerDetails, isLoggedIn, handleSignOut, displayName, displaySubtitle, translations } = auth;

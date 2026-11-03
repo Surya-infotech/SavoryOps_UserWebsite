@@ -85,8 +85,8 @@ export const applyTableAndBranchSettings = ({
     tableDetails?.tableno != null
       ? String(tableDetails.tableno)
       : fallbackTableNo
-      ? String(fallbackTableNo)
-      : null;
+        ? String(fallbackTableNo)
+        : null;
 
   const tableid = tableDetails?._id != null ? String(tableDetails._id) : null;
 
@@ -212,11 +212,8 @@ export const processTableQrCode = async (scannedText) => {
   }
 
   // Step B: Attempt decryption of payload or raw string
-  let decryptedString = null;
   const candidateEncrypted = encryptedPayload || trimmed;
-
-  // Try decrypting with secret key
-  decryptedString = decryptQrData(candidateEncrypted);
+  let decryptedString = decryptQrData(candidateEncrypted);
   if (!decryptedString && candidateEncrypted !== trimmed) {
     decryptedString = decryptQrData(trimmed);
   }

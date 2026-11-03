@@ -46,26 +46,6 @@ export const getPaymentStatusColor = (status) => {
   }
 };
 
-export const getItemStatusColor = (status) => {
-  const norm = String(status || "").trim();
-  switch (norm) {
-    case "Completed":
-      return "#28a745";
-    case "Pending":
-      return "#f44336";
-    case "Cancelled":
-      return "#e53935";
-    case "Assigned":
-      return "#8a2be2";
-    case "Preparing":
-      return "#ffc107";
-    case "Ready to Serve":
-      return "#4caf50";
-    default:
-      return "#757575";
-  }
-};
-
 export const getOrderTypeBackgroundColor = (orderType) => {
   const norm = String(orderType || "").toLowerCase().replace(/[-\s_]/g, "");
   switch (norm) {

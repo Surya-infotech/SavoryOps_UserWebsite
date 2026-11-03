@@ -10,7 +10,7 @@ const CART_STORAGE_KEY = "cart";
  * Generate unique cart item ID
  * Format: cartitem_{timestamp}_{random}
  */
-export const generateCartItemId = () => {
+const generateCartItemId = () => {
   const timestamp = Date.now();
   const random = Math.floor(Math.random() * 1000000);
   return `cartitem_${timestamp}_${random}`;
@@ -47,7 +47,7 @@ export const saveCart = (cart) => {
 /**
  * Helper to get a sorted comma-separated string of selected addon IDs
  */
-export const getSelectedAddonsKey = (addons = []) => {
+const getSelectedAddonsKey = (addons = []) => {
   if (!Array.isArray(addons)) return "";
   return addons
     .filter((addon) => addon && addon.selected !== false && (addon.addonid || addon.id || addon._id))
@@ -62,7 +62,7 @@ export const getSelectedAddonsKey = (addons = []) => {
  * - selected addons
  * - specialInstructions
  */
-export const areCartItemsEqual = (itemA, itemB) => {
+const areCartItemsEqual = (itemA, itemB) => {
   if (!itemA || !itemB) return false;
 
   const idA = String(itemA.itemId || itemA.itemid || itemA.id || "");
@@ -81,7 +81,7 @@ export const areCartItemsEqual = (itemA, itemB) => {
 /**
  * Merges duplicate items in a cart array by combining their quantities
  */
-export const mergeDuplicateCartItems = (cart = []) => {
+const mergeDuplicateCartItems = (cart = []) => {
   if (!Array.isArray(cart) || cart.length <= 1) return cart || [];
 
   const merged = [];

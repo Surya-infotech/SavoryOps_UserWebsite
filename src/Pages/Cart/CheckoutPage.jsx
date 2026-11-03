@@ -134,7 +134,14 @@ const CheckoutPage = () => {
   const normalizedOrderType = orderTypeStr.toLowerCase().replace(/[\s_-]+/g, "");
   const isDelivery = normalizedOrderType === "delivery";
   const isPickup = normalizedOrderType === "pickup";
-  const resolvedOrderTypeName = isDelivery ? "Delivery" : isPickup ? "Pickup" : (orderTypeStr || "Pickup");
+  const isDineIn = normalizedOrderType.includes("dine");
+  const resolvedOrderTypeName = isDelivery
+    ? "Delivery"
+    : isPickup
+    ? "Pickup"
+    : isDineIn
+    ? "Dine-in"
+    : (orderTypeStr || "Pickup");
 
   // Sync Branch, Order Type, Branch Setting, and Cart
   useEffect(() => {

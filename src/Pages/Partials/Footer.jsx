@@ -304,7 +304,7 @@ const Footer = () => {
                     <li key={menu.id}>
                       <Link
                         to="/menu"
-                        state={{ selectedMenuId: menu.id, timestamp: Date.now() }}
+                        state={{ selectedMenuId: menu.id }}
                         className="footer-nav-link"
                         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                       >

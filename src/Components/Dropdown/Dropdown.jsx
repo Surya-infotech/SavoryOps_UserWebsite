@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useId } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchIcon from "@mui/icons-material/Search";
@@ -34,7 +34,8 @@ const Dropdown = ({
 
   const { translations = {}, isRtl } = useLanguage();
 
-  const instanceId = useRef(id || `dropdown-${Math.random().toString(36).substr(2, 9)}`).current;
+  const generatedId = useId();
+  const instanceId = id || generatedId;
 
   // Ensure only one dropdown is open at any time across the app
   useEffect(() => {

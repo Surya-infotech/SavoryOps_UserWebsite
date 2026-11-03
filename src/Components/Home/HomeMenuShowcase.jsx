@@ -19,7 +19,7 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
  * Rich Default Menu Sections Data (Option 2: Curated Section Carousels)
  * Note: Pure local data, no external API call is made.
  */
-export const DEFAULT_MENU_SECTIONS = [];
+const DEFAULT_MENU_SECTIONS = [];
 
 /**
  * Individual Horizontal Carousel Row Component

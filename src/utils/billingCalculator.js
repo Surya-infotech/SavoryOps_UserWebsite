@@ -12,7 +12,7 @@
  * - Grand Total
  */
 
-export const resolveActiveCharges = (payload) => {
+const resolveActiveCharges = (payload) => {
   if (!payload) return { activeCharges: [], isSpecialDay: false };
   const now = new Date();
   const todayDayName = now.toLocaleDateString("en-US", { weekday: "long" });
