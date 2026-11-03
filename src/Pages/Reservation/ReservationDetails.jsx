@@ -272,11 +272,18 @@ const ReservationDetails = ({
     translations
   );
 
+  const statusNorm = String(reservation?.status || "")
+    .toLowerCase()
+    .replace(/[-\s_]/g, "");
+  const isRejected = statusNorm === "rejected";
+  const reasonText =
+    reservation?.cancelreason ||
+    reservation?.rejectionreason ||
+    reservation?.rejectreason;
+
   const isCancellable =
     reservation?.status &&
-    ["pending", "confirmed"].includes(
-      reservation.status.toLowerCase().replace(/\s/g, "")
-    );
+    ["pending", "confirmed"].includes(statusNorm);
 
   const overviewDateTime = reservation.createdAt
     ? formatReservationDateTime(
@@ -552,14 +559,16 @@ const ReservationDetails = ({
           </div>
         )}
 
-        {/* Cancellation Reason Section (if cancelled) */}
-        {reservation.cancelreason && (
+        {/* Cancellation or Rejection Reason Section */}
+        {reasonText && (
           <div className="order-details-section">
             <div className="section-header-outside">
               <div className="section-header-left">
                 <CancelOutlinedIcon className="section-header-icon red" />
                 <h3>
-                  {translations.cancellationreason || "Cancellation Reason"}
+                  {isRejected
+                    ? translations.rejectionreason || "Rejection Reason"
+                    : translations.cancellationreason || "Cancellation Reason"}
                 </h3>
               </div>
             </div>
@@ -573,7 +582,7 @@ const ReservationDetails = ({
                   backgroundColor: "#fff5f5",
                 }}
               >
-                {reservation.cancelreason}
+                {reasonText}
               </div>
             </div>
           </div>
