@@ -5,6 +5,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import AddIcon from "@mui/icons-material/Add";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
@@ -39,6 +40,7 @@ import {
   getPaymentStatusColor,
   getOrderTypeBackgroundColor,
   isDeliveryOrderType,
+  isDineInOrderType,
   isItemCancelled,
   normalizeLocationDetails,
   formatLocationDetailsLine,
@@ -166,6 +168,7 @@ const OrderDetailsShimmer = () => (
 );
 
 const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName = "" }) => {
+  const navigate = useNavigate();
   const { business } = useWebsiteStatus();
   const businessDisplayName = propBusinessName || business?.businessname || "";
   const { translations = {}, isRtl } = useLanguage();
@@ -635,6 +638,61 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
     }
   };
 
+  const canAddMoreItems = useMemo(() => {
+    if (!order || !order.orderno) return false;
+    const status = String(order.orderstatus || "").toLowerCase();
+    const payment = String(order.paymentstatus || "").toLowerCase();
+    const isCompleted = status === "completed" || status === "delivered";
+    const isCancelled = status === "cancelled";
+    const isPaid = payment === "paid";
+    const isDineIn = isDineInOrderType(order.ordertype);
+    return !isCompleted && !isCancelled && !isPaid && isDineIn;
+  }, [order]);
+
+  const handleAddMoreItems = () => {
+    if (!order || !order.orderno) return;
+    try {
+      localStorage.setItem("currentOrderId", String(order._id));
+      localStorage.setItem("currentOrderNo", String(order.orderno));
+      if (order.ordertype) {
+        localStorage.setItem("orderType", order.ordertype);
+        localStorage.setItem(
+          "selectedOrderType",
+          JSON.stringify({ ordertypename: order.ordertype })
+        );
+      }
+      if (order.branchid) {
+        localStorage.setItem("selectedBranchid", String(order.branchid));
+      }
+      if (Array.isArray(order.areatabledetails)) {
+        for (const area of order.areatabledetails) {
+          if (Array.isArray(area?.tables) && area.tables.length > 0) {
+            const firstTable = area.tables[0];
+            if (firstTable.tableno) {
+              localStorage.setItem("selectedTableNo", String(firstTable.tableno));
+            }
+            if (firstTable._id || firstTable.tableid) {
+              localStorage.setItem(
+                "selectedTableId",
+                String(firstTable._id || firstTable.tableid)
+              );
+            }
+            break;
+          }
+        }
+      }
+      if (typeof showSnackbar === "function") {
+        showSnackbar(
+          `${translations.addingmoreitems || "Adding more items to Order"} #${order.orderno}`,
+          "info"
+        );
+      }
+      navigate("/menu");
+    } catch (err) {
+      console.error("Failed to set order update session:", err);
+    }
+  };
+
   const hasTableDetails = useMemo(() => {
     const areas = order?.areatabledetails;
     if (!Array.isArray(areas) || areas.length === 0) return false;
@@ -989,6 +1047,17 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
                 <ShoppingBasketOutlinedIcon className="section-header-icon" />
                 <h3>{translations.itemdetails || "Item Details"}</h3>
               </div>
+              {canAddMoreItems && (
+                <button
+                  type="button"
+                  className="inline-add-more-btn"
+                  onClick={handleAddMoreItems}
+                  title={translations.addmoreitems || "Add More Items"}
+                  aria-label="Add more items"
+                >
+                  <AddIcon fontSize="small" />
+                </button>
+              )}
             </div>
             <div className="detail-card items-details-card">
               <div className="card-top-accent green" />

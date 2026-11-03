@@ -112,6 +112,35 @@
     gap: 0.65rem;
 
     .section-header-outside {
+      .inline-add-more-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #028802;
+        color: #ffffff;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 2px 5px rgba(2, 136, 2, 0.25);
+
+        &:hover {
+          background: #026c02;
+          transform: scale(1.05);
+          box-shadow: 0 4px 10px rgba(2, 136, 2, 0.35);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+
+        svg {
+          font-size: 1.25rem;
+        }
+      }
+
       display: flex;
       align-items: center;
       justify-content: space-between;

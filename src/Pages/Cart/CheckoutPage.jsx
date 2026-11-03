@@ -569,10 +569,18 @@ const CheckoutPage = () => {
         orderData.address = fullAddr;
       }
 
+      const currentOrderNo = localStorage.getItem("currentOrderNo");
+      const currentOrderId = localStorage.getItem("currentOrderId");
+      const isUpdate = Boolean(currentOrderNo);
+
+      const orderUrl = isUpdate
+        ? `${adminPanelBackendPath}/Website/Order/UpdateOrder/${customerId}/${branchId}/${currentOrderNo}`
+        : `${adminPanelBackendPath}/Website/Order/AddOrder/${customerId}/${branchId}`;
+
       const response = await fetch(
-        `${adminPanelBackendPath}/Website/Order/AddOrder/${customerId}/${branchId}`,
+        orderUrl,
         {
-          method: "POST",
+          method: isUpdate ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",
             "x-user": "admin",
@@ -586,14 +594,29 @@ const CheckoutPage = () => {
 
       if (response.ok) {
         clearCart();
-        showSnackbar(
-          translations.orderplacedsuccessfully || "Order placed successfully!",
-          "success",
-          4000
-        );
-        navigate("/orders");
+        if (isUpdate) {
+          localStorage.removeItem("currentOrderNo");
+          localStorage.removeItem("currentOrderId");
+          showSnackbar(
+            translations.orderupdatedsuccessfully || "Items added to Order successfully!",
+            "success",
+            4000
+          );
+          if (currentOrderId) {
+            navigate(`/orderdetails/${currentOrderId}`);
+          } else {
+            navigate("/orders");
+          }
+        } else {
+          showSnackbar(
+            translations.orderplacedsuccessfully || "Order placed successfully!",
+            "success",
+            4000
+          );
+          navigate("/orders");
+        }
       } else {
-        const errorMsg = data?.message || "Failed to process order. Please try again.";
+        const errorMsg = data?.message || (isUpdate ? "Failed to add items to order. Please try again." : "Failed to process order. Please try again.");
         showSnackbar(errorMsg, "error", 4000);
       }
     } catch (err) {
@@ -914,7 +937,7 @@ const CheckoutPage = () => {
                   <CircularProgress size={22} color="inherit" />
                 ) : (
                   <>
-                    <span>{translations.addorder || "Add Order"}</span>
+                    <span>{localStorage.getItem("currentOrderNo") ? `${translations.additemstoorder || "Add Items to Order"} #${localStorage.getItem("currentOrderNo")}` : (translations.addorder || "Add Order")}</span>
                     <ArrowForwardIcon fontSize="small" />
                   </>
                 )}

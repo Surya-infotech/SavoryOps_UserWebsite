@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import CircularProgress from "@mui/material/CircularProgress";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -31,6 +33,7 @@ import "../../Scss/Pages/Cart/cartpage.scss";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
+const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 /**
  * Standard Veg/Non-Veg FSSAI-compliant diet badge
@@ -80,6 +83,10 @@ const CartPage = () => {
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
     return localStorage.getItem("selectedOrderType");
   });
+  const [currentOrderNo, setCurrentOrderNo] = useState(() => localStorage.getItem("currentOrderNo"));
+  const [currentOrderId, setCurrentOrderId] = useState(() => localStorage.getItem("currentOrderId"));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [posPayload, setPosPayload] = useState(() => {
     return typeof window !== "undefined" ? window.__branchSetting : null;
   });
@@ -282,7 +289,17 @@ const CartPage = () => {
     return (base + addonsSum) * (Number(editingCartItem.quantity) || 1);
   }, [editingCartItem, modalAvailableAddons, selectedModalAddonIds]);
 
-  const handleProceedCheckout = () => {
+  const handleCancelOrderUpdate = () => {
+    localStorage.removeItem("currentOrderNo");
+    localStorage.removeItem("currentOrderId");
+    setCurrentOrderNo(null);
+    setCurrentOrderId(null);
+    if (typeof showSnackbar === "function") {
+      showSnackbar("Order update cancelled. You are now creating a new order.", "info", 3000);
+    }
+  };
+
+  const handleProceedCheckout = async () => {
     if (!cartItems.length) {
       if (typeof showSnackbar === "function") {
         showSnackbar(translations.emptycartmessage || "Your cart is empty", "warning");
@@ -290,6 +307,164 @@ const CartPage = () => {
       return;
     }
 
+    const token = localStorage.getItem(customerTokenName);
+    const customerId = localStorage.getItem(customerIdName);
+
+    if (!token || !customerId) {
+      if (typeof showSnackbar === "function") {
+        showSnackbar(
+          translations.pleasesignintoorder || "Please sign in to proceed to checkout",
+          "info"
+        );
+      }
+      navigate("/signin", { state: { from: "/cart" } });
+      return;
+    }
+
+    // Direct Order Update when adding more items to an existing order (same as UserApp)
+    if (currentOrderNo) {
+      const branchId = selectedBranch?.branchid || localStorage.getItem("selectedBranchid");
+      if (!branchId) {
+        if (typeof showSnackbar === "function") {
+          showSnackbar("Branch information not found. Please try again.", "error");
+        }
+        return;
+      }
+
+      setIsSubmitting(true);
+      try {
+        const processedItems = cartItems.map((item) => {
+          const itemQuantity = Number(item.quantity || 1);
+          const itemPrice = Number(item.price || 0);
+          const itemRawPrice = Number(item.rawPrice !== undefined ? item.rawPrice : itemPrice);
+
+          const selectedAddons = (item.addons || [])
+            .filter((a) => a && a.selected !== false)
+            .map((addon) => {
+              const rawAddonId = addon.addonid != null ? addon.addonid : (addon.id != null ? addon.id : addon._id);
+              const addonPrice = Number(addon.price || addon.addonprice || 0);
+              return {
+                addonid: rawAddonId != null && !isNaN(Number(rawAddonId)) ? Number(rawAddonId) : rawAddonId,
+                id: rawAddonId,
+                addonname: addon.addonname || addon.name,
+                name: addon.addonname || addon.name,
+                addonprice: addonPrice,
+                price: addonPrice,
+                selected: true,
+              };
+            });
+
+          const itemAddonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * itemQuantity, 0);
+          const itemAmount = Number((itemPrice * itemQuantity + itemAddonsTotal).toFixed(2));
+          const resolvedItemId = item.itemid != null ? item.itemid : (item.itemId || item.id || item._id);
+
+          return {
+            ...item,
+            cartItemId: item.cartItemId,
+            itemid: resolvedItemId != null && !isNaN(Number(resolvedItemId)) ? Number(resolvedItemId) : resolvedItemId,
+            itemId: resolvedItemId,
+            id: resolvedItemId,
+            name: item.name || item.itemname,
+            itemname: item.name || item.itemname,
+            quantity: itemQuantity,
+            qty: itemQuantity,
+            price: itemPrice,
+            rawPrice: itemRawPrice,
+            amount: itemAmount,
+            addons: selectedAddons,
+            taxes: item.taxes || [],
+            appliedTaxes: item.appliedTaxes || item.taxes || [],
+            itemtype: item.itemtype || (item.isVeg ? "Veg" : "Non-Veg"),
+            specialInstructions: item.specialInstructions || "",
+          };
+        });
+
+        const orderData = {
+          items: processedItems,
+          subtotal: billingSummary.subtotal,
+          subtotalprice: billingSummary.subtotal,
+          beforeTaxCharges: billingSummary.beforeTaxCharges,
+          taxes: billingSummary.taxRows,
+          branchTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "branch"),
+          orderTypeTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "ordertype"),
+          itemTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "item"),
+          totalExclusiveTax: billingSummary.totalExclusiveTax,
+          totaltax: billingSummary.totalExclusiveTax,
+          afterTaxCharges: billingSummary.afterTaxCharges,
+          additionalCharges: billingSummary.additionalCharges,
+          specialDayCharges: billingSummary.specialDayCharges,
+          additional_charges: billingSummary.additionalCharges,
+          special_charges: billingSummary.specialDayCharges,
+          specialdaycharges: billingSummary.specialDayCharges,
+          roundoff: billingSummary.roundoff,
+          roundoffAmount: billingSummary.roundoff?.roundedAmount ?? 0,
+          grandTotal: billingSummary.grandTotal,
+          totalprice: billingSummary.grandTotal,
+          currency: selectedBranch?.currency || selectedBranch?.currencysymbol || "$",
+          currencySymbol: selectedBranch?.currencysymbol || "$",
+          ordertype: "Dine-in",
+          tableid: localStorage.getItem("selectedTableId") || undefined,
+          taxApplicationMode: posPayload?.taxApplicationMode || "apply_all",
+          inclusiveTaxIncreasesPrice: Boolean(posPayload?.inclusiveTaxIncreasesPrice),
+          itemTaxOverridesBranch: Boolean(posPayload?.itemTaxOverridesBranch),
+          itemTaxOverridesOrderType: Boolean(posPayload?.itemTaxOverridesOrderType),
+          orderTypeTaxOverridesBranch: Boolean(posPayload?.orderTypeTaxOverridesBranch),
+        };
+
+        const response = await fetch(
+          `${adminPanelBackendPath}/Website/Order/UpdateOrder/${customerId}/${branchId}/${currentOrderNo}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user": "admin",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(orderData),
+          }
+        );
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          clearCart();
+          const targetOrderId = currentOrderId;
+          localStorage.removeItem("currentOrderNo");
+          localStorage.removeItem("currentOrderId");
+          setCurrentOrderNo(null);
+          setCurrentOrderId(null);
+
+          if (typeof showSnackbar === "function") {
+            showSnackbar(
+              translations.orderupdatedsuccessfully || "Items added to Order successfully!",
+              "success",
+              4000
+            );
+          }
+
+          if (targetOrderId) {
+            navigate(`/orderdetails/${targetOrderId}`);
+          } else {
+            navigate("/orders");
+          }
+        } else {
+          const errorMsg = data?.message || "Failed to add items to order. Please try again.";
+          if (typeof showSnackbar === "function") {
+            showSnackbar(errorMsg, "error", 4000);
+          }
+        }
+      } catch (err) {
+        console.error("Order update error:", err);
+        if (typeof showSnackbar === "function") {
+          showSnackbar("An unexpected error occurred while updating order.", "error", 4000);
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // Normal checkout flow
     const orderTypeStr = typeof selectedOrderType === "object"
       ? String(selectedOrderType?.ordertypename || selectedOrderType?.name || "").trim()
       : String(selectedOrderType || "").trim();
@@ -297,27 +472,14 @@ const CartPage = () => {
 
     const isDelivery = normalized === "delivery";
     const isPickup = normalized === "pickup";
+    const isDineIn = normalized.includes("dine");
 
-    if (isDelivery || isPickup) {
-      const token = localStorage.getItem(customerTokenName);
-      const customerId = localStorage.getItem(customerIdName);
-
-      if (!token || !customerId) {
-        if (typeof showSnackbar === "function") {
-          showSnackbar(
-            translations.pleasesignintoorder || "Please sign in to proceed to checkout",
-            "info"
-          );
-        }
-        navigate("/signin", { state: { from: "/checkout" } });
-        return;
-      }
-
+    if (isDelivery || isPickup || isDineIn) {
       navigate("/checkout");
     } else {
       if (typeof showSnackbar === "function") {
         showSnackbar(
-          translations.selectdeliveryorpickup || "Please select Delivery or Pickup to proceed to checkout",
+          translations.selectdeliveryorpickup || "Please select an Order Type to proceed to checkout",
           "warning"
         );
       }
@@ -588,10 +750,10 @@ const CartPage = () => {
                       const taxAmount = typeof tax.amount === "number"
                         ? tax.amount
                         : (typeof tax.calculatedAmount === "number"
-                            ? tax.calculatedAmount
-                            : (isPct
-                                ? billingSummary.subtotal * (parseFloat(taxRate) / 100)
-                                : parseFloat(taxRate)));
+                          ? tax.calculatedAmount
+                          : (isPct
+                            ? billingSummary.subtotal * (parseFloat(taxRate) / 100)
+                            : parseFloat(taxRate)));
                       const hasRate = taxRate != null && taxRate !== "" && Number(taxRate) > 0;
                       return (
                         <div className="bill-row bill-tax-row" key={tax.taxid || tax._id || tax.taxname || `tax-${idx}`}>
@@ -662,14 +824,29 @@ const CartPage = () => {
                     </span>
                   </div>
 
-                  {/* Proceed to Checkout CTA */}
+                  {/* Proceed to Checkout CTA / Update Order CTA */}
                   <button
                     type="button"
                     className="cart-checkout-btn"
                     onClick={handleProceedCheckout}
+                    disabled={isSubmitting}
                   >
-                    <span>{translations.proceedtocheckout || "Proceed to Checkout"}</span>
-                    <ArrowForwardIcon fontSize="small" />
+                    {isSubmitting ? (
+                      <>
+                        <CircularProgress size={18} color="inherit" />
+                        <span>{translations.updatingorder || "Updating Order..."}</span>
+                      </>
+                    ) : currentOrderNo ? (
+                      <>
+                        <span>{translations.additemstoorder || "Add Items to Order"} #{currentOrderNo}</span>
+                        <AddIcon fontSize="small" />
+                      </>
+                    ) : (
+                      <>
+                        <span>{translations.proceedtocheckout || "Proceed to Checkout"}</span>
+                        <ArrowForwardIcon fontSize="small" />
+                      </>
+                    )}
                   </button>
 
                   {/* Continue Shopping Secondary CTA */}
