@@ -17,7 +17,6 @@ import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import BoltIcon from "@mui/icons-material/Bolt";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import CircularProgress from "@mui/material/CircularProgress";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -54,20 +53,26 @@ const getOrderTypeComponentIcon = (orderType) => {
 };
 
 const ShimmerCard = () => (
-  <div className="order-shimmer-card">
-    <div className="shimmer-bar top-accent" />
-    <div className="shimmer-header">
-      <div className="shimmer-box title" />
-      <div className="shimmer-box badge" />
-    </div>
-    <div className="shimmer-body">
-      <div className="shimmer-box line" />
-      <div className="shimmer-box line short" />
-      <div className="shimmer-box line" />
-    </div>
-    <div className="shimmer-footer">
-      <div className="shimmer-box pill" />
-      <div className="shimmer-box pill price" />
+  <div className="order-card-tile order-shimmer-card">
+    <div className="shimmer-box top-accent" />
+    <div className="order-card-main">
+      <div className="shimmer-header">
+        <div className="shimmer-box title" />
+        <div className="shimmer-box badge" />
+      </div>
+      <div className="shimmer-restaurant-row">
+        <div className="shimmer-box avatar" />
+        <div className="shimmer-col">
+          <div className="shimmer-box line title-line" />
+          <div className="shimmer-box line sub-line" />
+        </div>
+      </div>
+      <div className="shimmer-box preview-line" />
+      <div className="shimmer-divider" />
+      <div className="shimmer-footer">
+        <div className="shimmer-box price" />
+        <div className="shimmer-box circle-btn" />
+      </div>
     </div>
   </div>
 );
@@ -183,9 +188,10 @@ const OrderList = ({ onSelectOrder }) => {
 
       {/* Main Content Area - Parity with Offers Page & Manage Address */}
       {loading ? (
-        <div className="address-loading-wrap orders-loading-wrap">
-          <CircularProgress size={40} sx={{ color: "#028802" }} />
-          <p>{translations.loading || "Loading..."}</p>
+        <div className="orders-grid">
+          {[1, 2, 3, 4, 5, 6].map((k) => (
+            <ShimmerCard key={k} />
+          ))}
         </div>
       ) : orders.length === 0 ? (
         /* Empty State (No Orders Placed) - Exact parity with Offers Page */
