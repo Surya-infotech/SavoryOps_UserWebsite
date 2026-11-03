@@ -829,22 +829,32 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
               </div>
               <div className="detail-card table-details-card">
                 <div className="card-top-accent teal" />
-                <div className="table-details-list">
-                  {order.areatabledetails
-                    .filter((a) => Array.isArray(a?.tables) && a.tables.length > 0)
-                    .map((area, idx) => {
-                      const tableNos = area.tables
-                        .map((t) => t.tableno)
-                        .join(", ");
-                      return (
-                        <div key={idx} className="table-row">
-                          <span className="area-name">{area.areaname}</span>
-                          <span className="table-numbers">
-                            {tableNos}
-                          </span>
+                <div className="table-details-body">
+                  <div className="table-areas-grid">
+                    {order.areatabledetails
+                      .filter(
+                        (a) => Array.isArray(a?.tables) && a.tables.length > 0
+                      )
+                      .map((area, idx) => (
+                        <div key={idx} className="table-area-card">
+                          <div className="area-card-header">
+                            <span className="area-title">
+                              {area.areaname}
+                            </span>
+                          </div>
+                          <div className="area-tables-list">
+                            {area.tables.map((table, tIdx) => (
+                              <span key={tIdx} className="table-chip">
+                                <TableRestaurantIcon className="table-chip-icon" />
+                                <span className="table-chip-number">
+                                  {table.tableno}
+                                </span>
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                      );
-                    })}
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
