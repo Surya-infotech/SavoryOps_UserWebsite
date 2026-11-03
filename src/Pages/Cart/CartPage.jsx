@@ -22,6 +22,7 @@ import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurren
 import {
   getCart,
   saveCart,
+  clearCart,
   updateCartItemQuantity,
   removeCartItem,
   updateCartItemInstructions,
