@@ -279,131 +279,139 @@ const ReservationDetails = ({
             </div>
 
             {/* Branch / Restaurant Card */}
-            <div className="details-section-card">
-              <div className="section-card-header">
-                <StorefrontIcon className="section-icon" />
-                <h4>{translations.restaurantinfo || "Branch Information"}</h4>
-              </div>
-              <div className="branch-meta-box">
-                <div className="branch-main-info">
-                  <h5 className="branch-title">{reservation.branchname}</h5>
-                  <p className="business-subline">
-                    {reservation.businessname}
-                  </p>
+            <div className="reservation-details-section">
+              <div className="section-header-outside">
+                <div className="section-header-left">
+                  <StorefrontIcon className="section-header-icon" />
+                  <h3>{translations.restaurantinfo || "Branch Information"}</h3>
                 </div>
+              </div>
+              <div className="details-section-card">
+                <div className="branch-meta-box">
+                  <div className="branch-main-info">
+                    <h5 className="branch-title">{reservation.branchname}</h5>
+                    <p className="business-subline">
+                      {reservation.businessname}
+                    </p>
+                  </div>
 
-                {reservation.branchphone && (
-                  <a
-                    href={`tel:${reservation.branchphone}`}
-                    className="branch-phone-link"
-                  >
-                    <PhoneOutlinedIcon fontSize="small" />
-                    <span>{reservation.branchphone}</span>
-                  </a>
-                )}
+                  {reservation.branchphone && (
+                    <a
+                      href={`tel:${reservation.branchphone}`}
+                      className="branch-phone-link"
+                    >
+                      <PhoneOutlinedIcon fontSize="small" />
+                      <span>{reservation.branchphone}</span>
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Booking Information Card */}
-            <div className="details-section-card">
-              <div className="section-card-header">
-                <TableRestaurantIcon className="section-icon" />
-                <h4>{translations.bookingdetails || "Booking Information"}</h4>
+            <div className="reservation-details-section">
+              <div className="section-header-outside">
+                <div className="section-header-left">
+                  <TableRestaurantIcon className="section-header-icon" />
+                  <h3>{translations.bookingdetails || "Booking Information"}</h3>
+                </div>
               </div>
-              <div className="info-grid-two">
-                {/* Date */}
-                <div className="info-cell">
-                  <CalendarMonthOutlinedIcon className="cell-icon" />
-                  <div className="cell-value">
-                    {formatReservationDate(
-                      reservation.reservationdate,
-                      activeDateFormat,
-                      activeTimeZone
-                    )}
-                  </div>
-                </div>
-
-                {/* Time */}
-                <div className="info-cell">
-                  <AccessTimeIcon className="cell-icon" />
-                  <div className="cell-value">
-                    {formatReservationTime(
-                      reservation.reservationtime,
-                      activeTimeFormat,
-                      activeTimeZone
-                    )}
-                  </div>
-                </div>
-
-                {/* Seating Details */}
-                {reservation.reservationtype === "pickspot" ? (
-                  <>
-                    <div className="info-cell">
-                      <EventSeatIcon className="cell-icon" />
-                      <div className="cell-value">
-                        {reservation.areaname || "Main Area"}
-                      </div>
+              <div className="details-section-card">
+                <div className="info-grid-two">
+                  {/* Date */}
+                  <div className="info-cell">
+                    <CalendarMonthOutlinedIcon className="cell-icon" />
+                    <div className="cell-value">
+                      {formatReservationDate(
+                        reservation.reservationdate,
+                        activeDateFormat,
+                        activeTimeZone
+                      )}
                     </div>
+                  </div>
 
-                    <div className="info-cell">
-                      <TableRestaurantIcon className="cell-icon highlight" />
+                  {/* Time */}
+                  <div className="info-cell">
+                    <AccessTimeIcon className="cell-icon" />
+                    <div className="cell-value">
+                      {formatReservationTime(
+                        reservation.reservationtime,
+                        activeTimeFormat,
+                        activeTimeZone
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Seating Details */}
+                  {reservation.reservationtype === "pickspot" ? (
+                    <>
+                      <div className="info-cell">
+                        <EventSeatIcon className="cell-icon" />
+                        <div className="cell-value">
+                          {reservation.areaname || "Main Area"}
+                        </div>
+                      </div>
+
+                      <div className="info-cell">
+                        <TableRestaurantIcon className="cell-icon highlight" />
+                        <div className="cell-value highlight">
+                          {reservation.tableno}
+                          {reservation.capacity ? (
+                            <span className="sub-cap">
+                              ({reservation.capacity} seats)
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="info-cell full-span">
+                      <GroupsOutlinedIcon className="cell-icon highlight" />
                       <div className="cell-value highlight">
-                        {reservation.tableno}
-                        {reservation.capacity ? (
-                          <span className="sub-cap">
-                            ({reservation.capacity} seats)
-                          </span>
-                        ) : null}
+                        {reservation.guest || 1}{" "}
+                        {reservation.guest === 1 ? "Guest" : "Guests"}
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div className="info-cell full-span">
-                    <GroupsOutlinedIcon className="cell-icon highlight" />
-                    <div className="cell-value highlight">
-                      {reservation.guest || 1}{" "}
-                      {reservation.guest === 1 ? "Guest" : "Guests"}
+                  )}
+
+                  {/* Timezone */}
+                  {reservation.timezone && (
+                    <div className="info-cell full-span">
+                      <PublicIcon className="cell-icon" />
+                      <div className="cell-value text-muted">
+                        {reservation.timezone}
+                      </div>
                     </div>
+                  )}
+                </div>
+
+                {/* Special Notes (if any) */}
+                {reservation.specialnotes && (
+                  <div className="special-notes-box">
+                    <div className="notes-label">
+                      <NotesOutlinedIcon fontSize="small" />
+                      <span>
+                        {translations.specialnotes || "Special Requests"}
+                      </span>
+                    </div>
+                    <p className="notes-text">{reservation.specialnotes}</p>
                   </div>
                 )}
 
-                {/* Timezone */}
-                {reservation.timezone && (
-                  <div className="info-cell full-span">
-                    <PublicIcon className="cell-icon" />
-                    <div className="cell-value text-muted">
-                      {reservation.timezone}
+                {/* Cancellation Reason (if cancelled) */}
+                {reservation.cancelreason && (
+                  <div className="cancellation-reason-box">
+                    <div className="cancel-label">
+                      <CancelOutlinedIcon fontSize="small" />
+                      <span>
+                        {translations.cancellationreason ||
+                          "Cancellation Reason"}
+                      </span>
                     </div>
+                    <p className="cancel-text">{reservation.cancelreason}</p>
                   </div>
                 )}
               </div>
-
-              {/* Special Notes (if any) */}
-              {reservation.specialnotes && (
-                <div className="special-notes-box">
-                  <div className="notes-label">
-                    <NotesOutlinedIcon fontSize="small" />
-                    <span>
-                      {translations.specialnotes || "Special Requests"}
-                    </span>
-                  </div>
-                  <p className="notes-text">{reservation.specialnotes}</p>
-                </div>
-              )}
-
-              {/* Cancellation Reason (if cancelled) */}
-              {reservation.cancelreason && (
-                <div className="cancellation-reason-box">
-                  <div className="cancel-label">
-                    <CancelOutlinedIcon fontSize="small" />
-                    <span>
-                      {translations.cancellationreason ||
-                        "Cancellation Reason"}
-                    </span>
-                  </div>
-                  <p className="cancel-text">{reservation.cancelreason}</p>
-                </div>
-              )}
             </div>
 
             {/* Cancel Reservation Section (when Pending or Confirmed) */}
@@ -487,67 +495,71 @@ const ReservationDetails = ({
         {/* Right Column: Status History Timeline */}
         <div className="details-side-column">
           <div className="reservation-details-content">
-            <div className="details-section-card">
-              <div className="section-card-header">
-                <HistoryIcon className="section-icon" />
-                <h4>
-                  {translations.reservationstatushistory || "Status History"}
-                </h4>
+            <div className="reservation-details-section">
+              <div className="section-header-outside">
+                <div className="section-header-left">
+                  <HistoryIcon className="section-header-icon" />
+                  <h3>
+                    {translations.reservationstatushistory || "Reservation Status History"}
+                  </h3>
+                </div>
               </div>
 
-              {hasStatusLogs ? (
-                <div className="timeline-container">
-                  {reservation.statusLogs.map((log, index) => {
-                    const logConfig = getReservationStatusConfig(
-                      log.newStatus,
-                      translations
-                    );
-                    return (
-                      <div key={index} className="timeline-item">
-                        <div
-                          className="timeline-marker"
-                          style={{ backgroundColor: logConfig.dotColor }}
-                        />
-                        {index !== reservation.statusLogs.length - 1 && (
-                          <div className="timeline-line" />
-                        )}
-                        <div className="timeline-content">
-                          <span
-                            className="timeline-status-chip"
-                            style={{
-                              backgroundColor: logConfig.bgColor,
-                              color: logConfig.color,
-                            }}
-                          >
-                            {logConfig.label}
-                          </span>
-                          <div className="timeline-meta">
-                            {log.updatedAt && (
-                              <span className="timeline-time">
-                                {formatReservationDateTime(
-                                  log.updatedAt,
-                                  activeDateFormat,
-                                  activeTimeFormat,
-                                  activeTimeZone
-                                )}
-                              </span>
-                            )}
-                            {log.updatedByEmployeeName && (
-                              <span className="timeline-author">
-                                by {log.updatedByEmployeeName}
-                              </span>
-                            )}
+              <div className="details-section-card">
+                {hasStatusLogs ? (
+                  <div className="timeline-container">
+                    {reservation.statusLogs.map((log, index) => {
+                      const logConfig = getReservationStatusConfig(
+                        log.newStatus,
+                        translations
+                      );
+                      return (
+                        <div key={index} className="timeline-item">
+                          <div
+                            className="timeline-marker"
+                            style={{ backgroundColor: logConfig.dotColor }}
+                          />
+                          {index !== reservation.statusLogs.length - 1 && (
+                            <div className="timeline-line" />
+                          )}
+                          <div className="timeline-content">
+                            <span
+                              className="timeline-status-chip"
+                              style={{
+                                backgroundColor: logConfig.bgColor,
+                                color: logConfig.color,
+                              }}
+                            >
+                              {logConfig.label}
+                            </span>
+                            <div className="timeline-meta">
+                              {log.updatedAt && (
+                                <span className="timeline-time">
+                                  {formatReservationDateTime(
+                                    log.updatedAt,
+                                    activeDateFormat,
+                                    activeTimeFormat,
+                                    activeTimeZone
+                                  )}
+                                </span>
+                              )}
+                              {log.updatedByEmployeeName && (
+                                <span className="timeline-author">
+                                  by {log.updatedByEmployeeName}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="no-history-text" style={{ fontSize: "0.85rem", color: "#94a3b8", margin: 0 }}>
-                  {translations.nostatushistory || "No status history recorded yet."}
-                </p>
-              )}
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="no-history-text" style={{ fontSize: "0.85rem", color: "#94a3b8", margin: 0 }}>
+                    {translations.nostatushistory || "No status history recorded yet."}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -557,4 +569,3 @@ const ReservationDetails = ({
 };
 
 export default ReservationDetails;
-
