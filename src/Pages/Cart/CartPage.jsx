@@ -543,9 +543,6 @@ const CartPage = () => {
                     {getOrderTypeIcon(effectiveOrderType)}
                   </div>
                   <div className="cart-info-text-box">
-                    <span className="cart-info-label">
-                      {translations.ordertype || "Order Type"}
-                    </span>
                     <span className="cart-info-value">
                       {translations[effectiveOrderType] || effectiveOrderType}
                     </span>
@@ -561,9 +558,6 @@ const CartPage = () => {
                     <TableRestaurantIcon fontSize="small" />
                   </div>
                   <div className="cart-info-text-box">
-                    <span className="cart-info-label">
-                      {translations.tableno || "Table No"}
-                    </span>
                     <span className="cart-info-value">{selectedTableNo}</span>
                   </div>
                 </div>
@@ -577,9 +571,6 @@ const CartPage = () => {
                     <ReceiptLongOutlinedIcon fontSize="small" />
                   </div>
                   <div className="cart-info-text-box">
-                    <span className="cart-info-label">
-                      {translations.orderno || "Order No"}
-                    </span>
                     <span className="cart-info-value">#{currentOrderNo}</span>
                   </div>
                   <button

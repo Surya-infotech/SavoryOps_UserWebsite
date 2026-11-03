@@ -110,20 +110,12 @@
       flex: 1;
       min-width: 0;
 
-      .cart-info-label {
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #64748b;
-        line-height: 1.2;
-      }
-
       .cart-info-value {
         font-size: 1.05rem;
         font-weight: 800;
         color: #0f172a;
-        margin-top: 0.15rem;
+        margin-top: 0;
+        line-height: 1.2;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -153,6 +145,7 @@
     }
   }
 }
+
 .cart-header-row {
   display: flex;
   align-items: center;
@@ -1055,13 +1048,25 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleUp {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Standard FSSAI Diet Badge (Veg / Non-Veg Indicator) */
