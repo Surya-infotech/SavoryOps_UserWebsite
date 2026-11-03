@@ -1158,7 +1158,7 @@ const Navbar = () => {
               onClick={() => setIsScanModalOpen(true)}
               aria-label={translations.scanqr}
             >
-              <QrCodeScannerIcon className="nav-scanner-icon" />
+              <QrCodeScannerIcon fontSize="small" />
             </button>
             <LanguageDropdown />
 

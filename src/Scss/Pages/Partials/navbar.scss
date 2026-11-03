@@ -204,6 +204,7 @@
   0% {
     transform: translate3d(0, 0, 0);
   }
+
   100% {
     transform: translate3d(-50%, 0, 0);
   }
@@ -213,6 +214,7 @@
   0% {
     transform: translate3d(0, 0, 0);
   }
+
   100% {
     transform: translate3d(50%, 0, 0);
   }
@@ -222,6 +224,7 @@
   .nav-top-marquee-track {
     animation: none !important;
   }
+
   .nav-top-announcement.is-scrolling {
     overflow-x: auto;
   }
@@ -436,6 +439,7 @@
   gap: 0.85rem;
 }
 
+.nav-scanner-btn,
 .nav-cart-btn {
   position: relative;
   display: inline-flex;
@@ -448,12 +452,19 @@
   border: 1px solid #e2e8f0;
   color: #334155;
   transition: all 0.2s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
 
   &:hover {
     background: rgba(2, 136, 2, 0.08);
     color: #028802;
     border-color: rgba(2, 136, 2, 0.3);
     transform: translateY(-1px);
+  }
+
+  svg {
+    color: inherit;
   }
 }
 
@@ -1086,6 +1097,7 @@
 
   [dir="rtl"] &,
   body.rtl-mode & {
+
     &:hover .drawer-arrow,
     &:active .drawer-arrow {
       transform: translateX(-3px);
@@ -1545,12 +1557,6 @@
 }
 
 /* Responsive Breakpoints - Mobile, Tablet & Laptop Architecture */
-@media (min-width: 1025px) {
-  .nav-scanner-btn {
-    display: none !important;
-    /* Hidden on laptop & computers */
-  }
-}
 
 @media (max-width: 1080px) {
   .nav-search-box {
@@ -2306,47 +2312,6 @@
     width: 100%;
     justify-content: space-between;
     padding: 0.5rem 0.85rem;
-  }
-}
-
-/* ==========================================================================
-   Scanner Button & Mobile QR Scanner (Phone & Tablet Only)
-   ========================================================================== */
-.nav-scanner-btn {
-  /* Hidden on laptop and desktop computers (>1024px) */
-  display: none !important;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #334155;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  flex-shrink: 0;
-
-  &:hover {
-    background: rgba(2, 136, 2, 0.08);
-    color: #028802;
-    border-color: rgba(2, 136, 2, 0.3);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(2, 136, 2, 0.12);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  .nav-scanner-icon {
-    font-size: 1.3rem;
-  }
-
-  /* Visible only on phones and tablets (<=1024px) */
-  @media (max-width: 1024px) {
-    display: inline-flex !important;
   }
 }
 
