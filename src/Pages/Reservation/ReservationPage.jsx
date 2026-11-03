@@ -118,7 +118,7 @@ const ReservationPage = () => {
   const handleSelectReservation = (reservation) => {
     setSelectedReservation(reservation);
     const id = reservation?._id || reservation?.reservationid;
-    navigate(`/reservation/${id}`);
+    navigate(`/reservationdetails/${id}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -132,25 +132,25 @@ const ReservationPage = () => {
     selectedReservation ||
     (selectedReservationId
       ? reservations.find(
-          (r) =>
-            r._id === selectedReservationId ||
-            String(r.reservationid) === String(selectedReservationId)
-        )
+        (r) =>
+          r._id === selectedReservationId ||
+          String(r.reservationid) === String(selectedReservationId)
+      )
       : null);
 
   const breadcrumbItems = selectedReservationId
     ? [
-        { label: translations.home || "Home", path: "/" },
-        {
-          label: translations.tablereservation || "Table Reservations",
-          path: "/reservation",
-        },
-        { label: translations.reservationdetails || "Reservation Details" },
-      ]
+      { label: translations.home || "Home", path: "/" },
+      {
+        label: translations.tablereservation || "Table Reservations",
+        path: "/reservation",
+      },
+      { label: translations.reservationdetails || "Reservation Details" },
+    ]
     : [
-        { label: translations.home || "Home", path: "/" },
-        { label: translations.tablereservation || "Table Reservations" },
-      ];
+      { label: translations.home || "Home", path: "/" },
+      { label: translations.tablereservation || "Table Reservations" },
+    ];
 
   return (
     <div className={`reservation-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
