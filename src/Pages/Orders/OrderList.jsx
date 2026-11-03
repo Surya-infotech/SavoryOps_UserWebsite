@@ -120,7 +120,7 @@ const OrderList = ({ onSelectOrder }) => {
     } catch (err) {
       console.error("Error fetching customer orders:", err);
       showSnackbar(
-        translations.somethingWentWrong || "Failed to load orders",
+        translations.somethingWentWrong,
         "error"
       );
       setOrders([]);
@@ -168,8 +168,7 @@ const OrderList = ({ onSelectOrder }) => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={
-                translations.searchorders ||
-                "Search by order number, restaurant, branch..."
+                translations.searchorders
               }
             />
             {search && (
@@ -200,15 +199,14 @@ const OrderList = ({ onSelectOrder }) => {
             <ReceiptLongOutlinedIcon className="empty-icon" />
           </div>
           <h2 className="empty-title">
-            {translations.noorderfound || "No orders placed yet."}
+            {translations.noorderfound}
           </h2>
           <p className="empty-subtitle">
-            {translations.noorderdescription ||
-              "Your order history will appear here once you place your first order. Explore our main menu to discover delicious treats!"}
+            {translations.noorderdescription}
           </p>
           <Link to="/menu" className="empty-add-btn">
             <RestaurantMenuIcon fontSize="small" />
-            <span>{translations.exploremenu || "Explore Menu"}</span>
+            <span>{translations.exploremenu}</span>
           </Link>
         </div>
       ) : filteredOrders.length === 0 ? (
@@ -218,11 +216,10 @@ const OrderList = ({ onSelectOrder }) => {
             <SearchOffIcon className="empty-icon" />
           </div>
           <h2 className="empty-title">
-            {translations.nosearchresultsfound || "No matching orders found"}
+            {translations.nosearchresultsfound}
           </h2>
           <p className="empty-subtitle">
-            {translations.noordersmatchsearch ||
-              "No orders match your search criteria. Try a different query."}
+            {translations.noordersmatchsearch}
           </p>
           <button
             type="button"
@@ -230,7 +227,7 @@ const OrderList = ({ onSelectOrder }) => {
             onClick={() => setSearch("")}
           >
             <CloseIcon fontSize="small" />
-            <span>{translations.clearsearch || "Clear Search Filter"}</span>
+            <span>{translations.clearsearch}</span>
           </button>
         </div>
       ) : (
@@ -308,8 +305,8 @@ const OrderList = ({ onSelectOrder }) => {
                       <span className="items-count-badge">
                         {order.products.length}{" "}
                         {order.products.length === 1
-                          ? translations.item || "item"
-                          : translations.items || "items"}
+                          ? translations.item
+                          : translations.items}
                       </span>
                       <span className="items-preview-names">
                         {order.products
@@ -358,7 +355,7 @@ const OrderList = ({ onSelectOrder }) => {
                     </span>
                   </div>
 
-                  <div className="order-action-circle" title={translations.viewdetails || "View Details"}>
+                  <div className="order-action-circle" title={translations.viewdetails}>
                     <ArrowForwardIcon className="arrow-icon" fontSize="small" />
                   </div>
                 </div>

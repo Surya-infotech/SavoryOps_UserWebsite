@@ -46,11 +46,11 @@ const OrderStatusHistoryModal = ({
             </div>
             <div className="modal-title-text">
               <h3 id="order-history-title">
-                {translations.orderstatushistory || "Order Status History"}
+                {translations.orderstatushistory}
               </h3>
               {orderNumber && (
                 <span className="modal-orderno-badge">
-                  {translations.orderno || "Order"} #{orderNumber}
+                  {translations.orderno} #{orderNumber}
                 </span>
               )}
             </div>
@@ -59,7 +59,7 @@ const OrderStatusHistoryModal = ({
             type="button"
             className="modal-close-btn"
             onClick={onClose}
-            aria-label={translations.close || "Close"}
+            aria-label={translations.close}
           >
             <CloseIcon fontSize="small" />
           </button>
@@ -119,8 +119,7 @@ const OrderStatusHistoryModal = ({
             <div className="empty-history-state">
               <AccessTimeIcon className="empty-history-icon" />
               <p>
-                {translations.nostatushistoryfound ||
-                  "No status history recorded for this order yet."}
+                {translations.nostatushistoryfound}
               </p>
             </div>
           )}
@@ -128,7 +127,7 @@ const OrderStatusHistoryModal = ({
 
         <div className="modal-footer">
           <button type="button" className="modal-close-submit-btn" onClick={onClose}>
-            {translations.close || "Close"}
+            {translations.close}
           </button>
         </div>
       </div>

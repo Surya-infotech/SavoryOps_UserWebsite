@@ -110,7 +110,7 @@ export const DishAddonModal = ({
   };
 
   const prepTime = item.preparationtime
-    ? `${item.preparationtime} ${translations.min || "min"}`
+    ? `${item.preparationtime} ${translations.min}`
     : item.prepTime || "";
 
   return (
@@ -155,7 +155,7 @@ export const DishAddonModal = ({
             type="button"
             className="addon-modal-close-btn"
             onClick={onClose}
-            aria-label={translations.close || "Close"}
+            aria-label={translations.close}
           >
             <CloseIcon />
           </button>
@@ -168,7 +168,7 @@ export const DishAddonModal = ({
         {item.addons && item.addons.length > 0 && (
           <div className="addon-selection-section">
             <div className="dish-modal-addons-box">
-              <h5>{translations.customizableaddons || "Customizable Add-ons"}</h5>
+              <h5>{translations.customizableaddons}</h5>
               <div className="addons-list">
                 {item.addons.map((addon) => {
                   const addonKey = addon.addonid || addon._id || addon.id;
@@ -205,7 +205,7 @@ export const DishAddonModal = ({
               type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               disabled={quantity <= 1}
-              aria-label={translations.decreasequantity || "Decrease quantity"}
+              aria-label={translations.decreasequantity}
             >
               -
             </button>
@@ -213,7 +213,7 @@ export const DishAddonModal = ({
             <button
               type="button"
               onClick={() => setQuantity((q) => q + 1)}
-              aria-label={translations.increasequantity || "Increase quantity"}
+              aria-label={translations.increasequantity}
             >
               +
             </button>
@@ -223,7 +223,7 @@ export const DishAddonModal = ({
             type="button"
             className="addon-add-cart-btn"
             onClick={handleConfirm}
-            aria-label={translations.addtocart || "Add to cart"}
+            aria-label={translations.addtocart}
           >
             <ShoppingCartOutlinedIcon className="confirm-btn-icon" fontSize="small" />
             <span className="addon-total-price">

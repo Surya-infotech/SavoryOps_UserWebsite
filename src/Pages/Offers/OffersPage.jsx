@@ -39,7 +39,7 @@ const OffersPage = () => {
   const [selectedItemModal, setSelectedItemModal] = useState(null);
 
   useEffect(() => {
-    const pageTitle = translations.specialoffers || "Special Offers & Deals";
+    const pageTitle = translations.specialoffers;
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {
@@ -214,10 +214,10 @@ const OffersPage = () => {
         categoryid: "deals",
         categoryname:
           bundleTypeLower === "combo"
-            ? translations.combos || "Combos"
+            ? translations.combos
             : bundleTypeLower === "unlimited"
-              ? translations.unlimitedmeals || "Unlimited Meals"
-              : translations.specialoffers || "Special Offers",
+              ? translations.unlimitedmeals
+              : translations.specialoffers,
         bundletype: bundleTypeLower,
         title: b.dealsbundlesname || "",
         desc: b.description || "",
@@ -288,7 +288,7 @@ const OffersPage = () => {
   return (
     <div className={`offers-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       {/* Site-wide Unified Breadcrumbs */}
-      <Breadcrumbs currentPage={translations.specialoffers || "Special Offers & Deals"} />
+      <Breadcrumbs currentPage={translations.specialoffers} />
 
       <div className="offers-main-content-container">
         {/* Filter Bar (matching MenuPage ultra-compact design, fully responsive on mobile/tablet) */}
@@ -308,7 +308,7 @@ const OffersPage = () => {
                   className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
                   onClick={() => setSelectedType("all")}
                 >
-                  <span>{translations.alloffers || "All Deals"}</span>
+                  <span>{translations.alloffers}</span>
                 </button>
 
                 {comboMeals.length > 0 && (
@@ -319,7 +319,7 @@ const OffersPage = () => {
                     className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
                     onClick={() => setSelectedType("combo")}
                   >
-                    <span>{translations.combos || "Combos"}</span>
+                    <span>{translations.combos}</span>
                   </button>
                 )}
 
@@ -331,7 +331,7 @@ const OffersPage = () => {
                     className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
                     onClick={() => setSelectedType("unlimited")}
                   >
-                    <span>{translations.unlimitedmeals || "Unlimited Meals"}</span>
+                    <span>{translations.unlimitedmeals}</span>
                   </button>
                 )}
               </div>
@@ -347,7 +347,7 @@ const OffersPage = () => {
                     onMouseDown={(e) => e.preventDefault()}
                     onFocus={(e) => e.target.blur()}
                   >
-                    <span>{translations.all || "All"}</span>
+                    <span>{translations.all}</span>
                   </button>
                   <button
                     type="button"
@@ -360,7 +360,7 @@ const OffersPage = () => {
                     <span className="diet-box">
                       <span className="diet-dot" />
                     </span>
-                    <span>{translations.veg || "Veg"}</span>
+                    <span>{translations.veg}</span>
                   </button>
                   <button
                     type="button"
@@ -373,7 +373,7 @@ const OffersPage = () => {
                     <span className="diet-box">
                       <span className="diet-dot" />
                     </span>
-                    <span>{translations.nonveg || "Non-Veg"}</span>
+                    <span>{translations.nonveg}</span>
                   </button>
                 </div>
               </div>
@@ -388,7 +388,7 @@ const OffersPage = () => {
                     title="Clear all filters"
                   >
                     <CloseIcon fontSize="small" />
-                    <span>{translations.clear || "Clear"}</span>
+                    <span>{translations.clear}</span>
                   </button>
                 </div>
               )}
@@ -422,11 +422,10 @@ const OffersPage = () => {
               <SearchOffIcon className="empty-icon" />
             </div>
             <h2 className="empty-title">
-              {translations.nomatchingitems || "No matching deals found"}
+              {translations.nomatchingitems}
             </h2>
             <p className="empty-subtitle">
-              {translations.tryadjustingfilters ||
-                "Try adjusting your filters to find what you are looking for."}
+              {translations.tryadjustingfilters}
             </p>
             {isFilterActive && (
               <button
@@ -435,7 +434,7 @@ const OffersPage = () => {
                 onClick={handleClearFilters}
               >
                 <CloseIcon fontSize="small" />
-                <span>{translations.resetfilters || "Reset Filters"}</span>
+                <span>{translations.resetfilters}</span>
               </button>
             )}
           </div>
@@ -446,15 +445,14 @@ const OffersPage = () => {
               <LocalOfferOutlinedIcon className="empty-icon" />
             </div>
             <h2 className="empty-title">
-              {translations.nodealsfound || "No special offers available at this branch right now."}
+              {translations.nodealsfound}
             </h2>
             <p className="empty-subtitle">
-              {translations.nodealsdescription ||
-                "There are currently no active offers or combo deals for this branch. Explore our main menu to discover delicious treats!"}
+              {translations.nodealsdescription}
             </p>
             <Link to="/menu" className="empty-add-btn">
               <RestaurantMenuIcon fontSize="small" />
-              <span>{translations.exploremenu || "Explore Menu"}</span>
+              <span>{translations.exploremenu}</span>
             </Link>
           </div>
         )}

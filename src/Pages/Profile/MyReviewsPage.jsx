@@ -55,7 +55,7 @@ const MyReviewsPage = () => {
 
   // Dynamic document title and dynamic favicon sync - matching other pages
   useEffect(() => {
-    const pageTitle = translations.myreviews || "My Reviews";
+    const pageTitle = translations.myreviews;
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {
@@ -123,14 +123,14 @@ const MyReviewsPage = () => {
         setReviews(Array.isArray(data) ? data : []);
       } else {
         showSnackbar(
-          translations.somethingWentWrong || "Failed to load reviews.",
+          translations.somethingWentWrong,
           "error"
         );
       }
     } catch (error) {
       console.error("Error fetching my reviews:", error);
       showSnackbar(
-        translations.somethingWentWrong || "Error fetching reviews.",
+        translations.somethingWentWrong,
         "error"
       );
     } finally {
@@ -161,9 +161,9 @@ const MyReviewsPage = () => {
       {/* Site-wide Unified Breadcrumbs matching Profile & ManageAddress */}
       <Breadcrumbs
         items={[
-          { label: translations.home || "Home", path: "/" },
-          { label: translations.myaccount || "My Account", path: "/profile" },
-          { label: translations.myreviews || "My Reviews" },
+          { label: translations.home, path: "/" },
+          { label: translations.myaccount, path: "/profile" },
+          { label: translations.myreviews },
         ]}
       />
 
@@ -183,17 +183,15 @@ const MyReviewsPage = () => {
             </div>
             <h2 className="empty-title">
               {translations.noreviewsfound ||
-                translations.noReviews ||
-                "No reviews written yet."}
+                translations.noReviews}
             </h2>
             <p className="empty-subtitle">
               {translations.noreviewsdescription ||
-                translations.noReviewsMessage ||
-                "You haven't written any reviews yet. Share your experience with your favorite restaurants!"}
+                translations.noReviewsMessage}
             </p>
             <Link to="/menu" className="empty-add-btn">
               <RestaurantMenuIcon fontSize="small" />
-              <span>{translations.exploremenu || "Explore Menu"}</span>
+              <span>{translations.exploremenu}</span>
             </Link>
           </div>
         ) : (

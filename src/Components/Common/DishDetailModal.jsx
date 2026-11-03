@@ -116,7 +116,7 @@ export const DishDetailModal = ({
   };
 
   const includedItems = item.includedItems || (Array.isArray(item.items) ? item.items : []);
-  const prepTime = item.preparationtime ? `${item.preparationtime} ${translations.min || "min"}` : (item.prepTime || "");
+  const prepTime = item.preparationtime ? `${item.preparationtime} ${translations.min}` : (item.prepTime || "");
 
   return (
     <div className="dish-modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
@@ -125,7 +125,7 @@ export const DishDetailModal = ({
           type="button"
           className={`dish-modal-close-btn ${!item.image ? "no-img" : ""}`}
           onClick={onClose}
-          aria-label={translations.close || "Close"}
+          aria-label={translations.close}
         >
           <CloseIcon fontSize="small" />
         </button>
@@ -156,13 +156,13 @@ export const DishDetailModal = ({
                 {item.menuname && <span className="tag-badge">{item.menuname}</span>}
                 {item.bundletype && (
                   <span className={`tag-badge deal-ribbon-badge ${item.bundletype}`} style={{ position: "static" }}>
-                    {item.bundletype === "combo" ? (translations.combo || "COMBO") : (translations.unlimited || "UNLIMITED")}
+                    {item.bundletype === "combo" ? (translations.combo) : (translations.unlimited)}
                   </span>
                 )}
                 {prepTime && <span className="tag-badge">⏱ {prepTime}</span>}
                 {showDiet && (
                   <span className="tag-badge">
-                    {isVeg ? (translations.veg || "Vegetarian") : (translations.nonveg || "Non-Vegetarian")}
+                    {isVeg ? (translations.veg) : (translations.nonveg)}
                   </span>
                 )}
               </div>
@@ -178,7 +178,7 @@ export const DishDetailModal = ({
           {/* Included Items for Combos/Deals */}
           {isComboItem && includedItems.length > 0 && (
             <div className="dish-modal-addons-box">
-              <h5>{translations.includeditems || "Included Items"}</h5>
+              <h5>{translations.includeditems}</h5>
               <div className="addons-list">
                 {includedItems.map((it, idx) => {
                   const itemName = typeof it === "string" ? it : (it.itemname || it.name || it.title || "");
@@ -202,8 +202,8 @@ export const DishDetailModal = ({
             <div className="dish-modal-addons-box">
               <h5>
                 {isComboItem
-                  ? (translations.addons || "Add-ons")
-                  : (translations.customizableaddons || "Customizable Add-ons")}
+                  ? (translations.addons)
+                  : (translations.customizableaddons)}
               </h5>
               <div className="addons-list">
                 {item.addons.map((addon) => {
@@ -257,7 +257,7 @@ export const DishDetailModal = ({
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   disabled={quantity <= 1}
-                  aria-label={translations.decreasequantity || "Decrease quantity"}
+                  aria-label={translations.decreasequantity}
                 >
                   -
                 </button>
@@ -265,7 +265,7 @@ export const DishDetailModal = ({
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
-                  aria-label={translations.increasequantity || "Increase quantity"}
+                  aria-label={translations.increasequantity}
                 >
                   +
                 </button>
@@ -275,7 +275,7 @@ export const DishDetailModal = ({
                 type="button"
                 className="confirm-add-btn"
                 onClick={handleConfirm}
-                aria-label={translations.addtocart || "Add to cart"}
+                aria-label={translations.addtocart}
               >
                 <ShoppingCartOutlinedIcon className="confirm-btn-icon" />
                 <span>{formatPriceFromBranch(grandTotal, selectedBranch)}</span>

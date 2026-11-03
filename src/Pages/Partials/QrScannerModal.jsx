@@ -65,7 +65,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
           if (tableParam) {
             localStorage.setItem("selectedTable", tableParam);
             window.dispatchEvent(new CustomEvent("tableChange", { detail: tableParam }));
-            showSnackbar(`${translations.connectedtotable || "Connected to Table"} ${tableParam}!`, "success");
+            showSnackbar(`${translations.connectedtotable} ${tableParam}!`, "success");
             navigate(`/menu?table=${encodeURIComponent(tableParam)}`);
             return;
           }
@@ -89,7 +89,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
       if (cleanTable) {
         localStorage.setItem("selectedTable", cleanTable);
         window.dispatchEvent(new CustomEvent("tableChange", { detail: cleanTable }));
-        showSnackbar(`${translations.connectedtotable || "Connected to Table"} ${cleanTable}!`, "success");
+        showSnackbar(`${translations.connectedtotable} ${cleanTable}!`, "success");
         navigate(`/menu?table=${encodeURIComponent(cleanTable)}`);
       } else {
         showSnackbar(`Scanned: ${scannedText}`, "info");
@@ -105,8 +105,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
 
     if (!navigator?.mediaDevices?.getUserMedia) {
       setCameraError(
-        translations.cameranotavailable ||
-          "Camera access is not supported on this device. Please open in a compatible mobile browser."
+        translations.cameranotavailable
       );
       return;
     }
@@ -199,8 +198,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
     } catch (err) {
       console.warn("Mobile camera access error:", err);
       let errorMsg =
-        translations.cameranotavailable ||
-        "Camera access is not permitted or camera is unavailable. Please check camera permissions in your phone browser settings.";
+        translations.cameranotavailable;
       if (err.name === "NotAllowedError") {
         errorMsg =
           "Camera permission was denied. Please allow camera permissions in your browser to scan QR codes.";
@@ -247,11 +245,10 @@ const QrScannerModal = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h3 className="qr-modal-title">
-                {translations.scanqr || "Scan QR Code"}
+                {translations.scanqr}
               </h3>
               <p className="qr-modal-subtitle">
-                {translations.positionqrinframe ||
-                  "Point your phone camera at the QR code to scan."}
+                {translations.positionqrinframe}
               </p>
             </div>
           </div>
@@ -301,7 +298,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
                 </div>
 
                 <p className="qr-viewfinder-hint">
-                  {translations.positionqrinframe || "Align QR code inside frame"}
+                  {translations.positionqrinframe}
                 </p>
               </div>
             )}

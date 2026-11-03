@@ -132,9 +132,9 @@ export const formatLocationDetailsLine = (location) => {
 
 export const formatLocationAddressType = (type, translations = {}) => {
   const norm = String(type || "").toLowerCase().trim();
-  if (norm === "work") return translations.work || "Work";
-  if (norm === "other") return translations.other || "Other";
-  return translations.home || "Home";
+  if (norm === "work") return translations.work;
+  if (norm === "other") return translations.other;
+  return translations.home;
 };
 
 export const formatOrderDateTime = (

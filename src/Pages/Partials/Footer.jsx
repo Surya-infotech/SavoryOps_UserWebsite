@@ -296,7 +296,7 @@ const Footer = () => {
 
           {/* Explore Menu Column */}
           <div className="footer-col">
-            <h4 className="footer-col-title">{translations.exploremenu || "Explore Menu"}</h4>
+            <h4 className="footer-col-title">{translations.exploremenu}</h4>
             <ul className="footer-nav-list">
               {footerMenus.length > 0 ? (
                 <>
@@ -319,7 +319,7 @@ const Footer = () => {
                         className="footer-nav-link footer-view-all-link"
                         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                       >
-                        <span>{translations.allmenus || "All Menus"}</span>
+                        <span>{translations.allmenus}</span>
                         <span className="view-all-arrow">→</span>
                       </Link>
                     </li>
@@ -332,7 +332,7 @@ const Footer = () => {
                     className="footer-nav-link"
                     onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                   >
-                    {translations.allmenus || "All Menus"}
+                    {translations.allmenus}
                   </Link>
                 </li>
               )}

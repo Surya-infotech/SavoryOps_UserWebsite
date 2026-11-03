@@ -45,12 +45,12 @@ const OrderReviewModal = ({
     setErrorMsg("");
 
     if (rating === 0) {
-      setErrorMsg(translations.pleaseselectrating || "Please select a rating of 1 to 5 stars.");
+      setErrorMsg(translations.pleaseselectrating);
       return;
     }
 
     if (!reviewText.trim()) {
-      setErrorMsg(translations.pleaseenterreview || "Please enter your review text.");
+      setErrorMsg(translations.pleaseenterreview);
       return;
     }
 
@@ -76,8 +76,8 @@ const OrderReviewModal = ({
       const data = await response.json();
       if (response.ok) {
         const successMessage = isEdit
-          ? translations.yourreviewupdated || "Your review has been updated successfully."
-          : translations.yourreviewsubmitted || "Your review has been submitted successfully.";
+          ? translations.yourreviewupdated
+          : translations.yourreviewsubmitted;
         showSnackbar(successMessage, "success");
         onReviewSubmitted(data.review || { rating, review: reviewText.trim(), updatedAt: new Date().toISOString() });
         onClose();
@@ -88,7 +88,7 @@ const OrderReviewModal = ({
       }
     } catch (err) {
       console.error("Error submitting review:", err);
-      const msg = translations.somethingWentWrong || "Something went wrong. Please try again.";
+      const msg = translations.somethingWentWrong;
       setErrorMsg(msg);
       showSnackbar(msg, "error");
     } finally {
@@ -107,8 +107,8 @@ const OrderReviewModal = ({
             <RateReviewIcon className="modal-header-icon" />
             <h3>
               {isEdit
-                ? translations.editreview || "Edit Review"
-                : translations.writeareview || "Write a Review"}
+                ? translations.editreview
+                : translations.writeareview}
             </h3>
           </div>
           <button
@@ -131,7 +131,7 @@ const OrderReviewModal = ({
             {/* Star Rating Section */}
             <div className="rating-selector-wrap">
               <label className="rating-label">
-                {translations.yourrating || "Your Overall Rating"}
+                {translations.yourrating}
               </label>
               <div
                 className="stars-row"
@@ -172,7 +172,7 @@ const OrderReviewModal = ({
             {/* Review Comment Area */}
             <div className="review-input-group">
               <label htmlFor="reviewTextArea">
-                {translations.yourreviewtext || "Your Review & Feedback"}
+                {translations.yourreviewtext}
               </label>
               <textarea
                 id="reviewTextArea"
@@ -180,8 +180,7 @@ const OrderReviewModal = ({
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
                 placeholder={
-                  translations.enteryourreview ||
-                  "Tell us about the flavors, presentation, staff hospitality, and overall experience..."
+                  translations.enteryourreview
                 }
                 maxLength={1000}
               />
@@ -199,7 +198,7 @@ const OrderReviewModal = ({
                 onClick={onClose}
                 disabled={isSubmitting}
               >
-                {translations.cancel || "Cancel"}
+                {translations.cancel}
               </button>
               <button
                 type="submit"
@@ -209,9 +208,9 @@ const OrderReviewModal = ({
                 {isSubmitting ? (
                   <CircularProgress size={18} color="inherit" />
                 ) : isEdit ? (
-                  translations.update || "Update Review"
+                  translations.update
                 ) : (
-                  translations.submitreview || "Submit Review"
+                  translations.submitreview
                 )}
               </button>
             </div>

@@ -112,7 +112,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
     } catch (err) {
       console.error("Error fetching reservation branches:", err);
       showSnackbar(
-        translations.somethingWentWrong || "Error loading branches",
+        translations.somethingWentWrong,
         "error"
       );
     } finally {
@@ -249,8 +249,8 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
       ...table,
       displayLabel: `${table.tableno}${table.capacity
         ? ` (${table.capacity} ${table.capacity === 1
-          ? translations.seat || "seat"
-          : translations.seats || "seats"
+          ? translations.seat
+          : translations.seats
         })`
         : ""
         }`,
@@ -262,29 +262,29 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
     const newErrors = {};
 
     if (!selectedBranch) {
-      newErrors.branch = translations.pleaseselectbranchfirst || "Please select a branch";
+      newErrors.branch = translations.pleaseselectbranchfirst;
     }
 
     if (!selectedDate) {
-      newErrors.date = translations.pleaseselectdate || "Please select a date";
+      newErrors.date = translations.pleaseselectdate;
     }
 
     if (!selectedTime) {
-      newErrors.time = translations.pleaseselecttime || "Please select a time";
+      newErrors.time = translations.pleaseselecttime;
     }
 
     if (reservationType === "pickspot") {
       if (!selectedArea) {
-        newErrors.area = translations.pleaseselectareafirst || "Please select an area";
+        newErrors.area = translations.pleaseselectareafirst;
       }
       if (!selectedTable) {
-        newErrors.table = translations.pleaseselecttable || "Please select a table";
+        newErrors.table = translations.pleaseselecttable;
       }
     }
 
     if (reservationType === "quickseat") {
       if (!guestCount || Number(guestCount) < 1) {
-        newErrors.guests = translations.pleaseenterguest || "Please enter number of guests";
+        newErrors.guests = translations.pleaseenterguest;
       }
     }
 
@@ -299,7 +299,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
 
     const customerId = localStorage.getItem(customerIdName);
     if (!customerId) {
-      showSnackbar(translations.pleasesignin || "Please sign in to make a reservation", "warning");
+      showSnackbar(translations.pleasesignin, "warning");
       return;
     }
 
@@ -348,8 +348,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
 
       if (response.ok) {
         showSnackbar(
-          translations.tablereservationsavedsuccessfully ||
-          "Table reservation booked successfully!",
+          translations.tablereservationsavedsuccessfully,
           "success"
         );
         if (onSuccess) onSuccess();
@@ -357,15 +356,14 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
       } else {
         showSnackbar(
           result?.message ||
-          translations.somethingWentWrong ||
-          "Failed to book table reservation.",
+          translations.somethingWentWrong,
           "error"
         );
       }
     } catch (err) {
       console.error("Error saving reservation:", err);
       showSnackbar(
-        translations.somethingWentWrong || "Error connecting to server.",
+        translations.somethingWentWrong,
         "error"
       );
     } finally {
@@ -384,7 +382,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
         {/* Modal Header (Matching Manage Address modal header design) */}
         <div className="modal-header">
           <h2 className="modal-title">
-            {translations.addreservation || "Add Table Reservation"}
+            {translations.addreservation}
           </h2>
           <button
             type="button"
@@ -404,22 +402,21 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               {loadingBranches ? (
                 <div className="field-loading-placeholder">
                   <CircularProgress size={18} />
-                  <span>{translations.loadingbranches || "Loading branches..."}</span>
+                  <span>{translations.loadingbranches}</span>
                 </div>
               ) : availableBranches.length === 0 ? (
                 <div className="notice-chip">
-                  {translations.nobranchfound || "No branches found."}
+                  {translations.nobranchfound}
                 </div>
               ) : (
                 <Dropdown
                   id="reservation-branch-dropdown"
-                  label={translations.branch || "Branch"}
+                  label={translations.branch}
                   required={true}
                   placeholder={
                     translations.selectbranchplaceholder ||
                     translations.selectbranchlabel ||
-                    translations.selectBranch ||
-                    "Select Branch"
+                    translations.selectBranch
                   }
                   options={branchOptions}
                   labelKey="displayLabel"
@@ -443,7 +440,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             {/* 2. Reservation Type Selector (Pick Spot vs Quick Seat) */}
             <div className="form-group">
               <label className="form-label">
-                <span>{translations.reservationtype || "Reservation Type"}</span>
+                <span>{translations.reservationtype}</span>
               </label>
               <div className="type-toggle-container">
                 <button
@@ -460,7 +457,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   </div>
                   <div className="type-text-meta">
                     <span className="type-name">
-                      {translations.pickspot || "Pick Spot"}
+                      {translations.pickspot}
                     </span>
                   </div>
                 </button>
@@ -479,7 +476,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   </div>
                   <div className="type-text-meta">
                     <span className="type-name">
-                      {translations.quickseat || "Quick Seat"}
+                      {translations.quickseat}
                     </span>
                   </div>
                 </button>
@@ -494,22 +491,20 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   {loadingTables ? (
                     <div className="field-loading-placeholder">
                       <CircularProgress size={18} />
-                      <span>{translations.loadingareas || "Loading dining areas..."}</span>
+                      <span>{translations.loadingareas}</span>
                     </div>
                   ) : areas.length === 0 ? (
                     <div className="notice-chip">
-                      {translations.noareafound ||
-                        "No specific dining areas configured for this branch."}
+                      {translations.noareafound}
                     </div>
                   ) : (
                     <Dropdown
                       id="reservation-area-dropdown"
-                      label={translations.area || "Area"}
+                      label={translations.area}
                       required={true}
                       placeholder={
                         translations.selectareaplaceholder ||
-                        translations.selectarea ||
-                        "Select Area"
+                        translations.selectarea
                       }
                       options={areas}
                       labelKey="areaname"
@@ -542,14 +537,14 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 <div className="form-group table-form-group">
                   <Dropdown
                     id="reservation-table-dropdown"
-                    label={translations.tablelabel || "Table"}
+                    label={translations.tablelabel}
                     required={true}
                     placeholder={
                       !selectedArea
-                        ? (translations.pleaseselectareafirst || "Please Select Area First")
+                        ? (translations.pleaseselectareafirst)
                         : tablesInArea.length === 0
-                          ? (translations.notablefound || "No Tables in This Area")
-                          : (translations.selecttableplaceholder || translations.selecttable || "Select Table")
+                          ? (translations.notablefound)
+                          : (translations.selecttableplaceholder || translations.selecttable)
                     }
                     options={tableOptions}
                     labelKey="displayLabel"
@@ -575,7 +570,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               <div className="form-group guest-form-group">
                 <label className="form-label" htmlFor="reservation-guests-input">
                   <GroupsOutlinedIcon fontSize="small" className="label-icon" />
-                  <span>{translations.guest || "Guest"}</span>
+                  <span>{translations.guest}</span>
                 </label>
                 <input
                   id="reservation-guests-input"
@@ -584,7 +579,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   min="1"
                   max="100"
                   placeholder={
-                    translations.enterguestcount || "Enter Guest Count"
+                    translations.enterguestcount
                   }
                   value={guestCount}
                   onKeyDown={(e) => {
@@ -620,7 +615,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   <span>
                     {translations.date === "Update"
                       ? "Date"
-                      : translations.date || "Date"}
+                      : translations.date}
                   </span>
                 </label>
                 <input
@@ -645,7 +640,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   <span>
                     {translations.time === "Date & Time"
                       ? "Time"
-                      : translations.time || "Time"}
+                      : translations.time}
                   </span>
                 </label>
                 <input
@@ -676,14 +671,13 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             <div className="form-group">
               <label className="form-label">
                 <NotesOutlinedIcon fontSize="small" className="label-icon" />
-                <span>{translations.specialnotes || "Special Requests"}</span>
+                <span>{translations.specialnotes}</span>
               </label>
               <textarea
                 className="form-textarea"
                 rows={3}
                 placeholder={
-                  translations.enterspecialnotes ||
-                  "Add any requests (e.g., anniversary celebration, quiet table, child seat)..."
+                  translations.enterspecialnotes
                 }
                 value={specialNotes}
                 onChange={(e) => setSpecialNotes(e.target.value)}
@@ -700,7 +694,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               onClick={onClose}
               disabled={isSubmitting}
             >
-              {translations.cancel || "Cancel"}
+              {translations.cancel}
             </button>
             <button
               type="submit"
@@ -711,12 +705,12 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 <>
                   <CircularProgress size={18} color="inherit" />
                   <span>
-                    {translations.savingreservation || "Booking Table..."}
+                    {translations.savingreservation}
                   </span>
                 </>
               ) : (
                 <span>
-                  {translations.confirmbooking || "Confirm Reservation"}
+                  {translations.confirmbooking}
                 </span>
               )}
             </button>

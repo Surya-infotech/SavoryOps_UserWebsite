@@ -76,7 +76,7 @@ const ReservationList = ({
           onClick={onOpenAddModal}
         >
           <AddIcon fontSize="small" />
-          <span>{translations.addreservation || "Add Table Reservation"}</span>
+          <span>{translations.addreservation}</span>
         </button>
       </div>
 
@@ -94,11 +94,10 @@ const ReservationList = ({
             <TableRestaurantOutlinedIcon className="empty-icon" />
           </div>
           <h2 className="empty-title">
-            {translations.noTableReservations || "No Table Reservations Saved"}
+            {translations.noTableReservations}
           </h2>
           <p className="empty-subtitle">
-            {translations.noTableReservationsMessage ||
-              "Save your favorite tables and book in advance for a faster and smoother dining experience."}
+            {translations.noTableReservationsMessage}
           </p>
           <button
             type="button"
@@ -106,7 +105,7 @@ const ReservationList = ({
             onClick={onOpenAddModal}
           >
             <AddIcon fontSize="small" />
-            <span>{translations.addreservation || "Add Table Reservation"}</span>
+            <span>{translations.addreservation}</span>
           </button>
         </div>
       ) : (
@@ -160,7 +159,7 @@ const ReservationList = ({
                   <div className="reservation-no-pill">
                     <TableRestaurantIcon fontSize="inherit" />
                     <span>
-                      {translations.reservationNo || "Reservation No."} #
+                      {translations.reservationNo} #
                       {res.reservationid}
                     </span>
                   </div>

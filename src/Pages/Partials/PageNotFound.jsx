@@ -12,7 +12,7 @@ const PageNotFound = () => {
   const businessDisplayName = business?.businessname || "";
 
   useEffect(() => {
-    const pageTitle = translations.pagenotfound || "404 Not Found";
+    const pageTitle = translations.pagenotfound;
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {

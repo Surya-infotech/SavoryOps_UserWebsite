@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import loadLanguage from '../utils/LanguageLoader';
+import loadLanguage, { defaultTranslations } from '../utils/LanguageLoader';
 import { LanguageContext } from './languageContext.core.js';
 import { isRtlLanguage } from '../constants/languages';
 
@@ -15,7 +15,7 @@ function readInitialLanguage(defaultLanguage) {
 
 export function LanguageProvider({ children, defaultLanguage }) {
     const [language, setLanguage] = useState(() => readInitialLanguage(defaultLanguage));
-    const [translations, setTranslations] = useState({});
+    const [translations, setTranslations] = useState(() => defaultTranslations);
     const isRtl = isRtlLanguage(language);
 
     const changeLanguage = (lang) => {

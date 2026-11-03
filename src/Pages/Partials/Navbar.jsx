@@ -233,7 +233,7 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
                 ref={searchInputRef}
                 type="text"
                 className="dropdown-search-input"
-                placeholder={translations.searchbranchname || translations.search || "Search branch..."}
+                placeholder={translations.searchbranchname || translations.search}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 autoComplete="off"
@@ -247,7 +247,7 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
                     setSearch("");
                     searchInputRef.current?.focus();
                   }}
-                  aria-label={translations.clearsearch || "Clear search"}
+                  aria-label={translations.clearsearch}
                 >
                   <CloseIcon className="dropdown-clear-icon" fontSize="inherit" />
                 </button>
@@ -289,8 +289,8 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
             ) : (
               <li className="dropdown-no-record">
                 {search
-                  ? `${translations.nobranchesfound || translations.norecordfound || "No branches found"} "${search}"`
-                  : translations.nobranchesfound || translations.norecordfound || "No branches found"}
+                  ? `${translations.nobranchesfound || translations.norecordfound} "${search}"`
+                  : translations.nobranchesfound || translations.norecordfound}
               </li>
             )}
           </ul>
@@ -635,12 +635,12 @@ export const useCustomerAuth = () => {
     : "";
 
   const displayName = isLoggedIn
-    ? (fullName || translations.myaccount || "My Account")
-    : (translations.guestuser || "Guest User");
+    ? (fullName || translations.myaccount)
+    : (translations.guestuser);
 
   const displaySubtitle = isLoggedIn
     ? (customerDetails?.phone || "")
-    : (translations.signinwithphone || "Sign In with Phone");
+    : (translations.signinwithphone);
 
   return {
     customerDetails,
@@ -1077,7 +1077,7 @@ const Navbar = () => {
               <div className="nav-top-left">
                 <span className="top-badge">
                   <span className="live-dot"></span>
-                  {translations.livekitchen || "LIVE KITCHEN"}
+                  {translations.livekitchen}
                 </span>
                 {announcement.showAnnouncement && announcement.announcementText && (
                   <AnnouncementTicker text={announcement.announcementText} />
@@ -1154,9 +1154,9 @@ const Navbar = () => {
             <button
               type="button"
               className="nav-scanner-btn"
-              title={translations.scanqr || "Scan QR Code"}
+              title={translations.scanqr}
               onClick={() => setIsScanModalOpen(true)}
-              aria-label={translations.scanqr || "Scan QR Code"}
+              aria-label={translations.scanqr}
             >
               <QrCodeScannerIcon className="nav-scanner-icon" />
             </button>
@@ -1165,9 +1165,9 @@ const Navbar = () => {
             <button
               type="button"
               className="nav-cart-btn"
-              title={translations.cart || "Cart"}
+              title={translations.cart}
               onClick={() => navigate("/cart")}
-              aria-label={translations.cart || "Cart"}
+              aria-label={translations.cart}
             >
               <ShoppingBagOutlinedIcon fontSize="small" />
               {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
@@ -1263,7 +1263,7 @@ const Navbar = () => {
 
                 {/* Main Navigation Links */}
                 <div className="drawer-section-label">
-                  {translations.exploremenu || "Explore"}
+                  {translations.exploremenu}
                 </div>
                 <div className="mobile-nav-links">
                   {navLinks.map((link) => {
@@ -1289,7 +1289,7 @@ const Navbar = () => {
                 {auth.isLoggedIn && (
                   <>
                     <div className="drawer-section-label">
-                      {translations.myaccount || "My Account"}
+                      {translations.myaccount}
                     </div>
                     <div className="drawer-account-links">
                       <Link

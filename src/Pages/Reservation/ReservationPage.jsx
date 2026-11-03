@@ -67,8 +67,8 @@ const ReservationPage = () => {
   // Set document title
   useEffect(() => {
     const pageTitle = selectedReservationId
-      ? translations.reservationdetails || "Reservation Details"
-      : translations.tablereservation || "Table Reservations";
+      ? translations.reservationdetails
+      : translations.tablereservation;
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {
@@ -140,16 +140,16 @@ const ReservationPage = () => {
 
   const breadcrumbItems = selectedReservationId
     ? [
-      { label: translations.home || "Home", path: "/" },
+      { label: translations.home, path: "/" },
       {
-        label: translations.tablereservation || "Table Reservations",
+        label: translations.tablereservation,
         path: "/reservation",
       },
-      { label: translations.reservationdetails || "Reservation Details" },
+      { label: translations.reservationdetails },
     ]
     : [
-      { label: translations.home || "Home", path: "/" },
-      { label: translations.tablereservation || "Table Reservations" },
+      { label: translations.home, path: "/" },
+      { label: translations.tablereservation },
     ];
 
   return (

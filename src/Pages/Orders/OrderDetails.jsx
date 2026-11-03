@@ -208,18 +208,18 @@ const OrderDetails = ({ orderId, onBack }) => {
       const data = await response.json();
       if (response.ok) {
         showSnackbar(
-          translations.yourreviewdeleted || "Your review has been deleted successfully.",
+          translations.yourreviewdeleted,
           "success"
         );
         setOrder((prev) => (prev ? { ...prev, review: null } : prev));
         setIsDeleteReviewModalOpen(false);
       } else {
-        const err = data.message || translations.failedtodeletereview || "Failed to delete review";
+        const err = data.message || translations.failedtodeletereview;
         showSnackbar(err, "error");
       }
     } catch (err) {
       console.error("Error deleting review:", err);
-      showSnackbar(translations.somethingWentWrong || "Something went wrong.", "error");
+      showSnackbar(translations.somethingWentWrong, "error");
     } finally {
       setIsDeletingReview(false);
     }
@@ -573,7 +573,7 @@ const OrderDetails = ({ orderId, onBack }) => {
         await fetchOrderReview(data._id);
       } else {
         showSnackbar(
-          translations.orderdetilsnotfound || "Order details not found",
+          translations.orderdetilsnotfound,
           "error"
         );
         setOrder(null);
@@ -581,7 +581,7 @@ const OrderDetails = ({ orderId, onBack }) => {
     } catch (err) {
       console.error("Error fetching order detail:", err);
       showSnackbar(
-        translations.orderdetilsnotfound || "Error fetching order detail",
+        translations.orderdetilsnotfound,
         "error"
       );
       setOrder(null);
@@ -598,7 +598,7 @@ const OrderDetails = ({ orderId, onBack }) => {
   const handlePrintInvoice = async () => {
     if (!order) {
       showSnackbar(
-        translations.cannotdownloadinvoice || "Cannot download invoice",
+        translations.cannotdownloadinvoice,
         "error"
       );
       return;
@@ -621,14 +621,13 @@ const OrderDetails = ({ orderId, onBack }) => {
       );
       showSnackbar(
         translations.invoicepdfsaved ||
-        translations.invoicepdfgenerated ||
-        "Invoice PDF downloaded successfully!",
+        translations.invoicepdfgenerated,
         "success"
       );
     } catch (err) {
       console.error("Error generating invoice:", err);
       showSnackbar(
-        translations.failedtogenerateinvoice || "Failed to generate invoice",
+        translations.failedtogenerateinvoice,
         "error"
       );
     } finally {
@@ -681,7 +680,7 @@ const OrderDetails = ({ orderId, onBack }) => {
       }
       if (typeof showSnackbar === "function") {
         showSnackbar(
-          `${translations.addingmoreitems || "Adding more items to Order"} #${order.orderno}`,
+          `${translations.addingmoreitems} #${order.orderno}`,
           "info"
         );
       }
@@ -737,7 +736,7 @@ const OrderDetails = ({ orderId, onBack }) => {
     return (
       <div className="order-details-empty-state">
         <CancelOutlinedIcon className="empty-icon" />
-        <h3>{translations.orderdetilsnotfound || "Order details not found"}</h3>
+        <h3>{translations.orderdetilsnotfound}</h3>
         <p>
           We couldn't retrieve the details for this order. It might have been
           removed or an error occurred.
@@ -745,7 +744,7 @@ const OrderDetails = ({ orderId, onBack }) => {
         <div className="empty-actions">
           <button type="button" className="secondary-btn" onClick={onBack}>
             <ArrowBackIcon fontSize="small" />
-            <span>{translations.backtoorders || "Back to Orders"}</span>
+            <span>{translations.backtoorders}</span>
           </button>
           <button
             type="button"
@@ -753,7 +752,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             onClick={fetchOrderDetail}
           >
             <RefreshIcon fontSize="small" />
-            <span>{translations.taptoretry || "Retry"}</span>
+            <span>{translations.taptoretry}</span>
           </button>
         </div>
       </div>
@@ -771,7 +770,7 @@ const OrderDetails = ({ orderId, onBack }) => {
       <div className="order-details-nav-header">
         <div className="header-order-title">
           <h2>
-            {translations.orderno || "Order"} #{order.orderno}
+            {translations.orderno} #{order.orderno}
           </h2>
         </div>
 
@@ -780,10 +779,10 @@ const OrderDetails = ({ orderId, onBack }) => {
             type="button"
             className="history-btn"
             onClick={() => setIsHistoryModalOpen(true)}
-            title={translations.orderstatushistory || "Status History"}
+            title={translations.orderstatushistory}
           >
             <HistoryIcon fontSize="small" />
-            <span>{translations.orderstatushistory || "History"}</span>
+            <span>{translations.orderstatushistory}</span>
           </button>
         </div>
       </div>
@@ -880,7 +879,7 @@ const OrderDetails = ({ orderId, onBack }) => {
               <div className="section-header-outside">
                 <div className="section-header-left">
                   <TableRestaurantIcon className="section-header-icon teal" />
-                  <h3>{translations.tabledetails || "Table Details"}</h3>
+                  <h3>{translations.tabledetails}</h3>
                 </div>
               </div>
               <div className="detail-card table-details-card">
@@ -922,7 +921,7 @@ const OrderDetails = ({ orderId, onBack }) => {
               <div className="section-header-outside">
                 <div className="section-header-left">
                   <PlaceOutlinedIcon className="section-header-icon" />
-                  <h3>{translations.locationdetails || "Delivery Location"}</h3>
+                  <h3>{translations.locationdetails}</h3>
                 </div>
               </div>
               <div className="detail-card location-details-card">
@@ -964,8 +963,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                 <div className="section-header-left">
                   <CancelOutlinedIcon className="section-header-icon red" />
                   <h3>
-                    {translations.cancellationdetails ||
-                      "Cancellation Details"}
+                    {translations.cancellationdetails}
                   </h3>
                 </div>
               </div>
@@ -979,8 +977,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                           <CancelOutlinedIcon fontSize="inherit" />
                         </div>
                         <span className="cancellation-header-title">
-                          {translations.cancellationdetails ||
-                            "Cancellation Details"}
+                          {translations.cancellationdetails}
                         </span>
                       </div>
                     </div>
@@ -992,7 +989,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                             <div className="cancellation-meta-badge">
                               <PersonOutlinedIcon className="cancellation-meta-icon" />
                               <span className="cancellation-meta-label">
-                                {translations.cancelledby || "Cancelled By"}:
+                                {translations.cancelledby}:
                               </span>
                               <span className="cancellation-meta-value">
                                 {order.cancelledby}
@@ -1003,7 +1000,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                             <div className="cancellation-meta-badge">
                               <AccessTimeIcon className="cancellation-meta-icon" />
                               <span className="cancellation-meta-label">
-                                {translations.cancelledtime || "Cancelled Time"}:
+                                {translations.cancelledtime}:
                               </span>
                               <span className="cancellation-meta-value">
                                 {formatOrderDateTime(
@@ -1022,13 +1019,11 @@ const OrderDetails = ({ orderId, onBack }) => {
                       <FormatQuoteOutlinedIcon className="cancellation-quote-icon" />
                       <div className="cancellation-reason-content">
                         <span className="cancellation-reason-label">
-                          {translations.cancellationreason ||
-                            "Cancellation Reason"}
+                          {translations.cancellationreason}
                         </span>
                         <p className="cancellation-reason-text">
                           {order.cancelreason ||
-                            translations.notspecified ||
-                            "Not specified"}
+                            translations.notspecified}
                         </p>
                       </div>
                     </div>
@@ -1043,14 +1038,14 @@ const OrderDetails = ({ orderId, onBack }) => {
             <div className="section-header-outside">
               <div className="section-header-left">
                 <ShoppingBasketOutlinedIcon className="section-header-icon" />
-                <h3>{translations.itemdetails || "Item Details"}</h3>
+                <h3>{translations.itemdetails}</h3>
               </div>
               {canAddMoreItems && (
                 <button
                   type="button"
                   className="inline-add-more-btn"
                   onClick={handleAddMoreItems}
-                  title={translations.addmoreitems || "Add More Items"}
+                  title={translations.addmoreitems}
                   aria-label="Add more items"
                 >
                   <AddIcon fontSize="small" />
@@ -1097,7 +1092,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                             )}
                             {!isOrderCancelled && cancelled && (
                               <span className="cancelled-pill">
-                                {translations.Cancelled || "Cancelled"}
+                                {translations.Cancelled}
                               </span>
                             )}
                           </div>
@@ -1108,7 +1103,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                             >
                               <ShoppingBasketOutlinedIcon fontSize="inherit" />
                               <span>
-                                {translations.qty || "Qty"}: {product.quantity}
+                                {translations.qty}: {product.quantity}
                               </span>
                             </span>
                             <span
@@ -1133,7 +1128,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                         <div className="product-addons-box">
                           <div className="addons-title">
                             <AddCircleOutlineIcon fontSize="inherit" />
-                            <span>{translations.addons || "Add-ons"}</span>
+                            <span>{translations.addons}</span>
                           </div>
                           <div className="addons-list">
                             {product.addons.map((addon, aIdx) => (
@@ -1159,7 +1154,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                         <div className="product-bundle-box">
                           <div className="bundle-box-heading">
                             <span className="bundle-box-dot"></span>
-                            <strong>{translations.includeditems || "Included Items"}</strong>
+                            <strong>{translations.includeditems}</strong>
                             <span className="bundle-count-pill">{product.bundleItems.length}</span>
                           </div>
                           <div className="bundle-items-flow">
@@ -1179,8 +1174,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                           <div className="notes-header">
                             <SpeakerNotesOutlinedIcon fontSize="inherit" />
                             <span>
-                              {translations.specialinstructions ||
-                                "Special Instructions"}
+                              {translations.specialinstructions}
                               :
                             </span>
                           </div>
@@ -1197,8 +1191,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                                 <CancelOutlinedIcon fontSize="inherit" />
                               </div>
                               <span className="cancellation-header-title">
-                                {translations.cancellationdetails ||
-                                  "Cancellation Details"}
+                                {translations.cancellationdetails}
                               </span>
                             </div>
                           </div>
@@ -1210,8 +1203,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                                   <div className="cancellation-meta-badge">
                                     <PersonOutlinedIcon className="cancellation-meta-icon" />
                                     <span className="cancellation-meta-label">
-                                      {translations.cancelledby ||
-                                        "Cancelled By"}
+                                      {translations.cancelledby}
                                       :
                                     </span>
                                     <span className="cancellation-meta-value">
@@ -1223,8 +1215,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                                   <div className="cancellation-meta-badge">
                                     <AccessTimeIcon className="cancellation-meta-icon" />
                                     <span className="cancellation-meta-label">
-                                      {translations.cancelledtime ||
-                                        "Cancelled Time"}
+                                      {translations.cancelledtime}
                                       :
                                     </span>
                                     <span className="cancellation-meta-value">
@@ -1244,13 +1235,11 @@ const OrderDetails = ({ orderId, onBack }) => {
                             <FormatQuoteOutlinedIcon className="cancellation-quote-icon" />
                             <div className="cancellation-reason-content">
                               <span className="cancellation-reason-label">
-                                {translations.cancellationreason ||
-                                  "Cancellation Reason"}
+                                {translations.cancellationreason}
                               </span>
                               <p className="cancellation-reason-text">
                                 {product.cancelreason ||
-                                  translations.notspecified ||
-                                  "Not specified"}
+                                  translations.notspecified}
                               </p>
                             </div>
                           </div>
@@ -1271,7 +1260,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             <div className="section-header-outside">
               <div className="section-header-left">
                 <AccountBalanceWalletOutlinedIcon className="section-header-icon" />
-                <h3>{translations.billdetails || "Bill Details"}</h3>
+                <h3>{translations.billdetails}</h3>
               </div>
             </div>
             <div className="detail-card bill-summary-card">
@@ -1281,7 +1270,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                 {/* Subtotal */}
                 <div className="bill-row subtotal-row">
                   <span className="label">
-                    {translations.subtotal || "Subtotal"}
+                    {translations.subtotal}
                   </span>
                   <span className="value">
                     {formatOrderPrice(order.subtotalprice, order)}
@@ -1317,11 +1306,11 @@ const OrderDetails = ({ orderId, onBack }) => {
                   <div className="bill-tax-card">
                     <div className="tax-card-header">
                       <span className="tax-card-title">
-                        {translations.taxes || "Taxes"}
+                        {translations.taxes}
                       </span>
                       {order.taxes.length > 1 && (
                         <span className="tax-card-badge">
-                          {order.taxes.length} {translations.taxes || "taxes"}
+                          {order.taxes.length} {translations.taxes}
                         </span>
                       )}
                     </div>
@@ -1359,7 +1348,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                     {order.taxes.length > 1 && (
                       <div className="tax-card-total-row">
                         <span className="total-tax-label">
-                          {translations.totaltax || "Total Tax"}
+                          {translations.totaltax}
                         </span>
                         <span className="total-tax-value">
                           {formatOrderPrice(order.totaltax, order)}
@@ -1397,7 +1386,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                 {showRoundoff && (
                   <div className="bill-row roundoff">
                     <span className="label">
-                      {translations.roundoff || "Round Off"}
+                      {translations.roundoff}
                     </span>
                     <span className={`value ${roundoffAmount < 0 ? "negative" : ""}`}>
                       {roundoffAmount > 0
@@ -1415,7 +1404,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                     <div className="grand-icon-wrap">
                       <AccountBalanceWalletOutlinedIcon fontSize="small" />
                     </div>
-                    <span>{translations.grandtotal || "Grand Total"}</span>
+                    <span>{translations.grandtotal}</span>
                   </div>
                   <span className="grand-value">
                     {formatOrderPrice(order.totalprice, order)}
@@ -1438,7 +1427,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                       <DownloadOutlinedIcon fontSize="small" />
                     )}
                     <span>
-                      {isInvoicePrinting ? (translations.loading || "Downloading...") : (translations.generatepdfinvoice || "Download Invoice")}
+                      {isInvoicePrinting ? (translations.loading) : (translations.generatepdfinvoice)}
                     </span>
                   </button>
                 </div>
@@ -1452,7 +1441,7 @@ const OrderDetails = ({ orderId, onBack }) => {
               <div className="section-header-outside">
                 <div className="section-header-left">
                   <RateReviewOutlinedIcon className="section-header-icon gold" />
-                  <h3>{translations.reviews || "Dining Review"}</h3>
+                  <h3>{translations.reviews}</h3>
                 </div>
               </div>
               <div className="detail-card reviews-card">
@@ -1468,7 +1457,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                   >
                     <div className="prompt-left">
                       <span className="prompt-title">
-                        {translations.writeareview || "Write a Review"}
+                        {translations.writeareview}
                       </span>
                       <p className="prompt-sub">
                         Share your dining experience, dish flavor, and service
@@ -1502,8 +1491,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                             setIsEditReview(true);
                             setIsReviewModalOpen(true);
                           }}
-                          title={translations.editreview || "Edit Review"}
-                          aria-label={translations.editreview || "Edit Review"}
+                          title={translations.editreview}
+                          aria-label={translations.editreview}
                         >
                           <EditOutlinedIcon fontSize="small" />
                         </button>
@@ -1511,8 +1500,8 @@ const OrderDetails = ({ orderId, onBack }) => {
                           type="button"
                           className="icon-action-btn delete"
                           onClick={() => setIsDeleteReviewModalOpen(true)}
-                          title={translations.deletereview || "Delete Review"}
-                          aria-label={translations.deletereview || "Delete Review"}
+                          title={translations.deletereview}
+                          aria-label={translations.deletereview}
                         >
                           <DeleteOutlineIcon fontSize="small" />
                         </button>
@@ -1582,11 +1571,10 @@ const OrderDetails = ({ orderId, onBack }) => {
               <DeleteOutlineIcon className="delete-icon" />
             </div>
             <h3 className="delete-modal-title">
-              {translations.deletereviewtitle || "Delete Review?"}
+              {translations.deletereviewtitle}
             </h3>
             <p className="delete-modal-text">
-              {translations.deletereviewconfirm ||
-                "Are you sure you want to delete this review? This action cannot be undone."}
+              {translations.deletereviewconfirm}
             </p>
             <div className="delete-modal-actions">
               <button
@@ -1595,7 +1583,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                 onClick={() => setIsDeleteReviewModalOpen(false)}
                 disabled={isDeletingReview}
               >
-                {translations.cancel || "Cancel"}
+                {translations.cancel}
               </button>
               <button
                 type="button"
@@ -1606,10 +1594,10 @@ const OrderDetails = ({ orderId, onBack }) => {
                 {isDeletingReview ? (
                   <>
                     <CircularProgress size={16} color="inherit" />
-                    <span>{translations.deleting || "Deleting..."}</span>
+                    <span>{translations.deleting}</span>
                   </>
                 ) : (
-                  translations.delete || "Delete"
+                  translations.delete
                 )}
               </button>
             </div>

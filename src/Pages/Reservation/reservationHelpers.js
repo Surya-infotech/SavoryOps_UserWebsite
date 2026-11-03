@@ -34,7 +34,7 @@ export const getReservationStatusConfig = (status, translations = {}) => {
   switch (norm) {
     case "pending":
       return {
-        label: translations.pending || "Pending",
+        label: translations.pending,
         color: "#d97706",
         bgColor: "#fef3c7",
         borderColor: "#fde68a",
@@ -43,7 +43,7 @@ export const getReservationStatusConfig = (status, translations = {}) => {
       };
     case "confirmed":
       return {
-        label: translations.confirmed || "Confirmed",
+        label: translations.confirmed,
         color: "#059669",
         bgColor: "#d1fae5",
         borderColor: "#a7f3d0",
@@ -52,7 +52,7 @@ export const getReservationStatusConfig = (status, translations = {}) => {
       };
     case "seated":
       return {
-        label: translations.seated || "Seated",
+        label: translations.seated,
         color: "#2563eb",
         bgColor: "#dbeafe",
         borderColor: "#bfdbfe",
@@ -61,7 +61,7 @@ export const getReservationStatusConfig = (status, translations = {}) => {
       };
     case "cancelled":
       return {
-        label: translations.cancelled || "Cancelled",
+        label: translations.cancelled,
         color: "#dc2626",
         bgColor: "#fee2e2",
         borderColor: "#fecaca",
@@ -70,7 +70,7 @@ export const getReservationStatusConfig = (status, translations = {}) => {
       };
     case "rejected":
       return {
-        label: translations.rejected || "Rejected",
+        label: translations.rejected,
         color: "#dc2626",
         bgColor: "#fee2e2",
         borderColor: "#fecaca",
@@ -79,7 +79,7 @@ export const getReservationStatusConfig = (status, translations = {}) => {
       };
     case "noshow":
       return {
-        label: translations.noshow || "No Show",
+        label: translations.noshow,
         color: "#6b7280",
         bgColor: "#f3f4f6",
         borderColor: "#e5e7eb",
@@ -88,7 +88,7 @@ export const getReservationStatusConfig = (status, translations = {}) => {
       };
     default:
       return {
-        label: status || translations.unknown || "Unknown",
+        label: status || translations.unknown,
         color: "#6b7280",
         bgColor: "#f3f4f6",
         borderColor: "#e5e7eb",

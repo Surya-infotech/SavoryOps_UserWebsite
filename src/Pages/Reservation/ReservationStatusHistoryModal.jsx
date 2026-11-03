@@ -71,12 +71,11 @@ const ReservationStatusHistoryModal = ({
             </div>
             <div className="modal-title-text">
               <h3 id="reservation-history-title">
-                {translations.reservationstatushistory ||
-                  "Reservation Status History"}
+                {translations.reservationstatushistory}
               </h3>
               {reservationNo && (
                 <span className="modal-orderno-badge">
-                  {translations.reservationNo || "Reservation"} #{reservationNo}
+                  {translations.reservationNo} #{reservationNo}
                 </span>
               )}
             </div>
@@ -85,7 +84,7 @@ const ReservationStatusHistoryModal = ({
             type="button"
             className="modal-close-btn"
             onClick={onClose}
-            aria-label={translations.close || "Close"}
+            aria-label={translations.close}
           >
             <CloseIcon fontSize="small" />
           </button>
@@ -151,8 +150,7 @@ const ReservationStatusHistoryModal = ({
             <div className="empty-history-state">
               <AccessTimeIcon className="empty-history-icon" />
               <p>
-                {translations.nostatushistory ||
-                  "No status history recorded yet."}
+                {translations.nostatushistory}
               </p>
             </div>
           )}
@@ -164,7 +162,7 @@ const ReservationStatusHistoryModal = ({
             className="modal-close-submit-btn"
             onClick={onClose}
           >
-            {translations.close || "Close"}
+            {translations.close}
           </button>
         </div>
       </div>

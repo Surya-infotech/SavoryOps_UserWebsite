@@ -20,8 +20,8 @@ const OrdersPage = () => {
 
   useEffect(() => {
     const pageTitle = selectedOrderId
-      ? translations.orderdetails || "Order Details"
-      : translations.orders || "Orders";
+      ? translations.orderdetails
+      : translations.orders;
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {
@@ -41,13 +41,13 @@ const OrdersPage = () => {
 
   const breadcrumbItems = selectedOrderId
     ? [
-        { label: translations.home || "Home", path: "/" },
-        { label: translations.orders || "Orders", path: "/orders" },
-        { label: translations.orderdetails || "Order Details" },
+        { label: translations.home, path: "/" },
+        { label: translations.orders, path: "/orders" },
+        { label: translations.orderdetails },
       ]
     : [
-        { label: translations.home || "Home", path: "/" },
-        { label: translations.orders || "Orders" },
+        { label: translations.home, path: "/" },
+        { label: translations.orders },
       ];
 
   return (

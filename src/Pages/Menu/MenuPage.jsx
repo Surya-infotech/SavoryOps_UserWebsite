@@ -324,7 +324,7 @@ const MenuPage = () => {
   // Options for custom Dropdown component
   const menuOptions = useMemo(() => {
     return [
-      { id: "all", name: translations.allmenus || "All Menus" },
+      { id: "all", name: translations.allmenus },
       ...availableMenus,
     ];
   }, [availableMenus, translations]);
@@ -355,7 +355,7 @@ const MenuPage = () => {
     return [
       {
         id: "all",
-        name: translations.allcategories || "All Categories",
+        name: translations.allcategories,
       },
       ...availableCategories.map((cat) => ({
         id: cat.id,
@@ -480,7 +480,7 @@ const MenuPage = () => {
                           setSelectedMenu(val || "all");
                           setSelectedCategory("all");
                         }}
-                        placeholder={translations.allmenus || "All Menus"}
+                        placeholder={translations.allmenus}
                         showSearch={true}
                         className="menu-page-dropdown"
                       />
@@ -499,7 +499,7 @@ const MenuPage = () => {
                         valueKey="id"
                         selectedValue={selectedCategory}
                         onValueChange={(val) => setSelectedCategory(val || "all")}
-                        placeholder={translations.allcategories || "All Categories"}
+                        placeholder={translations.allcategories}
                         showSearch={true}
                         className="menu-page-dropdown"
                       />
@@ -520,7 +520,7 @@ const MenuPage = () => {
                         onMouseDown={(e) => e.preventDefault()}
                         onFocus={(e) => e.target.blur()}
                       >
-                        <span>{translations.all || "All"}</span>
+                        <span>{translations.all}</span>
                       </button>
                       <button
                         type="button"
@@ -533,7 +533,7 @@ const MenuPage = () => {
                         <span className="diet-box">
                           <span className="diet-dot" />
                         </span>
-                        <span>{translations.veg || "Veg"}</span>
+                        <span>{translations.veg}</span>
                       </button>
                       <button
                         type="button"
@@ -546,7 +546,7 @@ const MenuPage = () => {
                         <span className="diet-box">
                           <span className="diet-dot" />
                         </span>
-                        <span>{translations.nonveg || "Non-Veg"}</span>
+                        <span>{translations.nonveg}</span>
                       </button>
                     </div>
                   </div>
@@ -561,7 +561,7 @@ const MenuPage = () => {
                         title="Clear all filters"
                       >
                         <CloseIcon fontSize="small" />
-                        <span>{translations.clear || "Clear"}</span>
+                        <span>{translations.clear}</span>
                       </button>
                     </div>
                   )}
@@ -597,11 +597,10 @@ const MenuPage = () => {
               <SearchOffIcon className="empty-icon" />
             </div>
             <h2 className="empty-title">
-              {translations.nomatchingitems || "No matching dishes found"}
+              {translations.nomatchingitems}
             </h2>
             <p className="empty-subtitle">
-              {translations.tryadjustingfilters ||
-                "Try adjusting your menu, category, or diet filters to see more dishes."}
+              {translations.tryadjustingfilters}
             </p>
             {isFilterActive && (
               <button
@@ -610,7 +609,7 @@ const MenuPage = () => {
                 onClick={handleClearFilters}
               >
                 <CloseIcon fontSize="small" />
-                <span>{translations.resetfilters || "Reset Filters"}</span>
+                <span>{translations.resetfilters}</span>
               </button>
             )}
           </div>
@@ -621,11 +620,10 @@ const MenuPage = () => {
               <RestaurantMenuIcon className="empty-icon" />
             </div>
             <h2 className="empty-title">
-              {translations.nodishesfound || "No dishes available in this selection."}
+              {translations.nodishesfound}
             </h2>
             <p className="empty-subtitle">
-              {translations.nodishesdescription ||
-                "There are currently no dishes available in this menu. Explore our special offers or check back soon!"}
+              {translations.nodishesdescription}
             </p>
             {isFilterActive ? (
               <button
@@ -634,12 +632,12 @@ const MenuPage = () => {
                 onClick={handleClearFilters}
               >
                 <CloseIcon fontSize="small" />
-                <span>{translations.resetfilters || "Reset Filters"}</span>
+                <span>{translations.resetfilters}</span>
               </button>
             ) : (
               <Link to="/offers" className="empty-add-btn">
                 <LocalOfferOutlinedIcon fontSize="small" />
-                <span>{translations.specialoffers || "Special Offers & Deals"}</span>
+                <span>{translations.specialoffers}</span>
               </Link>
             )}
           </div>

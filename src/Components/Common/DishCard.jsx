@@ -14,8 +14,8 @@ export const DietIndicator = ({ isVeg, className = "" }) => {
   return (
     <span
       className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? translations.veg || "Vegetarian" : translations.nonveg || "Non-Vegetarian"}
-      aria-label={isVeg ? translations.veg || "Vegetarian" : translations.nonveg || "Non-Vegetarian"}
+      title={isVeg ? translations.veg : translations.nonveg}
+      aria-label={isVeg ? translations.veg : translations.nonveg}
     >
       <span className="diet-box">
         <span className="diet-dot" />
@@ -67,7 +67,7 @@ const DishCard = ({
       if (/\d+\s*(min|mins|m)/i.test(prepStr)) {
         formattedPrepTime = prepStr;
       } else if (Number(prepStr) > 0) {
-        formattedPrepTime = `${prepStr} ${translations.min || "min"}`;
+        formattedPrepTime = `${prepStr} ${translations.min}`;
       }
     }
   }
@@ -142,11 +142,11 @@ const DishCard = ({
         {isDeal ? (
           isUnlimited ? (
             <span className="deal-ribbon-badge unlimited">
-              {translations.unlimited || "UNLIMITED"}
+              {translations.unlimited}
             </span>
           ) : isCombo ? (
             <span className="deal-ribbon-badge combo">
-              {translations.combo || "COMBO"}
+              {translations.combo}
             </span>
           ) : dish.bundletype ? (
             <span className={`deal-ribbon-badge ${dish.bundletype}`}>
@@ -189,8 +189,8 @@ const DishCard = ({
             <span className="deal-items-pill">
               🍽️ {includedCount}{" "}
               {includedCount === 1
-                ? translations.itemincluded || "item included"
-                : translations.itemsincluded || "items included"}
+                ? translations.itemincluded
+                : translations.itemsincluded}
             </span>
           </div>
         )}
@@ -208,8 +208,8 @@ const DishCard = ({
                 type="button"
                 className="dish-addon-btn"
                 onClick={handleAddonClick}
-                title={`${translations.addons || "Add-ons"} - ${dish.title}`}
-                aria-label={`${dish.title} ${translations.addons || "Add-ons"}`}
+                title={`${translations.addons} - ${dish.title}`}
+                aria-label={`${dish.title} ${translations.addons}`}
               >
                 <AddIcon className="addon-btn-icon" />
               </button>
@@ -221,8 +221,8 @@ const DishCard = ({
                 type="button"
                 className={`dish-add-btn ${count > 0 ? "added" : ""}`}
                 onClick={handleCartClick}
-                aria-label={translations.addtocart || "Add to cart"}
-                title={count > 0 ? `${translations.added || "Added"} (${count})` : (translations.addtocart || "Add to cart")}
+                aria-label={translations.addtocart}
+                title={count > 0 ? `${translations.added} (${count})` : (translations.addtocart)}
               >
                 <ShoppingCartOutlinedIcon fontSize="small" />
                 {count > 0 && <span className="dish-btn-count-badge">{count}</span>}

@@ -154,14 +154,14 @@ const ReservationDetails = ({
         setReservation(data);
       } else {
         showSnackbar(
-          translations.reservationnotfound || "Reservation details not found.",
+          translations.reservationnotfound,
           "error"
         );
       }
     } catch (err) {
       console.error("Error fetching reservation details:", err);
       showSnackbar(
-        translations.somethingWentWrong || "Failed to load reservation details.",
+        translations.somethingWentWrong,
         "error"
       );
     } finally {
@@ -180,8 +180,7 @@ const ReservationDetails = ({
   const handleCancelReservation = async (reason) => {
     if (!reason?.trim()) {
       showSnackbar(
-        translations.pleaseentercancellationreason ||
-        "Please enter a reason for cancellation.",
+        translations.pleaseentercancellationreason,
         "warning"
       );
       return;
@@ -207,8 +206,7 @@ const ReservationDetails = ({
 
       if (response.ok) {
         showSnackbar(
-          translations.reservationcancelled ||
-          "Reservation cancelled successfully.",
+          translations.reservationcancelled,
           "success"
         );
         setIsCancelModalOpen(false);
@@ -217,15 +215,14 @@ const ReservationDetails = ({
       } else {
         showSnackbar(
           resData?.message ||
-          translations.somethingWentWrong ||
-          "Failed to cancel reservation.",
+          translations.somethingWentWrong,
           "error"
         );
       }
     } catch (err) {
       console.error("Error cancelling reservation:", err);
       showSnackbar(
-        translations.somethingWentWrong || "Error connecting to server.",
+        translations.somethingWentWrong,
         "error"
       );
     } finally {
@@ -243,22 +240,21 @@ const ReservationDetails = ({
         <div className="order-details-empty-state">
           <CancelOutlinedIcon className="empty-icon" />
           <h3>
-            {translations.reservationnotfound || "Reservation details not found"}
+            {translations.reservationnotfound}
           </h3>
           <p>
-            {translations.reservationnotfounddesc ||
-              "We couldn't retrieve the details for this reservation. It may have been removed or an error occurred."}
+            {translations.reservationnotfounddesc}
           </p>
           <div className="empty-actions">
             <button type="button" className="secondary-btn" onClick={onBack}>
               <ArrowBackIcon fontSize="small" />
               <span>
-                {translations.backtoreservations || "Back to Reservations"}
+                {translations.backtoreservations}
               </span>
             </button>
             <button type="button" className="primary-btn" onClick={fetchDetails}>
               <RefreshIcon fontSize="small" />
-              <span>{translations.taptoretry || "Retry"}</span>
+              <span>{translations.taptoretry}</span>
             </button>
           </div>
         </div>
@@ -310,7 +306,7 @@ const ReservationDetails = ({
       <div className="order-details-nav-header">
         <div className="header-order-title">
           <h2>
-            {translations.reservationNo || "Reservation No"} #{reservation.reservationid}
+            {translations.reservationNo} #{reservation.reservationid}
           </h2>
         </div>
 
@@ -320,14 +316,12 @@ const ReservationDetails = ({
             className="history-btn"
             onClick={() => setIsHistoryModalOpen(true)}
             title={
-              translations.reservationstatushistory ||
-              "Reservation Status History"
+              translations.reservationstatushistory
             }
           >
             <HistoryIcon fontSize="small" />
             <span>
-              {translations.reservationstatushistory ||
-                "Reservation Status History"}
+              {translations.reservationstatushistory}
             </span>
           </button>
         </div>
@@ -363,8 +357,8 @@ const ReservationDetails = ({
                 <EventSeatIcon fontSize="inherit" />
                 <span>
                   {reservation.reservationtype === "quickseat"
-                    ? translations.quickseat || "Quick Seat"
-                    : translations.pickspot || "Pick Spot"}
+                    ? translations.quickseat
+                    : translations.pickspot}
                 </span>
               </span>
             </div>
@@ -432,8 +426,8 @@ const ReservationDetails = ({
                   <div className="info-text">
                     <span>
                       {reservation.reservationtype === "quickseat"
-                        ? translations.quickseat || "Quick Seat"
-                        : translations.pickspot || "Pick Spot"}
+                        ? translations.quickseat
+                        : translations.pickspot}
                     </span>
                   </div>
                 </div>
@@ -447,7 +441,7 @@ const ReservationDetails = ({
           <div className="section-header-outside">
             <div className="section-header-left">
               <TableRestaurantIcon className="section-header-icon" />
-              <h3>{translations.bookingdetails || "Booking Information"}</h3>
+              <h3>{translations.bookingdetails}</h3>
             </div>
           </div>
           <div className="detail-card booking-info-card">
@@ -560,7 +554,7 @@ const ReservationDetails = ({
             <div className="section-header-outside">
               <div className="section-header-left">
                 <NotesOutlinedIcon className="section-header-icon" />
-                <h3>{translations.specialnotes || "Special Requests"}</h3>
+                <h3>{translations.specialnotes}</h3>
               </div>
             </div>
             <div className="detail-card">
@@ -586,8 +580,8 @@ const ReservationDetails = ({
                 <CancelOutlinedIcon className="section-header-icon red" />
                 <h3>
                   {isRejected
-                    ? translations.rejectionreason || "Rejection Reason"
-                    : translations.cancellationreason || "Cancellation Reason"}
+                    ? translations.rejectionreason
+                    : translations.cancellationreason}
                 </h3>
               </div>
             </div>
@@ -614,11 +608,11 @@ const ReservationDetails = ({
               type="button"
               className="cancel-reservation-btn"
               onClick={() => setIsCancelModalOpen(true)}
-              title={translations.cancelreservation || "Cancel Reservation"}
+              title={translations.cancelreservation}
             >
               <CancelOutlinedIcon className="cancel-btn-icon" />
               <span>
-                {translations.cancelreservation || "Cancel Reservation"}
+                {translations.cancelreservation}
               </span>
             </button>
           </div>

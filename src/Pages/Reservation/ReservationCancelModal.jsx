@@ -49,11 +49,11 @@ const ReservationCancelModal = ({
             </div>
             <div className="modal-title-text">
               <h3 id="cancel-reservation-title">
-                {translations.cancelreservation || "Cancel Reservation"}
+                {translations.cancelreservation}
               </h3>
               {reservationNo && (
                 <span className="modal-orderno-badge">
-                  {translations.reservationNo || "Reservation"} #{reservationNo}
+                  {translations.reservationNo} #{reservationNo}
                 </span>
               )}
             </div>
@@ -62,7 +62,7 @@ const ReservationCancelModal = ({
             type="button"
             className="modal-close-btn"
             onClick={onClose}
-            aria-label={translations.close || "Close"}
+            aria-label={translations.close}
             disabled={isCancelling}
           >
             <CloseIcon fontSize="small" />
@@ -73,14 +73,13 @@ const ReservationCancelModal = ({
           <div className="cancel-modal-warning">
             <WarningAmberIcon fontSize="small" />
             <span>
-              {translations.cancellationconfirmdesc ||
-                "Are you sure you want to cancel this booking? This action cannot be undone."}
+              {translations.cancellationconfirmdesc}
             </span>
           </div>
 
           <div className="cancel-reason-field">
             <label htmlFor="cancel-reason-textarea">
-              {translations.cancellationreason || "Reason for Cancellation"}
+              {translations.cancellationreason}
               <span className="required-star">*</span>
             </label>
             <textarea
@@ -88,8 +87,7 @@ const ReservationCancelModal = ({
               className="cancel-reason-textarea"
               rows={3}
               placeholder={
-                translations.entercancellationreason ||
-                "e.g. Schedule conflict, feeling unwell, change of plans..."
+                translations.entercancellationreason
               }
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -106,7 +104,7 @@ const ReservationCancelModal = ({
               onClick={onClose}
               disabled={isCancelling}
             >
-              {translations.keepbooking || "Keep Reservation"}
+              {translations.keepbooking}
             </button>
             <button
               type="submit"
@@ -117,12 +115,12 @@ const ReservationCancelModal = ({
                 <>
                   <CircularProgress size={16} color="inherit" />
                   <span>
-                    {translations.cancellingreservation || "Cancelling..."}
+                    {translations.cancellingreservation}
                   </span>
                 </>
               ) : (
                 <span>
-                  {translations.confirmcancellation || "Confirm Cancellation"}
+                  {translations.confirmcancellation}
                 </span>
               )}
             </button>

@@ -286,7 +286,7 @@ const CheckoutPage = () => {
 
   // Dynamic document title
   useEffect(() => {
-    document.title = `${translations.checkout || "Checkout"} | ${businessDisplayName || "SavoryOps"}`;
+    document.title = `${translations.checkout} | ${businessDisplayName || "SavoryOps"}`;
   }, [translations, businessDisplayName]);
 
   // Billing Calculations
@@ -356,38 +356,38 @@ const CheckoutPage = () => {
     let isValid = true;
 
     if (!streetAddress.trim()) {
-      setAddressError(translations.addressrequired || "Street address is required");
+      setAddressError(translations.addressrequired);
       isValid = false;
     } else {
       setAddressError("");
     }
 
     if (!countryName) {
-      setCountryError(translations.countryrequired || "Country is required");
+      setCountryError(translations.countryrequired);
       isValid = false;
     } else {
       setCountryError("");
     }
 
     if (!stateName) {
-      setStateError(translations.staterequired || "State is required");
+      setStateError(translations.staterequired);
       isValid = false;
     } else {
       setStateError("");
     }
 
     if (!cityName) {
-      setCityError(translations.cityrequired || "City is required");
+      setCityError(translations.cityrequired);
       isValid = false;
     } else {
       setCityError("");
     }
 
     if (!pincode.trim()) {
-      setPincodeError(translations.pincoderequired || "Postal code is required");
+      setPincodeError(translations.pincoderequired);
       isValid = false;
     } else if (pincode.trim().length < 3) {
-      setPincodeError(translations.pincodeinvalid || "Postal code is too short");
+      setPincodeError(translations.pincodeinvalid);
       isValid = false;
     } else {
       setPincodeError("");
@@ -398,7 +398,7 @@ const CheckoutPage = () => {
     const customerId = localStorage.getItem(customerIdName);
     const token = localStorage.getItem(customerTokenName);
     if (!customerId || !token) {
-      showSnackbar(translations.pleasesignintoorder || "Please sign in to order", "error");
+      showSnackbar(translations.pleasesignintoorder, "error");
       return;
     }
 
@@ -428,7 +428,7 @@ const CheckoutPage = () => {
 
       if (response.ok) {
         const resData = await response.json().catch(() => ({}));
-        showSnackbar(translations.addressaddedsuccess || "Address added successfully", "success");
+        showSnackbar(translations.addressaddedsuccess, "success");
         setIsAddAddressModalOpen(false);
         const newId = resData?.data?._id || resData?._id || resData?.addressid;
         await fetchAddresses(newId);
@@ -449,17 +449,17 @@ const CheckoutPage = () => {
     if (isSubmitting) return;
 
     if (!selectedPaymentMethod) {
-      showSnackbar(translations.selectpaymentmethod || "Please select a payment method", "error");
+      showSnackbar(translations.selectpaymentmethod, "error");
       return;
     }
 
     if (isDelivery && !selectedAddress) {
-      showSnackbar(translations.selectdeliveryaddress || "Please select a delivery address", "error");
+      showSnackbar(translations.selectdeliveryaddress, "error");
       return;
     }
 
     if (!cartItems.length) {
-      showSnackbar(translations.emptycartmessage || "Your cart is empty", "error");
+      showSnackbar(translations.emptycartmessage, "error");
       navigate("/cart");
       return;
     }
@@ -468,7 +468,7 @@ const CheckoutPage = () => {
     const token = localStorage.getItem(customerTokenName);
 
     if (!customerId || !token) {
-      showSnackbar(translations.pleasesignintoorder || "Please sign in to place order", "error");
+      showSnackbar(translations.pleasesignintoorder, "error");
       navigate("/signin", { state: { from: "/checkout" } });
       return;
     }
@@ -601,7 +601,7 @@ const CheckoutPage = () => {
           localStorage.removeItem("selectedTableId");
           localStorage.removeItem("selectedTableNo");
           showSnackbar(
-            translations.orderupdatedsuccessfully || "Items added to Order successfully!",
+            translations.orderupdatedsuccessfully,
             "success",
             4000
           );
@@ -612,7 +612,7 @@ const CheckoutPage = () => {
           }
         } else {
           showSnackbar(
-            translations.orderplacedsuccessfully || "Order placed successfully!",
+            translations.orderplacedsuccessfully,
             "success",
             4000
           );
@@ -635,9 +635,9 @@ const CheckoutPage = () => {
       {/* Site-wide Unified Breadcrumbs - Exact design and position as ManageAddress */}
       <Breadcrumbs
         items={[
-          { label: translations.home || "Home", path: "/" },
-          { label: translations.cart || "Cart", path: "/cart" },
-          { label: translations.checkout || "Checkout" },
+          { label: translations.home, path: "/" },
+          { label: translations.cart, path: "/cart" },
+          { label: translations.checkout },
         ]}
       />
 
@@ -645,7 +645,7 @@ const CheckoutPage = () => {
         {/* Page Header */}
         <div className="checkout-header-row">
           <div className="checkout-title-group">
-            <h1 className="checkout-page-title">{translations.checkout || "Checkout"}</h1>
+            <h1 className="checkout-page-title">{translations.checkout}</h1>
             <div className={`checkout-ordertype-pill ${isDelivery ? "delivery" : "pickup"}`}>
               {isDelivery ? <DeliveryDiningIcon fontSize="small" /> : <StorefrontIcon fontSize="small" />}
               <span>{resolvedOrderTypeName}</span>
@@ -653,7 +653,7 @@ const CheckoutPage = () => {
           </div>
           <button type="button" className="back-to-cart-btn" onClick={() => navigate("/cart")}>
             <ArrowBackIcon fontSize="small" />
-            <span>{translations.backtocart || "Back to Cart"}</span>
+            <span>{translations.backtocart}</span>
           </button>
         </div>
 
@@ -668,7 +668,7 @@ const CheckoutPage = () => {
                   <div className="card-header-left">
                     <LocationOnOutlinedIcon className="section-header-icon" />
                     <h3 className="section-title">
-                      {translations.deliveryaddress || "Delivery Address"}
+                      {translations.deliveryaddress}
                     </h3>
                   </div>
                   {addresses.length > 0 && (
@@ -678,7 +678,7 @@ const CheckoutPage = () => {
                       onClick={() => setIsAddressModalOpen(true)}
                     >
                       <EditLocationAltOutlinedIcon fontSize="small" />
-                      <span>{translations.changeaddress || "Change"}</span>
+                      <span>{translations.changeaddress}</span>
                     </button>
                   )}
                 </div>
@@ -705,7 +705,7 @@ const CheckoutPage = () => {
                   ) : (
                     <div className="no-address-state">
                       <p className="no-address-hint">
-                        {translations.noaddressesfororder || "No saved delivery addresses found."}
+                        {translations.noaddressesfororder}
                       </p>
                       <button
                         type="button"
@@ -713,7 +713,7 @@ const CheckoutPage = () => {
                         onClick={handleOpenAddAddressModal}
                       >
                         <AddLocationAltOutlinedIcon fontSize="small" />
-                        <span>{translations.addnewaddress || "Add New Address"}</span>
+                        <span>{translations.addnewaddress}</span>
                       </button>
                     </div>
                   )}
@@ -727,7 +727,7 @@ const CheckoutPage = () => {
                 <div className="card-header-left">
                   <AccountBalanceWalletOutlinedIcon className="section-header-icon" />
                   <h3 className="section-title">
-                    {translations.paymentmethod || "Payment Method"}
+                    {translations.paymentmethod}
                   </h3>
                 </div>
               </div>
@@ -744,7 +744,7 @@ const CheckoutPage = () => {
                       <PaymentsOutlinedIcon />
                     </div>
                     <div className="option-info">
-                      <span className="option-title">{translations.cash || "Cash"}</span>
+                      <span className="option-title">{translations.cash}</span>
                       <span className="option-subtitle">Pay at counter</span>
                     </div>
                     {selectedPaymentMethod === "Cash" && (
@@ -763,7 +763,7 @@ const CheckoutPage = () => {
                     <CreditCardOutlinedIcon />
                   </div>
                   <div className="option-info">
-                    <span className="option-title">{translations.online || "Online"}</span>
+                    <span className="option-title">{translations.online}</span>
                     <span className="option-subtitle">Credit / Debit Card / Netbanking</span>
                   </div>
                   {selectedPaymentMethod === "Online" && (
@@ -779,7 +779,7 @@ const CheckoutPage = () => {
                 <div className="card-header-left">
                   <RestaurantMenuIcon className="section-header-icon" />
                   <h3 className="section-title">
-                    {translations.orderitems || "Order Items"} ({totalQuantity})
+                    {translations.orderitems} ({totalQuantity})
                   </h3>
                 </div>
                 <Link to="/cart" className="card-header-action-btn">
@@ -818,13 +818,13 @@ const CheckoutPage = () => {
             <div className="cart-bill-summary-card checkout-bill-card">
               <div className="bill-header">
                 <ReceiptLongOutlinedIcon className="bill-icon" />
-                <h3>{translations.billdetails || "Bill Details"}</h3>
+                <h3>{translations.billdetails}</h3>
               </div>
 
               <div className="bill-rows-container">
                 {/* Sub Total */}
                 <div className="bill-row">
-                  <span className="bill-row-label">{translations.subtotal || "Subtotal"}</span>
+                  <span className="bill-row-label">{translations.subtotal}</span>
                   <span className="bill-row-value">
                     {formatPriceFromBranch(billingSummary.subtotal, selectedBranch)}
                   </span>
@@ -877,7 +877,7 @@ const CheckoutPage = () => {
                 {billingSummary.taxRows.length > 0 && (
                   <div className="bill-row bill-total-tax-row">
                     <span className="bill-row-label bill-total-tax-label">
-                      {translations.totaltax || "Total Tax"}
+                      {translations.totaltax}
                     </span>
                     <span className="bill-row-value bill-total-tax-value">
                       {formatPriceFromBranch(billingSummary.totalExclusiveTax, selectedBranch)}
@@ -907,7 +907,7 @@ const CheckoutPage = () => {
                 {Boolean(billingSummary.roundoff && (billingSummary.roundoff.status === true || billingSummary.roundoff.status === "true")) && (
                   <div className="bill-row bill-roundoff-row">
                     <span className="bill-row-label">
-                      {translations.roundoff || "Round Off"}
+                      {translations.roundoff}
                     </span>
                     <span className="bill-row-value">
                       {(billingSummary.roundoff.roundedAmount ?? 0) > 0
@@ -923,7 +923,7 @@ const CheckoutPage = () => {
               <div className="bill-divider" />
 
               <div className="bill-grand-total-row">
-                <span className="grand-total-label">{translations.grandtotal || "To Pay"}</span>
+                <span className="grand-total-label">{translations.grandtotal}</span>
                 <span className="grand-total-value">
                   {formatPriceFromBranch(billingSummary.grandTotal, selectedBranch)}
                 </span>
@@ -940,7 +940,7 @@ const CheckoutPage = () => {
                   <CircularProgress size={22} color="inherit" />
                 ) : (
                   <>
-                    <span>{localStorage.getItem("currentOrderNo") ? `${translations.additemstoorder || "Add Items to Order"} #${localStorage.getItem("currentOrderNo")}` : (translations.addorder || "Add Order")}</span>
+                    <span>{localStorage.getItem("currentOrderNo") ? `${translations.additemstoorder} #${localStorage.getItem("currentOrderNo")}` : (translations.addorder)}</span>
                     <ArrowForwardIcon fontSize="small" />
                   </>
                 )}
@@ -965,7 +965,7 @@ const CheckoutPage = () => {
             <div className="addon-modal-header">
               <div className="addon-header-main">
                 <h3 className="addon-modal-item-title">
-                  {translations.selectaddress || "Select Delivery Address"}
+                  {translations.selectaddress}
                 </h3>
               </div>
               <button
@@ -980,7 +980,7 @@ const CheckoutPage = () => {
             <div className="address-modal-list">
               {addresses.length === 0 ? (
                 <div className="empty-address-modal-state">
-                  <p>{translations.noaddressesfororder || "No saved addresses found."}</p>
+                  <p>{translations.noaddressesfororder}</p>
                   <button
                     type="button"
                     className="modal-add-addr-btn"
@@ -990,7 +990,7 @@ const CheckoutPage = () => {
                     }}
                   >
                     <AddIcon fontSize="small" />
-                    <span>{translations.addnewaddress || "Add New Address"}</span>
+                    <span>{translations.addnewaddress}</span>
                   </button>
                 </div>
               ) : (
@@ -1037,7 +1037,7 @@ const CheckoutPage = () => {
                 }}
               >
                 <AddIcon fontSize="small" />
-                <span>{translations.addnewaddress || "Add New Address"}</span>
+                <span>{translations.addnewaddress}</span>
               </button>
             </div>
           </div>
@@ -1057,7 +1057,7 @@ const CheckoutPage = () => {
             {/* Modal Header */}
             <div className="modal-header">
               <h2 id="checkout-address-modal-title" className="modal-title">
-                {translations.addaddress || translations.addnewaddress || "Add New Address"}
+                {translations.addaddress || translations.addnewaddress}
               </h2>
               <button
                 type="button"
@@ -1075,7 +1075,7 @@ const CheckoutPage = () => {
               {/* Address Type Chips */}
               <div className="form-group span-full">
                 <label className="form-label">
-                  {translations.addresstype || "Address Type"}
+                  {translations.addresstype}
                 </label>
                 <div className="address-type-selector">
                   {ADDRESS_TYPES.map((typeObj) => {
@@ -1099,7 +1099,7 @@ const CheckoutPage = () => {
               {/* Street Address */}
               <div className="form-group span-full">
                 <label className="form-label" htmlFor="checkout-address-street">
-                  {translations.address || "Street Address"} <span className="req">*</span>
+                  {translations.address} <span className="req">*</span>
                 </label>
                 <div className={`textarea-field-wrap ${addressError ? "has-error" : ""}`}>
                   <HomeOutlinedIcon className="field-icon textarea-icon" />
@@ -1108,7 +1108,7 @@ const CheckoutPage = () => {
                     name="modal_addr_street"
                     rows={2}
                     className="textarea-input"
-                    placeholder={translations.streetaddressplaceholder || "House/Apartment number, street name, landmark"}
+                    placeholder={translations.streetaddressplaceholder}
                     autoComplete="off"
                     value={streetAddress}
                     onChange={(e) => {
@@ -1124,14 +1124,14 @@ const CheckoutPage = () => {
               <div className="form-group">
                 <Dropdown
                   id="checkout-address-country-dropdown"
-                  label={translations.country || "Country"}
+                  label={translations.country}
                   required={true}
                   options={countries}
                   labelKey="name"
                   valueKey="isoCode"
                   selectedValue={countryCode}
                   onValueChange={handleCountryChange}
-                  placeholder={translations.countryselect || "Select Country"}
+                  placeholder={translations.countryselect}
                   showSearch={true}
                 />
                 {countryError && <span className="field-error-msg">{countryError}</span>}
@@ -1141,7 +1141,7 @@ const CheckoutPage = () => {
               <div className="form-group">
                 <Dropdown
                   id="checkout-address-state-dropdown"
-                  label={translations.state || "State"}
+                  label={translations.state}
                   required={true}
                   options={states}
                   labelKey="name"
@@ -1149,7 +1149,7 @@ const CheckoutPage = () => {
                   selectedValue={stateCode}
                   onValueChange={handleStateChange}
                   placeholder={
-                    countryCode ? (translations.stateselect || "Select State") : (translations.selectcountryfirst || "Select Country First")
+                    countryCode ? (translations.stateselect) : (translations.selectcountryfirst)
                   }
                   disabled={!countryCode || states.length === 0}
                   showSearch={true}
@@ -1161,7 +1161,7 @@ const CheckoutPage = () => {
               <div className="form-group">
                 <Dropdown
                   id="checkout-address-city-dropdown"
-                  label={translations.city || "City"}
+                  label={translations.city}
                   required={true}
                   options={cities}
                   labelKey="name"
@@ -1169,7 +1169,7 @@ const CheckoutPage = () => {
                   selectedValue={cityName}
                   onValueChange={handleCityChange}
                   placeholder={
-                    stateCode ? (translations.cityselect || "Select City") : (translations.selectstatefirst || "Select State First")
+                    stateCode ? (translations.cityselect) : (translations.selectstatefirst)
                   }
                   disabled={!stateCode || cities.length === 0}
                   showSearch={true}
@@ -1180,7 +1180,7 @@ const CheckoutPage = () => {
               {/* Postal Code / Pincode */}
               <div className="form-group">
                 <label className="form-label" htmlFor="checkout-address-postalcode">
-                  {translations.postalcode || "Postal Code"} <span className="req">*</span>
+                  {translations.postalcode} <span className="req">*</span>
                 </label>
                 <div className={`input-field-wrap ${pincodeError ? "has-error" : ""}`}>
                   <MarkunreadMailboxOutlinedIcon className="field-icon" />
@@ -1189,7 +1189,7 @@ const CheckoutPage = () => {
                     name="address_postal_code_field"
                     type="text"
                     className="text-input"
-                    placeholder={translations.enterpostalcode || "Enter postal code"}
+                    placeholder={translations.enterpostalcode}
                     autoComplete="off"
                     value={pincode}
                     onChange={(e) => {
@@ -1209,7 +1209,7 @@ const CheckoutPage = () => {
                   onClick={handleCloseAddAddressModal}
                   disabled={isSavingAddress}
                 >
-                  {translations.cancel || "Cancel"}
+                  {translations.cancel}
                 </button>
                 <button
                   type="submit"
@@ -1219,10 +1219,10 @@ const CheckoutPage = () => {
                   {isSavingAddress ? (
                     <>
                       <CircularProgress size={18} color="inherit" />
-                      <span>{translations.saving || "Saving..."}</span>
+                      <span>{translations.saving}</span>
                     </>
                   ) : (
-                    <span>{translations.saveaddress || "Save Address"}</span>
+                    <span>{translations.saveaddress}</span>
                   )}
                 </button>
               </div>

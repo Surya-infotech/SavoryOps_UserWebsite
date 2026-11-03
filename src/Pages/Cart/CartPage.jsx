@@ -47,8 +47,8 @@ const DietIndicator = ({ isVeg, className = "" }) => {
   return (
     <span
       className={`dish-diet-badge ${isVeg ? "veg" : "non-veg"} ${className}`}
-      title={isVeg ? translations.veg || "Vegetarian" : translations.nonveg || "Non-Vegetarian"}
-      aria-label={isVeg ? translations.veg || "Vegetarian" : translations.nonveg || "Non-Vegetarian"}
+      title={isVeg ? translations.veg : translations.nonveg}
+      aria-label={isVeg ? translations.veg : translations.nonveg}
     >
       <span className="diet-box">
         <span className="diet-dot" />
@@ -212,7 +212,7 @@ const CartPage = () => {
 
   // Dynamic document title
   useEffect(() => {
-    document.title = `${translations.cart || "Cart"} | ${businessDisplayName || "SavoryOps"}`;
+    document.title = `${translations.cart} | ${businessDisplayName || "SavoryOps"}`;
   }, [translations, businessDisplayName]);
 
   // Handlers
@@ -333,7 +333,7 @@ const CartPage = () => {
   const handleProceedCheckout = async () => {
     if (!cartItems.length) {
       if (typeof showSnackbar === "function") {
-        showSnackbar(translations.emptycartmessage || "Your cart is empty", "warning");
+        showSnackbar(translations.emptycartmessage, "warning");
       }
       return;
     }
@@ -344,7 +344,7 @@ const CartPage = () => {
     if (!token || !customerId) {
       if (typeof showSnackbar === "function") {
         showSnackbar(
-          translations.pleasesignintoorder || "Please sign in to proceed to checkout",
+          translations.pleasesignintoorder,
           "info"
         );
       }
@@ -471,7 +471,7 @@ const CartPage = () => {
 
           if (typeof showSnackbar === "function") {
             showSnackbar(
-              translations.orderupdatedsuccessfully || "Items added to Order successfully!",
+              translations.orderupdatedsuccessfully,
               "success",
               4000
             );
@@ -514,7 +514,7 @@ const CartPage = () => {
     } else {
       if (typeof showSnackbar === "function") {
         showSnackbar(
-          translations.selectdeliveryorpickup || "Please select an Order Type to proceed to checkout",
+          translations.selectdeliveryorpickup,
           "warning"
         );
       }
@@ -526,8 +526,8 @@ const CartPage = () => {
       {/* Site-wide Unified Breadcrumbs - Exact design and position as ManageAddress */}
       <Breadcrumbs
         items={[
-          { label: translations.home || "Home", path: "/" },
-          { label: translations.cart || "Cart" },
+          { label: translations.home, path: "/" },
+          { label: translations.cart },
         ]}
       />
 
@@ -576,7 +576,7 @@ const CartPage = () => {
                     type="button"
                     className="cart-info-cancel-btn"
                     onClick={handleCancelOrderUpdate}
-                    title={translations.cancelupdate || "Cancel adding items to this order"}
+                    title={translations.cancelupdate}
                     aria-label="Cancel update"
                   >
                     <CloseIcon fontSize="inherit" />
@@ -592,14 +592,13 @@ const CartPage = () => {
             <div className="empty-icon-wrap">
               <ShoppingBagOutlinedIcon className="empty-icon" />
             </div>
-            <h2 className="empty-title">{translations.yourcartisempty || "Your cart is empty"}</h2>
+            <h2 className="empty-title">{translations.yourcartisempty}</h2>
             <p className="empty-desc">
-              {translations.emptycartmessage ||
-                "Looks like you haven't added any dishes yet. Explore our artisanal culinary creations to get started!"}
+              {translations.emptycartmessage}
             </p>
             <Link to="/menu" className="empty-browse-btn">
               <RestaurantMenuIcon fontSize="small" />
-              <span>{translations.browsemenu || "Explore Menu"}</span>
+              <span>{translations.browsemenu}</span>
               <ArrowForwardIcon fontSize="small" />
             </Link>
           </div>
@@ -608,9 +607,9 @@ const CartPage = () => {
             {/* Header with Title */}
             <div className="cart-header-row">
               <div className="cart-title-group">
-                <h1 className="cart-page-title">{translations.yourcart || "Your Cart"}</h1>
+                <h1 className="cart-page-title">{translations.yourcart}</h1>
                 <span className="cart-badge-count">
-                  {totalQuantity} {totalQuantity === 1 ? translations.item || "item" : translations.items || "items"}
+                  {totalQuantity} {totalQuantity === 1 ? translations.item : translations.items}
                 </span>
               </div>
             </div>
@@ -681,7 +680,7 @@ const CartPage = () => {
                               <div className="cart-item-addons-list">
                                 <div className="cart-addons-header-row">
                                   <span className="cart-addons-label">
-                                    {translations.addons || "Add-ons"}:
+                                    {translations.addons}:
                                   </span>
                                   <button
                                     type="button"
@@ -690,7 +689,7 @@ const CartPage = () => {
                                     title="Customize Add-ons"
                                   >
                                     <EditOutlinedIcon fontSize="inherit" />
-                                    <span>{translations.customize || "Customize"}</span>
+                                    <span>{translations.customize}</span>
                                   </button>
                                 </div>
                                 {selectedAddons.map((addon, aIdx) => (
@@ -711,7 +710,7 @@ const CartPage = () => {
                                   title="Add customizations and add-ons"
                                 >
                                   <AddCircleOutlineIcon fontSize="inherit" />
-                                  <span>{translations.customizableaddons || "+ Add Add-ons"}</span>
+                                  <span>{translations.customizableaddons}</span>
                                 </button>
                               </div>
                             )}
@@ -728,8 +727,8 @@ const CartPage = () => {
                             <EditNoteIcon fontSize="small" />
                             <span>
                               {item.specialInstructions
-                                ? translations.editspecialinstructions || "Edit instructions"
-                                : translations.addspecialinstructions || "Add note / instructions"}
+                                ? translations.editspecialinstructions
+                                : translations.addspecialinstructions}
                             </span>
                           </button>
 
@@ -738,8 +737,7 @@ const CartPage = () => {
                               <textarea
                                 className="instructions-input"
                                 placeholder={
-                                  translations.specialinstructionshint ||
-                                  "e.g. Less spicy, dressing on the side..."
+                                  translations.specialinstructionshint
                                 }
                                 value={item.specialInstructions || ""}
                                 onChange={(e) =>
@@ -802,13 +800,13 @@ const CartPage = () => {
                 <div className="cart-bill-summary-card">
                   <div className="bill-header">
                     <ReceiptLongOutlinedIcon className="bill-icon" />
-                    <h3>{translations.billdetails || "Bill Details"}</h3>
+                    <h3>{translations.billdetails}</h3>
                   </div>
 
                   <div className="bill-rows-container">
                     {/* Sub Total */}
                     <div className="bill-row">
-                      <span className="bill-row-label">{translations.subtotal || "Subtotal"}</span>
+                      <span className="bill-row-label">{translations.subtotal}</span>
                       <span className="bill-row-value">
                         {formatPriceFromBranch(billingSummary.subtotal, selectedBranch)}
                       </span>
@@ -861,7 +859,7 @@ const CartPage = () => {
                     {billingSummary.taxRows.length > 0 && (
                       <div className="bill-row bill-total-tax-row">
                         <span className="bill-row-label bill-total-tax-label">
-                          {translations.totaltax || "Total Tax"}
+                          {translations.totaltax}
                         </span>
                         <span className="bill-row-value bill-total-tax-value">
                           {formatPriceFromBranch(billingSummary.totalExclusiveTax, selectedBranch)}
@@ -891,7 +889,7 @@ const CartPage = () => {
                     {Boolean(billingSummary.roundoff && (billingSummary.roundoff.status === true || billingSummary.roundoff.status === "true")) && (
                       <div className="bill-row bill-roundoff-row">
                         <span className="bill-row-label">
-                          {translations.roundoff || "Round Off"}
+                          {translations.roundoff}
                         </span>
                         <span className="bill-row-value">
                           {(billingSummary.roundoff.roundedAmount ?? 0) > 0
@@ -907,7 +905,7 @@ const CartPage = () => {
                   <div className="bill-divider" />
 
                   <div className="bill-grand-total-row">
-                    <span className="grand-total-label">{translations.grandtotal || "To Pay"}</span>
+                    <span className="grand-total-label">{translations.grandtotal}</span>
                     <span className="grand-total-value">
                       {formatPriceFromBranch(grandTotal, selectedBranch)}
                     </span>
@@ -923,16 +921,16 @@ const CartPage = () => {
                     {isSubmitting ? (
                       <>
                         <CircularProgress size={18} color="inherit" />
-                        <span>{translations.updatingorder || "Updating Order..."}</span>
+                        <span>{translations.updatingorder}</span>
                       </>
                     ) : currentOrderNo ? (
                       <>
-                        <span>{translations.additemstoorder || "Add Items to Order"} #{currentOrderNo}</span>
+                        <span>{translations.additemstoorder} #{currentOrderNo}</span>
                         <AddIcon fontSize="small" />
                       </>
                     ) : (
                       <>
-                        <span>{translations.proceedtocheckout || "Proceed to Checkout"}</span>
+                        <span>{translations.proceedtocheckout}</span>
                         <ArrowForwardIcon fontSize="small" />
                       </>
                     )}
@@ -945,7 +943,7 @@ const CartPage = () => {
                     onClick={() => navigate("/menu")}
                   >
                     <ArrowBackIcon fontSize="small" />
-                    <span>{translations.addmoreitems || "Add More Items"}</span>
+                    <span>{translations.addmoreitems}</span>
                   </button>
                 </div>
               </div>
@@ -990,7 +988,7 @@ const CartPage = () => {
                     {formatPriceFromBranch(editingCartItem.price, selectedBranch)}
                   </span>
                   <span className="addon-edit-tag">
-                    {translations.customizeaddons || "Customize Add-ons"}
+                    {translations.customizeaddons}
                   </span>
                 </div>
               </div>
@@ -1019,7 +1017,7 @@ const CartPage = () => {
             <div className="addon-selection-section">
               <div className="addon-section-title-wrap">
                 <h4 className="addon-section-title">
-                  {translations.chooseaddons || "Select Your Add-ons"}
+                  {translations.chooseaddons}
                 </h4>
               </div>
 
@@ -1056,7 +1054,7 @@ const CartPage = () => {
             {/* Modal Bottom Sticky Footer */}
             <div className="addon-modal-footer">
               <div className="addon-modal-total-preview">
-                <span className="total-preview-label">{translations.itemtotal || "Item Total"}:</span>
+                <span className="total-preview-label">{translations.itemtotal}:</span>
                 <span className="total-preview-val">
                   {formatPriceFromBranch(modalComputedTotal, selectedBranch)}
                 </span>
@@ -1067,7 +1065,7 @@ const CartPage = () => {
                 className="addon-add-cart-btn cart-save-addons-btn"
                 onClick={handleSaveAddons}
               >
-                <span>{translations.updateaddons || "Update Add-ons"}</span>
+                <span>{translations.updateaddons}</span>
               </button>
             </div>
           </div>
