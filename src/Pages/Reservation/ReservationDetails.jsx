@@ -49,16 +49,8 @@ const StatusIcon = ({ iconType, fontSize = "inherit" }) => {
   }
 };
 
-const ReservationDetailsShimmer = ({ onBack, translations = {} }) => (
+const ReservationDetailsShimmer = () => (
   <div className="reservation-details-page-container shimmer-mode">
-    <div className="reservation-details-nav-header">
-      <button type="button" className="details-back-btn" onClick={onBack}>
-        <ArrowBackIcon fontSize="small" />
-        <span>{translations.backtoreservations || "Back to Reservations"}</span>
-      </button>
-      <div className="shimmer-line" style={{ width: 180, height: 28, borderRadius: 8 }} />
-    </div>
-
     <div className="reservation-details-page-grid">
       <div className="details-main-column">
         <div className="shimmer-card" style={{ height: 70, borderRadius: 14 }} />
@@ -198,7 +190,7 @@ const ReservationDetails = ({
   };
 
   if (loading && !reservation) {
-    return <ReservationDetailsShimmer onBack={onBack} translations={translations} />;
+    return <ReservationDetailsShimmer />;
   }
 
   if (!reservation) {
@@ -241,26 +233,6 @@ const ReservationDetails = ({
 
   return (
     <div className={`reservation-details-page-container ${isRtl ? "is-rtl" : ""}`}>
-      {/* Top Header Bar */}
-      <div className="reservation-details-nav-header">
-        <button type="button" className="details-back-btn" onClick={onBack}>
-          <ArrowBackIcon fontSize="small" />
-          <span>{translations.backtoreservations || "Back to Reservations"}</span>
-        </button>
-
-        <div className="header-titles">
-          <h2>{translations.reservationdetails || "Reservation Details"}</h2>
-          {reservation?.reservationid && (
-            <span className="reservation-id-pill">
-              <TableRestaurantIcon fontSize="inherit" />
-              <span>
-                {translations.reservationNo || "Reservation No."} #{reservation.reservationid}
-              </span>
-            </span>
-          )}
-        </div>
-      </div>
-
       {/* Main Content Layout */}
       <div className="reservation-details-page-grid">
         {/* Left Column: Status, Branch, Booking, Notes, Cancellation */}
@@ -274,17 +246,29 @@ const ReservationDetails = ({
                 borderColor: statusConfig.borderColor,
               }}
             >
-              <div
-                className="status-pill-badge"
-                style={{
-                  backgroundColor: `${statusConfig.color}15`,
-                  color: statusConfig.color,
-                  borderColor: `${statusConfig.color}30`,
-                }}
-              >
-                <StatusIcon iconType={statusConfig.iconType} />
-                <span>{statusConfig.label}</span>
+              <div className="status-banner-left">
+                <div
+                  className="status-pill-badge"
+                  style={{
+                    backgroundColor: `${statusConfig.color}15`,
+                    color: statusConfig.color,
+                    borderColor: `${statusConfig.color}30`,
+                  }}
+                >
+                  <StatusIcon iconType={statusConfig.iconType} />
+                  <span>{statusConfig.label}</span>
+                </div>
+
+                {reservation?.reservationid && (
+                  <span className="reservation-id-pill">
+                    <TableRestaurantIcon fontSize="inherit" />
+                    <span>
+                      {translations.reservationNo || "Reservation No."} #{reservation.reservationid}
+                    </span>
+                  </span>
+                )}
               </div>
+
               <div className="status-banner-meta">
                 <span className="type-badge">
                   {reservation.reservationtype === "quickseat"
