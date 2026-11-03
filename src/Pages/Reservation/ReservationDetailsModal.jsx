@@ -22,6 +22,11 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import {
   getReservationStatusConfig,
   formatReservationDate,
+  formatReservationTime,
+  formatReservationDateTime,
+  getStoredDateFormat,
+  getStoredTimeFormat,
+  getStoredTimeZone,
 } from "./reservationHelpers.js";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -47,6 +52,9 @@ const ReservationDetailsModal = ({
   reservationId,
   initialReservation = null,
   isOpen,
+  dateFormat,
+  timeFormat,
+  timeZone,
   onClose,
   onReservationUpdated,
 }) => {
@@ -58,6 +66,10 @@ const ReservationDetailsModal = ({
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
   const [cancellationReason, setCancellationReason] = useState("");
   const [isCancelling, setIsCancelling] = useState(false);
+
+  const activeDateFormat = dateFormat || getStoredDateFormat();
+  const activeTimeFormat = timeFormat || getStoredTimeFormat();
+  const activeTimeZone = timeZone || reservation?.timezone || getStoredTimeZone();
 
   // Fetch full details if needed
   const fetchDetails = useCallback(async () => {
@@ -291,7 +303,11 @@ const ReservationDetailsModal = ({
                       <span>{translations.date || "Date"}</span>
                     </div>
                     <div className="cell-value">
-                      {formatReservationDate(reservation.reservationdate)}
+                      {formatReservationDate(
+                        reservation.reservationdate,
+                        activeDateFormat,
+                        activeTimeZone
+                      )}
                     </div>
                   </div>
 
@@ -302,7 +318,11 @@ const ReservationDetailsModal = ({
                       <span>{translations.time || "Time"}</span>
                     </div>
                     <div className="cell-value">
-                      {reservation.reservationtime}
+                      {formatReservationTime(
+                        reservation.reservationtime,
+                        activeTimeFormat,
+                        activeTimeZone
+                      )}
                     </div>
                   </div>
 
@@ -428,14 +448,11 @@ const ReservationDetailsModal = ({
                               <div className="timeline-meta">
                                 {log.updatedAt && (
                                   <span className="timeline-time">
-                                    {new Date(log.updatedAt).toLocaleString(
-                                      "en-US",
-                                      {
-                                        month: "short",
-                                        day: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                      }
+                                    {formatReservationDateTime(
+                                      log.updatedAt,
+                                      activeDateFormat,
+                                      activeTimeFormat,
+                                      activeTimeZone
                                     )}
                                   </span>
                                 )}

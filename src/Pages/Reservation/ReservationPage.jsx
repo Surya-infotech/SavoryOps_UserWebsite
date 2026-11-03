@@ -6,6 +6,11 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import ReservationList from "./ReservationList.jsx";
 import AddReservationModal from "./AddReservationModal.jsx";
 import ReservationDetailsModal from "./ReservationDetailsModal.jsx";
+import {
+  getStoredDateFormat,
+  getStoredTimeFormat,
+  getStoredTimeZone,
+} from "./reservationHelpers.js";
 import "../../Scss/Pages/Reservation/tablereservation.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -20,6 +25,36 @@ const ReservationPage = () => {
 
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Date and Time formats from user preferences/localStorage
+  const [dateFormat, setDateFormat] = useState(getStoredDateFormat);
+  const [timeFormat, setTimeFormat] = useState(getStoredTimeFormat);
+  const [timeZone, setTimeZone] = useState(getStoredTimeZone);
+
+  // Listen for date & time format changes
+  useEffect(() => {
+    const handleDateTimeSettingsChange = (e) => {
+      if (e?.detail) {
+        if (e.detail.dateFormat) setDateFormat(e.detail.dateFormat);
+        if (e.detail.timeFormat) setTimeFormat(e.detail.timeFormat);
+        if (e.detail.timezone || e.detail.timeZone) {
+          setTimeZone(e.detail.timezone || e.detail.timeZone);
+        }
+      } else {
+        setDateFormat(getStoredDateFormat());
+        setTimeFormat(getStoredTimeFormat());
+        setTimeZone(getStoredTimeZone());
+      }
+    };
+
+    window.addEventListener("dateTimeSettingsChange", handleDateTimeSettingsChange);
+    window.addEventListener("storage", handleDateTimeSettingsChange);
+
+    return () => {
+      window.removeEventListener("dateTimeSettingsChange", handleDateTimeSettingsChange);
+      window.removeEventListener("storage", handleDateTimeSettingsChange);
+    };
+  }, []);
 
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -115,6 +150,9 @@ const ReservationPage = () => {
         <ReservationList
           reservations={reservations}
           loading={loading}
+          dateFormat={dateFormat}
+          timeFormat={timeFormat}
+          timeZone={timeZone}
           onSelectReservation={handleSelectReservation}
           onOpenAddModal={() => setIsAddModalOpen(true)}
         />
@@ -134,6 +172,9 @@ const ReservationPage = () => {
         isOpen={isDetailsModalOpen}
         reservationId={selectedReservation?._id}
         initialReservation={selectedReservation}
+        dateFormat={dateFormat}
+        timeFormat={timeFormat}
+        timeZone={timeZone}
         onClose={handleCloseDetailsModal}
         onReservationUpdated={() => {
           fetchReservations();

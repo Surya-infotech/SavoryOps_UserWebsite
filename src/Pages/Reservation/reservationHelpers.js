@@ -1,3 +1,33 @@
+import moment from "moment-timezone";
+
+export const getStoredDateFormat = () => {
+  if (typeof localStorage === "undefined") return "DD/MM/YYYY";
+  return (
+    localStorage.getItem("DateFormat") ||
+    localStorage.getItem("dateFormat") ||
+    "DD/MM/YYYY"
+  );
+};
+
+export const getStoredTimeFormat = () => {
+  if (typeof localStorage === "undefined") return "hh:mm A";
+  return (
+    localStorage.getItem("TimeFormat") ||
+    localStorage.getItem("timeFormat") ||
+    "hh:mm A"
+  );
+};
+
+export const getStoredTimeZone = () => {
+  if (typeof localStorage === "undefined") return "Asia/Kolkata";
+  return (
+    localStorage.getItem("TimeZone") ||
+    localStorage.getItem("timeZone") ||
+    localStorage.getItem("timezone") ||
+    "Asia/Kolkata"
+  );
+};
+
 export const getReservationStatusConfig = (status, translations = {}) => {
   const norm = String(status || "").toLowerCase().replace(/[-\s_]/g, "");
 
@@ -68,19 +98,132 @@ export const getReservationStatusConfig = (status, translations = {}) => {
   }
 };
 
-export const formatReservationDate = (dateStr) => {
+export const formatReservationDate = (dateStr, customDateFormat, customTimeZone) => {
   if (!dateStr) return "";
+  const targetFormat = customDateFormat || getStoredDateFormat();
+  const targetTz = customTimeZone || getStoredTimeZone();
+
   try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString("en-GB", {
-      weekday: "short",
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    const trimmed = String(dateStr).trim();
+
+    // If dateStr is a date-only string like "YYYY-MM-DD" or "YYYY/MM/DD",
+    // parse as calendar date without timezone offset shift to preserve the exact booking date
+    if (/^\d{4}[-/]\d{2}[-/]\d{2}$/.test(trimmed)) {
+      const parsed = moment(trimmed, ["YYYY-MM-DD", "YYYY/MM/DD"], true);
+      if (parsed.isValid()) {
+        return parsed.format(targetFormat);
+      }
+    }
+
+    if (targetTz) {
+      try {
+        const m = moment.tz(trimmed, targetTz);
+        if (m.isValid()) {
+          return m.format(targetFormat);
+        }
+      } catch {
+        // Fallback if targetTz is invalid
+      }
+    }
+
+    const m = moment(trimmed);
+    if (m.isValid()) {
+      return m.format(targetFormat);
+    }
+
+    const d = new Date(trimmed);
+    if (!isNaN(d.getTime())) {
+      return moment(d).format(targetFormat);
+    }
+  } catch (err) {
+    console.warn("formatReservationDate error:", err);
+  }
+
+  return dateStr;
+};
+
+export const formatReservationTime = (timeStr, customTimeFormat, customTimeZone) => {
+  if (!timeStr) return "";
+  const targetFormat = customTimeFormat || getStoredTimeFormat();
+  const targetTz = customTimeZone || getStoredTimeZone();
+
+  try {
+    const trimmed = String(timeStr).trim();
+
+    const timeFormats = [
+      "hh:mm:ss A",
+      "h:mm:ss A",
+      "hh:mm A",
+      "h:mm A",
+      "HH:mm:ss",
+      "H:mm:ss",
+      "HH:mm",
+      "H:mm",
+      "hh:mm:ssa",
+      "h:mm:ssa",
+      "hh:mma",
+      "h:mma",
+    ];
+
+    const parsedTime = moment(trimmed, timeFormats, true);
+    if (parsedTime.isValid()) {
+      return parsedTime.format(targetFormat);
+    }
+
+    const parsedTimeLoose = moment(trimmed, timeFormats, false);
+    if (parsedTimeLoose.isValid()) {
+      return parsedTimeLoose.format(targetFormat);
+    }
+
+    // If timeStr is an ISO date-time string e.g. "2026-11-03T19:00:00.000Z"
+    if (targetTz) {
+      try {
+        const m = moment.tz(trimmed, targetTz);
+        if (m.isValid()) {
+          return m.format(targetFormat);
+        }
+      } catch {
+        // Fallback
+      }
+    }
+
+    const m = moment(trimmed);
+    if (m.isValid()) {
+      return m.format(targetFormat);
+    }
+  } catch (err) {
+    console.warn("formatReservationTime error:", err);
+  }
+
+  return timeStr;
+};
+
+export const formatReservationDateTime = (
+  dateString,
+  customDateFormat,
+  customTimeFormat,
+  customTimeZone
+) => {
+  if (!dateString) return "";
+  const dFormat = customDateFormat || getStoredDateFormat();
+  const tFormat = customTimeFormat || getStoredTimeFormat();
+  const tz = customTimeZone || getStoredTimeZone();
+  const combined = `${dFormat} ${tFormat}`;
+
+  try {
+    if (tz) {
+      try {
+        const m = moment.tz(dateString, tz);
+        if (m.isValid()) return m.format(combined);
+      } catch {
+        // Fallback
+      }
+    }
+    const m = moment(dateString);
+    if (m.isValid()) return m.format(combined);
+    return new Date(dateString).toLocaleString();
   } catch {
-    return dateStr;
+    return dateString;
   }
 };
 

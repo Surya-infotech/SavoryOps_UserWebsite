@@ -15,6 +15,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import {
   getReservationStatusConfig,
   formatReservationDate,
+  formatReservationTime,
 } from "./reservationHelpers.js";
 import "../../Scss/Pages/Reservation/tablereservation.scss";
 
@@ -57,6 +58,9 @@ const ShimmerCard = () => (
 const ReservationList = ({
   reservations = [],
   loading = false,
+  dateFormat,
+  timeFormat,
+  timeZone,
   onSelectReservation,
   onOpenAddModal,
 }) => {
@@ -175,7 +179,7 @@ const ReservationList = ({
                           {translations.date || "Date"}
                         </span>
                         <span className="value">
-                          {formatReservationDate(res.reservationdate)}
+                          {formatReservationDate(res.reservationdate, dateFormat, timeZone)}
                         </span>
                       </div>
                     </div>
@@ -188,7 +192,9 @@ const ReservationList = ({
                         <span className="label">
                           {translations.time || "Time"}
                         </span>
-                        <span className="value">{res.reservationtime}</span>
+                        <span className="value">
+                          {formatReservationTime(res.reservationtime, timeFormat, timeZone)}
+                        </span>
                       </div>
                     </div>
                   </div>
