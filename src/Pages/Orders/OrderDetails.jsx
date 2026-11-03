@@ -840,7 +840,7 @@ const OrderDetails = ({ orderId, onBack, businessDisplayName: propBusinessName =
                         <div key={idx} className="table-row">
                           <span className="area-name">{area.areaname}</span>
                           <span className="table-numbers">
-                            {translations.tableno || "Table"} {tableNos}
+                            {tableNos}
                           </span>
                         </div>
                       );
