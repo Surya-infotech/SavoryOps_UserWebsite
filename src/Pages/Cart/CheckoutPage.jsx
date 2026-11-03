@@ -10,6 +10,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -68,6 +69,9 @@ const CheckoutPage = () => {
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
     return localStorage.getItem("selectedOrderType") || "Delivery";
+  });
+  const [selectedTableNo, setSelectedTableNo] = useState(() => {
+    return localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
   });
   const [posPayload, setPosPayload] = useState(() => {
     return typeof window !== "undefined" ? window.__branchSetting : null;
@@ -160,12 +164,27 @@ const CheckoutPage = () => {
       if (e.key === "selectedOrderType" && e.newValue) {
         setSelectedOrderType(e.newValue);
       }
+      if ((e.key === "selectedTableNo" || e.key === "selectedTable") && e.newValue) {
+        setSelectedTableNo(e.newValue);
+      }
+    };
+
+    const handleTableChange = (e) => {
+      const tableVal = e?.detail?.tableNo || e?.detail?.tableno || e?.detail;
+      if (tableVal) {
+        setSelectedTableNo(String(tableVal));
+      } else {
+        setSelectedTableNo(
+          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable")
+        );
+      }
     };
 
     window.addEventListener("cartUpdated", handleCartUpdated);
     window.addEventListener("branchChange", handleBranchChange);
     window.addEventListener("orderTypeChange", handleOrderTypeChange);
     window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("tableChange", handleTableChange);
     window.addEventListener("storage", handleStorage);
 
     window.dispatchEvent(new CustomEvent("requestBranch"));
@@ -176,6 +195,7 @@ const CheckoutPage = () => {
       window.removeEventListener("branchChange", handleBranchChange);
       window.removeEventListener("orderTypeChange", handleOrderTypeChange);
       window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("tableChange", handleTableChange);
       window.removeEventListener("storage", handleStorage);
     };
   }, [navigate]);
@@ -553,6 +573,8 @@ const CheckoutPage = () => {
         currency: selectedBranch?.currency || selectedBranch?.currencysymbol || "$",
         currencySymbol: selectedBranch?.currencysymbol || "$",
         ordertype: resolvedOrderTypeName,
+        tableid: localStorage.getItem("selectedTableId") || undefined,
+        tableno: localStorage.getItem("selectedTableNo") || undefined,
         paymentmethod: selectedPaymentMethod,
         taxApplicationMode: posPayload?.taxApplicationMode || "apply_all",
         inclusiveTaxIncreasesPrice: Boolean(posPayload?.inclusiveTaxIncreasesPrice),
@@ -646,10 +668,26 @@ const CheckoutPage = () => {
         <div className="checkout-header-row">
           <div className="checkout-title-group">
             <h1 className="checkout-page-title">{translations.checkout}</h1>
-            <div className={`checkout-ordertype-pill ${isDelivery ? "delivery" : "pickup"}`}>
-              {isDelivery ? <DeliveryDiningIcon fontSize="small" /> : <StorefrontIcon fontSize="small" />}
+            <div className={`checkout-ordertype-pill ${isDelivery ? "delivery" : isDineIn ? "dine-in" : "pickup"}`}>
+              {isDelivery ? (
+                <DeliveryDiningIcon fontSize="small" />
+              ) : isDineIn ? (
+                <TableRestaurantIcon fontSize="small" />
+              ) : (
+                <StorefrontIcon fontSize="small" />
+              )}
               <span>{resolvedOrderTypeName}</span>
             </div>
+            {selectedTableNo && (
+              <div className="checkout-ordertype-pill table-badge-pill">
+                <TableRestaurantIcon fontSize="small" />
+                <span>
+                  {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
+                    ? selectedTableNo
+                    : `${translations.table || "Table"} ${selectedTableNo}`}
+                </span>
+              </div>
+            )}
           </div>
           <button type="button" className="back-to-cart-btn" onClick={() => navigate("/cart")}>
             <ArrowBackIcon fontSize="small" />

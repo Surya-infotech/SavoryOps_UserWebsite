@@ -43,7 +43,9 @@ const getStoredBranch = (branches = []) => {
   const savedId = localStorage.getItem("selectedBranchId");
   if (savedId) {
     const found = branches.find(
-      (b) => String(b._id) === String(savedId)
+      (b) =>
+        String(b._id) === String(savedId) ||
+        String(b.branchid) === String(savedId)
     );
     if (found) return found;
   }
@@ -122,15 +124,47 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
   useEffect(() => {
     const handleBranchChange = (e) => {
       if (e?.detail) {
-        setSelectedBranch(e.detail);
+        const branchObj = e.detail;
+        const matched =
+          branches.find(
+            (b) =>
+              String(b._id) === String(branchObj._id) ||
+              String(b.branchid) === String(branchObj.branchid || branchObj.branchId)
+          ) || branchObj;
+
+        setSelectedBranch(matched);
+        window.__selectedBranch = matched;
+        if (matched?._id) {
+          localStorage.setItem("selectedBranchId", matched._id);
+        }
+        if (typeof onBranchChange === "function") {
+          onBranchChange(matched);
+        }
+      }
+    };
+
+    const handleStorage = (e) => {
+      if (e.key === "selectedBranchId" && e.newValue) {
+        const found = branches.find(
+          (b) => String(b._id) === String(e.newValue) || String(b.branchid) === String(e.newValue)
+        );
+        if (found) {
+          setSelectedBranch(found);
+          window.__selectedBranch = found;
+          if (typeof onBranchChange === "function") {
+            onBranchChange(found);
+          }
+        }
       }
     };
 
     window.addEventListener("branchChange", handleBranchChange);
+    window.addEventListener("storage", handleStorage);
     return () => {
       window.removeEventListener("branchChange", handleBranchChange);
+      window.removeEventListener("storage", handleStorage);
     };
-  }, []);
+  }, [branches, onBranchChange]);
 
   // Allow sibling components (like Footer) to request current branch without refetching API
   useEffect(() => {

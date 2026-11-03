@@ -8,6 +8,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import jsQR from "jsqr";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
+import { processTableQrCode } from "../../utils/qrTableService.js";
 
 const QrScannerModal = ({ isOpen, onClose }) => {
   const { translations = {} } = useLanguage();
@@ -73,10 +74,13 @@ const QrScannerModal = ({ isOpen, onClose }) => {
     }
   }, []);
 
+  const isProcessingRef = useRef(false);
+
   // Handle successful QR detection
   const handleQrSuccess = useCallback(
-    (scannedText) => {
-      if (!scannedText) return;
+    async (scannedText) => {
+      if (!scannedText || isProcessingRef.current) return;
+      isProcessingRef.current = true;
 
       // Haptic feedback on phone
       if (typeof navigator !== "undefined" && navigator.vibrate) {
@@ -90,43 +94,40 @@ const QrScannerModal = ({ isOpen, onClose }) => {
       stopCamera();
       onClose();
 
-      // Check if scanned code is a URL
       try {
-        if (scannedText.startsWith("http://") || scannedText.startsWith("https://")) {
-          const url = new URL(scannedText);
-          const tableParam = url.searchParams.get("table") || url.searchParams.get("tableno");
+        const result = await processTableQrCode(scannedText);
 
-          if (tableParam) {
-            localStorage.setItem("selectedTable", tableParam);
-            window.dispatchEvent(new CustomEvent("tableChange", { detail: tableParam }));
-            showSnackbar(`${translations.connectedtotable} ${tableParam}!`, "success");
-            navigate(`/menu?table=${encodeURIComponent(tableParam)}`);
-            return;
+        if (result && result.success && result.tableNo) {
+          const branchPart = result.branchName ? ` (${result.branchName})` : "";
+          const msg = `${translations.connectedtotable || "Connected to Table"} ${result.tableNo}!${branchPart}`;
+          showSnackbar(msg, "success");
+
+          // If user was on the cart page, remain on cart page so they see updated table card & branch
+          const currentPath = window.location.pathname;
+          if (currentPath === "/cart" || currentPath === "/cart/") {
+            window.dispatchEvent(
+              new CustomEvent("tableChange", {
+                detail: {
+                  tableNo: result.tableNo,
+                  tableId: result.tableId,
+                  tableno: result.tableNo,
+                  tableid: result.tableId,
+                },
+              })
+            );
+          } else {
+            navigate(`/menu?table=${encodeURIComponent(result.tableNo)}`);
           }
-
-          // Same origin or menu URL
-          if (url.origin === window.location.origin) {
-            navigate(url.pathname + url.search);
-            return;
-          }
-
-          // External URL navigation
-          window.location.href = scannedText;
-          return;
+        } else {
+          showSnackbar(`Scanned: ${scannedText}`, "info");
         }
-      } catch {
-        // Not a standard URL, continue with string handling
-      }
-
-      // If text contains a table number / code, e.g. "Table 14" or "14"
-      const cleanTable = scannedText.replace(/^(table|tbl)[\s:#\-_]*/i, "").trim() || scannedText.trim();
-      if (cleanTable) {
-        localStorage.setItem("selectedTable", cleanTable);
-        window.dispatchEvent(new CustomEvent("tableChange", { detail: cleanTable }));
-        showSnackbar(`${translations.connectedtotable} ${cleanTable}!`, "success");
-        navigate(`/menu?table=${encodeURIComponent(cleanTable)}`);
-      } else {
-        showSnackbar(`Scanned: ${scannedText}`, "info");
+      } catch (err) {
+        console.error("Error processing scanned QR code:", err);
+        showSnackbar(translations.somethingwentwrong || "Error processing table QR code", "error");
+      } finally {
+        setTimeout(() => {
+          isProcessingRef.current = false;
+        }, 1000);
       }
     },
     [navigate, onClose, showSnackbar, stopCamera, translations]

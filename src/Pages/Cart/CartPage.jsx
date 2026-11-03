@@ -97,7 +97,9 @@ const CartPage = () => {
   });
   const [currentOrderNo, setCurrentOrderNo] = useState(() => localStorage.getItem("currentOrderNo"));
   const [currentOrderId, setCurrentOrderId] = useState(() => localStorage.getItem("currentOrderId"));
-  const [selectedTableNo, setSelectedTableNo] = useState(() => localStorage.getItem("selectedTableNo"));
+  const [selectedTableNo, setSelectedTableNo] = useState(() => {
+    return localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [posPayload, setPosPayload] = useState(() => {
@@ -143,15 +145,32 @@ const CartPage = () => {
         setPosPayload(e.detail);
       }
     };
+    const handleTableChange = (e) => {
+      const tableVal = e?.detail?.tableNo || e?.detail?.tableno || e?.detail;
+      if (tableVal) {
+        setSelectedTableNo(String(tableVal));
+      } else {
+        setSelectedTableNo(
+          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable")
+        );
+      }
+    };
     const handleStorage = (e) => {
       if (e.key === "selectedOrderType" && e.newValue) {
         setSelectedOrderType(e.newValue);
+      }
+      if ((e.key === "selectedTableNo" || e.key === "selectedTable") && e.newValue) {
+        setSelectedTableNo(e.newValue);
+      }
+      if (e.key === "selectedBranchId") {
+        setSelectedBranch(getActiveBranch());
       }
     };
 
     window.addEventListener("branchChange", handleBranchChange);
     window.addEventListener("orderTypeChange", handleOrderTypeChange);
     window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("tableChange", handleTableChange);
     window.addEventListener("storage", handleStorage);
     window.dispatchEvent(new CustomEvent("requestBranch"));
     window.dispatchEvent(new CustomEvent("requestBranchSetting"));
@@ -160,6 +179,7 @@ const CartPage = () => {
       window.removeEventListener("branchChange", handleBranchChange);
       window.removeEventListener("orderTypeChange", handleOrderTypeChange);
       window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("tableChange", handleTableChange);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
@@ -533,7 +553,7 @@ const CartPage = () => {
 
       <div className="cart-container">
         {/* Info Cards Row (Order Type, Table No, Order No) - Matches SavoryOps_UserApp */}
-        {(effectiveOrderType || (selectedTableNo && isDineIn) || currentOrderNo) && (
+        {(effectiveOrderType || selectedTableNo || currentOrderNo) && (
           <div className="cart-info-cards-row">
             {effectiveOrderType && (
               <div className="cart-info-card-wrapper">
@@ -550,14 +570,18 @@ const CartPage = () => {
               </div>
             )}
 
-            {selectedTableNo && (isDineIn || currentOrderNo) && (
+            {selectedTableNo && (
               <div className="cart-info-card-wrapper">
                 <div className="cart-info-card table-no-card">
                   <div className="cart-info-icon-box">
                     <TableRestaurantIcon fontSize="small" />
                   </div>
                   <div className="cart-info-text-box">
-                    <span className="cart-info-value">{selectedTableNo}</span>
+                    <span className="cart-info-value">
+                      {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
+                        ? selectedTableNo
+                        : `${selectedTableNo}`}
+                    </span>
                   </div>
                 </div>
               </div>

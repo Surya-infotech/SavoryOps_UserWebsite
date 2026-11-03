@@ -9,6 +9,7 @@ import Navbar from "./Pages/Partials/Navbar.jsx";
 import Footer from "./Pages/Partials/Footer.jsx";
 import { useLanguage } from "./Context/useLanguage.js";
 import HomeRouter from "./Router/Home.jsx";
+import { processTableQrCode } from "./utils/qrTableService.js";
 import "./App.scss";
 import "./Scss/Pages/Partials/undermaintenance.scss";
 
@@ -50,6 +51,26 @@ const AppContent = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [location.pathname]);
+
+  // Handle QR code query parameters (e.g. ?data=... or ?table=...) on direct page load
+  useEffect(() => {
+    const search = location.search;
+    if (search && (search.includes("data=") || search.includes("qr=") || search.includes("table="))) {
+      processTableQrCode(window.location.href).then((res) => {
+        if (res && res.success && res.tableNo) {
+          try {
+            const params = new URLSearchParams(window.location.search);
+            params.delete("data");
+            params.delete("qr");
+            const newSearch = params.toString() ? `?${params.toString()}` : "";
+            window.history.replaceState({}, "", `${window.location.pathname}${newSearch}`);
+          } catch {
+            // ignore history error
+          }
+        }
+      });
+    }
+  }, [location.search]);
 
   return (
     <div className="user-app-container">
