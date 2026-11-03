@@ -1,6 +1,3 @@
-import { useState, useMemo } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
 import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutlined";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -8,9 +5,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import AddIcon from "@mui/icons-material/Add";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
-import BoltIcon from "@mui/icons-material/Bolt";
-import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
-import SearchOffIcon from "@mui/icons-material/SearchOff";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
@@ -67,52 +61,6 @@ const ReservationList = ({
   onOpenAddModal,
 }) => {
   const { translations = {} } = useLanguage();
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-
-  const filterTabs = [
-    { key: "all", label: translations.all || "All" },
-    { key: "pending", label: translations.pending || "Pending" },
-    { key: "confirmed", label: translations.confirmed || "Confirmed" },
-    { key: "seated", label: translations.seated || "Seated" },
-    { key: "cancelled", label: translations.cancelled || "Cancelled" },
-  ];
-
-  // Filtered Reservations
-  const filteredReservations = useMemo(() => {
-    return reservations.filter((item) => {
-      // 1. Status Filter
-      if (statusFilter !== "all") {
-        const itemStatus = String(item.status || "").toLowerCase().replace(/\s/g, "");
-        if (statusFilter === "cancelled") {
-          if (itemStatus !== "cancelled" && itemStatus !== "rejected") {
-            return false;
-          }
-        } else if (itemStatus !== statusFilter) {
-          return false;
-        }
-      }
-
-      // 2. Search Filter
-      if (!search.trim()) return true;
-      const q = search.toLowerCase().trim();
-      const resNo = String(item.reservationid || "").toLowerCase();
-      const bName = String(item.branchname || "").toLowerCase();
-      const bizName = String(item.businessname || "").toLowerCase();
-      const area = String(item.areaname || "").toLowerCase();
-      const table = String(item.tableno || "").toLowerCase();
-      const status = String(item.status || "").toLowerCase();
-
-      return (
-        resNo.includes(q) ||
-        bName.includes(q) ||
-        bizName.includes(q) ||
-        area.includes(q) ||
-        table.includes(q) ||
-        status.includes(q)
-      );
-    });
-  }, [reservations, statusFilter, search]);
 
   return (
     <div className="reservations-list-wrapper">
@@ -127,52 +75,6 @@ const ReservationList = ({
           <span>{translations.addreservation || "Add Table Reservation"}</span>
         </button>
       </div>
-
-      {/* Toolbar / Search & Filter Row */}
-      {reservations.length > 0 && (
-        <div className="reservations-toolbar">
-          {/* Status Tabs */}
-          <div className="filter-tabs-row">
-            {filterTabs.map((tab) => {
-              const isActive = statusFilter === tab.key;
-              return (
-                <button
-                  key={tab.key}
-                  type="button"
-                  className={`status-tab-btn ${isActive ? "active" : ""}`}
-                  onClick={() => setStatusFilter(tab.key)}
-                >
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Search Box */}
-          <div className="reservation-search-box">
-            <SearchIcon className="search-icon" />
-            <input
-              type="text"
-              placeholder={
-                translations.searchreservations ||
-                "Search by #No, branch, or table..."
-              }
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {search && (
-              <button
-                type="button"
-                className="search-clear-btn"
-                onClick={() => setSearch("")}
-                aria-label="Clear search"
-              >
-                <CloseIcon fontSize="small" />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Main Content Area */}
       {loading ? (
@@ -203,35 +105,10 @@ const ReservationList = ({
             <span>{translations.addreservation || "Add Table Reservation"}</span>
           </button>
         </div>
-      ) : filteredReservations.length === 0 ? (
-        /* Filter / Search Empty State */
-        <div className="reservations-empty-state search-empty">
-          <div className="empty-icon-wrap search">
-            <SearchOffIcon className="empty-icon" />
-          </div>
-          <h2 className="empty-title">
-            {translations.noreservationfound || "No reservations found"}
-          </h2>
-          <p className="empty-subtitle">
-            {translations.nosearchresultsfound ||
-              "No reservations match your search or filter criteria. Try adjusting your filter."}
-          </p>
-          <button
-            type="button"
-            className="empty-add-btn secondary"
-            onClick={() => {
-              setSearch("");
-              setStatusFilter("all");
-            }}
-          >
-            <CloseIcon fontSize="small" />
-            <span>{translations.clearfilter || "Clear Filters"}</span>
-          </button>
-        </div>
       ) : (
         /* Reservations Cards Grid */
         <div className="reservations-grid">
-          {filteredReservations.map((res) => {
+          {reservations.map((res) => {
             const statusConfig = getReservationStatusConfig(
               res.status,
               translations
