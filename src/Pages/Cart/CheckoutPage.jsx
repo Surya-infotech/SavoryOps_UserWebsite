@@ -597,6 +597,9 @@ const CheckoutPage = () => {
         if (isUpdate) {
           localStorage.removeItem("currentOrderNo");
           localStorage.removeItem("currentOrderId");
+          localStorage.removeItem("orderType");
+          localStorage.removeItem("selectedTableId");
+          localStorage.removeItem("selectedTableNo");
           showSnackbar(
             translations.orderupdatedsuccessfully || "Items added to Order successfully!",
             "success",

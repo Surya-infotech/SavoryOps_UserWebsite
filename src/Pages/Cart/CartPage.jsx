@@ -293,6 +293,9 @@ const CartPage = () => {
   const handleCancelOrderUpdate = () => {
     localStorage.removeItem("currentOrderNo");
     localStorage.removeItem("currentOrderId");
+    localStorage.removeItem("orderType");
+    localStorage.removeItem("selectedTableId");
+    localStorage.removeItem("selectedTableNo");
     setCurrentOrderNo(null);
     setCurrentOrderId(null);
     if (typeof showSnackbar === "function") {
@@ -432,6 +435,9 @@ const CartPage = () => {
           const targetOrderId = currentOrderId;
           localStorage.removeItem("currentOrderNo");
           localStorage.removeItem("currentOrderId");
+          localStorage.removeItem("orderType");
+          localStorage.removeItem("selectedTableId");
+          localStorage.removeItem("selectedTableNo");
           setCurrentOrderNo(null);
           setCurrentOrderId(null);
 
