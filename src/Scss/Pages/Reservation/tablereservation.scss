@@ -1306,31 +1306,33 @@
 
     .info-cell {
       background: #f8fafc;
-      padding: 0.75rem 0.9rem;
+      padding: 0.85rem 1rem;
       border-radius: 10px;
       display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+      align-items: center;
+      gap: 0.65rem;
 
       &.full-span {
         grid-column: 1 / -1;
       }
 
-      .cell-label {
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        font-size: 0.75rem;
-        font-weight: 700;
+      .cell-icon {
+        font-size: 1.25rem;
         color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
+        flex-shrink: 0;
+
+        &.highlight {
+          color: #028802;
+        }
       }
 
       .cell-value {
-        font-size: 0.98rem;
+        font-size: 0.95rem;
         font-weight: 700;
         color: #0f172a;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
 
         &.highlight {
           color: #028802;

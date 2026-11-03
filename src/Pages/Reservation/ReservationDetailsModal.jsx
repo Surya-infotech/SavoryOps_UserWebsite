@@ -298,10 +298,7 @@ const ReservationDetailsModal = ({
                 <div className="info-grid-two">
                   {/* Date */}
                   <div className="info-cell">
-                    <div className="cell-label">
-                      <CalendarMonthOutlinedIcon fontSize="inherit" />
-                      <span>{translations.date || "Date"}</span>
-                    </div>
+                    <CalendarMonthOutlinedIcon className="cell-icon" />
                     <div className="cell-value">
                       {formatReservationDate(
                         reservation.reservationdate,
@@ -313,10 +310,7 @@ const ReservationDetailsModal = ({
 
                   {/* Time */}
                   <div className="info-cell">
-                    <div className="cell-label">
-                      <AccessTimeIcon fontSize="inherit" />
-                      <span>{translations.time || "Time"}</span>
-                    </div>
+                    <AccessTimeIcon className="cell-icon" />
                     <div className="cell-value">
                       {formatReservationTime(
                         reservation.reservationtime,
@@ -330,20 +324,14 @@ const ReservationDetailsModal = ({
                   {reservation.reservationtype === "pickspot" ? (
                     <>
                       <div className="info-cell">
-                        <div className="cell-label">
-                          <EventSeatIcon fontSize="inherit" />
-                          <span>{translations.area || "Dining Area"}</span>
-                        </div>
+                        <EventSeatIcon className="cell-icon" />
                         <div className="cell-value">
                           {reservation.areaname || "Main Area"}
                         </div>
                       </div>
 
                       <div className="info-cell">
-                        <div className="cell-label">
-                          <TableRestaurantIcon fontSize="inherit" />
-                          <span>{translations.table || "Table No"}</span>
-                        </div>
+                        <TableRestaurantIcon className="cell-icon highlight" />
                         <div className="cell-value highlight">
                           {reservation.tableno}
                           {reservation.capacity ? (
@@ -356,10 +344,7 @@ const ReservationDetailsModal = ({
                     </>
                   ) : (
                     <div className="info-cell full-span">
-                      <div className="cell-label">
-                        <GroupsOutlinedIcon fontSize="inherit" />
-                        <span>{translations.guest || "Party Size"}</span>
-                      </div>
+                      <GroupsOutlinedIcon className="cell-icon highlight" />
                       <div className="cell-value highlight">
                         {reservation.guest || 1}{" "}
                         {reservation.guest === 1 ? "Guest" : "Guests"}
@@ -370,10 +355,7 @@ const ReservationDetailsModal = ({
                   {/* Timezone */}
                   {reservation.timezone && (
                     <div className="info-cell full-span">
-                      <div className="cell-label">
-                        <PublicIcon fontSize="inherit" />
-                        <span>{translations.timezone || "Timezone"}</span>
-                      </div>
+                      <PublicIcon className="cell-icon" />
                       <div className="cell-value text-muted">
                         {reservation.timezone}
                       </div>
