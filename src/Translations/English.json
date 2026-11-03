@@ -356,6 +356,8 @@
   "pleaseselectrestaurantfirst": "Please select a restaurant first",
   "guest": "Guest",
   "enterguestcount": "Enter Guest Count",
+  "area": "Area",
+  "tablelabel": "Table",
   "selectarea": "Select Area",
   "pleaseselectbranchfirst": "Please select a branch first",
   "selecttable": "Select Table",

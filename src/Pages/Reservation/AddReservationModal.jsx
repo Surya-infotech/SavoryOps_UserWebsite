@@ -414,11 +414,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               ) : (
                 <Dropdown
                   id="reservation-branch-dropdown"
-                  label={
-                    translations.selectbranchlabel ||
-                    translations.selectBranch ||
-                    "Select Branch"
-                  }
+                  label={translations.branch || "Branch"}
                   required={true}
                   placeholder={
                     translations.selectbranchplaceholder ||
@@ -509,7 +505,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   ) : (
                     <Dropdown
                       id="reservation-area-dropdown"
-                      label={translations.selectarea || "Select Area"}
+                      label={translations.area || "Area"}
                       required={true}
                       placeholder={
                         translations.selectareaplaceholder ||
@@ -547,7 +543,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 <div className="form-group table-form-group">
                   <Dropdown
                     id="reservation-table-dropdown"
-                    label={translations.selecttable || "Select Table"}
+                    label={translations.tablelabel || "Table"}
                     required={true}
                     placeholder={
                       !selectedArea
