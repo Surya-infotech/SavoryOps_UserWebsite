@@ -38,54 +38,6 @@ export const formatTimeAgo = (dateStr) => {
 };
 
 /**
- * Seed initial helpful notifications if user has no stored notifications
- */
-const getInitialSeedNotifications = () => {
-  const now = new Date();
-  const tenMinsAgo = new Date(now.getTime() - 10 * 60 * 1000).toISOString();
-  const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString();
-
-  const seeds = [
-    {
-      id: generateNotificationId(),
-      title: "Welcome to Harbour Blue!",
-      message: "Discover our chef's hand-crafted delicacies, authentic recipes, and fast delivery right to your door.",
-      type: "general",
-      url: "/menu",
-      isRead: false,
-      createdAt: tenMinsAgo,
-    },
-    {
-      id: generateNotificationId(),
-      title: "Special Offer: 20% OFF",
-      message: "Enjoy free express delivery on orders over $30 with promo code FEAST20.",
-      type: "offer",
-      url: "/offers",
-      isRead: false,
-      createdAt: twoHoursAgo,
-    },
-  ];
-
-  // If table is already selected in storage, also add table notification
-  if (typeof localStorage !== "undefined") {
-    const tableNo = localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
-    if (tableNo) {
-      seeds.unshift({
-        id: generateNotificationId(),
-        title: `Connected to Table ${tableNo}`,
-        message: `Your session is active on Table ${tableNo}. Items added to your cart will be served to your table.`,
-        type: "table",
-        url: "/cart",
-        isRead: false,
-        createdAt: new Date().toISOString(),
-      });
-    }
-  }
-
-  return seeds;
-};
-
-/**
  * Dispatch notification change event for reactive component updating
  */
 const notifyChange = (notifications) => {
@@ -110,12 +62,9 @@ export const getNotifications = () => {
     if (typeof localStorage === "undefined") return [];
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) {
-      const initial = getInitialSeedNotifications();
-      saveNotifications(initial);
-      return initial;
+      return [];
     }
     const parsed = JSON.parse(data);
-    return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
     console.error("Error loading notifications from localStorage:", error);
     return [];

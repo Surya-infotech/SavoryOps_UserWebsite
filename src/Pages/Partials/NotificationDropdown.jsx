@@ -137,11 +137,6 @@ const NotificationDropdown = ({ className = "" }) => {
                 <NotificationsOutlinedIcon fontSize="small" />
               </div>
               <h4 className="notif-header-title">{translations.notifications}</h4>
-              {unreadCount > 0 && (
-                <span className="notif-header-badge">
-                  {unreadCount} {translations.unread}
-                </span>
-              )}
             </div>
           </div>
 
