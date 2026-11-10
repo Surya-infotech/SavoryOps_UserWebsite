@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import RestaurantMenuOutlinedIcon from "@mui/icons-material/RestaurantMenuOutlined";
 import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
@@ -13,8 +11,6 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import {
   getNotifications,
   markAsRead,
-  markAllAsRead,
-  clearAllNotifications,
   formatTimeAgo,
 } from "../../utils/notificationService.js";
 
@@ -37,7 +33,6 @@ const NotificationDropdown = ({ className = "" }) => {
   const navigate = useNavigate();
   const { translations = {} } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("all"); // "all" | "unread"
   const [notificationList, setNotificationList] = useState(() => getNotifications());
   const dropdownRef = useRef(null);
 
@@ -92,13 +87,6 @@ const NotificationDropdown = ({ className = "" }) => {
     return notificationList.filter((n) => !n.isRead).length;
   }, [notificationList]);
 
-  const displayedNotifications = useMemo(() => {
-    if (activeTab === "unread") {
-      return notificationList.filter((n) => !n.isRead);
-    }
-    return notificationList;
-  }, [notificationList, activeTab]);
-
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
@@ -111,16 +99,6 @@ const NotificationDropdown = ({ className = "" }) => {
     if (item.url) {
       navigate(item.url);
     }
-  };
-
-  const handleMarkAllRead = (e) => {
-    e.stopPropagation();
-    markAllAsRead();
-  };
-
-  const handleClearAll = (e) => {
-    e.stopPropagation();
-    clearAllNotifications();
   };
 
   const handleViewOrders = (e) => {
@@ -166,41 +144,11 @@ const NotificationDropdown = ({ className = "" }) => {
                 </span>
               )}
             </div>
-
-            {unreadCount > 0 && (
-              <button
-                type="button"
-                className="notif-mark-all-btn"
-                onClick={handleMarkAllRead}
-                title={translations.markallread}
-              >
-                <DoneAllIcon fontSize="inherit" />
-                <span>{translations.markallread}</span>
-              </button>
-            )}
-          </div>
-
-          {/* Filter Bar */}
-          <div className="notification-filter-bar">
-            <button
-              type="button"
-              className={`notif-filter-pill ${activeTab === "all" ? "active" : ""}`}
-              onClick={() => setActiveTab("all")}
-            >
-              {translations.all} ({notificationList.length})
-            </button>
-            <button
-              type="button"
-              className={`notif-filter-pill ${activeTab === "unread" ? "active" : ""}`}
-              onClick={() => setActiveTab("unread")}
-            >
-              {translations.unread} ({unreadCount})
-            </button>
           </div>
 
           {/* Body / List */}
           <div className="notification-dropdown-body">
-            {displayedNotifications.length === 0 ? (
+            {notificationList.length === 0 ? (
               <div className="notification-empty-state">
                 <div className="notif-empty-icon-wrap">
                   <NotificationsOutlinedIcon className="notif-empty-icon" />
@@ -210,7 +158,7 @@ const NotificationDropdown = ({ className = "" }) => {
               </div>
             ) : (
               <div className="notification-items-list">
-                {displayedNotifications.map((item) => (
+                {notificationList.map((item) => (
                   <div
                     key={item.id}
                     className={`notification-item ${!item.isRead ? "unread" : "read"} ${
@@ -249,17 +197,6 @@ const NotificationDropdown = ({ className = "" }) => {
 
           {/* Footer */}
           <div className="notification-dropdown-footer">
-            {notificationList.length > 0 && (
-              <button
-                type="button"
-                className="notif-clear-all-btn"
-                onClick={handleClearAll}
-                title={translations.clearall}
-              >
-                <DeleteSweepOutlinedIcon fontSize="small" />
-                <span>{translations.clearall}</span>
-              </button>
-            )}
             <button
               type="button"
               className="notif-view-orders-btn"
@@ -275,4 +212,3 @@ const NotificationDropdown = ({ className = "" }) => {
 };
 
 export default NotificationDropdown;
-
