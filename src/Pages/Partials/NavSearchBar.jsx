@@ -293,70 +293,61 @@ const NavSearchBar = ({ branch, branchId }) => {
                 <span>{translations.loading || "Searching dishes..."}</span>
               </div>
             ) : topMatches.length > 0 ? (
-              <>
-                <div className="nav-search-dropdown-header">
-                  <span className="dropdown-results-count">
-                    {matchingDishes.length} {matchingDishes.length === 1 ? "dish found" : "dishes found"}
-                  </span>
-                  <span className="dropdown-hint">Click item to view details</span>
-                </div>
-
-                <div className="nav-search-items-list">
-                  {topMatches.map((dish, idx) => {
-                    const isHighlighted = selectedIndex === idx;
-                    return (
-                      <div
-                        key={dish.id || idx}
-                        className={`nav-search-item ${isHighlighted ? "highlighted" : ""}`}
-                        onClick={() => handleSelectDish(dish)}
-                        onMouseEnter={() => setSelectedIndex(idx)}
-                        role="option"
-                        aria-selected={isHighlighted}
-                        tabIndex={0}
-                      >
-                        <div className="nav-search-item-thumb">
-                          {dish.imageUrl || dish.image ? (
-                            <img
-                              src={dish.imageUrl || dish.image}
-                              alt={dish.name || dish.title}
-                              onError={(e) => {
-                                e.target.style.display = "none";
-                                if (e.target.nextSibling) {
-                                  e.target.nextSibling.style.display = "flex";
-                                }
-                              }}
-                            />
-                          ) : null}
-                          <div
-                            className="nav-search-fallback-icon"
-                            style={{ display: dish.imageUrl || dish.image ? "none" : "flex" }}
-                          >
-                            <RestaurantMenuIcon fontSize="small" />
-                          </div>
-                        </div>
-
-                        <div className="nav-search-item-info">
-                          <div className="nav-search-item-title-row">
-                            {dish.isVeg && <span className="diet-dot-veg" title="Veg" />}
-                            {dish.isNonVeg && <span className="diet-dot-nonveg" title="Non-Veg" />}
-                            <span className="nav-search-item-name">{dish.title || dish.name}</span>
-                          </div>
-                          {(dish.categoryName || dish.categoryname) && (
-                            <span className="nav-search-item-cat">
-                              {dish.categoryName || dish.categoryname}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="nav-search-item-price">
-                          {dish.currencySymbol || dish.currencysymbol}
-                          {Number(dish.price).toFixed(2)}
+              <div className="nav-search-items-list">
+                {topMatches.map((dish, idx) => {
+                  const isHighlighted = selectedIndex === idx;
+                  return (
+                    <div
+                      key={dish.id || idx}
+                      className={`nav-search-item ${isHighlighted ? "highlighted" : ""}`}
+                      onClick={() => handleSelectDish(dish)}
+                      onMouseEnter={() => setSelectedIndex(idx)}
+                      role="option"
+                      aria-selected={isHighlighted}
+                      tabIndex={0}
+                    >
+                      <div className="nav-search-item-thumb">
+                        {dish.imageUrl || dish.image ? (
+                          <img
+                            src={dish.imageUrl || dish.image}
+                            alt={dish.name || dish.title}
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              if (e.target.nextSibling) {
+                                e.target.nextSibling.style.display = "flex";
+                              }
+                            }}
+                          />
+                        ) : null}
+                        <div
+                          className="nav-search-fallback-icon"
+                          style={{ display: dish.imageUrl || dish.image ? "none" : "flex" }}
+                        >
+                          <RestaurantMenuIcon fontSize="small" />
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              </>
+
+                      <div className="nav-search-item-info">
+                        <div className="nav-search-item-title-row">
+                          {dish.isVeg && <span className="diet-dot-veg" title="Veg" />}
+                          {dish.isNonVeg && <span className="diet-dot-nonveg" title="Non-Veg" />}
+                          <span className="nav-search-item-name">{dish.title || dish.name}</span>
+                        </div>
+                        {(dish.categoryName || dish.categoryname) && (
+                          <span className="nav-search-item-cat">
+                            {dish.categoryName || dish.categoryname}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="nav-search-item-price">
+                        {dish.currencySymbol || dish.currencysymbol}
+                        {Number(dish.price).toFixed(2)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             ) : (
               <div className="nav-search-dropdown-empty">
                 <div className="search-empty-icon-wrap">
