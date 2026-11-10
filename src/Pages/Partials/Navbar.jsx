@@ -1181,7 +1181,7 @@ const Navbar = () => {
               <QrCodeScannerIcon fontSize="small" />
             </button>
             <LanguageDropdown />
-            <NotificationDropdown />
+            {auth.isLoggedIn && <NotificationDropdown />}
 
             <button
               type="button"
