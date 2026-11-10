@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
@@ -10,7 +10,7 @@ import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
@@ -61,7 +61,6 @@ const NotificationsPage = () => {
   const businessDisplayName = business?.businessname || "";
 
   const [notificationList, setNotificationList] = useState(() => getNotifications());
-  const [activeTab, setActiveTab] = useState("all"); // "all" | "unread" | "order" | "reservation" | "table" | "offer"
 
   // Dynamic document title
   useEffect(() => {
@@ -105,39 +104,6 @@ const NotificationsPage = () => {
     return notificationList.filter((n) => !n.isRead).length;
   }, [notificationList]);
 
-  // Filter tabs config
-  const tabs = useMemo(() => [
-    { id: "all", label: translations.all || "All", count: notificationList.length },
-    { id: "unread", label: translations.unread || "Unread", count: unreadCount },
-    {
-      id: "order",
-      label: translations.orders || "Orders",
-      count: notificationList.filter((n) => n.type === "order").length,
-    },
-    {
-      id: "reservation",
-      label: translations.tablereservation || "Reservations",
-      count: notificationList.filter((n) => n.type === "reservation").length,
-    },
-    {
-      id: "table",
-      label: translations.table || "Table",
-      count: notificationList.filter((n) => n.type === "table").length,
-    },
-    {
-      id: "offer",
-      label: translations.offers || "Offers",
-      count: notificationList.filter((n) => n.type === "offer").length,
-    },
-  ], [notificationList, unreadCount, translations]);
-
-  // Filtered notifications
-  const displayedNotifications = useMemo(() => {
-    if (activeTab === "all") return notificationList;
-    if (activeTab === "unread") return notificationList.filter((n) => !n.isRead);
-    return notificationList.filter((n) => n.type === activeTab);
-  }, [notificationList, activeTab]);
-
   const handleItemClick = (item) => {
     if (!item.isRead) {
       markAsRead(item.id);
@@ -171,27 +137,9 @@ const NotificationsPage = () => {
       <Breadcrumbs items={breadcrumbItems} />
 
       <div className="notifications-page-container">
-        {/* Header Section */}
-        <div className="notifications-page-header">
-          <div className="notifications-header-meta">
-            <div className="notifications-title-row">
-              <div className="notifications-title-icon-box">
-                <NotificationsOutlinedIcon />
-              </div>
-              <h1 className="notifications-main-title">{translations.notifications || "Notifications"}</h1>
-              {unreadCount > 0 && (
-                <span className="notifications-unread-pill">
-                  {unreadCount} {translations.unread || "Unread"}
-                </span>
-              )}
-            </div>
-            <p className="notifications-main-subtitle">
-              {translations.notificationssubtitle ||
-                "Stay updated on your live orders, reservations, tableside sessions, and exclusive restaurant rewards."}
-            </p>
-          </div>
-
-          <div className="notifications-header-actions">
+        {/* Actions bar when notifications exist */}
+        {notificationList.length > 0 && (
+          <div className="notifications-top-actions">
             {unreadCount > 0 && (
               <button
                 type="button"
@@ -202,63 +150,41 @@ const NotificationsPage = () => {
                 <span>{translations.markallread || "Mark all as read"}</span>
               </button>
             )}
-            {notificationList.length > 0 && (
-              <button
-                type="button"
-                className="notif-action-btn clear-all-btn"
-                onClick={handleClearAll}
-              >
-                <DeleteSweepOutlinedIcon fontSize="small" />
-                <span>{translations.clearall || "Clear all"}</span>
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Filter Pills */}
-        <div className="notifications-filter-bar">
-          {tabs.map((tab) => (
             <button
-              key={tab.id}
               type="button"
-              className={`notif-filter-tab ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
+              className="notif-action-btn clear-all-btn"
+              onClick={handleClearAll}
             >
-              <span>{tab.label}</span>
-              {tab.count > 0 && <span className="tab-count-badge">{tab.count}</span>}
+              <DeleteSweepOutlinedIcon fontSize="small" />
+              <span>{translations.clearall || "Clear all"}</span>
             </button>
-          ))}
-        </div>
+          </div>
+        )}
 
         {/* Notifications List or Empty State */}
-        {displayedNotifications.length === 0 ? (
-          <div className="notifications-empty-state">
-            <div className="empty-state-card">
-              <div className="empty-icon-ring">
-                <NotificationsOutlinedIcon className="empty-icon" />
-              </div>
-              <h3 className="empty-title">{translations.nonotifications || "No new notifications"}</h3>
-              <p className="empty-desc">
-                {translations.allcaughtup || "You're all caught up!"}
-              </p>
-              <button
-                type="button"
-                className="empty-action-btn"
-                onClick={() => navigate("/menu")}
-              >
-                <RestaurantIcon fontSize="small" />
-                <span>{translations.browsemenu || "Explore Menu"}</span>
-              </button>
+        {notificationList.length === 0 ? (
+          <div className="address-empty-card notifications-empty-card">
+            <div className="empty-icon-wrap">
+              <NotificationsOutlinedIcon className="empty-icon" />
             </div>
+            <h2 className="empty-title">
+              {translations.nonotifications || "No new notifications"}
+            </h2>
+            <p className="empty-subtitle">
+              {translations.allcaughtup || "You're all caught up!"}
+            </p>
+            <Link to="/menu" className="empty-add-btn">
+              <RestaurantMenuIcon fontSize="small" />
+              <span>{translations.browsemenu || "Explore Menu"}</span>
+            </Link>
           </div>
         ) : (
           <div className="notifications-list-grid">
-            {displayedNotifications.map((item) => (
+            {notificationList.map((item) => (
               <div
                 key={item.id}
-                className={`notification-page-card ${!item.isRead ? "unread" : "read"} ${
-                  item.type || "general"
-                }`}
+                className={`notification-page-card ${!item.isRead ? "unread" : "read"} ${item.type || "general"
+                  }`}
                 onClick={() => handleItemClick(item)}
                 role="button"
                 tabIndex={0}
