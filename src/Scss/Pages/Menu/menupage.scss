@@ -403,6 +403,44 @@
       white-space: nowrap;
     }
 
+    .filter-search-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(2, 136, 2, 0.08);
+      color: #028802;
+      border: 1px solid rgba(2, 136, 2, 0.25);
+      border-radius: 10px;
+      height: 38px;
+      padding: 0 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+
+      .search-badge-label strong {
+        color: #0f172a;
+      }
+
+      .filter-search-remove {
+        background: none;
+        border: none;
+        color: #028802;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        border-radius: 50%;
+        font-size: 0.95rem;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: rgba(2, 136, 2, 0.15);
+          color: #dc2626;
+        }
+      }
+    }
+
     .filter-clear-btn {
       display: inline-flex;
       align-items: center;
@@ -755,6 +793,44 @@
       }
     }
 
+    .filter-search-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(2, 136, 2, 0.08);
+      color: #028802;
+      border: 1px solid rgba(2, 136, 2, 0.25);
+      border-radius: 10px;
+      height: 38px;
+      padding: 0 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+
+      .search-badge-label strong {
+        color: #0f172a;
+      }
+
+      .filter-search-remove {
+        background: none;
+        border: none;
+        color: #028802;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        border-radius: 50%;
+        font-size: 0.95rem;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: rgba(2, 136, 2, 0.15);
+          color: #dc2626;
+        }
+      }
+    }
+
     .filter-clear-btn {
       height: 35px;
       padding: 0 0.75rem;
@@ -818,6 +894,44 @@
             width: 4.5px;
             height: 4.5px;
           }
+        }
+      }
+    }
+
+    .filter-search-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(2, 136, 2, 0.08);
+      color: #028802;
+      border: 1px solid rgba(2, 136, 2, 0.25);
+      border-radius: 10px;
+      height: 38px;
+      padding: 0 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+
+      .search-badge-label strong {
+        color: #0f172a;
+      }
+
+      .filter-search-remove {
+        background: none;
+        border: none;
+        color: #028802;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        border-radius: 50%;
+        font-size: 0.95rem;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: rgba(2, 136, 2, 0.15);
+          color: #dc2626;
         }
       }
     }

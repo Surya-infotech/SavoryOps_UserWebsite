@@ -30,6 +30,7 @@ import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.j
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
 import NotificationDropdown from "./NotificationDropdown.jsx";
+import NavSearchBar from "./NavSearchBar.jsx";
 import "../../Scss/Components/General/dropdown.scss";
 import "../../Scss/Pages/Partials/navbar.scss";
 
@@ -1161,6 +1162,12 @@ const Navbar = () => {
               );
             })}
           </div>
+
+          {/* Quick Food Search with Live Item Autocomplete */}
+          <NavSearchBar
+            branch={selectedBranch}
+            branchId={selectedBranch?._id || selectedBranch?.branchid}
+          />
 
           {/* Action Buttons: Language, Cart & Profile */}
           <div className="nav-actions">
