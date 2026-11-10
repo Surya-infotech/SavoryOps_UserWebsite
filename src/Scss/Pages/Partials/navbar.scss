@@ -27,7 +27,7 @@
 .nav-top-bar {
   background: linear-gradient(90deg, #025002 0%, #028802 50%, #046c04 100%);
   color: #ffffff;
-  padding: 6px 1.5rem;
+  padding: 6px clamp(1.25rem, 2.5vw, 2.5rem);
   min-height: 36px;
   display: flex;
   align-items: center;
@@ -37,7 +37,7 @@
 
 .nav-top-inner {
   width: 100%;
-  max-width: 1320px;
+  max-width: 100%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -270,9 +270,10 @@
 /* --- Main Navigation Bar --- */
 .nav-main {
   position: relative;
-  max-width: 1320px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0.85rem 1.5rem;
+  padding: 0.85rem clamp(1.25rem, 2.5vw, 2.5rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
