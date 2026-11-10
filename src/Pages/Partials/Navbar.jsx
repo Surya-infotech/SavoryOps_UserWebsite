@@ -968,7 +968,6 @@ const Navbar = () => {
   }, []);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
 
   const location = useLocation();
@@ -1094,13 +1093,6 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      alert(`Searching dishes for: "${searchQuery}"`);
-    }
-  };
-
   return (
     <>
       <header className={`savory-navbar-wrapper ${isScrolled ? "scrolled" : ""}`}>
@@ -1169,19 +1161,6 @@ const Navbar = () => {
               );
             })}
           </div>
-
-          {/* Quick Food Search */}
-          <form className="nav-search-box" onSubmit={handleSearchSubmit} autoComplete="off">
-            <SearchIcon className="nav-search-icon" />
-            <input
-              type="text"
-              className="nav-search-input"
-              placeholder={translations.searchdishes}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoComplete="off"
-            />
-          </form>
 
           {/* Action Buttons: Language, Cart & Profile */}
           <div className="nav-actions">
