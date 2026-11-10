@@ -6,7 +6,6 @@ import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutl
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useLanguage } from "../../Context/useLanguage.js";
 import {
   getNotifications,
@@ -177,16 +176,10 @@ const NotificationDropdown = ({ className = "" }) => {
                     <div className="notif-content-wrap">
                       <div className="notif-title-row">
                         <span className="notif-item-title">{item.title}</span>
-                        {!item.isRead && <span className="notif-unread-dot" />}
                       </div>
                       {item.message && <p className="notif-item-msg">{item.message}</p>}
                       <div className="notif-meta-row">
                         <span className="notif-item-time">{formatTimeAgo(item.createdAt)}</span>
-                        {item.url && (
-                          <span className="notif-item-action-hint">
-                            <ChevronRightIcon fontSize="inherit" />
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
