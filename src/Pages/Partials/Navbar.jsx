@@ -29,6 +29,7 @@ import { getCartTotalCount } from "../../utils/cartService.js";
 import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
+import NotificationDropdown from "./NotificationDropdown.jsx";
 import "../../Scss/Components/General/dropdown.scss";
 import "../../Scss/Pages/Partials/navbar.scss";
 
@@ -1194,6 +1195,7 @@ const Navbar = () => {
               <QrCodeScannerIcon fontSize="small" />
             </button>
             <LanguageDropdown />
+            <NotificationDropdown />
 
             <button
               type="button"
