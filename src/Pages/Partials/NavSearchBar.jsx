@@ -354,10 +354,7 @@ const NavSearchBar = ({ branch, branchId }) => {
                   <SearchOffIcon className="search-empty-icon" />
                 </div>
                 <p className="search-empty-title">
-                  {translations.nosearchresultsfound || "No dishes found"}
-                </p>
-                <p className="search-empty-sub">
-                  No items matching &ldquo;{query}&rdquo;
+                  {translations.nomatchingitems || "No matching dishes found"}
                 </p>
               </div>
             )}
