@@ -6,10 +6,12 @@ import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutl
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import {
   getNotifications,
   markAsRead,
+  clearAllNotifications,
   formatTimeAgo,
 } from "../../utils/notificationService.js";
 
@@ -100,10 +102,15 @@ const NotificationDropdown = ({ className = "" }) => {
     }
   };
 
-  const handleViewOrders = (e) => {
+  const handleClearAll = (e) => {
+    e.stopPropagation();
+    clearAllNotifications();
+  };
+
+  const handleViewAllNotifications = (e) => {
     e.stopPropagation();
     setIsOpen(false);
-    navigate("/orders");
+    navigate("/notifications");
   };
 
   return (
@@ -185,12 +192,23 @@ const NotificationDropdown = ({ className = "" }) => {
 
           {/* Footer */}
           <div className="notification-dropdown-footer">
+            {notificationList.length > 0 && (
+              <button
+                type="button"
+                className="notif-clear-all-btn"
+                onClick={handleClearAll}
+                title={translations.clearall || "Clear all"}
+              >
+                <DeleteSweepOutlinedIcon fontSize="small" />
+                <span>{translations.clearall || "Clear all"}</span>
+              </button>
+            )}
             <button
               type="button"
-              className="notif-view-orders-btn"
-              onClick={handleViewOrders}
+              className="notif-view-all-btn"
+              onClick={handleViewAllNotifications}
             >
-              <span>{translations.vieworders}</span>
+              <span>{translations.viewallnotifications || "View all notifications"}</span>
             </button>
           </div>
         </div>

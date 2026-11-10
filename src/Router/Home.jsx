@@ -16,6 +16,7 @@ import CartPage from "../Pages/Cart/CartPage.jsx";
 import CheckoutPage from "../Pages/Cart/CheckoutPage.jsx";
 import OrdersPage from "../Pages/Orders/OrdersPage.jsx";
 import ReservationPage from "../Pages/Reservation/ReservationPage.jsx";
+import NotificationsPage from "../Pages/Notifications/NotificationsPage.jsx";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -143,6 +144,7 @@ const HomeRouter = () => {
           </ProtectedRoute>
         }
       />
+      <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

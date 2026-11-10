@@ -65,6 +65,7 @@ export const getNotifications = () => {
       return [];
     }
     const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
     console.error("Error loading notifications from localStorage:", error);
     return [];
@@ -134,6 +135,15 @@ export const markAsRead = (notificationId) => {
   const updated = current.map((n) =>
     n.id === notificationId ? { ...n, isRead: true } : n
   );
+  saveNotifications(updated);
+};
+
+/**
+ * Delete a single notification
+ */
+export const deleteNotification = (notificationId) => {
+  const current = getNotifications();
+  const updated = current.filter((n) => n.id !== notificationId);
   saveNotifications(updated);
 };
 
