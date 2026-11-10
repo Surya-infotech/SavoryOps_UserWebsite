@@ -501,5 +501,7 @@
   "yourreviewtext": "La tua Recensione",
   "yourreviewupdated": "La tua recensione è stata aggiornata con successo.",
   "viewallnotifications": "Visualizza tutte le notifiche",
-  "notificationssubtitle": "Rimani aggiornato sui tuoi ordini in tempo reale, prenotazioni e offerte esclusive."
+  "notificationssubtitle": "Rimani aggiornato sui tuoi ordini in tempo reale, prenotazioni e offerte esclusive.",
+  "nonotificationsfound": "Ancora nessuna notifica.",
+  "nonotificationsdesc": "La cronologia delle notifiche apparirà qui non appena riceverai aggiornamenti. Esplora il nostro menu per scoprire piatti deliziosi!"
 }

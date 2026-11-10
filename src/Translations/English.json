@@ -501,5 +501,7 @@
   "yourreviewtext": "Your Review",
   "yourreviewupdated": "Your review has been updated successfully.",
   "viewallnotifications": "View all notifications",
-  "notificationssubtitle": "Stay updated on your live orders, reservations, tableside sessions, and exclusive restaurant rewards."
+  "notificationssubtitle": "Stay updated on your live orders, reservations, tableside sessions, and exclusive restaurant rewards.",
+  "nonotificationsfound": "No notifications yet.",
+  "nonotificationsdesc": "Your notification history will appear here once you receive updates. Explore our main menu to discover delicious treats!"
 }

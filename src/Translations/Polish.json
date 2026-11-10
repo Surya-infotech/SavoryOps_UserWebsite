@@ -501,5 +501,7 @@
   "yourreviewtext": "Twoja Opinia",
   "yourreviewupdated": "Twoja opinia została pomyślnie zaktualizowana.",
   "viewallnotifications": "Zobacz wszystkie powiadomienia",
-  "notificationssubtitle": "Bądź na bieżąco ze swoimi zamówieniami na żywo, rezerwacjami i ekskluzywnymi ofertami."
+  "notificationssubtitle": "Bądź na bieżąco ze swoimi zamówieniami na żywo, rezerwacjami i ekskluzywnymi ofertami.",
+  "nonotificationsfound": "Brak powiadomień.",
+  "nonotificationsdesc": "Twoja historia powiadomień pojawi się tutaj, gdy tylko otrzymasz aktualizacje. Odkryj nasze menu, aby znaleźć wyśmienite dania!"
 }

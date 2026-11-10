@@ -501,5 +501,7 @@
   "yourreviewtext": "Ihre Bewertung",
   "yourreviewupdated": "Ihre Bewertung wurde erfolgreich aktualisiert.",
   "viewallnotifications": "Alle Benachrichtigungen anzeigen",
-  "notificationssubtitle": "Bleiben Sie über Ihre Live-Bestellungen, Reservierungen und exklusiven Restaurant-Prämien auf dem Laufenden."
+  "notificationssubtitle": "Bleiben Sie über Ihre Live-Bestellungen, Reservierungen und exklusiven Restaurant-Prämien auf dem Laufenden.",
+  "nonotificationsfound": "Noch keine Benachrichtigungen.",
+  "nonotificationsdesc": "Ihr Benachrichtigungsverlauf wird hier angezeigt, sobald Sie Updates erhalten. Erkunden Sie unsere Speisekarte, um köstliche Gerichte zu entdecken!"
 }

@@ -501,5 +501,7 @@
   "yourreviewtext": "Tu Opinión",
   "yourreviewupdated": "Tu reseña ha sido actualizada con éxito.",
   "viewallnotifications": "Ver todas las notificaciones",
-  "notificationssubtitle": "Manténgase actualizado sobre sus pedidos en vivo, reservas e ofertas exclusivas."
+  "notificationssubtitle": "Manténgase actualizado sobre sus pedidos en vivo, reservas e ofertas exclusivas.",
+  "nonotificationsfound": "Aún no hay notificaciones.",
+  "nonotificationsdesc": "Su historial de notificaciones aparecerá aquí una vez que reciba actualizaciones. ¡Explore nuestro menú principal para descubrir platos deliciosos!"
 }

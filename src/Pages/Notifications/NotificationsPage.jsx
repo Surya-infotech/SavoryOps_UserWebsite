@@ -133,112 +133,117 @@ const NotificationsPage = () => {
 
   return (
     <div className={`notifications-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
-      {/* Unified Site Breadcrumbs */}
+      {/* Site-wide Unified Breadcrumbs - Exact design and position as Profile & Orders */}
       <Breadcrumbs items={breadcrumbItems} />
 
       <div className="notifications-page-container">
-        {/* Actions bar when notifications exist */}
-        {notificationList.length > 0 && (
-          <div className="notifications-top-actions">
-            {unreadCount > 0 && (
+        <div className="notifications-page-content">
+          {/* Actions bar when notifications exist */}
+          {notificationList.length > 0 && (
+            <div className="notifications-top-actions">
+              {unreadCount > 0 && (
+                <button
+                  type="button"
+                  className="notif-action-btn mark-all-btn"
+                  onClick={handleMarkAllRead}
+                >
+                  <DoneAllIcon fontSize="small" />
+                  <span>{translations.markallread || "Mark all as read"}</span>
+                </button>
+              )}
               <button
                 type="button"
-                className="notif-action-btn mark-all-btn"
-                onClick={handleMarkAllRead}
+                className="notif-action-btn clear-all-btn"
+                onClick={handleClearAll}
               >
-                <DoneAllIcon fontSize="small" />
-                <span>{translations.markallread || "Mark all as read"}</span>
+                <DeleteSweepOutlinedIcon fontSize="small" />
+                <span>{translations.clearall || "Clear all"}</span>
               </button>
-            )}
-            <button
-              type="button"
-              className="notif-action-btn clear-all-btn"
-              onClick={handleClearAll}
-            >
-              <DeleteSweepOutlinedIcon fontSize="small" />
-              <span>{translations.clearall || "Clear all"}</span>
-            </button>
-          </div>
-        )}
-
-        {/* Notifications List or Empty State */}
-        {notificationList.length === 0 ? (
-          <div className="address-empty-card notifications-empty-card">
-            <div className="empty-icon-wrap">
-              <NotificationsOutlinedIcon className="empty-icon" />
             </div>
-            <h2 className="empty-title">
-              {translations.nonotifications || "No new notifications"}
-            </h2>
-            <p className="empty-subtitle">
-              {translations.allcaughtup || "You're all caught up!"}
-            </p>
-            <Link to="/menu" className="empty-add-btn">
-              <RestaurantMenuIcon fontSize="small" />
-              <span>{translations.browsemenu || "Explore Menu"}</span>
-            </Link>
-          </div>
-        ) : (
-          <div className="notifications-list-grid">
-            {notificationList.map((item) => (
-              <div
-                key={item.id}
-                className={`notification-page-card ${!item.isRead ? "unread" : "read"} ${item.type || "general"
-                  }`}
-                onClick={() => handleItemClick(item)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handleItemClick(item);
-                  }
-                }}
-              >
-                <div className="card-accent-bar" />
-                <div className="card-main-content">
-                  <div className="card-icon-area">
-                    <div className="notif-avatar-circle">{getNotificationIcon(item.type)}</div>
-                  </div>
+          )}
 
-                  <div className="card-body-area">
-                    <div className="card-top-row">
-                      <span className="card-type-tag">
-                        {getNotificationTypeLabel(item.type, translations)}
-                      </span>
-                      <span className="card-timestamp">{formatTimeAgo(item.createdAt)}</span>
+          {/* Notifications List or Empty State - Exact Parity with Orders Page */}
+          {notificationList.length === 0 ? (
+            <div className="address-empty-card notifications-empty-state">
+              <div className="empty-icon-wrap">
+                <NotificationsOutlinedIcon className="empty-icon" />
+              </div>
+              <h2 className="empty-title">
+                {translations.nonotificationsfound ||
+                  translations.nonotifications ||
+                  "No notifications yet."}
+              </h2>
+              <p className="empty-subtitle">
+                {translations.nonotificationsdesc ||
+                  "Your notification history will appear here once you receive updates. Explore our main menu to discover delicious treats!"}
+              </p>
+              <Link to="/menu" className="empty-add-btn">
+                <RestaurantMenuIcon fontSize="small" />
+                <span>{translations.exploremenu || "Explore Menu"}</span>
+              </Link>
+            </div>
+          ) : (
+            <div className="notifications-list-grid">
+              {notificationList.map((item) => (
+                <div
+                  key={item.id}
+                  className={`notification-page-card ${!item.isRead ? "unread" : "read"} ${item.type || "general"
+                    }`}
+                  onClick={() => handleItemClick(item)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleItemClick(item);
+                    }
+                  }}
+                >
+                  <div className="card-accent-bar" />
+                  <div className="card-main-content">
+                    <div className="card-icon-area">
+                      <div className="notif-avatar-circle">{getNotificationIcon(item.type)}</div>
                     </div>
 
-                    <h4 className="card-title">
-                      {item.title}
-                      {!item.isRead && <span className="card-unread-dot" />}
-                    </h4>
-
-                    {item.message && <p className="card-message">{item.message}</p>}
-
-                    <div className="card-bottom-row">
-                      {item.url && (
-                        <span className="card-action-link">
-                          <span>{translations.viewdetails || "View Details"}</span>
-                          <ArrowForwardIcon fontSize="inherit" className="arrow-icon" />
+                    <div className="card-body-area">
+                      <div className="card-top-row">
+                        <span className="card-type-tag">
+                          {getNotificationTypeLabel(item.type, translations)}
                         </span>
-                      )}
+                        <span className="card-timestamp">{formatTimeAgo(item.createdAt)}</span>
+                      </div>
 
-                      <button
-                        type="button"
-                        className="card-delete-btn"
-                        onClick={(e) => handleDeleteItem(e, item.id)}
-                        title={translations.delete || "Delete"}
-                        aria-label={translations.delete || "Delete"}
-                      >
-                        <DeleteOutlineOutlinedIcon fontSize="small" />
-                      </button>
+                      <h4 className="card-title">
+                        {item.title}
+                        {!item.isRead && <span className="card-unread-dot" />}
+                      </h4>
+
+                      {item.message && <p className="card-message">{item.message}</p>}
+
+                      <div className="card-bottom-row">
+                        {item.url && (
+                          <span className="card-action-link">
+                            <span>{translations.viewdetails || "View Details"}</span>
+                            <ArrowForwardIcon fontSize="inherit" className="arrow-icon" />
+                          </span>
+                        )}
+
+                        <button
+                          type="button"
+                          className="card-delete-btn"
+                          onClick={(e) => handleDeleteItem(e, item.id)}
+                          title={translations.delete || "Delete"}
+                          aria-label={translations.delete || "Delete"}
+                        >
+                          <DeleteOutlineOutlinedIcon fontSize="small" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
