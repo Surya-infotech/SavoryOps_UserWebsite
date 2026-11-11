@@ -162,9 +162,8 @@ const NotificationDropdown = ({ className = "" }) => {
                 {notificationList.map((item) => (
                   <div
                     key={item.id}
-                    className={`notification-item ${!item.isRead ? "unread" : "read"} ${
-                      item.type || "general"
-                    }`}
+                    className={`notification-item ${!item.isRead ? "unread" : "read"} ${item.type || "general"
+                      }`}
                     onClick={() => handleItemClick(item)}
                     role="menuitem"
                     tabIndex={0}
@@ -191,8 +190,8 @@ const NotificationDropdown = ({ className = "" }) => {
           </div>
 
           {/* Footer */}
-          <div className="notification-dropdown-footer">
-            {notificationList.length > 0 && (
+          {notificationList.length > 0 && (
+            <div className="notification-dropdown-footer">
               <button
                 type="button"
                 className="notif-clear-all-btn"
@@ -202,15 +201,15 @@ const NotificationDropdown = ({ className = "" }) => {
                 <DeleteSweepOutlinedIcon fontSize="small" />
                 <span>{translations.clearall || "Clear all"}</span>
               </button>
-            )}
-            <button
-              type="button"
-              className="notif-view-all-btn"
-              onClick={handleViewAllNotifications}
-            >
-              <span>{translations.viewallnotifications || "View all notifications"}</span>
-            </button>
-          </div>
+              <button
+                type="button"
+                className="notif-view-all-btn"
+                onClick={handleViewAllNotifications}
+              >
+                <span>{translations.viewallnotifications || "View all notifications"}</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
