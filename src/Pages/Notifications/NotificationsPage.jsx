@@ -163,20 +163,21 @@ const NotificationsPage = () => {
                 >
                   <div className="card-accent-bar" />
                   <div className="card-main-content">
-                    <div className="card-icon-area">
-                      <div className="notif-avatar-circle">{getNotificationIcon(item.type)}</div>
-                    </div>
-
-                    <div className="card-body-area">
-                      <div className="card-top-row">
+                    <div className="card-top-row">
+                      <div className="card-top-left">
+                        <div className="card-icon-area">
+                          <div className="notif-avatar-circle">{getNotificationIcon(item.type)}</div>
+                        </div>
                         <span className="card-type-tag">
                           {getNotificationTypeLabel(item.type, translations)}
                         </span>
-                        <span className="card-timestamp">
-                          {formatTimeAgo(item.createdAt, item.createdAtFormatted)}
-                        </span>
                       </div>
+                      <span className="card-timestamp">
+                        {formatTimeAgo(item.createdAt, item.createdAtFormatted)}
+                      </span>
+                    </div>
 
+                    <div className="card-body-area">
                       <h4 className="card-title">
                         {item.title}
                         {!item.isRead && <span className="card-unread-dot" />}
