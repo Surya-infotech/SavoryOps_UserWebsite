@@ -2,19 +2,24 @@ import { getWebsiteSubdomain } from "../Pages/Partials/UnderMaintenance.jsx";
 
 /**
  * Centralized Notification Service for SavoryOps User Website
- * Combines backend customer notifications (MongoDB) with local real-time events,
- * read/unread synchronization, and cross-tab push updates.
+ * Keeps notification state strictly in memory + synchronized with backend MongoDB API
+ * and cross-tab BroadcastChannel events (no notification data persisted in localStorage).
  */
 
-const STORAGE_KEY = "savoryops_customer_notifications";
-const SERVER_CACHE_KEY = "savoryops_customer_notifications_server";
+const LEGACY_NOTIFICATION_STORAGE_KEYS = [
+  "savoryops_customer_notifications",
+  "savoryops_customer_notifications_server",
+];
 const NOTIFICATION_BROADCAST_CHANNEL = "savoryops_customer_notifications";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const CUSTOMER_TOKEN_KEY = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 
 let inFlightSyncPromise = null;
+let serverNotifications = [];
+let localNotifications = [];
 let pendingPushNotifications = [];
+let broadcastChannelInstance = null;
 
 const getCustomerAuthToken = () => {
   if (typeof localStorage === "undefined" || !CUSTOMER_TOKEN_KEY) return "";
@@ -23,27 +28,23 @@ const getCustomerAuthToken = () => {
 
 const isServerNotificationId = (id) => /^[a-f\d]{24}$/i.test(String(id || ""));
 
-const readStorageArray = (key) => {
-  try {
-    if (typeof localStorage === "undefined") return [];
-    const data = localStorage.getItem(key);
-    if (!data) return [];
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.error(`Error loading ${key} from localStorage:`, error);
-    return [];
+const getBroadcastChannel = () => {
+  if (typeof BroadcastChannel === "undefined") return null;
+  if (!broadcastChannelInstance) {
+    try {
+      broadcastChannelInstance = new BroadcastChannel(NOTIFICATION_BROADCAST_CHANNEL);
+    } catch {
+      return null;
+    }
   }
+  return broadcastChannelInstance;
 };
 
-const writeStorageArray = (key, list) => {
+const postCrossTabSync = (type = "NOTIFICATIONS_UPDATED") => {
   try {
-    if (typeof localStorage === "undefined") return false;
-    localStorage.setItem(key, JSON.stringify(list || []));
-    return true;
-  } catch (error) {
-    console.error(`Error saving ${key} to localStorage:`, error);
-    return false;
+    getBroadcastChannel()?.postMessage({ type, timestamp: Date.now() });
+  } catch {
+    // Ignore BroadcastChannel restriction
   }
 };
 
@@ -121,7 +122,7 @@ const normalizeServerNotification = (item = {}) => {
 };
 
 /**
- * Generate unique local notification ID
+ * Generate unique local session notification ID
  */
 const generateNotificationId = () => {
   return `notif_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
@@ -173,17 +174,26 @@ const notifyChange = (notifications) => {
 };
 
 /**
- * Get all merged notifications (server DB cache when authenticated + local events)
+ * Apply an in-memory transform across all notification lists and notify listeners.
+ */
+const updateAllStores = (transform) => {
+  serverNotifications = transform(serverNotifications);
+  localNotifications = transform(localNotifications);
+  pendingPushNotifications = transform(pendingPushNotifications);
+  notifyChange(getNotifications());
+};
+
+/**
+ * Get all merged notifications from memory (server DB records + in-session local/push events)
  */
 export const getNotifications = () => {
   const token = getCustomerAuthToken();
-  const serverList = token ? readStorageArray(SERVER_CACHE_KEY) : [];
-  const localList = readStorageArray(STORAGE_KEY);
+  const activeServerList = token ? serverNotifications : [];
 
   const seenIds = new Set();
   const combined = [];
 
-  for (const item of serverList) {
+  for (const item of activeServerList) {
     if (!item?.id || seenIds.has(item.id)) continue;
     seenIds.add(item.id);
     combined.push(item);
@@ -191,7 +201,7 @@ export const getNotifications = () => {
 
   for (const item of pendingPushNotifications) {
     if (!item?.id || seenIds.has(item.id)) continue;
-    const matchesServer = serverList.some(
+    const matchesServer = activeServerList.some(
       (srv) => srv.title === item.title && srv.message === item.message
     );
     if (matchesServer) continue;
@@ -199,7 +209,7 @@ export const getNotifications = () => {
     combined.push(item);
   }
 
-  for (const item of localList) {
+  for (const item of localNotifications) {
     if (!item?.id || seenIds.has(item.id)) continue;
     seenIds.add(item.id);
     combined.push(item);
@@ -215,23 +225,21 @@ export const getNotifications = () => {
 };
 
 /**
- * Save local notifications array to localStorage
+ * Replace in-session local notifications list in memory
  */
 export const saveNotifications = (notifications) => {
-  const ok = writeStorageArray(STORAGE_KEY, notifications || []);
-  if (ok) {
-    notifyChange(getNotifications());
-  }
-  return ok;
+  localNotifications = Array.isArray(notifications) ? notifications : [];
+  notifyChange(getNotifications());
+  return true;
 };
 
 /**
- * Fetch authenticated customer's notifications from backend MongoDB and merge cleanly.
+ * Fetch authenticated customer's notifications from backend MongoDB into memory.
  */
 export const syncNotificationsFromServer = async ({ force = false } = {}) => {
   const token = getCustomerAuthToken();
   if (!token || !BACKEND_URL) {
-    writeStorageArray(SERVER_CACHE_KEY, []);
+    serverNotifications = [];
     pendingPushNotifications = [];
     const current = getNotifications();
     notifyChange(current);
@@ -265,7 +273,7 @@ export const syncNotificationsFromServer = async ({ force = false } = {}) => {
         .map(normalizeServerNotification)
         .filter((item) => item.id);
 
-      writeStorageArray(SERVER_CACHE_KEY, normalizedServer);
+      serverNotifications = normalizedServer;
 
       // Drop optimistic push previews once backend confirms or ages out
       const now = Date.now();
@@ -303,15 +311,14 @@ export const getUnreadCount = () => {
 };
 
 /**
- * Add a new local notification
+ * Add an in-memory notification for the active session
  * @param {Object} notif - { title, message, type: 'order'|'table'|'offer'|'reservation'|'general', url }
  */
 export const addNotification = ({ title, message, type = "general", url = "" }) => {
   if (!title) return null;
-  const current = readStorageArray(STORAGE_KEY);
 
   // Deduplicate recent identical notification (within 30 seconds)
-  const isDuplicate = current.some(
+  const isDuplicate = localNotifications.some(
     (n) =>
       n.title === title &&
       n.message === message &&
@@ -330,7 +337,7 @@ export const addNotification = ({ title, message, type = "general", url = "" }) 
     source: "local",
   };
 
-  const updated = [newEntry, ...current].slice(0, 50); // Keep latest 50
+  const updated = [newEntry, ...localNotifications].slice(0, 50);
   saveNotifications(updated);
   return newEntry;
 };
@@ -383,13 +390,9 @@ export const addPushPreviewNotification = ({
 export const markAsRead = async (notificationId) => {
   if (!notificationId) return;
 
-  const markMatch = (list) =>
-    list.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n));
-
-  writeStorageArray(SERVER_CACHE_KEY, markMatch(readStorageArray(SERVER_CACHE_KEY)));
-  writeStorageArray(STORAGE_KEY, markMatch(readStorageArray(STORAGE_KEY)));
-  pendingPushNotifications = markMatch(pendingPushNotifications);
-  notifyChange(getNotifications());
+  updateAllStores((list) =>
+    list.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
+  );
 
   const token = getCustomerAuthToken();
   if (token && BACKEND_URL && isServerNotificationId(notificationId)) {
@@ -398,6 +401,7 @@ export const markAsRead = async (notificationId) => {
         method: "PUT",
         headers: buildCustomerHeaders(token),
       });
+      postCrossTabSync("NOTIFICATIONS_UPDATED");
     } catch (error) {
       console.error("Error marking server notification as read:", error);
     }
@@ -410,12 +414,7 @@ export const markAsRead = async (notificationId) => {
 export const deleteNotification = async (notificationId) => {
   if (!notificationId) return;
 
-  const removeMatch = (list) => list.filter((n) => n.id !== notificationId);
-
-  writeStorageArray(SERVER_CACHE_KEY, removeMatch(readStorageArray(SERVER_CACHE_KEY)));
-  writeStorageArray(STORAGE_KEY, removeMatch(readStorageArray(STORAGE_KEY)));
-  pendingPushNotifications = removeMatch(pendingPushNotifications);
-  notifyChange(getNotifications());
+  updateAllStores((list) => list.filter((n) => n.id !== notificationId));
 
   const token = getCustomerAuthToken();
   if (token && BACKEND_URL && isServerNotificationId(notificationId)) {
@@ -424,6 +423,7 @@ export const deleteNotification = async (notificationId) => {
         method: "DELETE",
         headers: buildCustomerHeaders(token),
       });
+      postCrossTabSync("NOTIFICATIONS_UPDATED");
     } catch (error) {
       console.error("Error deleting server notification:", error);
     }
@@ -434,12 +434,7 @@ export const deleteNotification = async (notificationId) => {
  * Mark all notifications as read
  */
 export const markAllAsRead = async () => {
-  const markAll = (list) => list.map((n) => ({ ...n, isRead: true }));
-
-  writeStorageArray(SERVER_CACHE_KEY, markAll(readStorageArray(SERVER_CACHE_KEY)));
-  writeStorageArray(STORAGE_KEY, markAll(readStorageArray(STORAGE_KEY)));
-  pendingPushNotifications = markAll(pendingPushNotifications);
-  notifyChange(getNotifications());
+  updateAllStores((list) => list.map((n) => ({ ...n, isRead: true })));
 
   const token = getCustomerAuthToken();
   if (token && BACKEND_URL) {
@@ -448,6 +443,7 @@ export const markAllAsRead = async () => {
         method: "PUT",
         headers: buildCustomerHeaders(token),
       });
+      postCrossTabSync("NOTIFICATIONS_UPDATED");
     } catch (error) {
       console.error("Error marking all server notifications as read:", error);
     }
@@ -458,10 +454,7 @@ export const markAllAsRead = async () => {
  * Clear all notifications
  */
 export const clearAllNotifications = async () => {
-  writeStorageArray(SERVER_CACHE_KEY, []);
-  writeStorageArray(STORAGE_KEY, []);
-  pendingPushNotifications = [];
-  notifyChange([]);
+  updateAllStores(() => []);
 
   const token = getCustomerAuthToken();
   if (token && BACKEND_URL) {
@@ -470,6 +463,7 @@ export const clearAllNotifications = async () => {
         method: "DELETE",
         headers: buildCustomerHeaders(token),
       });
+      postCrossTabSync("NOTIFICATIONS_UPDATED");
     } catch (error) {
       console.error("Error clearing server notifications:", error);
     }
@@ -478,7 +472,7 @@ export const clearAllNotifications = async () => {
 
 /**
  * Subscribe a UI component to real-time notification changes, initial server sync,
- * focus/visibility refreshes, cross-tab storage updates, and optional periodic polling.
+ * focus/visibility refreshes, auth storage changes, and optional periodic polling.
  *
  * @param {Function} onChange - Callback invoked with updated notifications array
  * @param {Object} [options]
@@ -498,8 +492,10 @@ export const subscribeToNotifications = (onChange, { pollIntervalMs = 60000 } = 
     emitCurrent(event?.detail?.notifications || getNotifications());
   };
 
-  const handleStorageChange = () => {
-    emitCurrent(getNotifications());
+  const handleAuthStorageChange = (event) => {
+    if (!event?.key || event.key === CUSTOMER_TOKEN_KEY) {
+      syncNotificationsFromServer({ force: true });
+    }
   };
 
   const handleFocusOrVisible = () => {
@@ -508,7 +504,7 @@ export const subscribeToNotifications = (onChange, { pollIntervalMs = 60000 } = 
   };
 
   window.addEventListener("notificationChange", handleNotificationChange);
-  window.addEventListener("storage", handleStorageChange);
+  window.addEventListener("storage", handleAuthStorageChange);
   window.addEventListener("focus", handleFocusOrVisible);
   document.addEventListener("visibilitychange", handleFocusOrVisible);
 
@@ -520,7 +516,7 @@ export const subscribeToNotifications = (onChange, { pollIntervalMs = 60000 } = 
 
   return () => {
     window.removeEventListener("notificationChange", handleNotificationChange);
-    window.removeEventListener("storage", handleStorageChange);
+    window.removeEventListener("storage", handleAuthStorageChange);
     window.removeEventListener("focus", handleFocusOrVisible);
     document.removeEventListener("visibilitychange", handleFocusOrVisible);
     if (timerId !== null) {
@@ -529,8 +525,14 @@ export const subscribeToNotifications = (onChange, { pollIntervalMs = 60000 } = 
   };
 };
 
-// Auto-wire tableChange event listener so QR scans log an automatic notification
+// Auto-wire event listeners and remove any legacy notification keys from localStorage
 if (typeof window !== "undefined") {
+  if (typeof localStorage !== "undefined") {
+    for (const key of LEGACY_NOTIFICATION_STORAGE_KEYS) {
+      localStorage.removeItem(key);
+    }
+  }
+
   window.addEventListener("tableChange", (event) => {
     const tableNo = event?.detail?.tableNo || event?.detail?.tableno;
     if (tableNo) {
@@ -543,7 +545,6 @@ if (typeof window !== "undefined") {
     }
   });
 
-  // Listen to order updates or placements
   window.addEventListener("orderPlaced", (event) => {
     const orderNo = event?.detail?.orderNo || event?.detail?.orderno;
     const orderId = event?.detail?.orderId || event?.detail?.orderid;
@@ -557,7 +558,6 @@ if (typeof window !== "undefined") {
     }
   });
 
-  // Sync backend notifications on foreground push, background BroadcastChannel wakeups, or auth changes
   window.addEventListener("savoryops_customer_notification", () => {
     syncNotificationsFromServer({ force: true });
   });
@@ -566,17 +566,15 @@ if (typeof window !== "undefined") {
     syncNotificationsFromServer({ force: true });
   });
 
-  if (typeof BroadcastChannel !== "undefined") {
-    try {
-      const channel = new BroadcastChannel(NOTIFICATION_BROADCAST_CHANNEL);
-      channel.addEventListener("message", (event) => {
-        if (event?.data?.type === "NOTIFICATION_RECEIVED") {
-          syncNotificationsFromServer({ force: true });
-        }
-      });
-    } catch {
-      // Ignore BroadcastChannel restriction
-    }
+  const channel = getBroadcastChannel();
+  if (channel) {
+    channel.addEventListener("message", (event) => {
+      if (
+        event?.data?.type === "NOTIFICATION_RECEIVED" ||
+        event?.data?.type === "NOTIFICATIONS_UPDATED"
+      ) {
+        syncNotificationsFromServer({ force: true });
+      }
+    });
   }
 }
-
