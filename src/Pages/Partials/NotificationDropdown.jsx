@@ -6,7 +6,6 @@ import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutl
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import {
@@ -16,7 +15,6 @@ import {
 import {
   getNotifications,
   markAsRead,
-  clearAllNotifications,
   formatTimeAgo,
   syncNotificationsFromServer,
   subscribeToNotifications,
@@ -142,11 +140,6 @@ const NotificationDropdown = ({ className = "" }) => {
     if (item.url) {
       navigate(item.url);
     }
-  };
-
-  const handleClearAll = (e) => {
-    e.stopPropagation();
-    clearAllNotifications();
   };
 
   const handleViewAllNotifications = (e) => {
@@ -280,15 +273,6 @@ const NotificationDropdown = ({ className = "" }) => {
           {/* Footer */}
           {notificationList.length > 0 && (
             <div className="notification-dropdown-footer">
-              <button
-                type="button"
-                className="notif-clear-all-btn"
-                onClick={handleClearAll}
-                title={translations.clearall || "Clear all"}
-              >
-                <DeleteSweepOutlinedIcon fontSize="small" />
-                <span>{translations.clearall || "Clear all"}</span>
-              </button>
               <button
                 type="button"
                 className="notif-view-all-btn"
