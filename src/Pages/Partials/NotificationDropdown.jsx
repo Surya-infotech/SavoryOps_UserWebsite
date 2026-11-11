@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import RestaurantMenuOutlinedIcon from "@mui/icons-material/RestaurantMenuOutlined";
@@ -18,6 +18,8 @@ import {
   markAsRead,
   clearAllNotifications,
   formatTimeAgo,
+  syncNotificationsFromServer,
+  subscribeToNotifications,
 } from "../../utils/notificationService.js";
 
 const getNotificationIcon = (type) => {
@@ -47,22 +49,11 @@ const NotificationDropdown = ({ className = "" }) => {
   const [enablingPush, setEnablingPush] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Sync state with storage and window events
-  const refreshNotifications = useCallback(() => {
-    setNotificationList(getNotifications());
-  }, []);
-
+  // Sync state with backend server, storage, and real-time window events
   useEffect(() => {
-    const handleNotificationChange = (e) => {
-      if (e?.detail?.notifications) {
-        setNotificationList(e.detail.notifications);
-      } else {
-        refreshNotifications();
-      }
-    };
-
-    window.addEventListener("notificationChange", handleNotificationChange);
-    window.addEventListener("storage", refreshNotifications);
+    const unsubscribeNotifications = subscribeToNotifications(setNotificationList, {
+      pollIntervalMs: 60000,
+    });
 
     const syncPushStatus = () => {
       setPushStatus(getCustomerPushStatus());
@@ -71,12 +62,11 @@ const NotificationDropdown = ({ className = "" }) => {
     window.addEventListener("customerAuthChange", syncPushStatus);
 
     return () => {
-      window.removeEventListener("notificationChange", handleNotificationChange);
-      window.removeEventListener("storage", refreshNotifications);
+      unsubscribeNotifications();
       window.removeEventListener("savoryops_customer_push_status", syncPushStatus);
       window.removeEventListener("customerAuthChange", syncPushStatus);
     };
-  }, [refreshNotifications]);
+  }, []);
 
   // Click outside to close
   useEffect(() => {
@@ -108,7 +98,13 @@ const NotificationDropdown = ({ className = "" }) => {
 
   const handleToggle = () => {
     setPushStatus(getCustomerPushStatus());
-    setIsOpen((prev) => !prev);
+    setIsOpen((prev) => {
+      const next = !prev;
+      if (next) {
+        syncNotificationsFromServer({ force: true });
+      }
+      return next;
+    });
   };
 
   const authToken = customerTokenKey && typeof localStorage !== "undefined" ? localStorage.getItem(customerTokenKey) : null;
@@ -270,7 +266,9 @@ const NotificationDropdown = ({ className = "" }) => {
                       </div>
                       {item.message && <p className="notif-item-msg">{item.message}</p>}
                       <div className="notif-meta-row">
-                        <span className="notif-item-time">{formatTimeAgo(item.createdAt)}</span>
+                        <span className="notif-item-time">
+                          {formatTimeAgo(item.createdAt, item.createdAtFormatted)}
+                        </span>
                       </div>
                     </div>
                   </div>

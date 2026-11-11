@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
@@ -21,6 +21,7 @@ import {
   clearAllNotifications,
   deleteNotification,
   formatTimeAgo,
+  subscribeToNotifications,
 } from "../../utils/notificationService.js";
 import "../../Scss/Pages/Notifications/notificationspage.scss";
 
@@ -77,28 +78,10 @@ const NotificationsPage = () => {
     };
   }, [translations, businessDisplayName]);
 
-  // Sync state with storage and window events
-  const refreshNotifications = useCallback(() => {
-    setNotificationList(getNotifications());
-  }, []);
-
+  // Sync state with backend server, storage, and real-time window events
   useEffect(() => {
-    const handleNotificationChange = (e) => {
-      if (e?.detail?.notifications) {
-        setNotificationList(e.detail.notifications);
-      } else {
-        refreshNotifications();
-      }
-    };
-
-    window.addEventListener("notificationChange", handleNotificationChange);
-    window.addEventListener("storage", refreshNotifications);
-
-    return () => {
-      window.removeEventListener("notificationChange", handleNotificationChange);
-      window.removeEventListener("storage", refreshNotifications);
-    };
-  }, [refreshNotifications]);
+    return subscribeToNotifications(setNotificationList, { pollIntervalMs: 60000 });
+  }, []);
 
   const unreadCount = useMemo(() => {
     return notificationList.filter((n) => !n.isRead).length;
@@ -209,7 +192,9 @@ const NotificationsPage = () => {
                         <span className="card-type-tag">
                           {getNotificationTypeLabel(item.type, translations)}
                         </span>
-                        <span className="card-timestamp">{formatTimeAgo(item.createdAt)}</span>
+                        <span className="card-timestamp">
+                          {formatTimeAgo(item.createdAt, item.createdAtFormatted)}
+                        </span>
                       </div>
 
                       <h4 className="card-title">

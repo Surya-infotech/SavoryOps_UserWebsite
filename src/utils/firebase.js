@@ -1,6 +1,10 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getMessaging, getToken, onMessage, isSupported } from "firebase/messaging";
-import { addNotification } from "./notificationService.js";
+import {
+  addPushPreviewNotification,
+  normalizeNotificationCategory,
+  resolveNotificationPath,
+} from "./notificationService.js";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDwK5CJM5X5MwRWSpTTFjBoq5O6YuYGUYo",
@@ -294,30 +298,6 @@ export const resetCustomerFcmSessionCache = () => {
   notifyPushStatusChanged();
 };
 
-function resolveLocalNotificationPath(data = {}) {
-  if (data.path && typeof data.path === "string" && data.path.startsWith("/")) {
-    return data.path;
-  }
-  if (data.url && typeof data.url === "string") {
-    try {
-      const parsed = new URL(data.url, window.location.origin);
-      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-    } catch {
-      return data.url;
-    }
-  }
-  return "/orders";
-}
-
-function mapNotificationCategory(rawType = "") {
-  const normalized = String(rawType).toLowerCase();
-  if (normalized.includes("order") || normalized.includes("kot")) return "order";
-  if (normalized.includes("reservation")) return "reservation";
-  if (normalized.includes("table")) return "table";
-  if (normalized.includes("offer")) return "offer";
-  return "general";
-}
-
 /**
  * Listen for foreground Firebase messages on User Website and sync with Notification dropdown & order screens.
  *
@@ -333,12 +313,13 @@ export const setupCustomerForegroundNotificationListener = async (onReceive) => 
     const body = payload.notification?.body || payload.data?.body || "";
     const icon = payload.notification?.icon || payload.data?.icon || "/favicon.ico";
     const tag = payload.data?.tag || payload.data?.type || `${title}_${body}`;
-    const targetPath = resolveLocalNotificationPath(payload.data);
+    const targetPath = resolveNotificationPath(payload.data, "/orders");
 
-    addNotification({
+    addPushPreviewNotification({
+      id: payload.data?.notificationId || "",
       title,
       message: body,
-      type: mapNotificationCategory(payload.data?.type || payload.data?.cancelScope),
+      type: normalizeNotificationCategory(payload.data?.type || payload.data?.cancelScope),
       url: targetPath,
     });
 

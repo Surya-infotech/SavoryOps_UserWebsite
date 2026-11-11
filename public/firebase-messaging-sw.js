@@ -23,8 +23,29 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
 
+const NOTIFICATION_BROADCAST_CHANNEL = "savoryops_customer_notifications";
+
+const notifyOpenClientsOfPush = () => {
+  try {
+    if (typeof BroadcastChannel !== "undefined") {
+      const channel = new BroadcastChannel(NOTIFICATION_BROADCAST_CHANNEL);
+      channel.postMessage({ type: "NOTIFICATION_RECEIVED", timestamp: Date.now() });
+      channel.close();
+    }
+  } catch {
+    // Ignore broadcast failure in restricted contexts
+  }
+};
+
+// Notify open website tabs whenever a push arrives (even when FCM renders notification natively)
+self.addEventListener("push", () => {
+  notifyOpenClientsOfPush();
+});
+
 // Handle background messages when only data payload is provided (avoid duplicates when notification object is present)
 messaging.onBackgroundMessage((payload) => {
+  notifyOpenClientsOfPush();
+
   if (!payload.notification) {
     const notificationTitle = payload.data?.title || "SavoryOps Order Update";
     const notificationOptions = {
@@ -59,6 +80,7 @@ function resolveTargetUrl(notificationData) {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  notifyOpenClientsOfPush();
   const targetUrl = resolveTargetUrl(event.notification.data);
 
   event.waitUntil(
