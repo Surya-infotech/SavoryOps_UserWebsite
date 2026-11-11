@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RestaurantMenuOutlinedIcon from "@mui/icons-material/RestaurantMenuOutlined";
@@ -17,7 +16,6 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import {
   getNotifications,
   markAsRead,
-  markAllAsRead,
   clearAllNotifications,
   deleteNotification,
   formatTimeAgo,
@@ -83,10 +81,6 @@ const NotificationsPage = () => {
     return subscribeToNotifications(setNotificationList, { pollIntervalMs: 60000 });
   }, []);
 
-  const unreadCount = useMemo(() => {
-    return notificationList.filter((n) => !n.isRead).length;
-  }, [notificationList]);
-
   const handleItemClick = (item) => {
     if (!item.isRead) {
       markAsRead(item.id);
@@ -94,10 +88,6 @@ const NotificationsPage = () => {
     if (item.url) {
       navigate(item.url);
     }
-  };
-
-  const handleMarkAllRead = () => {
-    markAllAsRead();
   };
 
   const handleClearAll = () => {
@@ -124,16 +114,6 @@ const NotificationsPage = () => {
           {/* Actions bar when notifications exist */}
           {notificationList.length > 0 && (
             <div className="notifications-top-actions">
-              {unreadCount > 0 && (
-                <button
-                  type="button"
-                  className="notif-action-btn mark-all-btn"
-                  onClick={handleMarkAllRead}
-                >
-                  <DoneAllIcon fontSize="small" />
-                  <span>{translations.markallread || "Mark all as read"}</span>
-                </button>
-              )}
               <button
                 type="button"
                 className="notif-action-btn clear-all-btn"
