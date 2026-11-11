@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RestaurantMenuOutlinedIcon from "@mui/icons-material/RestaurantMenuOutlined";
 import TableRestaurantOutlinedIcon from "@mui/icons-material/TableRestaurantOutlined";
@@ -119,7 +118,7 @@ const NotificationsPage = () => {
                 className="notif-action-btn clear-all-btn"
                 onClick={handleClearAll}
               >
-                <DeleteSweepOutlinedIcon fontSize="small" />
+                <DeleteOutlineOutlinedIcon fontSize="small" />
                 <span>{translations.clearall || "Clear all"}</span>
               </button>
             </div>
