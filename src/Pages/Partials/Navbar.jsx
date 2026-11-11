@@ -1169,8 +1169,10 @@ const Navbar = () => {
             branchId={selectedBranch?._id || selectedBranch?.branchid}
           />
 
-          {/* Action Buttons: Language, Cart & Profile */}
+          {/* Action Buttons: Language, QR Scanner, Notifications, Cart & Profile */}
           <div className="nav-actions">
+            <LanguageDropdown />
+
             <button
               type="button"
               className="nav-scanner-btn"
@@ -1180,7 +1182,7 @@ const Navbar = () => {
             >
               <QrCodeScannerIcon fontSize="small" />
             </button>
-            <LanguageDropdown />
+
             {auth.isLoggedIn && <NotificationDropdown />}
 
             <button
