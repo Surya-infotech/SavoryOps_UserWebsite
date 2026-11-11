@@ -503,5 +503,6 @@
   "viewallnotifications": "Visualizza tutte le notifiche",
   "notificationssubtitle": "Rimani aggiornato sui tuoi ordini in tempo reale, prenotazioni e offerte esclusive.",
   "nonotificationsfound": "Ancora nessuna notifica.",
-  "nonotificationsdesc": "La cronologia delle notifiche apparirà qui non appena riceverai aggiornamenti. Esplora il nostro menu per scoprire piatti deliziosi!"
+  "nonotificationsdesc": "La cronologia delle notifiche apparirà qui non appena riceverai aggiornamenti. Esplora il nostro menu per scoprire piatti deliziosi!",
+  "emptycartdescription": "Aggiungi piatti deliziosi dal nostro menu al tuo carrello per un checkout rapido e senza intoppi."
 }

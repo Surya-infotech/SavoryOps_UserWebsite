@@ -503,5 +503,6 @@
   "viewallnotifications": "Ver todas as notificações",
   "notificationssubtitle": "Fique atualizado sobre seus pedidos ao vivo, reservas e ofertas exclusivas.",
   "nonotificationsfound": "Nenhuma notificação ainda.",
-  "nonotificationsdesc": "O histórico de notificações aparecerá aqui assim que você receber atualizações. Explore nosso cardápio principal para descobrir pratos deliciosos!"
+  "nonotificationsdesc": "O histórico de notificações aparecerá aqui assim que você receber atualizações. Explore nosso cardápio principal para descobrir pratos deliciosos!",
+  "emptycartdescription": "Adicione pratos deliciosos do nosso cardápio ao seu carrinho para uma finalização rápida e prática."
 }

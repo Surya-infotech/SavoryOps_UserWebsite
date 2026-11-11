@@ -503,5 +503,6 @@
   "viewallnotifications": "View all notifications",
   "notificationssubtitle": "Stay updated on your live orders, reservations, tableside sessions, and exclusive restaurant rewards.",
   "nonotificationsfound": "No notifications yet.",
-  "nonotificationsdesc": "Your notification history will appear here once you receive updates. Explore our main menu to discover delicious treats!"
+  "nonotificationsdesc": "Your notification history will appear here once you receive updates. Explore our main menu to discover delicious treats!",
+  "emptycartdescription": "Add delicious dishes from our menu to your cart for a fast and seamless checkout experience."
 }

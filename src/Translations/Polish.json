@@ -503,5 +503,6 @@
   "viewallnotifications": "Zobacz wszystkie powiadomienia",
   "notificationssubtitle": "Bądź na bieżąco ze swoimi zamówieniami na żywo, rezerwacjami i ekskluzywnymi ofertami.",
   "nonotificationsfound": "Brak powiadomień.",
-  "nonotificationsdesc": "Twoja historia powiadomień pojawi się tutaj, gdy tylko otrzymasz aktualizacje. Odkryj nasze menu, aby znaleźć wyśmienite dania!"
+  "nonotificationsdesc": "Twoja historia powiadomień pojawi się tutaj, gdy tylko otrzymasz aktualizacje. Odkryj nasze menu, aby znaleźć wyśmienite dania!",
+  "emptycartdescription": "Dodaj pyszne dania z naszego menu do koszyka, aby cieszyć się szybkim i wygodnym zamówieniem."
 }

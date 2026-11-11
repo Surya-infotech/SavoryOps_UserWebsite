@@ -746,18 +746,18 @@ const CartPage = () => {
         )}
         {/* Empty State */}
         {cartItems.length === 0 ? (
-          <div className="cart-empty-state">
+          <div className="address-empty-card cart-empty-state">
             <div className="empty-icon-wrap">
               <ShoppingBagOutlinedIcon className="empty-icon" />
             </div>
             <h2 className="empty-title">{translations.yourcartisempty}</h2>
-            <p className="empty-desc">
-              {translations.emptycartmessage}
+            <p className="empty-subtitle">
+              {translations.emptycartdescription ||
+                "Add delicious dishes from our menu to your cart for a fast and seamless checkout experience."}
             </p>
-            <Link to="/menu" className="empty-browse-btn">
+            <Link to="/menu" className="empty-add-btn">
               <RestaurantMenuIcon fontSize="small" />
-              <span>{translations.browsemenu}</span>
-              <ArrowForwardIcon fontSize="small" />
+              <span>{translations.exploremenu || translations.browsemenu}</span>
             </Link>
           </div>
         ) : (
@@ -1083,8 +1083,8 @@ const CartPage = () => {
                           {currentOrderNo
                             ? translations.updatingorder
                             : isDineIn
-                            ? translations.placingorder
-                            : translations.processing}
+                              ? translations.placingorder
+                              : translations.processing}
                         </span>
                       </>
                     ) : currentOrderNo ? (
