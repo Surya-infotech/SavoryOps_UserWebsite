@@ -15,6 +15,7 @@ import { useWebsiteStatus } from "./UnderMaintenance.jsx";
 import { getBrowserAndDeviceDetails, getIpAndLocation } from "../../utils/deviceDetails.js";
 import {
   CUSTOMER_FCM_STORAGE_KEY,
+  markCustomerFcmTokenRegistered,
   requestCustomerNotificationPermission,
   setupCustomerForegroundNotificationListener,
 } from "../../utils/firebase.js";
@@ -292,11 +293,11 @@ const SigninPage = () => {
     }
 
     if (verifySuccessData) {
-      completeLogin(verifySuccessData);
+      completeLogin(verifySuccessData, cachedFcmToken);
     }
   };
 
-  const completeLogin = (data) => {
+  const completeLogin = (data, sentFcmToken = null) => {
     const customer = data.customer || {};
     const customerId = data.id || customer._id || customer.customerid || "";
     const customerToken = data.token || "";
@@ -304,7 +305,11 @@ const SigninPage = () => {
     // Only store CUSTOMER_ID and savoryopscustomer_token in localStorage
     localStorage.setItem(customerTokenName, customerToken);
     localStorage.setItem(customerIdName, String(customerId));
-    void requestCustomerNotificationPermission(customerToken);
+    if (sentFcmToken) {
+      markCustomerFcmTokenRegistered(customerToken, sentFcmToken);
+    } else {
+      void requestCustomerNotificationPermission(customerToken);
+    }
     setupCustomerForegroundNotificationListener();
 
     showSnackbar(translations.signedinsuccessfully, "success");

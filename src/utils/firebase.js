@@ -16,7 +16,8 @@ export const CUSTOMER_FCM_STORAGE_KEY = "SAVORYOPS_CUSTOMER_FCM_TOKEN";
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 let messagingInstance = null;
-let isRegistrationInProgress = false;
+let inFlightRegistrationPromise = null;
+let inFlightAuthToken = null;
 let lastRegisteredSessionKey = null;
 let foregroundListenerRegistered = false;
 
@@ -101,6 +102,15 @@ export const getCustomerPushStatus = () => {
   };
 };
 
+export const markCustomerFcmTokenRegistered = (authToken, fcmToken) => {
+  if (!authToken || !fcmToken) return;
+  lastRegisteredSessionKey = `${authToken}:${fcmToken}`;
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem(CUSTOMER_FCM_STORAGE_KEY, fcmToken);
+  }
+  notifyPushStatusChanged();
+};
+
 /**
  * Request notification permission, register service worker, and store customer FCM token on backend.
  *
@@ -112,8 +122,8 @@ export const getCustomerPushStatus = () => {
 export const requestCustomerNotificationPermission = async (authToken, { force = false } = {}) => {
   if (typeof window === "undefined" || !authToken) return null;
 
-  if (isRegistrationInProgress) {
-    return localStorage.getItem(CUSTOMER_FCM_STORAGE_KEY) || null;
+  if (inFlightRegistrationPromise && inFlightAuthToken === authToken && !force) {
+    return inFlightRegistrationPromise;
   }
 
   if (!window.isSecureContext) {
@@ -130,89 +140,98 @@ export const requestCustomerNotificationPermission = async (authToken, { force =
     return null;
   }
 
-  try {
-    isRegistrationInProgress = true;
-    const messaging = await getFirebaseMessaging();
-    if (!messaging) {
-      notifyPushStatusChanged();
-      return null;
-    }
-
-    const permission =
-      Notification.permission === "granted"
-        ? "granted"
-        : await Notification.requestPermission();
-    if (permission !== "granted") {
-      console.log("[FCM] Customer notification permission not granted:", permission);
-      notifyPushStatusChanged();
-      return null;
-    }
-
-    const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
-      scope: "/",
-    });
+  const runRegistration = async () => {
     try {
-      await registration.update();
-    } catch {
-      // Ignore update errors
-    }
-
-    await Promise.race([
-      navigator.serviceWorker.ready,
-      new Promise((resolve) => setTimeout(resolve, 4000)),
-    ]);
-
-    const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY || undefined;
-    const tokenOptions = { serviceWorkerRegistration: registration };
-    if (vapidKey) tokenOptions.vapidKey = vapidKey;
-
-    const fcmToken = await getToken(messaging, tokenOptions);
-    if (!fcmToken) {
-      console.warn("[FCM] No customer FCM registration token returned.");
-      notifyPushStatusChanged();
-      return null;
-    }
-
-    const sessionKey = `${authToken}:${fcmToken}`;
-    if (!force && lastRegisteredSessionKey === sessionKey) {
-      return fcmToken;
-    }
-
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    if (backendUrl) {
-      const response = await fetch(`${backendUrl}/Website/General/save-fcm-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-          "x-user": "customer",
-        },
-        body: JSON.stringify({
-          fcmToken,
-          device: "Web Browser",
-        }),
-      });
-
-      if (response.ok) {
-        lastRegisteredSessionKey = sessionKey;
-        localStorage.setItem(CUSTOMER_FCM_STORAGE_KEY, fcmToken);
-        notifyPushStatusChanged();
-      } else {
-        const resData = await response.json().catch(() => ({}));
-        console.warn("[FCM] Failed to save customer FCM token:", response.status, resData);
+      const messaging = await getFirebaseMessaging();
+      if (!messaging) {
         notifyPushStatusChanged();
         return null;
       }
-    }
 
-    return fcmToken;
-  } catch (err) {
-    console.error("[FCM] Error requesting customer notification permission:", err);
-    notifyPushStatusChanged();
-    return null;
-  } finally {
-    isRegistrationInProgress = false;
-  }
+      const permission =
+        Notification.permission === "granted"
+          ? "granted"
+          : await Notification.requestPermission();
+      if (permission !== "granted") {
+        console.log("[FCM] Customer notification permission not granted:", permission);
+        notifyPushStatusChanged();
+        return null;
+      }
+
+      const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+        scope: "/",
+      });
+      try {
+        await registration.update();
+      } catch {
+        // Ignore update errors
+      }
+
+      await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((resolve) => setTimeout(resolve, 4000)),
+      ]);
+
+      const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY || undefined;
+      const tokenOptions = { serviceWorkerRegistration: registration };
+      if (vapidKey) tokenOptions.vapidKey = vapidKey;
+
+      const fcmToken = await getToken(messaging, tokenOptions);
+      if (!fcmToken) {
+        console.warn("[FCM] No customer FCM registration token returned.");
+        notifyPushStatusChanged();
+        return null;
+      }
+
+      const sessionKey = `${authToken}:${fcmToken}`;
+      if (!force && lastRegisteredSessionKey === sessionKey) {
+        return fcmToken;
+      }
+
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      if (backendUrl) {
+        const response = await fetch(`${backendUrl}/Website/General/save-fcm-token`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+            "x-user": "customer",
+          },
+          body: JSON.stringify({
+            fcmToken,
+            device: "Web Browser",
+          }),
+        });
+
+        if (response.ok) {
+          lastRegisteredSessionKey = sessionKey;
+          localStorage.setItem(CUSTOMER_FCM_STORAGE_KEY, fcmToken);
+          notifyPushStatusChanged();
+        } else {
+          const resData = await response.json().catch(() => ({}));
+          console.warn("[FCM] Failed to save customer FCM token:", response.status, resData);
+          notifyPushStatusChanged();
+          return null;
+        }
+      }
+
+      return fcmToken;
+    } catch (err) {
+      console.error("[FCM] Error requesting customer notification permission:", err);
+      notifyPushStatusChanged();
+      return null;
+    } finally {
+      if (inFlightRegistrationPromise === promise) {
+        inFlightRegistrationPromise = null;
+        inFlightAuthToken = null;
+      }
+    }
+  };
+
+  const promise = runRegistration();
+  inFlightRegistrationPromise = promise;
+  inFlightAuthToken = authToken;
+  return promise;
 };
 
 export const enableCustomerPushNotifications = async (authToken) => {
