@@ -426,3 +426,136 @@
     }
   }
 }
+
+/* --- Clear All Confirmation Dialog (Matching ManageAddress & OrderDetails design) --- */
+.notifications-delete-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(5px);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  overflow-y: auto;
+  animation: notifModalFadeIn 0.2s ease;
+
+  .delete-modal-dialog {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+    animation: notifModalSlideUp 0.2s ease;
+
+    .delete-icon-box {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #fee2e2;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+
+      .delete-icon {
+        font-size: 1.85rem;
+      }
+    }
+
+    .delete-modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem;
+    }
+
+    .delete-modal-text {
+      font-size: 0.9rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0 0 1.5rem;
+    }
+
+    .delete-modal-actions {
+      display: flex;
+      gap: 12px;
+
+      .delete-cancel-btn {
+        flex: 1;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover:not(:disabled) {
+          border-color: #94a3b8;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .delete-confirm-btn {
+        flex: 1;
+        height: 42px;
+        border-radius: 10px;
+        border: none;
+        background: #dc2626;
+        color: #ffffff;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgba(220, 38, 38, 0.25);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+
+        &:hover:not(:disabled) {
+          background: #b91c1c;
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+@keyframes notifModalFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes notifModalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
