@@ -10,6 +10,10 @@ import Footer from "./Pages/Partials/Footer.jsx";
 import { useLanguage } from "./Context/useLanguage.js";
 import HomeRouter from "./Router/Home.jsx";
 import { processTableQrCode } from "./utils/qrTableService.js";
+import {
+  requestCustomerNotificationPermission,
+  setupCustomerForegroundNotificationListener,
+} from "./utils/firebase.js";
 import "./App.scss";
 import "./Scss/Pages/Partials/undermaintenance.scss";
 
@@ -43,9 +47,35 @@ const LoadingSplash = ({ business }) => {
   );
 };
 
+const customerTokenKey = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
+
 const AppContent = () => {
   const location = useLocation();
   const isAuthPage = location.pathname.toLowerCase() === "/signin";
+
+  // Register Web Push notification token for logged-in customer website sessions
+  useEffect(() => {
+    const syncCustomerPush = () => {
+      const token = customerTokenKey ? localStorage.getItem(customerTokenKey) : null;
+      if (token) {
+        requestCustomerNotificationPermission(token);
+        setupCustomerForegroundNotificationListener();
+      }
+    };
+
+    syncCustomerPush();
+
+    const handleAuthChange = (event) => {
+      if (event?.detail?.isLoggedIn) {
+        syncCustomerPush();
+      }
+    };
+
+    window.addEventListener("customerAuthChange", handleAuthChange);
+    return () => {
+      window.removeEventListener("customerAuthChange", handleAuthChange);
+    };
+  }, []);
 
   // Automatically scroll to the top of the page on route change
   useEffect(() => {

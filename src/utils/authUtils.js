@@ -1,3 +1,5 @@
+import { CUSTOMER_FCM_STORAGE_KEY, resetCustomerFcmSessionCache } from "./firebase.js";
+
 /**
  * Keys in localStorage that should NOT be removed when a user logs out
  * or deletes their account (app preferences, selected branch, and order type).
@@ -16,20 +18,39 @@ const PRESERVED_STORAGE_KEYS = [
  */
 export const logoutCustomerApi = async (token, customerId) => {
   const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-  if (!token || !adminPanelBackendPath) return;
+  const fcmToken =
+    typeof localStorage !== "undefined" ? localStorage.getItem(CUSTOMER_FCM_STORAGE_KEY) || "" : "";
+
+  if (!adminPanelBackendPath) {
+    resetCustomerFcmSessionCache();
+    return;
+  }
 
   try {
-    await fetch(`${adminPanelBackendPath}/Website/General/Logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-user": "customer",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ token, customerId }),
-    });
+    if (token) {
+      await fetch(`${adminPanelBackendPath}/Website/General/Logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "customer",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ token, customerId, fcmToken }),
+      });
+    } else if (fcmToken) {
+      await fetch(`${adminPanelBackendPath}/Website/General/remove-fcm-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "customer",
+        },
+        body: JSON.stringify({ fcmToken, customerId }),
+      });
+    }
   } catch (error) {
     console.error("Error during customer logout API call:", error);
+  } finally {
+    resetCustomerFcmSessionCache();
   }
 };
 

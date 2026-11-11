@@ -15,6 +15,7 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { clearStorageOnLogout } from "../../utils/authUtils.js";
+import { resetCustomerFcmSessionCache } from "../../utils/firebase.js";
 import "../../Scss/Pages/Settings/settings.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -368,6 +369,7 @@ const SettingsPage = () => {
       const data = await response.json().catch(() => null);
 
       if (response.ok) {
+        resetCustomerFcmSessionCache();
         // Clear authentication and preferences from localStorage
         clearStorageOnLogout();
         window.dispatchEvent(

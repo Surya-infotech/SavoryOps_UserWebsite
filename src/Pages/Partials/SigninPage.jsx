@@ -13,6 +13,11 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
 import { getBrowserAndDeviceDetails, getIpAndLocation } from "../../utils/deviceDetails.js";
+import {
+  CUSTOMER_FCM_STORAGE_KEY,
+  requestCustomerNotificationPermission,
+  setupCustomerForegroundNotificationListener,
+} from "../../utils/firebase.js";
 import "../../Scss/Pages/Partials/signin.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -229,6 +234,16 @@ const SigninPage = () => {
     if (e) e.preventDefault();
     setOtpError("");
 
+    const cachedFcmToken = typeof localStorage !== "undefined" ? localStorage.getItem(CUSTOMER_FCM_STORAGE_KEY) : null;
+    if (
+      typeof window !== "undefined" &&
+      window.isSecureContext &&
+      "Notification" in window &&
+      Notification.permission === "default"
+    ) {
+      Notification.requestPermission().catch(() => {});
+    }
+
     const fullOtp = otpValues.join("");
     if (fullOtp.length !== OTP_LENGTH) {
       setOtpError(translations.enterallotpdigits);
@@ -254,6 +269,7 @@ const SigninPage = () => {
         body: JSON.stringify({
           phone: phoneNumber,
           otp: fullOtp,
+          ...(cachedFcmToken ? { fcmToken: cachedFcmToken } : {}),
           browserdetails,
           device,
           ipaddress,
@@ -288,6 +304,8 @@ const SigninPage = () => {
     // Only store CUSTOMER_ID and savoryopscustomer_token in localStorage
     localStorage.setItem(customerTokenName, customerToken);
     localStorage.setItem(customerIdName, String(customerId));
+    void requestCustomerNotificationPermission(customerToken);
+    setupCustomerForegroundNotificationListener();
 
     showSnackbar(translations.signedinsuccessfully, "success");
 
