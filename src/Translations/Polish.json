@@ -499,5 +499,21 @@
   "viewallnotifications": "Zobacz wszystkie powiadomienia",
   "nonotificationsfound": "Brak powiadomień.",
   "nonotificationsdesc": "Twoja historia powiadomień pojawi się tutaj, gdy tylko otrzymasz aktualizacje. Odkryj nasze menu, aby znaleźć wyśmienite dania!",
-  "emptycartdescription": "Dodaj pyszne dania z naszego menu do koszyka, aby cieszyć się szybkim i wygodnym zamówieniem."
+  "emptycartdescription": "Dodaj pyszne dania z naszego menu do koszyka, aby cieszyć się szybkim i wygodnym zamówieniem.",
+  "clearallnotifications": "Usunąć wszystkie powiadomienia?",
+  "clearallnotificationsconfirm": "Czy na pewno chcesz usunąć wszystkie powiadomienia? Tej operacji nie można cofnąć.",
+  "deal": "Zestaw",
+  "noitemfound": "Nie znaleziono pozycji",
+  "searchingdishes": "Wyszukiwanie dań...",
+  "switchbranchhint": "Aby zmienić lokal, użyj selektora lokalizacji lokalu w górnym pasku nawigacji.",
+  "scanned": "Zeskanowano",
+  "searchcountryplaceholder": "Szukaj kraju lub kodu (+91)...",
+  "pushnotificationsenabled": "Powiadomienia push zostały pomyślnie włączone.",
+  "pushnotificationsblocked": "Powiadomienia są zablokowane w ustawieniach witryny przeglądarki.",
+  "pushnotificationsfailed": "Nie udało się zarejestrować powiadomień push w przeglądarce.",
+  "pushinsecureoriginsnackbar": "Otwórz chrome://flags/#unsafely-treat-insecure-origin-as-secure, dodaj {origin} i uruchom ponownie Chrome.",
+  "pushinsecureoriginbanner": "Źródło HTTP zablokowane przez przeglądarkę. Dodaj {origin} (z portem) w chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Włącz powiadomienia przeglądarki o aktualizacjach zamówień i kuchni.",
+  "enabling": "Włączanie...",
+  "enable": "Włącz"
 }

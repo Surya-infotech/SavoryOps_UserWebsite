@@ -499,5 +499,21 @@
   "viewallnotifications": "Kuva kõik teated",
   "nonotificationsfound": "Teateid veel pole.",
   "nonotificationsdesc": "Teie teadete ajalugu ilmub siia pärast värskenduste saabumist. Tutvuge meie põhimenüüga!",
-  "emptycartdescription": "Lisage menüüst maitsvaid roogasid ostukorvi kiireks ja sujuvaks tellimiseks."
+  "emptycartdescription": "Lisage menüüst maitsvaid roogasid ostukorvi kiireks ja sujuvaks tellimiseks.",
+  "clearallnotifications": "Kustutada kõik teated?",
+  "clearallnotificationsconfirm": "Kas olete kindel, et soovite kõik teated kustutada? Seda toimingut ei saa tagasi võtta.",
+  "deal": "Pakkumine",
+  "noitemfound": "Üksusi ei leitud",
+  "searchingdishes": "Roogade otsimine...",
+  "switchbranchhint": "Esinduse vahetamiseks kasutage ülemisel navigeerimisribal asuvat asukohavalijat.",
+  "scanned": "Skannitud",
+  "searchcountryplaceholder": "Otsi riiki või koodi (+91)...",
+  "pushnotificationsenabled": "Tõuketeated edukalt lubatud.",
+  "pushnotificationsblocked": "Teated on teie brauseri saidiseadetes blokeeritud.",
+  "pushnotificationsfailed": "Brauseri tõuketeateid ei õnnestunud registreerida.",
+  "pushinsecureoriginsnackbar": "Avage chrome://flags/#unsafely-treat-insecure-origin-as-secure, lisage {origin} ja taaskäivitage Chrome.",
+  "pushinsecureoriginbanner": "Brauser blokeeris HTTP-päritolu. Lisage {origin} (koos pordiga) aadressil chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Lubage brauseri teated tellimuste ja köögiteadete jaoks.",
+  "enabling": "Lubamine...",
+  "enable": "Luba"
 }

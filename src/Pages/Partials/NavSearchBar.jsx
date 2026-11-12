@@ -261,7 +261,7 @@ const NavSearchBar = ({ branch, branchId }) => {
             ref={inputRef}
             type="text"
             className="nav-search-input"
-            placeholder={translations.searchdishes || "Search dishes, food..."}
+            placeholder={translations.searchdishes}
             value={query}
             onChange={handleInputChange}
             onFocus={() => {
@@ -269,15 +269,15 @@ const NavSearchBar = ({ branch, branchId }) => {
             }}
             onKeyDown={handleKeyDown}
             autoComplete="off"
-            aria-label={translations.searchdishes || "Search dishes"}
+            aria-label={translations.searchdishes}
           />
           {query && (
             <button
               type="button"
               className="nav-search-clear-btn"
               onClick={handleClear}
-              title={translations.clearsearch || "Clear"}
-              aria-label="Clear search input"
+              title={translations.clearsearch}
+              aria-label={translations.clearsearch}
             >
               <CloseIcon fontSize="inherit" />
             </button>
@@ -290,7 +290,7 @@ const NavSearchBar = ({ branch, branchId }) => {
             {loading ? (
               <div className="nav-search-dropdown-loading">
                 <span className="search-spin-dot" />
-                <span>{translations.loading || "Searching dishes..."}</span>
+                <span>{translations.searchingdishes}</span>
               </div>
             ) : topMatches.length > 0 ? (
               <div className="nav-search-items-list">
@@ -354,7 +354,7 @@ const NavSearchBar = ({ branch, branchId }) => {
                   <SearchOffIcon className="search-empty-icon" />
                 </div>
                 <p className="search-empty-title">
-                  {translations.nomatchingitems || "No matching dishes found"}
+                  {translations.nomatchingitems}
                 </p>
               </div>
             )}

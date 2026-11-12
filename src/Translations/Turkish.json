@@ -499,5 +499,21 @@
   "viewallnotifications": "Tüm bildirimleri görüntüle",
   "nonotificationsfound": "Henüz bildirim yok.",
   "nonotificationsdesc": "Güncellemeler aldığınızda bildirim geçmişiniz burada görünecektir. Lezzetleri keşfetmek için ana menümüze göz atın!",
-  "emptycartdescription": "Hızlı ve sorunsuz bir ödeme deneyimi için menümüzden lezzetli yemekleri sepetinize ekleyin."
+  "emptycartdescription": "Hızlı ve sorunsuz bir ödeme deneyimi için menümüzden lezzetli yemekleri sepetinize ekleyin.",
+  "clearallnotifications": "Tüm Bildirimler Silinsin mi?",
+  "clearallnotificationsconfirm": "Tüm bildirimleri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+  "deal": "Fırsat",
+  "noitemfound": "Ürün bulunamadı",
+  "searchingdishes": "Yemekler aranıyor...",
+  "switchbranchhint": "Şube değiştirmek için üst gezinme çubuğundaki şube konum seçicisini kullanın.",
+  "scanned": "Tarandı",
+  "searchcountryplaceholder": "Ülke veya kod (+91) ara...",
+  "pushnotificationsenabled": "Anlık bildirimler başarıyla etkinleştirildi.",
+  "pushnotificationsblocked": "Bildirimler tarayıcı site ayarlarınızda engellenmiş.",
+  "pushnotificationsfailed": "Tarayıcı anlık bildirimleri kaydedilemedi.",
+  "pushinsecureoriginsnackbar": "chrome://flags/#unsafely-treat-insecure-origin-as-secure sayfasını açın, {origin} adresini ekleyin ve Chrome'u yeniden başlatın.",
+  "pushinsecureoriginbanner": "HTTP kaynağı tarayıcı tarafından engellendi. chrome://flags/#unsafely-treat-insecure-origin-as-secure içinde {origin} (port dahil) adresini ekleyin",
+  "enablebrowseralerts": "Sipariş ve mutfak güncellemeleri için tarayıcı bildirimlerini etkinleştirin.",
+  "enabling": "Etkinleştiriliyor...",
+  "enable": "Etkinleştir"
 }

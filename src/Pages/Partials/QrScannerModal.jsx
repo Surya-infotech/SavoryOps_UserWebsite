@@ -85,11 +85,11 @@ const QrScannerModal = ({ isOpen, onClose }) => {
             navigate(`/menu?table=${encodeURIComponent(result.tableNo)}`);
           }
         } else {
-          showSnackbar(`Scanned: ${scannedText}`, "info");
+          showSnackbar(`${translations.scanned}: ${scannedText}`, "info");
         }
       } catch (err) {
         console.error("Error processing scanned QR code:", err);
-        showSnackbar(translations.errorprocessingtableqrcode || translations.somethingwentwrong, "error");
+        showSnackbar(translations.errorprocessingtableqrcode, "error");
       } finally {
         setTimeout(() => {
           isProcessingRef.current = false;

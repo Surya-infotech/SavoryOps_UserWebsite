@@ -499,5 +499,21 @@
   "viewallnotifications": "Alle meldingen bekijken",
   "nonotificationsfound": "Nog geen meldingen.",
   "nonotificationsdesc": "Uw meldingsgeschiedenis verschijnt hier zodra u updates ontvangt. Bekijk ons hoofdmenu om heerlijke gerechten te ontdekken!",
-  "emptycartdescription": "Voeg heerlijke gerechten uit ons menu toe aan uw winkelwagen voor een snelle en vlotte afrekening."
+  "emptycartdescription": "Voeg heerlijke gerechten uit ons menu toe aan uw winkelwagen voor een snelle en vlotte afrekening.",
+  "clearallnotifications": "Alle meldingen verwijderen?",
+  "clearallnotificationsconfirm": "Weet u zeker dat u alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+  "deal": "Aanbieding",
+  "noitemfound": "Geen items gevonden",
+  "searchingdishes": "Gerechten zoeken...",
+  "switchbranchhint": "Gebruik de vestigingskiezer in de bovenste navigatiebalk om van filiaal te wisselen.",
+  "scanned": "Gescand",
+  "searchcountryplaceholder": "Zoek land of landcode (+91)...",
+  "pushnotificationsenabled": "Pushmeldingen succesvol ingeschakeld.",
+  "pushnotificationsblocked": "Meldingen zijn geblokkeerd in de site-instellingen van uw browser.",
+  "pushnotificationsfailed": "Kan browser-pushmeldingen niet registreren.",
+  "pushinsecureoriginsnackbar": "Open chrome://flags/#unsafely-treat-insecure-origin-as-secure, voeg {origin} toe en start Chrome opnieuw.",
+  "pushinsecureoriginbanner": "HTTP-origin geblokkeerd door browser. Voeg {origin} (met poort) toe in chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Schakel browsermeldingen in voor bestel- en keukenupdates.",
+  "enabling": "Inschakelen...",
+  "enable": "Inschakelen"
 }

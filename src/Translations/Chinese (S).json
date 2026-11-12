@@ -499,5 +499,21 @@
   "viewallnotifications": "查看全部通知",
   "nonotificationsfound": "暂无通知。",
   "nonotificationsdesc": "当您收到更新时，通知历史记录将显示在这里。浏览我们的主菜单发现更多美味！",
-  "emptycartdescription": "从菜单将美味菜品加入购物车，享受快速流畅的结账体验。"
+  "emptycartdescription": "从菜单将美味菜品加入购物车，享受快速流畅的结账体验。",
+  "clearallnotifications": "删除所有通知？",
+  "clearallnotificationsconfirm": "您确定要删除所有通知吗？此操作无法撤销。",
+  "deal": "优惠套餐",
+  "noitemfound": "未找到商品",
+  "searchingdishes": "正在搜索菜品...",
+  "switchbranchhint": "要切换用餐分店，请使用顶部导航栏中的分店位置选择器。",
+  "scanned": "已扫描",
+  "searchcountryplaceholder": "搜索国家/地区或区号 (+91)...",
+  "pushnotificationsenabled": "推送通知已成功启用。",
+  "pushnotificationsblocked": "浏览器站点设置中已屏蔽通知。",
+  "pushnotificationsfailed": "无法注册浏览器推送通知。",
+  "pushinsecureoriginsnackbar": "请打开 chrome://flags/#unsafely-treat-insecure-origin-as-secure，添加 {origin}，然后重启 Chrome。",
+  "pushinsecureoriginbanner": "浏览器已阻止 HTTP 来源。请在 chrome://flags/#unsafely-treat-insecure-origin-as-secure 中添加 {origin}（含端口）",
+  "enablebrowseralerts": "开启浏览器通知以接收订单和厨房备餐状态更新。",
+  "enabling": "正在启用...",
+  "enable": "启用"
 }

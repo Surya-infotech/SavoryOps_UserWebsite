@@ -385,7 +385,7 @@ const OffersPage = () => {
                     type="button"
                     className="filter-clear-btn"
                     onClick={handleClearFilters}
-                    title="Clear all filters"
+                    title={translations.resetfilters}
                   >
                     <CloseIcon fontSize="small" />
                     <span>{translations.clear}</span>

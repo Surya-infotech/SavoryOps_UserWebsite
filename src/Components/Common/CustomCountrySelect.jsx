@@ -6,6 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import PublicIcon from "@mui/icons-material/Public";
+import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/General/customcountryselect.scss";
 
 /**
@@ -34,6 +35,7 @@ export const CustomCountrySelect = ({
   "aria-label": ariaLabel,
   className = "",
 }) => {
+  const { translations = {} } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef(null);
@@ -169,7 +171,7 @@ export const CustomCountrySelect = ({
                 ref={searchInputRef}
                 type="text"
                 className="country-search-input"
-                placeholder="Search country or code (+91)..."
+                placeholder={translations.searchcountryplaceholder}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
@@ -180,7 +182,7 @@ export const CustomCountrySelect = ({
                   type="button"
                   className="country-search-clear-btn"
                   onClick={() => setSearch("")}
-                  aria-label="Clear search"
+                  aria-label={translations.clearsearch}
                 >
                   <CloseIcon fontSize="inherit" />
                 </button>

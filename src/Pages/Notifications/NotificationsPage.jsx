@@ -41,15 +41,15 @@ const getNotificationIcon = (type) => {
 const getNotificationTypeLabel = (type, translations = {}) => {
   switch (type) {
     case "order":
-      return translations.orders || "Order";
+      return translations.orders;
     case "table":
-      return translations.table || "Table";
+      return translations.tablelabel;
     case "offer":
-      return translations.offers || "Special Offer";
+      return translations.offers;
     case "reservation":
-      return translations.tablereservation || "Reservation";
+      return translations.tablereservation;
     default:
-      return translations.notification || "Notification";
+      return translations.notification;
   }
 };
 
@@ -65,7 +65,7 @@ const NotificationsPage = () => {
 
   // Dynamic document title
   useEffect(() => {
-    const pageTitle = translations.notifications || "Notifications";
+    const pageTitle = translations.notifications;
     if (businessDisplayName) {
       document.title = `${pageTitle} | ${businessDisplayName}`;
     } else {
@@ -125,8 +125,8 @@ const NotificationsPage = () => {
   };
 
   const breadcrumbItems = [
-    { label: translations.home || "Home", path: "/" },
-    { label: translations.notifications || "Notifications" },
+    { label: translations.home, path: "/" },
+    { label: translations.notifications },
   ];
 
   return (
@@ -145,7 +145,7 @@ const NotificationsPage = () => {
                 onClick={handleOpenClearAllModal}
               >
                 <DeleteOutlineOutlinedIcon fontSize="small" />
-                <span>{translations.clearall || "Clear all"}</span>
+                <span>{translations.clearall}</span>
               </button>
             </div>
           )}
@@ -157,17 +157,14 @@ const NotificationsPage = () => {
                 <NotificationsOutlinedIcon className="empty-icon" />
               </div>
               <h2 className="empty-title">
-                {translations.nonotificationsfound ||
-                  translations.nonotifications ||
-                  "No notifications yet."}
+                {translations.nonotificationsfound}
               </h2>
               <p className="empty-subtitle">
-                {translations.nonotificationsdesc ||
-                  "Your notification history will appear here once you receive updates. Explore our main menu to discover delicious treats!"}
+                {translations.nonotificationsdesc}
               </p>
               <Link to="/menu" className="empty-add-btn">
                 <RestaurantMenuIcon fontSize="small" />
-                <span>{translations.exploremenu || "Explore Menu"}</span>
+                <span>{translations.exploremenu}</span>
               </Link>
             </div>
           ) : (
@@ -213,7 +210,7 @@ const NotificationsPage = () => {
                       <div className="card-bottom-row">
                         {item.url && (
                           <span className="card-action-link">
-                            <span>{translations.viewdetails || "View Details"}</span>
+                            <span>{translations.viewdetails}</span>
                             <ArrowForwardIcon fontSize="inherit" className="arrow-icon" />
                           </span>
                         )}
@@ -222,8 +219,8 @@ const NotificationsPage = () => {
                           type="button"
                           className="card-delete-btn"
                           onClick={(e) => handleDeleteItem(e, item.id)}
-                          title={translations.delete || "Delete"}
-                          aria-label={translations.delete || "Delete"}
+                          title={translations.delete}
+                          aria-label={translations.delete}
                         >
                           <DeleteOutlineOutlinedIcon fontSize="small" />
                         </button>
@@ -254,11 +251,10 @@ const NotificationsPage = () => {
               <DeleteOutlineOutlinedIcon className="delete-icon" />
             </div>
             <h3 id="clear-all-notifications-title" className="delete-modal-title">
-              {translations.clearallnotifications || "Delete All Notifications?"}
+              {translations.clearallnotifications}
             </h3>
             <p className="delete-modal-text">
-              {translations.clearallnotificationsconfirm ||
-                "Are you sure you want to delete all notifications? This action cannot be undone."}
+              {translations.clearallnotificationsconfirm}
             </p>
             <div className="delete-modal-actions">
               <button
@@ -267,7 +263,7 @@ const NotificationsPage = () => {
                 onClick={() => setIsClearAllModalOpen(false)}
                 disabled={isClearingAll}
               >
-                {translations.cancel || "Cancel"}
+                {translations.cancel}
               </button>
               <button
                 type="button"
@@ -278,10 +274,10 @@ const NotificationsPage = () => {
                 {isClearingAll ? (
                   <>
                     <CircularProgress size={16} color="inherit" />
-                    <span>{translations.deleting || "Deleting..."}</span>
+                    <span>{translations.deleting}</span>
                   </>
                 ) : (
-                  translations.delete || "Delete"
+                  translations.delete
                 )}
               </button>
             </div>

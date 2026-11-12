@@ -416,8 +416,7 @@ const generateInvoiceBodyHTML = (
   invoiceGeneratedAt = new Date().toISOString(),
   logoBase64Uri = null
 ) => {
-  const getTranslation = (key, fallback = "") =>
-    (translations && translations[key]) || fallback || "";
+  const getTranslation = (key) => (translations && translations[key]) || "";
   const formatPrice = (price) => formatOrderPrice(price, orderData);
 
   const formatCustomerField = (value) => {
@@ -441,7 +440,7 @@ const generateInvoiceBodyHTML = (
         .join("");
     }
     if (orderData.tableno || orderData.areaname) {
-      return `<div class="info-item"><span class="info-label">${escapeHtml(getTranslation("tableno") || "Table No")}:</span><span class="info-value">${escapeHtml(orderData.tableno || "")} ${orderData.areaname ? `(${escapeHtml(orderData.areaname)})` : ""}</span></div>`;
+      return `<div class="info-item"><span class="info-label">${escapeHtml(getTranslation("tableno"))}:</span><span class="info-value">${escapeHtml(orderData.tableno || "")} ${orderData.areaname ? `(${escapeHtml(orderData.areaname)})` : ""}</span></div>`;
     }
     return "";
   };
@@ -523,7 +522,7 @@ const generateInvoiceBodyHTML = (
         (Array.isArray(product.bundleItems) && product.bundleItems.length > 0) ||
         (Array.isArray(product.bundleitems) && product.bundleitems.length > 0)
       );
-      const bundletype = product.bundletype || product.bundleType || (isDeal ? "Deal" : null);
+      const bundletype = product.bundletype || product.bundleType || null;
       const bundleItems = Array.isArray(product.bundleItems)
         ? product.bundleItems
         : Array.isArray(product.bundleitems)
@@ -534,13 +533,13 @@ const generateInvoiceBodyHTML = (
       if (isDeal) {
         const dealLabel = bundletype
           ? getTranslation(bundletype.toLowerCase()) || bundletype
-          : getTranslation("deal") || "DEAL";
+          : getTranslation("deal");
         dealTagHtml = ` <span style="display: inline-block; background-color: #FEF3C7; color: #D97706; border: 1px solid #FCD34D; border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: bold; margin-left: 4px; text-transform: uppercase;">${escapeHtml(dealLabel)}</span>`;
       }
 
       let bundleItemsHtml = "";
       if (bundleItems.length > 0) {
-        const includedItemsLabel = getTranslation("includeditems") || "INCLUDED ITEMS";
+        const includedItemsLabel = getTranslation("includeditems");
         bundleItemsHtml = `
           <div style="margin-top: 6px; padding: 6px 8px; background-color: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 6px;">
             <div style="font-size: 9px; font-weight: bold; color: #166534; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
@@ -576,7 +575,7 @@ const generateInvoiceBodyHTML = (
 
       let specialInstructionsHtml = "";
       if (product.specialInstructions) {
-        specialInstructionsHtml = `<span class="special-instructions">${escapeHtml(getTranslation("specialinstructions") || "Special Instructions")}: ${escapeHtml(product.specialInstructions)}</span>`;
+        specialInstructionsHtml = `<span class="special-instructions">${escapeHtml(getTranslation("specialinstructions"))}: ${escapeHtml(product.specialInstructions)}</span>`;
       }
 
       itemsRows += `
@@ -597,7 +596,7 @@ const generateInvoiceBodyHTML = (
     itemsRows = `
       <tr>
         <td colspan="4" style="text-align: center; color: #888888; padding: 12px;">
-          ${escapeHtml(getTranslation("noitemfound") || "No items found")}
+          ${escapeHtml(getTranslation("noitemfound"))}
         </td>
       </tr>
     `;
@@ -726,14 +725,14 @@ const generateInvoiceBodyHTML = (
           : formatPrice(0);
     roundoffRow = `
       <div class="summary-row">
-        <span>${escapeHtml(getTranslation("roundoff") || "Round Off")}</span>
+        <span>${escapeHtml(getTranslation("roundoff"))}</span>
         <span>${roundoffDisplay}</span>
       </div>
     `;
   }
 
   const paymentStatus = String(orderData.paymentstatus || "paid").toLowerCase().replace(/\s+/g, "-");
-  const paymentStatusLabel = getTranslation(orderData.paymentstatus) || orderData.paymentstatus || "Paid";
+  const paymentStatusLabel = getTranslation(orderData.paymentstatus) || orderData.paymentstatus || getTranslation("paid");
 
   return `
     <div class="invoice-wrapper">
@@ -741,7 +740,7 @@ const generateInvoiceBodyHTML = (
       <div class="header">
         ${invoiceLogoHtml}
         <div class="header-content${!invoiceLogoHtml ? " no-logo" : ""}">
-          <h1>${escapeHtml(getTranslation("invoice") || "Invoice")}</h1>
+          <h1>${escapeHtml(getTranslation("invoice"))}</h1>
           <h2>${escapeHtml(orderData.businessname || "SavoryOps Restaurant")}</h2>
           ${orderData.branchname ? `<p>${escapeHtml(orderData.branchname)}</p>` : ""}
         </div>
@@ -752,19 +751,19 @@ const generateInvoiceBodyHTML = (
 
       <!-- Customer Info Card -->
       <div class="customer-info info-card">
-        <h3>${escapeHtml(getTranslation("customerinfo") || "Customer Information")}</h3>
+        <h3>${escapeHtml(getTranslation("customerinfo"))}</h3>
         <div class="customer-info-row">
           <div class="info-item">
-            <span class="info-label">${escapeHtml(getTranslation("customername") || "Customer Name")}:</span>
+            <span class="info-label">${escapeHtml(getTranslation("customername"))}:</span>
             <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerName))}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">${escapeHtml(getTranslation("customerphone") || "Phone Number")}:</span>
+            <span class="info-label">${escapeHtml(getTranslation("customerphone"))}:</span>
             <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerPhone))}</span>
           </div>
           ${hasCustomerEmail
       ? `<div class="info-item">
-                  <span class="info-label">${escapeHtml(getTranslation("customeremail") || "Email")}:</span>
+                  <span class="info-label">${escapeHtml(getTranslation("customeremail"))}:</span>
                   <span class="info-value">${escapeHtml(customerEmail)}</span>
                 </div>`
       : ""
@@ -775,19 +774,19 @@ const generateInvoiceBodyHTML = (
       <!-- Business Info & Order Info Cards Side-by-Side -->
       <div class="info-row-wrapper">
         <div class="business-info info-card">
-          <h3>${escapeHtml(getTranslation("businessinfo") || "Business Information")}</h3>
+          <h3>${escapeHtml(getTranslation("businessinfo"))}</h3>
           <div class="info-list">
             <div class="info-item">
-              <span class="info-label">${escapeHtml(getTranslation("branchphone") || getTranslation("phonenumber") || getTranslation("customerphone") || "Phone Number")}:</span>
+              <span class="info-label">${escapeHtml(getTranslation("branchphone"))}:</span>
               <span class="info-value">${escapeHtml(branchPhoneDisplay)}</span>
             </div>
             <div class="info-item">
-              <span class="info-label">${escapeHtml(getTranslation("branchaddress") || getTranslation("address") || "Address")}:</span>
+              <span class="info-label">${escapeHtml(getTranslation("branchaddress"))}:</span>
               <span class="info-value">${escapeHtml(branchAddressDisplay)}</span>
             </div>
             ${tableDetailsHTML
       ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
-                    <div class="info-item" style="margin-bottom: 6px;"><span class="info-label" style="font-weight: bold; color: #28a745;">${escapeHtml(getTranslation("tabledetails") || "Table Details")}</span></div>
+                    <div class="info-item" style="margin-bottom: 6px;"><span class="info-label" style="font-weight: bold; color: #28a745;">${escapeHtml(getTranslation("tabledetails"))}</span></div>
                     ${tableDetailsHTML}
                   </div>`
       : ""
@@ -796,24 +795,24 @@ const generateInvoiceBodyHTML = (
         </div>
 
         <div class="order-info info-card">
-          <h3>${escapeHtml(getTranslation("orderinfo") || "Order Information")}</h3>
+          <h3>${escapeHtml(getTranslation("orderinfo"))}</h3>
           <div class="info-list">
             <div class="info-item order-info-row">
               <div class="info-pair">
-                <span class="info-label">${escapeHtml(getTranslation("orderno") || "Order No")}:</span>
+                <span class="info-label">${escapeHtml(getTranslation("orderno"))}:</span>
                 <span class="info-value">#${escapeHtml(orderData.orderno || "")}</span>
               </div>
               <div class="info-pair info-pair-right">
-                <span class="info-label">${escapeHtml(getTranslation("ordertype") || "Order Type")}:</span>
+                <span class="info-label">${escapeHtml(getTranslation("ordertype"))}:</span>
                 <span class="info-value">${escapeHtml(getTranslation(orderData.ordertype) || orderData.ordertype || "")}</span>
               </div>
             </div>
             <div class="info-item">
-              <span class="info-label">${escapeHtml(getTranslation("orderdate") || "Order Date")}:</span>
+              <span class="info-label">${escapeHtml(getTranslation("orderdate"))}:</span>
               <span class="info-value">${formatOrderDateTime(orderData.createdAt, dateFormat, timeFormat, timeZone)}</span>
             </div>
             <div class="info-item">
-              <span class="info-label">${escapeHtml(getTranslation("payment") || "Payment")}:</span>
+              <span class="info-label">${escapeHtml(getTranslation("payment"))}:</span>
               <span class="status-badge status-${paymentStatus}">${escapeHtml(paymentStatusLabel)}</span>
             </div>
           </div>
@@ -821,14 +820,14 @@ const generateInvoiceBodyHTML = (
       </div>
 
       <!-- Items Section -->
-      <h3 class="items-section-title">${escapeHtml(getTranslation("itemordered", "Items Ordered") || "Items Ordered")}</h3>
+      <h3 class="items-section-title">${escapeHtml(getTranslation("itemordered"))}</h3>
       <table class="items-table">
         <thead>
           <tr>
-            <th>${escapeHtml(getTranslation("items", "Items") || "Items")}</th>
-            <th style="text-align: center;">${escapeHtml(getTranslation("qty", "Qty") || "Qty")}</th>
-            <th class="price-column">${escapeHtml(getTranslation("price", "Price") || "Price")}</th>
-            <th class="amount-column">${escapeHtml(getTranslation("total", "Total") || "Total")}</th>
+            <th>${escapeHtml(getTranslation("items"))}</th>
+            <th style="text-align: center;">${escapeHtml(getTranslation("qty"))}</th>
+            <th class="price-column">${escapeHtml(getTranslation("price"))}</th>
+            <th class="amount-column">${escapeHtml(getTranslation("total"))}</th>
           </tr>
         </thead>
         <tbody>
@@ -838,9 +837,9 @@ const generateInvoiceBodyHTML = (
 
       <!-- Bill Summary Card -->
       <div class="summary">
-        <h3>${escapeHtml(getTranslation("billsummary") || "Bill Summary")}</h3>
+        <h3>${escapeHtml(getTranslation("billsummary"))}</h3>
         <div class="summary-row">
-          <span>${escapeHtml(getTranslation("subtotal", "Subtotal") || "Subtotal")}</span>
+          <span>${escapeHtml(getTranslation("subtotal"))}</span>
           <span>${formatPrice(orderData.subtotalprice)}</span>
         </div>
         ${beforeTaxRows}
@@ -848,15 +847,15 @@ const generateInvoiceBodyHTML = (
         ${afterTaxRows}
         ${roundoffRow}
         <div class="summary-row total-row">
-          <span>${escapeHtml(getTranslation("grandtotal", "Grand Total") || "Grand Total")}</span>
+          <span>${escapeHtml(getTranslation("grandtotal"))}</span>
           <span>${formatPrice(orderData.totalprice)}</span>
         </div>
       </div>
 
       <!-- Footer Card -->
       <div class="footer">
-        <p><strong>${escapeHtml(getTranslation("thankyouforyourorder") || "Thank you for your order!")}</strong></p>
-        <p>${escapeHtml(getTranslation("computerbasedgeneratedinvoice") || "This is a computer-generated invoice.")}</p>
+        <p><strong>${escapeHtml(getTranslation("thankyouforyourorder"))}</strong></p>
+        <p>${escapeHtml(getTranslation("computerbasedgeneratedinvoice"))}</p>
       </div>
     </div>
   `;

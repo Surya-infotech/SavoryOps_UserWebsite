@@ -499,5 +499,21 @@
   "viewallnotifications": "Просмотреть все уведомления",
   "nonotificationsfound": "Уведомлений пока нет.",
   "nonotificationsdesc": "История уведомлений появится здесь, как только появятся обновления. Ознакомьтесь с нашим меню, чтобы открыть для себя вкусные блюда!",
-  "emptycartdescription": "Добавьте вкусные блюда из нашего меню в корзину для быстрого и удобного оформления заказа."
+  "emptycartdescription": "Добавьте вкусные блюда из нашего меню в корзину для быстрого и удобного оформления заказа.",
+  "clearallnotifications": "Удалить все уведомления?",
+  "clearallnotificationsconfirm": "Вы уверены, что хотите удалить все уведомления? Это действие невозможно отменить.",
+  "deal": "Акция",
+  "noitemfound": "Позиции не найдены",
+  "searchingdishes": "Поиск блюд...",
+  "switchbranchhint": "Чтобы переключить филиал, используйте выбор филиала в верхней панели навигации.",
+  "scanned": "Отсканировано",
+  "searchcountryplaceholder": "Поиск страны или кода (+91)...",
+  "pushnotificationsenabled": "Push-уведомления успешно включены.",
+  "pushnotificationsblocked": "Уведомления заблокированы в настройках сайта вашего браузера.",
+  "pushnotificationsfailed": "Не удалось зарегистрировать push-уведомления браузера.",
+  "pushinsecureoriginsnackbar": "Откройте chrome://flags/#unsafely-treat-insecure-origin-as-secure, добавьте {origin} и перезапустите Chrome.",
+  "pushinsecureoriginbanner": "HTTP-источник заблокирован браузером. Добавьте {origin} (с портом) в chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Включите уведомления браузера для обновлений по заказам и кухне.",
+  "enabling": "Включение...",
+  "enable": "Включить"
 }

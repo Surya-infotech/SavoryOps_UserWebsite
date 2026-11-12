@@ -1087,7 +1087,9 @@ const OrderDetails = ({ orderId, onBack }) => {
                             </span>
                             {product.isDeal && (
                               <span className="order-deal-tag">
-                                {product.bundletype || "Deal"}
+                                {product.bundletype
+                                  ? translations[String(product.bundletype).toLowerCase()] || product.bundletype
+                                  : translations.deal}
                               </span>
                             )}
                             {!isOrderCancelled && cancelled && (

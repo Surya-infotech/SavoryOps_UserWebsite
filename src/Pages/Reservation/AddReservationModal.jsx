@@ -413,11 +413,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   id="reservation-branch-dropdown"
                   label={translations.branch}
                   required={true}
-                  placeholder={
-                    translations.selectbranchplaceholder ||
-                    translations.selectbranchlabel ||
-                    translations.selectBranch
-                  }
+                  placeholder={translations.selectbranchplaceholder}
                   options={branchOptions}
                   labelKey="displayLabel"
                   valueKey="branchid"
@@ -502,10 +498,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                       id="reservation-area-dropdown"
                       label={translations.area}
                       required={true}
-                      placeholder={
-                        translations.selectareaplaceholder ||
-                        translations.selectarea
-                      }
+                      placeholder={translations.selectareaplaceholder}
                       options={areas}
                       labelKey="areaname"
                       valueKey="areaid"
@@ -544,7 +537,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                         ? (translations.pleaseselectareafirst)
                         : tablesInArea.length === 0
                           ? (translations.notablefound)
-                          : (translations.selecttableplaceholder || translations.selecttable)
+                          : translations.selecttableplaceholder
                     }
                     options={tableOptions}
                     labelKey="displayLabel"
@@ -612,11 +605,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                     fontSize="small"
                     className="label-icon"
                   />
-                  <span>
-                    {translations.date === "Update"
-                      ? "Date"
-                      : translations.date}
-                  </span>
+                  <span>{translations.date}</span>
                 </label>
                 <input
                   type="date"
@@ -637,11 +626,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               <div className="form-group">
                 <label className="form-label">
                   <AccessTimeIcon fontSize="small" className="label-icon" />
-                  <span>
-                    {translations.time === "Date & Time"
-                      ? "Time"
-                      : translations.time}
-                  </span>
+                  <span>{translations.time}</span>
                 </label>
                 <input
                   type="time"

@@ -499,5 +499,21 @@
   "viewallnotifications": "Voir toutes les notifications",
   "nonotificationsfound": "Aucune notification pour le moment.",
   "nonotificationsdesc": "L'historique de vos notifications apparaîtra ici dès que vous recevrez des mises à jour. Découvrez notre menu pour trouver de délicieux plats !",
-  "emptycartdescription": "Ajoutez de délicieux plats de notre menu à votre panier pour une commande rapide et fluide."
+  "emptycartdescription": "Ajoutez de délicieux plats de notre menu à votre panier pour une commande rapide et fluide.",
+  "clearallnotifications": "Supprimer toutes les notifications ?",
+  "clearallnotificationsconfirm": "Êtes-vous sûr de vouloir supprimer toutes les notifications ? Cette action est irréversible.",
+  "deal": "Offre",
+  "noitemfound": "Aucun article trouvé",
+  "searchingdishes": "Recherche de plats...",
+  "switchbranchhint": "Pour changer d'établissement, utilisez le sélecteur d'emplacement dans la barre de navigation supérieure.",
+  "scanned": "Scanné",
+  "searchcountryplaceholder": "Rechercher un pays ou indicatif (+91)...",
+  "pushnotificationsenabled": "Notifications push activées avec succès.",
+  "pushnotificationsblocked": "Les notifications sont bloquées dans les paramètres de votre navigateur.",
+  "pushnotificationsfailed": "Impossible d'enregistrer les notifications push du navigateur.",
+  "pushinsecureoriginsnackbar": "Ouvrez chrome://flags/#unsafely-treat-insecure-origin-as-secure, ajoutez {origin} et relancez Chrome.",
+  "pushinsecureoriginbanner": "Origine HTTP bloquée par le navigateur. Ajoutez {origin} (avec le port) dans chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Activez les alertes du navigateur pour suivre les commandes et la cuisine.",
+  "enabling": "Activation...",
+  "enable": "Activer"
 }

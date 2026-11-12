@@ -499,5 +499,21 @@
   "viewallnotifications": "مشاهده همه اعلان‌ها",
   "nonotificationsfound": "هنوز اعلانی وجود ندارد.",
   "nonotificationsdesc": "با دریافت به‌روزرسانی‌ها، تاریخچه اعلان‌های شما در اینجا نمایش داده می‌شود. منوی اصلی ما را کاوش کنید!",
-  "emptycartdescription": "برای تجربه‌ای سریع و روان در تسویه حساب، غذاهای خوشمزه را از منو به سبد خرید اضافه کنید."
+  "emptycartdescription": "برای تجربه‌ای سریع و روان در تسویه حساب، غذاهای خوشمزه را از منو به سبد خرید اضافه کنید.",
+  "clearallnotifications": "همه اعلان‌ها حذف شوند؟",
+  "clearallnotificationsconfirm": "آیا مطمئن هستید که می‌خواهید همه اعلان‌ها را حذف کنید؟ این اقدام قابل بازگشت نیست.",
+  "deal": "پیشنهاد ویژه",
+  "noitemfound": "موردی یافت نشد",
+  "searchingdishes": "در حال جستجوی غذاها...",
+  "switchbranchhint": "برای تغییر شعبه، از انتخاب‌گر موقعیت شعبه در نوار ناوبری بالا استفاده کنید.",
+  "scanned": "اسکن شد",
+  "searchcountryplaceholder": "جستجوی کشور یا پیش‌شماره (+91)...",
+  "pushnotificationsenabled": "اعلان‌های فوری با موفقیت فعال شدند.",
+  "pushnotificationsblocked": "اعلان‌ها در تنظیمات سایت مرورگر شما مسدود شده‌اند.",
+  "pushnotificationsfailed": "ثبت اعلان‌های فوری مرورگر امکان‌پذیر نبود.",
+  "pushinsecureoriginsnackbar": "صفحه chrome://flags/#unsafely-treat-insecure-origin-as-secure را باز کنید، {origin} را اضافه کنید و Chrome را دوباره راه‌اندازی کنید.",
+  "pushinsecureoriginbanner": "مبدأ HTTP توسط مرورگر مسدود شده است. {origin} (با پورت) را در chrome://flags/#unsafely-treat-insecure-origin-as-secure اضافه کنید",
+  "enablebrowseralerts": "هشدارهای مرورگر را برای به‌روزرسانی سفارش و آشپزخانه فعال کنید.",
+  "enabling": "در حال فعال‌سازی...",
+  "enable": "فعال‌سازی"
 }

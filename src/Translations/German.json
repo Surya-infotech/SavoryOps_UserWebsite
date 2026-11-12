@@ -499,5 +499,21 @@
   "viewallnotifications": "Alle Benachrichtigungen anzeigen",
   "nonotificationsfound": "Noch keine Benachrichtigungen.",
   "nonotificationsdesc": "Ihr Benachrichtigungsverlauf wird hier angezeigt, sobald Sie Updates erhalten. Erkunden Sie unsere Speisekarte, um köstliche Gerichte zu entdecken!",
-  "emptycartdescription": "Fügen Sie köstliche Gerichte aus unserer Speisekarte Ihrem Warenkorb hinzu – für einen schnellen und reibungslosen Checkout."
+  "emptycartdescription": "Fügen Sie köstliche Gerichte aus unserer Speisekarte Ihrem Warenkorb hinzu – für einen schnellen und reibungslosen Checkout.",
+  "clearallnotifications": "Alle Benachrichtigungen löschen?",
+  "clearallnotificationsconfirm": "Möchten Sie wirklich alle Benachrichtigungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "deal": "Angebot",
+  "noitemfound": "Keine Artikel gefunden",
+  "searchingdishes": "Gerichte werden gesucht...",
+  "switchbranchhint": "Um die Filiale zu wechseln, verwenden Sie die Standortauswahl in der oberen Navigationsleiste.",
+  "scanned": "Gescannt",
+  "searchcountryplaceholder": "Land oder Vorwahl (+91) suchen...",
+  "pushnotificationsenabled": "Push-Benachrichtigungen erfolgreich aktiviert.",
+  "pushnotificationsblocked": "Benachrichtigungen sind in Ihren Browser-Website-Einstellungen blockiert.",
+  "pushnotificationsfailed": "Browser-Push-Benachrichtigungen konnten nicht registriert werden.",
+  "pushinsecureoriginsnackbar": "Öffnen Sie chrome://flags/#unsafely-treat-insecure-origin-as-secure, fügen Sie {origin} hinzu und starten Sie Chrome neu.",
+  "pushinsecureoriginbanner": "HTTP-Origin vom Browser blockiert. Fügen Sie {origin} (mit Port) unter chrome://flags/#unsafely-treat-insecure-origin-as-secure hinzu",
+  "enablebrowseralerts": "Aktivieren Sie Browser-Benachrichtigungen für Bestell- & Küchen-Updates.",
+  "enabling": "Aktivierung...",
+  "enable": "Aktivieren"
 }

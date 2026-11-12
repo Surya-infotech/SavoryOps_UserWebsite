@@ -499,5 +499,21 @@
   "viewallnotifications": "View all notifications",
   "nonotificationsfound": "No notifications yet.",
   "nonotificationsdesc": "Your notification history will appear here once you receive updates. Explore our main menu to discover delicious treats!",
-  "emptycartdescription": "Add delicious dishes from our menu to your cart for a fast and seamless checkout experience."
+  "emptycartdescription": "Add delicious dishes from our menu to your cart for a fast and seamless checkout experience.",
+  "clearallnotifications": "Delete All Notifications?",
+  "clearallnotificationsconfirm": "Are you sure you want to delete all notifications? This action cannot be undone.",
+  "deal": "Deal",
+  "noitemfound": "No items found",
+  "searchingdishes": "Searching dishes...",
+  "switchbranchhint": "To switch dining branches, use the branch location selector in the top navigation bar.",
+  "scanned": "Scanned",
+  "searchcountryplaceholder": "Search country or code (+91)...",
+  "pushnotificationsenabled": "Push notifications enabled successfully.",
+  "pushnotificationsblocked": "Notifications are blocked in your browser site settings.",
+  "pushnotificationsfailed": "Could not register browser push notifications.",
+  "pushinsecureoriginsnackbar": "Open chrome://flags/#unsafely-treat-insecure-origin-as-secure, add {origin}, and relaunch Chrome.",
+  "pushinsecureoriginbanner": "HTTP origin blocked by browser. Add {origin} (with port) in chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Enable browser alerts for order & KOT updates.",
+  "enabling": "Enabling...",
+  "enable": "Enable"
 }

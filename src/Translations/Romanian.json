@@ -499,5 +499,21 @@
   "viewallnotifications": "Vezi toate notificările",
   "nonotificationsfound": "Încă nu există notificări.",
   "nonotificationsdesc": "Istoricul notificărilor va apărea aici după ce primiți actualizări. Explorați meniul nostru principal pentru a descoperi bunătăți!",
-  "emptycartdescription": "Adăugați preparate delicioase din meniul nostru în coș pentru o finalizare rapidă și simplă a comenzii."
+  "emptycartdescription": "Adăugați preparate delicioase din meniul nostru în coș pentru o finalizare rapidă și simplă a comenzii.",
+  "clearallnotifications": "Ștergeți toate notificările?",
+  "clearallnotificationsconfirm": "Sigur doriți să ștergeți toate notificările? Această acțiune nu poate fi anulată.",
+  "deal": "Ofertă",
+  "noitemfound": "Nu s-au găsit produse",
+  "searchingdishes": "Se caută preparate...",
+  "switchbranchhint": "Pentru a schimba filiala, utilizați selectorul de locație din bara de navigare de sus.",
+  "scanned": "Scanat",
+  "searchcountryplaceholder": "Caută țară sau cod (+91)...",
+  "pushnotificationsenabled": "Notificările push au fost activate cu succes.",
+  "pushnotificationsblocked": "Notificările sunt blocate în setările site-ului din browser.",
+  "pushnotificationsfailed": "Nu s-au putut înregistra notificările push în browser.",
+  "pushinsecureoriginsnackbar": "Deschideți chrome://flags/#unsafely-treat-insecure-origin-as-secure, adăugați {origin} și reporniți Chrome.",
+  "pushinsecureoriginbanner": "Origine HTTP blocată de browser. Adăugați {origin} (cu port) în chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Activați alertele în browser pentru actualizări privind comenzile și bucătăria.",
+  "enabling": "Se activează...",
+  "enable": "Activează"
 }

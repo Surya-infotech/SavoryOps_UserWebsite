@@ -752,12 +752,11 @@ const CartPage = () => {
             </div>
             <h2 className="empty-title">{translations.yourcartisempty}</h2>
             <p className="empty-subtitle">
-              {translations.emptycartdescription ||
-                "Add delicious dishes from our menu to your cart for a fast and seamless checkout experience."}
+              {translations.emptycartdescription}
             </p>
             <Link to="/menu" className="empty-add-btn">
               <RestaurantMenuIcon fontSize="small" />
-              <span>{translations.exploremenu || translations.browsemenu}</span>
+              <span>{translations.exploremenu}</span>
             </Link>
           </div>
         ) : (
@@ -844,7 +843,7 @@ const CartPage = () => {
                                     type="button"
                                     className="cart-addon-edit-btn"
                                     onClick={() => handleOpenAddonModal(item)}
-                                    title="Customize Add-ons"
+                                    title={translations.customizeaddons}
                                   >
                                     <EditOutlinedIcon fontSize="inherit" />
                                     <span>{translations.customize}</span>
@@ -865,7 +864,7 @@ const CartPage = () => {
                                   type="button"
                                   className="cart-addon-customize-trigger"
                                   onClick={() => handleOpenAddonModal(item)}
-                                  title="Add customizations and add-ons"
+                                  title={translations.customizeaddons}
                                 >
                                   <AddCircleOutlineIcon fontSize="inherit" />
                                   <span>{translations.customizableaddons}</span>
@@ -941,7 +940,7 @@ const CartPage = () => {
                             type="button"
                             className="remove-item-btn"
                             onClick={() => handleRemove(item.cartItemId, item.name)}
-                            title="Remove from cart"
+                            title={translations.delete}
                             aria-label={`Remove ${item.name} from cart`}
                           >
                             <DeleteOutlineOutlinedIcon fontSize="small" />

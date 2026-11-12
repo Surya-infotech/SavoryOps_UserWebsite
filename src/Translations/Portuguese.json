@@ -499,5 +499,21 @@
   "viewallnotifications": "Ver todas as notificações",
   "nonotificationsfound": "Nenhuma notificação ainda.",
   "nonotificationsdesc": "O histórico de notificações aparecerá aqui assim que você receber atualizações. Explore nosso cardápio principal para descobrir pratos deliciosos!",
-  "emptycartdescription": "Adicione pratos deliciosos do nosso cardápio ao seu carrinho para uma finalização rápida e prática."
+  "emptycartdescription": "Adicione pratos deliciosos do nosso cardápio ao seu carrinho para uma finalização rápida e prática.",
+  "clearallnotifications": "Eliminar todas as notificações?",
+  "clearallnotificationsconfirm": "Tem a certeza de que pretende eliminar todas as notificações? Esta ação não pode ser anulada.",
+  "deal": "Oferta",
+  "noitemfound": "Nenhum artigo encontrado",
+  "searchingdishes": "A pesquisar pratos...",
+  "switchbranchhint": "Para mudar de restaurante, utilize o seletor de localização na barra de navegação superior.",
+  "scanned": "Digitalizado",
+  "searchcountryplaceholder": "Pesquisar país ou código (+91)...",
+  "pushnotificationsenabled": "Notificações push ativadas com sucesso.",
+  "pushnotificationsblocked": "As notificações estão bloqueadas nas definições do site do seu navegador.",
+  "pushnotificationsfailed": "Não foi possível registar as notificações push do navegador.",
+  "pushinsecureoriginsnackbar": "Abra chrome://flags/#unsafely-treat-insecure-origin-as-secure, adicione {origin} e reinicie o Chrome.",
+  "pushinsecureoriginbanner": "Origem HTTP bloqueada pelo navegador. Adicione {origin} (com porta) em chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "Ative os alertas do navegador para atualizações de pedidos e cozinha.",
+  "enabling": "A ativar...",
+  "enable": "Ativar"
 }

@@ -116,16 +116,16 @@ const NotificationDropdown = ({ className = "" }) => {
       const result = await enableCustomerPushNotifications(authToken);
       setPushStatus(getCustomerPushStatus());
       if (result.ok) {
-        showSnackbar("Push notifications enabled successfully.", "success");
+        showSnackbar(translations.pushnotificationsenabled, "success");
       } else if (result.status === "insecure_origin") {
         showSnackbar(
-          `Open chrome://flags/#unsafely-treat-insecure-origin-as-secure, add ${result.origin}, and relaunch Chrome.`,
+          translations.pushinsecureoriginsnackbar?.replace("{origin}", result.origin),
           "warning"
         );
       } else if (result.status === "permission_denied") {
-        showSnackbar("Notifications are blocked in your browser site settings.", "warning");
+        showSnackbar(translations.pushnotificationsblocked, "warning");
       } else {
-        showSnackbar("Could not register browser push notifications.", "error");
+        showSnackbar(translations.pushnotificationsfailed, "error");
       }
     } finally {
       setEnablingPush(false);
@@ -164,7 +164,10 @@ const NotificationDropdown = ({ className = "" }) => {
       >
         <NotificationsOutlinedIcon className="nav-notification-icon" fontSize="small" />
         {unreadCount > 0 && (
-          <span className="notification-count-badge" aria-label={`${unreadCount} unread`}>
+          <span
+            className="notification-count-badge"
+            aria-label={`${unreadCount} ${translations.notifications}`}
+          >
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -198,10 +201,10 @@ const NotificationDropdown = ({ className = "" }) => {
             >
               <span style={{ lineHeight: 1.35 }}>
                 {pushStatus.status === "insecure_origin"
-                  ? `HTTP origin blocked by browser. Add ${pushStatus.origin} (with port) in chrome://flags/#unsafely-treat-insecure-origin-as-secure`
+                  ? translations.pushinsecureoriginbanner?.replace("{origin}", pushStatus.origin)
                   : pushStatus.status === "permission_denied"
-                    ? "Notifications are blocked in browser site settings."
-                    : "Enable browser alerts for order & KOT updates."}
+                    ? translations.pushnotificationsblocked
+                    : translations.enablebrowseralerts}
               </span>
               {(pushStatus.status === "needs_permission" || pushStatus.status === "not_registered") && (
                 <button
@@ -220,7 +223,7 @@ const NotificationDropdown = ({ className = "" }) => {
                     cursor: enablingPush ? "wait" : "pointer",
                   }}
                 >
-                  {enablingPush ? "Enabling..." : "Enable"}
+                  {enablingPush ? translations.enabling : translations.enable}
                 </button>
               )}
             </div>
@@ -278,7 +281,7 @@ const NotificationDropdown = ({ className = "" }) => {
                 className="notif-view-all-btn"
                 onClick={handleViewAllNotifications}
               >
-                <span>{translations.viewallnotifications || "View all notifications"}</span>
+                <span>{translations.viewallnotifications}</span>
               </button>
             </div>
           )}

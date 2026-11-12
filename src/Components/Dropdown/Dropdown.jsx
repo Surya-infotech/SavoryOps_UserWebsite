@@ -124,7 +124,7 @@ const Dropdown = ({
 
   const isSelectedValid = selected != null && String(selected).trim() !== "";
 
-  let displayLabel = placeholder || translations.selectoption || "";
+  let displayLabel = placeholder || translations.selectoption;
   let isPlaceholder = true;
 
   if (isSelectedValid) {

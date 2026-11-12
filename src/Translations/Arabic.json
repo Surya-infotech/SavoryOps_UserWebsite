@@ -499,5 +499,21 @@
   "viewallnotifications": "عرض جميع الإشعارات",
   "nonotificationsfound": "لا توجد إشعارات حتى الآن.",
   "nonotificationsdesc": "ستظهر سجلات الإشعارات هنا بمجرد تلقي التحديثات. استكشف قائمتنا الرئيسية لاكتشاف أشهى الأطباق!",
-  "emptycartdescription": "أضف أطباقًا لذيذة من قائمتنا إلى سلتك لتجربة دفع سريعة وسلسة."
+  "emptycartdescription": "أضف أطباقًا لذيذة من قائمتنا إلى سلتك لتجربة دفع سريعة وسلسة.",
+  "clearallnotifications": "حذف جميع الإشعارات؟",
+  "clearallnotificationsconfirm": "هل أنت متأكد من رغبتك في حذف جميع الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.",
+  "deal": "عرض",
+  "noitemfound": "لم يتم العثور على عناصر",
+  "searchingdishes": "جارٍ البحث عن الأطباق...",
+  "switchbranchhint": "لتبديل فروع تناول الطعام، استخدم محدد موقع الفرع في شريط التنقل العلوي.",
+  "scanned": "تم المسح",
+  "searchcountryplaceholder": "ابحث عن الدولة أو الرمز (+91)...",
+  "pushnotificationsenabled": "تم تفعيل الإشعارات الفورية بنجاح.",
+  "pushnotificationsblocked": "الإشعارات محظورة في إعدادات الموقع بالمتصفح.",
+  "pushnotificationsfailed": "تعذر تسجيل إشعارات المتصفح الفورية.",
+  "pushinsecureoriginsnackbar": "افتح chrome://flags/#unsafely-treat-insecure-origin-as-secure، وأضف {origin}، ثم أعد تشغيل Chrome.",
+  "pushinsecureoriginbanner": "المتصفح يحظر أصل HTTP. أضف {origin} (مع المنفذ) في chrome://flags/#unsafely-treat-insecure-origin-as-secure",
+  "enablebrowseralerts": "فعّل تنبيهات المتصفح لتحديثات الطلبات والمطبخ.",
+  "enabling": "جارٍ التفعيل...",
+  "enable": "تفعيل"
 }

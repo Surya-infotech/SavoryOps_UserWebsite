@@ -438,7 +438,7 @@ const AboutPage = () => {
                 <div className="branch-helper-note">
                   <CheckCircleOutlinedIcon className="helper-icon" />
                   <span>
-                    To switch dining branches, use the branch location selector in the top navigation bar.
+                    {translations.switchbranchhint}
                   </span>
                 </div>
               </div>
