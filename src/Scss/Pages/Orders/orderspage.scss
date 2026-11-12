@@ -33,41 +33,10 @@
   padding: 0 1.5rem;
 }
 
-/* Page Header */
-.orders-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-
-  .orders-header-meta {
-    flex: 1;
-    min-width: 260px;
-  }
-
-  .orders-main-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 0.35rem;
-    letter-spacing: -0.5px;
-  }
-
-  .orders-main-subtitle {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin: 0;
-    line-height: 1.5;
-  }
-}
-
 /* ==========================================================================
    Order List Section
    ========================================================================== */
 
-.orders-loading-wrap,
 .address-loading-wrap {
   display: flex;
   flex-direction: column;
@@ -577,8 +546,7 @@
 }
 
 .address-empty-card,
-.orders-empty-state,
-.orders-empty-card {
+.orders-empty-state {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   outline: none;
@@ -600,8 +568,7 @@
     justify-content: center;
     margin: 0 auto 1.5rem;
 
-    .empty-icon,
-    .empty-illustration-icon {
+    .empty-icon {
       font-size: 2.75rem;
       color: #028802;
     }
@@ -609,8 +576,7 @@
     &.search {
       background: linear-gradient(135deg, rgba(148, 163, 184, 0.15) 0%, rgba(203, 213, 225, 0.25) 100%);
 
-      .empty-icon,
-      .empty-illustration-icon {
+      .empty-icon {
         color: #64748b;
       }
     }
@@ -627,7 +593,6 @@
   }
 
   .empty-subtitle,
-  .empty-description,
   p {
     font-size: 0.95rem;
     color: #64748b;
@@ -636,8 +601,7 @@
     line-height: 1.55;
   }
 
-  .empty-add-btn,
-  .empty-action-btn {
+  .empty-add-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -706,8 +670,7 @@
       height: 76px;
       margin-bottom: 1.25rem;
 
-      .empty-icon,
-      .empty-illustration-icon {
+      .empty-icon {
         font-size: 2.4rem;
       }
     }
@@ -719,7 +682,6 @@
     }
 
     .empty-subtitle,
-    .empty-description,
     p {
       font-size: 0.9rem;
       margin-bottom: 1.5rem;

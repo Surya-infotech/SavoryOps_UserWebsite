@@ -175,13 +175,6 @@
         margin-top: 6px;
         z-index: 2;
         transition: transform 0.2s ease;
-
-        &.is-latest {
-          width: 16px;
-          height: 16px;
-          margin-top: 5px;
-          position: relative;
-        }
       }
 
       .timeline-line {

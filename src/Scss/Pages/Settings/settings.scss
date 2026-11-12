@@ -22,36 +22,6 @@
   padding: 0 1.5rem;
 }
 
-/* Page Header */
-.settings-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-
-  .settings-page-header-meta {
-    flex: 1;
-    min-width: 260px;
-  }
-
-  .settings-page-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 0.35rem;
-    letter-spacing: -0.5px;
-  }
-
-  .settings-page-subtitle {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin: 0;
-    line-height: 1.5;
-  }
-}
-
 /* Main Layout: Vertical Tabs + Content Panel */
 .settings-layout {
   display: grid;
@@ -197,30 +167,8 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-.panel-header-section {
-  border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 1.25rem;
-  margin-bottom: 1.75rem;
-
-  .panel-title {
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 0.35rem;
-    letter-spacing: -0.3px;
-  }
-
-  .panel-subtitle {
-    color: #64748b;
-    font-size: 0.88rem;
-    margin: 0;
-    line-height: 1.5;
-  }
-}
-
 /* Preview Banner (Date & Time) */
-.preview-banner,
-.live-preview-banner {
+.preview-banner {
   background: linear-gradient(135deg, rgba(2, 136, 2, 0.08) 0%, rgba(105, 232, 105, 0.08) 100%);
   border: 1.5px solid rgba(2, 136, 2, 0.2);
   border-radius: 12px;
@@ -236,14 +184,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-
-    .preview-badge-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #028802;
-      box-shadow: 0 0 10px #028802;
-    }
 
     .preview-label-group {
       display: flex;
@@ -872,21 +812,6 @@
 @media (max-width: 576px) {
   .settings-page-wrapper {
     padding: 0 0 3rem;
-  }
-
-  .settings-page-header {
-    .settings-title-row h1 {
-      font-size: 1.5rem;
-    }
-
-    .settings-header-desc {
-      margin-left: 0;
-      margin-top: 0.5rem;
-    }
-  }
-
-  .time-format-options {
-    grid-template-columns: 1fr;
   }
 
   .delete-actions-row {

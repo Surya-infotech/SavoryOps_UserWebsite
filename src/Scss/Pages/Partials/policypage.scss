@@ -97,63 +97,11 @@
       }
     }
 
-    .policy-hero-title {
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.025em;
-      margin: 4px 0 0;
-      line-height: 1.25;
-
-      @media (max-width: 640px) {
-        font-size: 1.45rem;
-      }
-    }
-
     .policy-business-tag {
       font-size: 0.88rem;
       color: #64748b;
       margin: 0;
       font-weight: 500;
-    }
-
-    .policy-hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      .policy-action-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        border-radius: 12px;
-        font-size: 0.88rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        color: #334155;
-
-        &:hover {
-          background: #ffffff;
-          border-color: #cbd5e1;
-          transform: translateY(-1px);
-        }
-
-        &.secondary {
-          background: #028802;
-          border-color: #028802;
-          color: #ffffff;
-
-          &:hover {
-            background: #016601;
-            border-color: #016601;
-            box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
-          }
-        }
-      }
     }
   }
 

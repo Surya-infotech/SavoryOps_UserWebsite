@@ -389,58 +389,6 @@
     margin-left: auto;
     flex-shrink: 0;
 
-    .filter-results-badge {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #64748b;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      height: 38px;
-      padding: 0 0.85rem;
-      border-radius: 10px;
-      display: inline-flex;
-      align-items: center;
-      white-space: nowrap;
-    }
-
-    .filter-search-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(2, 136, 2, 0.08);
-      color: #028802;
-      border: 1px solid rgba(2, 136, 2, 0.25);
-      border-radius: 10px;
-      height: 38px;
-      padding: 0 0.75rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      white-space: nowrap;
-
-      .search-badge-label strong {
-        color: #0f172a;
-      }
-
-      .filter-search-remove {
-        background: none;
-        border: none;
-        color: #028802;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2px;
-        border-radius: 50%;
-        font-size: 0.95rem;
-        transition: all 0.15s ease;
-
-        &:hover {
-          background: rgba(2, 136, 2, 0.15);
-          color: #dc2626;
-        }
-      }
-    }
-
     .filter-clear-btn {
       display: inline-flex;
       align-items: center;
@@ -482,8 +430,7 @@
   width: 100%;
   margin: 0 auto;
 
-  .empty-icon-wrap,
-  .filter-empty-icon-wrap {
+  .empty-icon-wrap {
     width: 84px;
     height: 84px;
     border-radius: 50%;
@@ -495,7 +442,6 @@
     margin: 0 auto 1.5rem;
 
     .empty-icon,
-    .no-dishes-icon,
     svg {
       font-size: 2.75rem !important;
       color: #028802;
@@ -531,8 +477,7 @@
     line-height: 1.55;
   }
 
-  .empty-add-btn,
-  .reset-filter-btn {
+  .empty-add-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -575,14 +520,12 @@
     padding: 3rem 1.5rem;
     border-radius: 20px;
 
-    .empty-icon-wrap,
-    .filter-empty-icon-wrap {
+    .empty-icon-wrap {
       width: 76px;
       height: 76px;
       margin-bottom: 1.25rem;
 
       .empty-icon,
-      .no-dishes-icon,
       svg {
         font-size: 2.4rem !important;
       }
@@ -793,44 +736,6 @@
       }
     }
 
-    .filter-search-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(2, 136, 2, 0.08);
-      color: #028802;
-      border: 1px solid rgba(2, 136, 2, 0.25);
-      border-radius: 10px;
-      height: 38px;
-      padding: 0 0.75rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      white-space: nowrap;
-
-      .search-badge-label strong {
-        color: #0f172a;
-      }
-
-      .filter-search-remove {
-        background: none;
-        border: none;
-        color: #028802;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2px;
-        border-radius: 50%;
-        font-size: 0.95rem;
-        transition: all 0.15s ease;
-
-        &:hover {
-          background: rgba(2, 136, 2, 0.15);
-          color: #dc2626;
-        }
-      }
-    }
-
     .filter-clear-btn {
       height: 35px;
       padding: 0 0.75rem;
@@ -894,44 +799,6 @@
             width: 4.5px;
             height: 4.5px;
           }
-        }
-      }
-    }
-
-    .filter-search-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(2, 136, 2, 0.08);
-      color: #028802;
-      border: 1px solid rgba(2, 136, 2, 0.25);
-      border-radius: 10px;
-      height: 38px;
-      padding: 0 0.75rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      white-space: nowrap;
-
-      .search-badge-label strong {
-        color: #0f172a;
-      }
-
-      .filter-search-remove {
-        background: none;
-        border: none;
-        color: #028802;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2px;
-        border-radius: 50%;
-        font-size: 0.95rem;
-        transition: all 0.15s ease;
-
-        &:hover {
-          background: rgba(2, 136, 2, 0.15);
-          color: #dc2626;
         }
       }
     }

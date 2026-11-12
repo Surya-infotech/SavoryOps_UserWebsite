@@ -12,7 +12,7 @@ const escapeHtml = (value) =>
 /**
  * Normalizes a base64 string or data URI into a valid data URI.
  */
-export const normalizeBase64Image = (base64) => {
+const normalizeBase64Image = (base64) => {
   if (!base64 || typeof base64 !== "string") return null;
   const trimmed = base64.trim();
   if (!trimmed) return null;
@@ -38,7 +38,7 @@ export const normalizeBase64Image = (base64) => {
 /**
  * Extracts and resolves the base64 logo from orderData if provided by the backend.
  */
-export const getLogoBase64FromOrder = (orderData) => {
+const getLogoBase64FromOrder = (orderData) => {
   if (!orderData || typeof orderData !== "object") return null;
   const candidate = orderData.logobase64;
   if (candidate && typeof candidate === "string" && candidate.trim()) {
@@ -50,7 +50,7 @@ export const getLogoBase64FromOrder = (orderData) => {
 /**
  * Loads an image URL as base64 data URL to prevent cross-origin canvas tainting in html2canvas.
  */
-export const loadLogoAsBase64 = async (url) => {
+const loadLogoAsBase64 = async (url) => {
   if (!url || typeof url !== "string") return null;
   const trimmed = url.trim();
   if (!trimmed) return null;
@@ -95,7 +95,7 @@ export const loadLogoAsBase64 = async (url) => {
 /**
  * CSS stylesheet exactly matching SavoryOps_UserApp/src/utils/invoiceTemplate.js
  */
-export const generateInvoiceStyles = () => `
+const generateInvoiceStyles = () => `
   @page {
     size: A4;
     margin: 0;
@@ -407,7 +407,7 @@ export const generateInvoiceStyles = () => `
 /**
  * Builds the inner invoice HTML matching SavoryOps_UserApp/src/utils/invoiceTemplate.js
  */
-export const generateInvoiceBodyHTML = (
+const generateInvoiceBodyHTML = (
   orderData,
   dateFormat = "DD/MM/YYYY",
   timeFormat = "hh:mm A",
@@ -863,61 +863,6 @@ export const generateInvoiceBodyHTML = (
 };
 
 /**
- * Generate full HTML document for preview or print.
- */
-export const generateInvoiceHTML = (
-  orderData,
-  dateFormat = "DD/MM/YYYY",
-  timeFormat = "hh:mm A",
-  timeZone = "Asia/Kolkata",
-  translations = {},
-  invoiceGeneratedAt = new Date().toISOString(),
-  autoPrint = false,
-  logoBase64Uri = null
-) => {
-  const resolvedLogo =
-    (logoBase64Uri ? (normalizeBase64Image(logoBase64Uri) || logoBase64Uri) : null) ||
-    getLogoBase64FromOrder(orderData) ||
-    null;
-  const styles = generateInvoiceStyles();
-  const body = generateInvoiceBodyHTML(
-    orderData,
-    dateFormat,
-    timeFormat,
-    timeZone,
-    translations,
-    invoiceGeneratedAt,
-    resolvedLogo
-  );
-
-  const printScript = autoPrint
-    ? `<script>
-    window.onload = function() {
-      setTimeout(function() {
-        window.print();
-      }, 350);
-    };
-  </script>`
-    : "";
-
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Invoice - Order #${orderData.orderno || ""}</title>
-  <style>
-    html, body { margin: 0; padding: 0; background-color: #ffffff; }
-    ${styles}
-  </style>
-</head>
-<body>
-  ${body}
-  ${printScript}
-</body>
-</html>`;
-};
-
-/**
  * Directly downloads the Order Invoice matching UserApp design as a high-quality PDF in the browser.
  */
 export const downloadOrderInvoicePDF = async (
@@ -1102,52 +1047,5 @@ export const downloadOrderInvoicePDF = async (
     if (document.body.contains(iframe)) {
       document.body.removeChild(iframe);
     }
-  }
-};
-
-export const printOrderInvoice = (
-  orderData,
-  dateFormat = "DD/MM/YYYY",
-  timeFormat = "hh:mm A",
-  timeZone = "Asia/Kolkata",
-  translations = {}
-) => {
-  const logoBase64 = getLogoBase64FromOrder(orderData);
-  const html = generateInvoiceHTML(
-    orderData,
-    dateFormat,
-    timeFormat,
-    timeZone,
-    translations,
-    new Date().toISOString(),
-    true,
-    logoBase64
-  );
-  const printWindow = window.open("", "_blank", "width=850,height=900");
-  if (printWindow) {
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
-  } else {
-    // If popup blocked, create hidden iframe to print
-    const iframe = document.createElement("iframe");
-    iframe.style.position = "fixed";
-    iframe.style.right = "0";
-    iframe.style.bottom = "0";
-    iframe.style.width = "0";
-    iframe.style.height = "0";
-    iframe.style.border = "0";
-    document.body.appendChild(iframe);
-    const doc = iframe.contentWindow || iframe.contentDocument;
-    if (doc.document) {
-      doc.document.open();
-      doc.document.write(html);
-      doc.document.close();
-    }
-    setTimeout(() => {
-      if (document.body.contains(iframe)) {
-        document.body.removeChild(iframe);
-      }
-    }, 60000);
   }
 };

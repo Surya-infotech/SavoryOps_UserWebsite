@@ -18,65 +18,6 @@
   }
 }
 
-/* --- Section Top Master Header --- */
-.showcase-master-header {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto 3rem;
-
-  .showcase-pill-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(2, 136, 2, 0.08);
-    border: 1px solid rgba(2, 136, 2, 0.22);
-    color: #028802;
-    padding: 5px 14px;
-    border-radius: 9999px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-bottom: 0.85rem;
-
-    .pill-icon {
-      font-size: 0.95rem;
-    }
-  }
-
-  .showcase-main-title {
-    font-size: 2.35rem;
-    font-weight: 800;
-    color: #0f172a;
-    line-height: 1.25;
-    margin: 0 0 0.85rem;
-    letter-spacing: -0.02em;
-
-    .highlight-text {
-      color: #028802;
-      background: linear-gradient(135deg, #028802 0%, #00b000 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    @media (max-width: 768px) {
-      font-size: 1.75rem;
-    }
-  }
-
-  .showcase-main-subtitle {
-    font-size: 1.025rem;
-    color: #64748b;
-    line-height: 1.6;
-    margin: 0;
-
-    @media (max-width: 768px) {
-      font-size: 0.925rem;
-    }
-  }
-}
-
 /* --- Individual Carousel Section Row --- */
 .showcase-carousel-row {
   margin-bottom: 3.5rem;
@@ -178,33 +119,6 @@
 
       @media (max-width: 768px) {
         font-size: 0.95rem;
-      }
-    }
-  }
-
-  .header-actions-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    flex-shrink: 0;
-
-    .row-view-all-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      color: #028802;
-      font-weight: 700;
-      font-size: 0.875rem;
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      background: transparent;
-
-      &:hover {
-        background: rgba(2, 136, 2, 0.08);
-        color: #026b02;
-        transform: translateX(2px);
       }
     }
   }
@@ -422,50 +336,6 @@
 }
 
 /* Dish card elements are centralized in src/Scss/Components/General/dishcard.scss */
-
-/* --- Section Master Footer Callout --- */
-.showcase-master-footer {
-  text-align: center;
-  padding: 1.5rem 0 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.85rem;
-
-  .explore-full-menu-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, #028802 0%, #026b02 100%);
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 700;
-    padding: 12px 28px;
-    border-radius: 9999px;
-    text-decoration: none;
-    box-shadow: 0 10px 24px -4px rgba(2, 136, 2, 0.35);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 30px -4px rgba(2, 136, 2, 0.45);
-      background: linear-gradient(135deg, #029b02 0%, #027a02 100%);
-    }
-
-    .btn-arrow-icon {
-      transition: transform 0.2s ease;
-    }
-
-    &:hover .btn-arrow-icon {
-      transform: translateX(4px);
-    }
-  }
-
-  .footer-sub-note {
-    font-size: 0.85rem;
-    color: #64748b;
-  }
-}
 
 /* Dish modal styles are centralized in src/Scss/Components/General/dishmodals.scss */
 

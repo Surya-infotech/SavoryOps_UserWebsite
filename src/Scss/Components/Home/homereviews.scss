@@ -292,24 +292,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-
-      .verified-badge-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 3px;
-        font-size: 0.6875rem;
-        font-weight: 700;
-        color: #028802;
-        background: rgba(2, 136, 2, 0.1);
-        padding: 2px 7px;
-        border-radius: 9999px;
-        flex-shrink: 0;
-        white-space: nowrap;
-
-        svg {
-          font-size: 0.8rem;
-        }
-      }
     }
 
     .customer-sub-meta {
@@ -368,37 +350,6 @@
       font-weight: 800;
       color: #0f172a;
     }
-
-    .sentiment-pill {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      color: #b45309;
-      background: #fef3c7;
-      padding: 2px 7px;
-      border-radius: 9999px;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-  }
-
-  .dining-type-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #f1f5f9;
-    color: #475569;
-    padding: 3px 9px;
-    border-radius: 9999px;
-    font-size: 0.725rem;
-    font-weight: 600;
-    white-space: nowrap;
-    flex-shrink: 0;
-
-    svg {
-      font-size: 0.85rem;
-      color: #64748b;
-    }
   }
 }
 
@@ -411,114 +362,13 @@
   color: #cbd5e1 !important;
 }
 
-/* Headline & Body Text */
-.review-headline {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #0f172a;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 2.8em;
-}
-
+/* Review Body Text */
 .review-body-text {
   font-size: 0.9375rem;
   color: #475569;
   line-height: 1.65;
   margin-bottom: 0;
   flex-grow: 1;
-}
-
-/* Ordered Dish Strip */
-.ordered-dish-strip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 6px 12px;
-  margin-bottom: 1rem;
-  font-size: 0.8125rem;
-
-  .ordered-label {
-    font-weight: 700;
-    color: #64748b;
-    text-transform: uppercase;
-    font-size: 0.6875rem;
-    flex-shrink: 0;
-  }
-
-  .ordered-dish-name {
-    font-weight: 600;
-    color: #028802;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* Card Footer */
-.review-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 1rem;
-  border-top: 1px solid #f1f5f9;
-
-  .helpful-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: transparent;
-    border: 1px solid #e2e8f0;
-    color: #64748b;
-    padding: 4px 10px;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    svg {
-      font-size: 0.9rem;
-    }
-
-    &:hover {
-      background: #f1f5f9;
-      color: #028802;
-      border-color: rgba(2, 136, 2, 0.3);
-    }
-
-    &.liked {
-      background: rgba(2, 136, 2, 0.1);
-      color: #028802;
-      border-color: #028802;
-    }
-  }
-
-  .view-details-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: transparent;
-    border: none;
-    color: #475569;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    svg {
-      font-size: 1rem;
-      transition: transform 0.2s ease;
-    }
-  }
 }
 
 /* ==========================================================================

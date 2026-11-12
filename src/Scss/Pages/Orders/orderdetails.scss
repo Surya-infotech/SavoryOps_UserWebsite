@@ -176,15 +176,6 @@
           letter-spacing: -0.01em;
         }
       }
-
-      .item-count-badge {
-        font-size: 0.78rem;
-        font-weight: 700;
-        background: #f1f5f9;
-        color: #475569;
-        padding: 0.2rem 0.65rem;
-        border-radius: 9999px;
-      }
     }
   }
 
@@ -226,30 +217,12 @@
       gap: 0.5rem;
       border-bottom: 1px solid #f1f5f9;
 
-      .card-header-icon {
-        color: #028802;
-        font-size: 1.25rem;
-
-        &.gold {
-          color: #f59e0b;
-        }
-      }
-
       h3 {
         margin: 0;
         font-size: 1.05rem;
         font-weight: 800;
         color: #0f172a;
         flex: 1;
-      }
-
-      .item-count-badge {
-        font-size: 0.78rem;
-        font-weight: 700;
-        background: #f1f5f9;
-        color: #475569;
-        padding: 0.2rem 0.65rem;
-        border-radius: 9999px;
       }
     }
   }
@@ -1555,19 +1528,6 @@
     }
   }
 
-  /* Loading & Empty States */
-  .order-details-loading-state {
-    padding: 5rem 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    color: #64748b;
-    font-size: 0.95rem;
-    font-weight: 500;
-  }
-
   /* Shimmer Skeleton Loading */
   &.order-details-shimmer {
     pointer-events: none;
@@ -1715,25 +1675,6 @@
     .items-shimmer {
       padding: 1.25rem;
 
-      .shimmer-card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.25rem;
-
-        .header-title {
-          height: 20px;
-          width: 140px;
-          border-radius: 6px;
-        }
-
-        .count-pill {
-          height: 24px;
-          width: 65px;
-          border-radius: 9999px;
-        }
-      }
-
       .shimmer-items-list {
         display: flex;
         flex-direction: column;
@@ -1794,16 +1735,6 @@
     /* Bill Shimmer */
     .bill-shimmer {
       padding: 1.25rem;
-
-      .shimmer-card-header {
-        margin-bottom: 1.25rem;
-
-        .header-title {
-          height: 20px;
-          width: 120px;
-          border-radius: 6px;
-        }
-      }
 
       .shimmer-bill-rows {
         display: flex;

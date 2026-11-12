@@ -10,7 +10,7 @@ const adminPanelBackendPath =
 /**
  * Decrypt AES encrypted data string using the shared secret key.
  */
-export const decryptQrData = (encryptedData, secret = QR_ENCRYPTION_SECRET) => {
+const decryptQrData = (encryptedData, secret = QR_ENCRYPTION_SECRET) => {
   if (!encryptedData || typeof encryptedData !== "string") return null;
   try {
     const raw = encryptedData.trim();
@@ -28,7 +28,7 @@ export const decryptQrData = (encryptedData, secret = QR_ENCRYPTION_SECRET) => {
 /**
  * Resolves the dine-in order type name from the branch's enabled order types.
  */
-export const resolveDineInOrderType = (orderTypes = []) => {
+const resolveDineInOrderType = (orderTypes = []) => {
   if (Array.isArray(orderTypes)) {
     const enabled = orderTypes.filter((ot) => ot && ot.isEnabled !== false);
     const dine = enabled.find((ot) => isDineInOrderType(ot.ordertypename || ot.name));
@@ -41,7 +41,7 @@ export const resolveDineInOrderType = (orderTypes = []) => {
 /**
  * Fetch table and branch details from the backend given ownerId, branchId, and tableId.
  */
-export const fetchTableAndBranchDetails = async (ownerId, branchId, tableId) => {
+const fetchTableAndBranchDetails = async (ownerId, branchId, tableId) => {
   if (!adminPanelBackendPath || !ownerId || !branchId || !tableId) {
     return null;
   }
@@ -75,7 +75,7 @@ export const fetchTableAndBranchDetails = async (ownerId, branchId, tableId) => 
  * Applies the table, branch, and dine-in settings to localStorage and dispatches
  * corresponding global custom events so Navbar, Cart, Menu, and other pages update immediately.
  */
-export const applyTableAndBranchSettings = ({
+const applyTableAndBranchSettings = ({
   branchDetails,
   tableDetails,
   fallbackTableNo,

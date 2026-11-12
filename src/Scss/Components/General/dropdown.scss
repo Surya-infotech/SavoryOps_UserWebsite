@@ -130,8 +130,7 @@
   [dir="rtl"] &,
   body.rtl-mode &,
   &.rtl-dropdown,
-  &[dir="rtl"],
-  .rtl-horinav & {
+  &[dir="rtl"] {
     .dropdownbtn {
       text-align: right !important;
       direction: rtl !important;

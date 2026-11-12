@@ -6,7 +6,7 @@ import {
   resolveNotificationPath,
 } from "./notificationService.js";
 
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyDwK5CJM5X5MwRWSpTTFjBoq5O6YuYGUYo",
   authDomain: "savoryops-notification.firebaseapp.com",
   projectId: "savoryops-notification",
@@ -25,7 +25,7 @@ let inFlightAuthToken = null;
 let lastRegisteredSessionKey = null;
 let foregroundListenerRegistered = false;
 
-export const getFirebaseMessaging = async () => {
+const getFirebaseMessaging = async () => {
   if (typeof window === "undefined") return null;
   const supported = await isSupported().catch(() => false);
   if (!supported) {
@@ -251,40 +251,6 @@ export const enableCustomerPushNotifications = async (authToken) => {
     token,
     ...postStatus,
   };
-};
-
-/**
- * Remove customer FCM token from backend upon logout / session invalidation.
- *
- * @param {string} [authToken]
- */
-export const removeCustomerFcmToken = async (authToken) => {
-  if (typeof localStorage === "undefined") return;
-  const fcmToken = localStorage.getItem(CUSTOMER_FCM_STORAGE_KEY);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-  try {
-    if (backendUrl && (fcmToken || authToken)) {
-      const headers = {
-        "Content-Type": "application/json",
-        "x-user": "customer",
-      };
-      if (authToken) {
-        headers.Authorization = `Bearer ${authToken}`;
-      }
-
-      await fetch(`${backendUrl}/Website/General/remove-fcm-token`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ fcmToken: fcmToken || "" }),
-      });
-    }
-  } catch (err) {
-    console.error("[FCM] Error removing customer FCM token:", err);
-  } finally {
-    lastRegisteredSessionKey = null;
-    localStorage.removeItem(CUSTOMER_FCM_STORAGE_KEY);
-  }
 };
 
 /**

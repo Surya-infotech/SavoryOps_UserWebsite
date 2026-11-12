@@ -32,7 +32,6 @@
 /* ==========================================================================
    Loading State (Unified brand spinner)
    ========================================================================== */
-.my-reviews-loading-wrap,
 .address-loading-wrap {
   display: flex;
   flex-direction: column;
@@ -386,8 +385,7 @@
    Empty States (Unified Parity with Manage Address & Orders)
    ========================================================================== */
 .address-empty-card,
-.my-reviews-empty-state,
-.my-reviews-empty-card {
+.my-reviews-empty-state {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   outline: none;
@@ -412,8 +410,7 @@
     justify-content: center;
     margin: 0 auto 1.5rem;
 
-    .empty-icon,
-    .empty-illustration-icon {
+    .empty-icon {
       font-size: 2.75rem !important;
       color: #028802;
     }
@@ -438,8 +435,7 @@
     line-height: 1.55;
   }
 
-  .empty-add-btn,
-  .empty-action-btn {
+  .empty-add-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;

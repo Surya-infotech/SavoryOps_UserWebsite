@@ -16,14 +16,6 @@
   &.is-rtl {
     direction: rtl;
     text-align: right;
-
-    .card-action-circle .arrow-icon {
-      transform: scaleX(-1);
-    }
-
-    .reservation-card-tile:hover .card-action-circle .arrow-icon {
-      transform: scaleX(-1) translateX(3px);
-    }
   }
 }
 
@@ -72,108 +64,6 @@
   }
 }
 
-/* Toolbar: Status Filter Tabs + Search Box */
-.reservations-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding: 0.5rem 0;
-
-  .filter-tabs-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-
-    .status-tab-btn {
-      padding: 0.5rem 1.1rem;
-      border-radius: 9999px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      color: #64748b;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #f1f5f9;
-        color: #0f172a;
-      }
-
-      &.active {
-        background: #028802;
-        color: #ffffff;
-        border-color: #028802;
-        box-shadow: 0 2px 8px rgba(2, 136, 2, 0.25);
-      }
-    }
-  }
-
-  .reservation-search-box {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 380px;
-    margin-left: auto;
-
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      color: #028802;
-      font-size: 1.2rem;
-      pointer-events: none;
-    }
-
-    input {
-      width: 100%;
-      height: 44px;
-      padding: 0 2.5rem 0 2.8rem;
-      background: #f8fafc;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 9999px;
-      font-size: 0.92rem;
-      color: #0f172a;
-      outline: none;
-      transition: all 0.2s ease;
-
-      &::placeholder {
-        color: #94a3b8;
-      }
-
-      &:focus {
-        background: #ffffff;
-        border-color: #028802;
-        box-shadow: 0 0 0 3px rgba(2, 136, 2, 0.12);
-      }
-    }
-
-    .search-clear-btn {
-      position: absolute;
-      right: 0.85rem;
-      background: #e2e8f0;
-      border: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #64748b;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #cbd5e1;
-        color: #0f172a;
-      }
-    }
-  }
-}
-
 /* ==========================================================================
    Reservations Cards Grid
    ========================================================================== */
@@ -201,17 +91,6 @@
     transform: translateY(-4px);
     box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
     border-color: #cbd5e1;
-
-    .card-action-circle {
-      background: #028802;
-      color: #ffffff;
-      border-color: #028802;
-      transform: scale(1.05);
-
-      .arrow-icon {
-        transform: translateX(2px);
-      }
-    }
   }
 
   .card-accent-bar {
@@ -369,50 +248,6 @@
       }
     }
   }
-
-  /* Seating Preview & Action Circle */
-  .seating-preview-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 0.25rem;
-
-    .seating-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: #475569;
-
-      &.quick {
-        color: #d97706;
-      }
-
-      &.spot {
-        color: #028802;
-      }
-    }
-
-    .card-action-circle {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 1.5px solid #e2e8f0;
-      background: #ffffff;
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-
-      .arrow-icon {
-        font-size: 1.05rem;
-        transition: transform 0.2s ease;
-      }
-    }
-  }
 }
 
 /* ==========================================================================
@@ -509,8 +344,7 @@
    Empty State (Matching Manage Address & Orders Standard)
    ========================================================================== */
 
-.reservations-empty-state,
-.reservations-empty-card {
+.reservations-empty-state {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   outline: none;
@@ -535,8 +369,7 @@
     justify-content: center;
     margin: 0 auto 1.5rem;
 
-    .empty-icon,
-    .empty-illustration-icon {
+    .empty-icon {
       font-size: 2.75rem;
       color: #028802;
     }
@@ -544,8 +377,7 @@
     &.search {
       background: linear-gradient(135deg, rgba(148, 163, 184, 0.15) 0%, rgba(203, 213, 225, 0.25) 100%);
 
-      .empty-icon,
-      .empty-illustration-icon {
+      .empty-icon {
         color: #64748b;
       }
     }
@@ -559,8 +391,7 @@
     letter-spacing: -0.01em;
   }
 
-  .empty-subtitle,
-  .empty-description {
+  .empty-subtitle {
     font-size: 0.95rem;
     color: #64748b;
     max-width: 440px;
@@ -568,8 +399,7 @@
     line-height: 1.55;
   }
 
-  .empty-add-btn,
-  .empty-action-btn {
+  .empty-add-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -659,16 +489,6 @@
   box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(15, 23, 42, 0.06);
   animation: resScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
-  &.reservation-details-modal {
-    max-width: 680px;
-    overflow: hidden;
-
-    .modal-scroll-body {
-      overflow-y: auto;
-      max-height: 75vh;
-    }
-  }
-
   .modal-header {
     display: flex;
     align-items: center;
@@ -692,18 +512,6 @@
       align-items: center;
       gap: 0.85rem;
 
-      .modal-icon-badge {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: rgba(2, 136, 2, 0.1);
-        color: #028802;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.35rem;
-      }
-
       .modal-title {
         font-size: 1.25rem;
         font-weight: 800;
@@ -715,17 +523,6 @@
         font-size: 0.85rem;
         color: #64748b;
         margin: 0.15rem 0 0;
-      }
-
-      .modal-subtitle-chip {
-        display: inline-block;
-        padding: 0.2rem 0.6rem;
-        border-radius: 6px;
-        background: #f1f5f9;
-        color: #475569;
-        font-size: 0.8rem;
-        font-weight: 700;
-        margin-top: 0.2rem;
       }
     }
 
@@ -768,8 +565,7 @@
     gap: 0.75rem;
     background: #fafafa;
 
-    .modal-cancel-btn,
-    .modal-close-action-btn {
+    .modal-cancel-btn {
       padding: 0.7rem 1.4rem;
       border-radius: 10px;
       border: 1px solid #cbd5e1;
@@ -1014,150 +810,6 @@
     z-index: 150 !important;
   }
 
-  /* Area Pills (Legacy fallback) */
-  .pill-selector-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-
-    .area-pill {
-      padding: 0.45rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      color: #334155;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #f8fafc;
-        border-color: #94a3b8;
-      }
-
-      &.selected {
-        background: #028802;
-        color: #ffffff;
-        border-color: #028802;
-        box-shadow: 0 2px 6px rgba(2, 136, 2, 0.25);
-      }
-    }
-  }
-
-  /* Table Cards Grid */
-  .table-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 0.65rem;
-
-    .table-select-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0.75rem 0.5rem;
-      border-radius: 10px;
-      border: 1.5px solid #e2e8f0;
-      background: #ffffff;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      .table-card-icon {
-        font-size: 1.35rem;
-        color: #64748b;
-        margin-bottom: 0.25rem;
-      }
-
-      .table-card-no {
-        font-size: 0.92rem;
-        font-weight: 800;
-        color: #0f172a;
-      }
-
-      .table-card-cap {
-        font-size: 0.72rem;
-        font-weight: 600;
-        color: #64748b;
-      }
-
-      &:hover {
-        border-color: #cbd5e1;
-        background: #f8fafc;
-      }
-
-      &.selected {
-        border-color: #028802;
-        background: rgba(2, 136, 2, 0.06);
-
-        .table-card-icon {
-          color: #028802;
-        }
-
-        .table-card-no {
-          color: #028802;
-        }
-      }
-    }
-  }
-
-  /* Guest Counter Box */
-  .guest-stepper-box {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    padding: 0.6rem 1rem;
-    background: #f8fafc;
-    border: 1.5px solid #cbd5e1;
-    border-radius: 12px;
-    width: fit-content;
-
-    .stepper-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      color: #0f172a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover:not(:disabled) {
-        background: #028802;
-        color: #ffffff;
-        border-color: #028802;
-      }
-
-      &:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-      }
-    }
-
-    .stepper-value-display {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 70px;
-
-      .count-number {
-        font-size: 1.35rem;
-        font-weight: 800;
-        color: #0f172a;
-      }
-
-      .count-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #64748b;
-      }
-    }
-  }
-
   .branch-timezone-badge {
     display: inline-flex;
     align-items: center;
@@ -1190,438 +842,6 @@
 }
 
 /* ==========================================================================
-   Reservation Details Content
-   ========================================================================== */
-
-.reservation-details-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-
-  .reservation-details-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-
-    .section-header-outside {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 0.25rem;
-
-      .section-header-left {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-
-        .section-header-icon {
-          color: #028802;
-          font-size: 1.25rem;
-        }
-
-        h3 {
-          margin: 0;
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: #0f172a;
-          letter-spacing: -0.01em;
-        }
-      }
-    }
-  }
-
-  .status-banner-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    border-radius: 14px;
-    border: 1px solid transparent;
-
-    .status-banner-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-
-      .reservation-id-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        background: rgba(255, 255, 255, 0.85);
-        color: #334155;
-        padding: 0.35rem 0.75rem;
-        border-radius: 6px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-    }
-
-    .status-pill-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.4rem 0.9rem;
-      border-radius: 9999px;
-      font-size: 0.92rem;
-      font-weight: 800;
-      border: 1px solid transparent;
-    }
-
-    .type-badge {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #334155;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 0.3rem 0.75rem;
-      border-radius: 6px;
-    }
-  }
-
-  .details-section-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-
-    .section-card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-bottom: 1px solid #f1f5f9;
-      padding-bottom: 0.65rem;
-
-      .section-icon {
-        color: #028802;
-        font-size: 1.25rem;
-      }
-
-      h4 {
-        font-size: 0.98rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin: 0;
-      }
-    }
-  }
-
-  .branch-meta-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-
-    .branch-main-info {
-      .branch-title {
-        font-size: 1.05rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin: 0;
-      }
-
-      .business-subline {
-        font-size: 0.85rem;
-        color: #64748b;
-        margin: 0.15rem 0 0;
-      }
-    }
-
-    .branch-phone-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 0.9rem;
-      border-radius: 8px;
-      background: rgba(2, 136, 2, 0.08);
-      color: #028802;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #028802;
-        color: #ffffff;
-      }
-    }
-  }
-
-  .info-grid-two {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
-
-    .info-cell {
-      background: #f8fafc;
-      padding: 0.85rem 1rem;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-
-      &.full-span {
-        grid-column: 1 / -1;
-      }
-
-      .cell-icon {
-        font-size: 1.25rem;
-        color: #64748b;
-        flex-shrink: 0;
-
-        &.highlight {
-          color: #028802;
-        }
-      }
-
-      .cell-value {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #0f172a;
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-
-        &.highlight {
-          color: #028802;
-          font-size: 1.05rem;
-        }
-
-        &.text-muted {
-          font-size: 0.88rem;
-          color: #475569;
-          font-weight: 500;
-        }
-
-        .sub-cap {
-          font-size: 0.8rem;
-          font-weight: 600;
-          color: #64748b;
-          margin-left: 0.35rem;
-        }
-      }
-    }
-  }
-
-  .special-notes-box,
-  .cancellation-reason-box {
-    padding: 0.85rem;
-    border-radius: 10px;
-    background: #f8fafc;
-    border-left: 3px solid #028802;
-
-    .notes-label,
-    .cancel-label {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #028802;
-      margin-bottom: 0.35rem;
-    }
-
-    .notes-text,
-    .cancel-text {
-      font-size: 0.88rem;
-      color: #334155;
-      margin: 0;
-      line-height: 1.5;
-    }
-  }
-
-  .cancellation-reason-box {
-    border-left-color: #dc2626;
-
-    .cancel-label {
-      color: #dc2626;
-    }
-  }
-
-  /* Status Timeline */
-  .timeline-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    padding-left: 0.5rem;
-
-    .timeline-item {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-
-      .timeline-marker {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-top: 0.3rem;
-        flex-shrink: 0;
-        z-index: 1;
-      }
-
-      .timeline-line {
-        position: absolute;
-        top: 15px;
-        left: 5px;
-        width: 2px;
-        height: calc(100% + 0.85rem);
-        background: #e2e8f0;
-      }
-
-      .timeline-content {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-
-        .timeline-status-chip {
-          padding: 0.2rem 0.65rem;
-          border-radius: 9999px;
-          font-size: 0.75rem;
-          font-weight: 700;
-        }
-
-        .timeline-meta {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.78rem;
-          color: #64748b;
-
-          .timeline-author {
-            color: #94a3b8;
-          }
-        }
-      }
-    }
-  }
-
-  /* Cancellation Action */
-  .cancel-action-wrapper {
-    .cancel-trigger-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.65rem 1.25rem;
-      border-radius: 10px;
-      border: 1px solid #fecaca;
-      background: #fee2e2;
-      color: #dc2626;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #fca5a5;
-        color: #b91c1c;
-      }
-    }
-
-    .cancel-form-box {
-      background: #fff5f5;
-      border: 1.5px solid #fecaca;
-      border-radius: 14px;
-      padding: 1.15rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-
-      h5 {
-        font-size: 0.95rem;
-        font-weight: 800;
-        color: #991b1b;
-        margin: 0;
-      }
-
-      .cancel-prompt {
-        font-size: 0.85rem;
-        color: #b91c1c;
-        margin: 0;
-        line-height: 1.4;
-      }
-
-      .cancel-textarea {
-        width: 100%;
-        background: #ffffff;
-        border: 1.5px solid #f87171;
-        border-radius: 8px;
-        padding: 0.6rem 0.85rem;
-        font-size: 0.88rem;
-        color: #0f172a;
-        outline: none;
-
-        &:focus {
-          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-        }
-      }
-
-      .cancel-form-actions {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 0.6rem;
-
-        .cancel-dismiss-btn {
-          padding: 0.5rem 1rem;
-          border-radius: 8px;
-          border: 1px solid #cbd5e1;
-          background: #ffffff;
-          color: #475569;
-          font-weight: 700;
-          font-size: 0.85rem;
-          cursor: pointer;
-
-          &:hover {
-            background: #f1f5f9;
-          }
-        }
-
-        .cancel-submit-danger-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.4rem;
-          padding: 0.5rem 1.15rem;
-          border-radius: 8px;
-          border: none;
-          background: #dc2626;
-          color: #ffffff;
-          font-weight: 700;
-          font-size: 0.85rem;
-          cursor: pointer;
-
-          &:hover:not(:disabled) {
-            background: #b91c1c;
-          }
-
-          &:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-          }
-        }
-      }
-    }
-  }
-
-  .modal-loading-state,
-  .modal-empty-state {
-    padding: 3rem 1.5rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.85rem;
-    color: #64748b;
-  }
-}
-
-/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 
@@ -1646,10 +866,6 @@
     .empty-icon-wrap {
       width: 76px;
       height: 76px;
-
-      .empty-illustration-icon {
-        font-size: 2.4rem;
-      }
     }
 
     .empty-title {
@@ -1687,154 +903,6 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-  }
-}
-
-/* ==========================================================================
-   Full Page Reservation Details Styles
-   ========================================================================== */
-
-.reservation-details-page-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-
-  &.is-rtl {
-    direction: rtl;
-    text-align: right;
-  }
-
-  .reservation-details-nav-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding-bottom: 0.5rem;
-
-    .details-back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.6rem 1.15rem;
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 9999px;
-      color: #334155;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        border-color: #028802;
-        color: #028802;
-        background: #f0fdf4;
-      }
-    }
-
-    .header-titles {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-
-      h2 {
-        margin: 0;
-        font-size: 1.65rem;
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.02em;
-      }
-
-      .reservation-id-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        background: #f1f5f9;
-        color: #475569;
-        padding: 0.35rem 0.75rem;
-        border-radius: 8px;
-        font-size: 0.82rem;
-        font-weight: 700;
-      }
-    }
-  }
-
-  .reservation-details-page-grid {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 1.5rem;
-    align-items: flex-start;
-
-    @media (max-width: 980px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .details-main-column,
-  .details-side-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-  }
-
-  .reservation-details-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 1.5rem;
-    text-align: center;
-    background: #ffffff;
-    border: 1px dashed #cbd5e1;
-    border-radius: 16px;
-
-    .empty-icon {
-      font-size: 3.5rem;
-      color: #94a3b8;
-      margin-bottom: 1rem;
-    }
-
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #1e293b;
-      margin: 0 0 0.5rem;
-    }
-
-    p {
-      color: #64748b;
-      font-size: 0.92rem;
-      max-width: 440px;
-      margin: 0 0 1.5rem;
-    }
-
-    .empty-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-
-      .retry-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.6rem 1.15rem;
-        background: #028802;
-        color: #ffffff;
-        border: none;
-        border-radius: 9999px;
-        font-weight: 700;
-        font-size: 0.88rem;
-        cursor: pointer;
-
-        &:hover {
-          background: #026b02;
-        }
-      }
-    }
   }
 }
 

@@ -227,7 +227,7 @@ export const getNotifications = () => {
 /**
  * Replace in-session local notifications list in memory
  */
-export const saveNotifications = (notifications) => {
+const saveNotifications = (notifications) => {
   localNotifications = Array.isArray(notifications) ? notifications : [];
   notifyChange(getNotifications());
   return true;
@@ -303,18 +303,10 @@ export const syncNotificationsFromServer = async ({ force = false } = {}) => {
 };
 
 /**
- * Get unread notifications count
- */
-export const getUnreadCount = () => {
-  const list = getNotifications();
-  return list.filter((n) => !n.isRead).length;
-};
-
-/**
  * Add an in-memory notification for the active session
  * @param {Object} notif - { title, message, type: 'order'|'table'|'offer'|'reservation'|'general', url }
  */
-export const addNotification = ({ title, message, type = "general", url = "" }) => {
+const addNotification = ({ title, message, type = "general", url = "" }) => {
   if (!title) return null;
 
   // Deduplicate recent identical notification (within 30 seconds)
@@ -426,26 +418,6 @@ export const deleteNotification = async (notificationId) => {
       postCrossTabSync("NOTIFICATIONS_UPDATED");
     } catch (error) {
       console.error("Error deleting server notification:", error);
-    }
-  }
-};
-
-/**
- * Mark all notifications as read
- */
-export const markAllAsRead = async () => {
-  updateAllStores((list) => list.map((n) => ({ ...n, isRead: true })));
-
-  const token = getCustomerAuthToken();
-  if (token && BACKEND_URL) {
-    try {
-      await fetch(`${BACKEND_URL}/Website/General/notifications/mark-all-read`, {
-        method: "PUT",
-        headers: buildCustomerHeaders(token),
-      });
-      postCrossTabSync("NOTIFICATIONS_UPDATED");
-    } catch (error) {
-      console.error("Error marking all server notifications as read:", error);
     }
   }
 };

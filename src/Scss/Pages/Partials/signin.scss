@@ -49,47 +49,6 @@
     gap: 16px;
   }
 
-  /* Top Navigation Strip */
-  .signin-top-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 4px;
-
-    .signin-back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #64748b;
-      text-decoration: none;
-      transition: all 0.2s ease;
-
-      &:hover {
-        color: #0f172a;
-        transform: translateX(-3px);
-      }
-    }
-
-    .signin-brand-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(2, 136, 2, 0.08);
-      color: #028802;
-      border: 1px solid rgba(2, 136, 2, 0.2);
-      border-radius: 9999px;
-      padding: 4px 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-
-      .brand-icon {
-        font-size: 1rem;
-      }
-    }
-  }
-
   /* Main Card */
   .signin-card {
     background: #ffffff;
@@ -300,12 +259,6 @@
       color: #334155;
     }
 
-    .field-helper-text {
-      font-size: 0.78rem;
-      color: #94a3b8;
-      line-height: 1.4;
-    }
-
     .field-error-text {
       font-size: 0.82rem;
       color: #dc2626;
@@ -495,16 +448,6 @@
     }
   }
 
-  .dev-otp-hint {
-    text-align: center;
-    font-size: 0.8rem;
-    color: #64748b;
-    background: #f8fafc;
-    border-radius: 8px;
-    padding: 6px 10px;
-    margin-top: 4px;
-  }
-
   /* Resend Strip */
   .resend-strip {
     text-align: center;
@@ -576,23 +519,6 @@
       opacity: 0.65;
       cursor: not-allowed;
       box-shadow: none;
-    }
-  }
-
-  .auth-secondary-btn {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: #64748b;
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 6px 0;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: #0f172a;
-      text-decoration: underline;
     }
   }
 

@@ -228,43 +228,6 @@
   font-weight: 600;
 }
 
-.delete-confirm-box {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 10px;
-
-  p {
-    margin: 0 0 0.75rem;
-    color: #991b1b;
-    font-size: 0.88rem;
-    font-weight: 600;
-  }
-
-  .delete-confirm-actions {
-    display: flex;
-    gap: 0.5rem;
-  }
-}
-
-.delete-link-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: transparent;
-  border: none;
-  color: #ef4444;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .primary-btn {
   padding: 0.65rem 1.4rem;
   background: #028802;

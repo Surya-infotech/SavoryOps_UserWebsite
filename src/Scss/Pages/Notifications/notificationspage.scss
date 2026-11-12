@@ -69,17 +69,6 @@
     transition: all 0.2s ease;
     border: 1px solid transparent;
 
-    &.mark-all-btn {
-      background: #f0fdf4;
-      color: #028802;
-      border-color: #bbf7d0;
-
-      &:hover {
-        background: #dcfce7;
-        border-color: #86efac;
-      }
-    }
-
     &.clear-all-btn {
       background: #fef2f2;
       color: #dc2626;
@@ -95,8 +84,7 @@
 
 /* Empty State Card - Full Width Parity with Orders Page */
 .address-empty-card,
-.notifications-empty-state,
-.notifications-empty-card {
+.notifications-empty-state {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   outline: none;
@@ -118,8 +106,7 @@
     justify-content: center;
     margin: 0 auto 1.5rem;
 
-    .empty-icon,
-    .empty-illustration-icon {
+    .empty-icon {
       font-size: 2.75rem;
       color: #028802;
     }
@@ -136,7 +123,6 @@
   }
 
   .empty-subtitle,
-  .empty-description,
   p {
     font-size: 0.95rem;
     color: #64748b;
@@ -145,8 +131,7 @@
     line-height: 1.55;
   }
 
-  .empty-add-btn,
-  .empty-action-btn {
+  .empty-add-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
