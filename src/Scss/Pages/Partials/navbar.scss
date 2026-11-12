@@ -770,7 +770,7 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  min-width: 200px;
+  min-width: 220px;
   max-width: calc(100vw - 24px);
   max-height: 280px;
   overflow-y: auto;
@@ -825,6 +825,7 @@
 
 .language-item-name {
   flex: 1;
+  white-space: nowrap;
 }
 
 .language-item-check {
@@ -2307,7 +2308,7 @@
     top: calc(100% + 8px) !important;
     right: 0 !important;
     left: auto !important;
-    width: 200px !important;
+    width: 220px !important;
     max-width: calc(100vw - 20px) !important;
     max-height: calc(100vh - 120px) !important;
     z-index: 1050 !important;

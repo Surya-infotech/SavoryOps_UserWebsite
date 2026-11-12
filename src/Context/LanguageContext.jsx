@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import loadLanguage, { defaultTranslations } from '../utils/LanguageLoader';
 import { LanguageContext } from './languageContext.core.js';
-import { isRtlLanguage } from '../constants/languages';
+import { getHtmlLangCode, isRtlLanguage } from '../constants/languages';
 
 function readInitialLanguage(defaultLanguage) {
     if (typeof window === 'undefined') return null;
@@ -32,7 +32,7 @@ export function LanguageProvider({ children, defaultLanguage }) {
             document.body.dir = dir;
             document.body.setAttribute('dir', dir);
             document.body.classList.toggle('rtl-mode', isRtl);
-            document.documentElement.setAttribute('lang', isRtl ? 'ar' : (language === 'English' ? 'en' : language || 'en'));
+            document.documentElement.setAttribute('lang', getHtmlLangCode(language));
         }
     }, [isRtl, language]);
 

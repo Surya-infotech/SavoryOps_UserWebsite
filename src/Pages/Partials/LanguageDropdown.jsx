@@ -65,7 +65,9 @@ export const LanguageDropdown = ({ className = "" }) => {
         <span className="lang-flag-container">
           <Flag code={selectedLang?.code} className="flag-icon" alt={selectedLang?.name} />
         </span>
-        <span className="lang-name-label">{selectedLang?.name.substring(0, 3)}</span>
+        <span className="lang-name-label">
+          {selectedLang?.short || selectedLang?.name.substring(0, 3)}
+        </span>
       </button>
 
       {isOpen && (
@@ -75,7 +77,7 @@ export const LanguageDropdown = ({ className = "" }) => {
               const isSelected = item.name.toLowerCase() === currentLanguage.toLowerCase();
               return (
                 <li
-                  key={item.code}
+                  key={item.name}
                   className={`language-menu-item ${isSelected ? "selected" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
