@@ -28,6 +28,7 @@ const OTP_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 30;
 
 const DEMO_PHONE = "+12125550101";
+const DEFAULT_DEMO_OTP = "123456";
 
 const maskPhone = (phoneStr) => {
   if (!phoneStr) return "";
@@ -86,6 +87,7 @@ const SigninPage = () => {
 
   // Loading & status states
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDemoLoggingIn, setIsDemoLoggingIn] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
 
@@ -160,7 +162,11 @@ const SigninPage = () => {
       if (response.ok) {
         setStep("otp");
         setResendTimer(RESEND_COOLDOWN_SECONDS);
-        setOtpValues(Array(OTP_LENGTH).fill(""));
+        if (phoneNumber === DEMO_PHONE) {
+          setOtpValues(DEFAULT_DEMO_OTP.split(""));
+        } else {
+          setOtpValues(Array(OTP_LENGTH).fill(""));
+        }
         setOtpError("");
       } else {
         setPhoneError(translations.failedtosendotp);
@@ -173,9 +179,86 @@ const SigninPage = () => {
     }
   };
 
-  const handleFillDemo = () => {
-    setPhoneNumber(DEMO_PHONE);
+  const handleDemoLogin = async () => {
+    if (isSubmitting || isDemoLoggingIn) return;
     setPhoneError("");
+    setOtpError("");
+    setPhoneNumber(DEMO_PHONE);
+    setIsDemoLoggingIn(true);
+
+    try {
+      const cachedFcmToken =
+        typeof localStorage !== "undefined"
+          ? localStorage.getItem(CUSTOMER_FCM_STORAGE_KEY)
+          : null;
+
+      const { browserdetails, device } = getBrowserAndDeviceDetails();
+      const { ipaddress, location: userGeoLocation } = await getIpAndLocation().catch(() => ({
+        ipaddress: "Unknown",
+        location: "Unknown",
+      }));
+
+      const verifyPayload = {
+        phone: DEMO_PHONE,
+        otp: DEFAULT_DEMO_OTP,
+        ...(cachedFcmToken ? { fcmToken: cachedFcmToken } : {}),
+        browserdetails,
+        device,
+        ipaddress,
+        location: userGeoLocation,
+      };
+
+      let response = await fetch(`${adminPanelBackendPath}/Website/General/VerifySignInPhoneOtp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user": "customer",
+        },
+        body: JSON.stringify(verifyPayload),
+      });
+
+      let data = await response.json().catch(() => null);
+
+      if (!response.ok && (response.status === 404 || data?.message?.includes("OTP not found"))) {
+        const sendResponse = await fetch(`${adminPanelBackendPath}/Website/General/SigninPhoneSendOtp`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": "customer",
+          },
+          body: JSON.stringify({
+            phone: DEMO_PHONE,
+            browserdetails,
+            device,
+            ipaddress,
+            location: userGeoLocation,
+          }),
+        });
+
+        if (sendResponse.ok) {
+          response = await fetch(`${adminPanelBackendPath}/Website/General/VerifySignInPhoneOtp`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user": "customer",
+            },
+            body: JSON.stringify(verifyPayload),
+          });
+          data = await response.json().catch(() => null);
+        }
+      }
+
+      if (response.ok && data?.token) {
+        completeLogin(data, cachedFcmToken, DEMO_PHONE);
+      } else {
+        showSnackbar(data?.message || translations.somethingwentwrong, "error");
+        setIsDemoLoggingIn(false);
+      }
+    } catch (err) {
+      console.error("Demo login error:", err);
+      showSnackbar(translations.servererror, "error");
+      setIsDemoLoggingIn(false);
+    }
   };
 
   /* ==========================================================================
@@ -297,7 +380,7 @@ const SigninPage = () => {
     }
   };
 
-  const completeLogin = (data, sentFcmToken = null) => {
+  const completeLogin = (data, sentFcmToken = null, fallbackPhone = null) => {
     const customer = data.customer || {};
     const customerId = data.id || customer._id || customer.customerid || "";
     const customerToken = data.token || "";
@@ -324,7 +407,7 @@ const SigninPage = () => {
       })
     );
 
-    setAuthenticatedUser({ phone: customer.phone || phoneNumber });
+    setAuthenticatedUser({ phone: customer.phone || phoneNumber || fallbackPhone || DEMO_PHONE });
     setStep("success");
 
     // Redirect to previous destination after 1.8 seconds
@@ -465,10 +548,18 @@ const SigninPage = () => {
                   <button
                     type="button"
                     className="demo-chip-btn"
-                    onClick={handleFillDemo}
+                    onClick={handleDemoLogin}
+                    disabled={isSubmitting || isDemoLoggingIn}
                     id="signin-demo-phone-chip"
                   >
-                    <span>{translations.usedemo}</span>
+                    {isDemoLoggingIn ? (
+                      <>
+                        <CircularProgress size={12} color="inherit" />
+                        <span>{translations.loading}</span>
+                      </>
+                    ) : (
+                      <span>{translations.usedemo}</span>
+                    )}
                   </button>
                 </div>
 
@@ -476,7 +567,7 @@ const SigninPage = () => {
                 <button
                   type="submit"
                   className="auth-primary-btn"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isDemoLoggingIn}
                   id="signin-send-otp-btn"
                 >
                   {isSubmitting ? (
@@ -532,6 +623,23 @@ const SigninPage = () => {
                     </span>
                   )}
                 </div>
+
+                {phoneNumber === DEMO_PHONE && (
+                  <div className="demo-fill-strip" style={{ justifyContent: "center", marginBottom: "8px" }}>
+                    <span className="demo-label">{translations.testingdemo}</span>
+                    <button
+                      type="button"
+                      className="demo-chip-btn"
+                      onClick={() => {
+                        setOtpValues(DEFAULT_DEMO_OTP.split(""));
+                        setOtpError("");
+                      }}
+                      id="signin-demo-otp-chip"
+                    >
+                      <span>{DEFAULT_DEMO_OTP}</span>
+                    </button>
+                  </div>
+                )}
 
                 {/* Resend Strip */}
                 <div className="resend-strip">

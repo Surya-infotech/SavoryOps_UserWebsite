@@ -399,11 +399,19 @@
       color: #028802;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background: rgba(2, 136, 2, 0.08);
         border-color: #028802;
         transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
       }
     }
   }
