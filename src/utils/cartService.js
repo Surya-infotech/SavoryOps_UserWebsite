@@ -65,9 +65,19 @@ const getSelectedAddonsKey = (addons = []) => {
 const areCartItemsEqual = (itemA, itemB) => {
   if (!itemA || !itemB) return false;
 
-  const idA = String(itemA.itemId || itemA.itemid || itemA.id || "");
-  const idB = String(itemB.itemId || itemB.itemid || itemB.id || "");
-  if (!idA || !idB || idA !== idB) return false;
+  const isDealA = Boolean(itemA.isDeal || itemA.dealsbundlesid);
+  const isDealB = Boolean(itemB.isDeal || itemB.dealsbundlesid);
+
+  if (isDealA || isDealB) {
+    if (isDealA !== isDealB) return false;
+    const dealIdA = String(itemA.dealsbundlesid || itemA.itemId || itemA.itemid || itemA.id || "");
+    const dealIdB = String(itemB.dealsbundlesid || itemB.itemId || itemB.itemid || itemB.id || "");
+    if (!dealIdA || !dealIdB || dealIdA !== dealIdB) return false;
+  } else {
+    const idA = String(itemA.itemId || itemA.itemid || itemA.id || "");
+    const idB = String(itemB.itemId || itemB.itemid || itemB.id || "");
+    if (!idA || !idB || idA !== idB) return false;
+  }
 
   const addonsA = getSelectedAddonsKey(itemA.addons);
   const addonsB = getSelectedAddonsKey(itemB.addons);
@@ -119,6 +129,8 @@ export const addItemToCart = (item, options = {}) => {
 
     const itemToAdd = {
       itemId: item.itemid || item.id || item.itemId || item.dealsbundlesid,
+      isDeal: Boolean(item.isDeal || item.dealsbundlesid || item.bundletype),
+      dealsbundlesid: item.dealsbundlesid ? Number(item.dealsbundlesid) : null,
       addons: addons,
       specialInstructions: specialInstructions || item.specialInstructions || "",
     };
@@ -171,9 +183,25 @@ export const addItemToCart = (item, options = {}) => {
         availableAddons: options.availableAddons || item.availableAddons || item.addons || addons,
         specialInstructions: specialInstructions || item.specialInstructions || "",
         isDeal: Boolean(item.isDeal || item.dealsbundlesid || item.bundletype),
-        dealsbundlesid: item.dealsbundlesid,
-        bundletype: item.bundletype,
-        bundleItems: item.items || item.bundleItems || [],
+        dealsbundlesid: item.dealsbundlesid ? Number(item.dealsbundlesid) : null,
+        bundletype: item.bundletype || (item.isDeal ? "Combo" : null),
+        bundleItems: Array.isArray(item.bundleItems) && item.bundleItems.length > 0
+          ? item.bundleItems.map((bi) => ({
+              itemid: bi.itemid != null ? Number(bi.itemid) : undefined,
+              itemname: bi.itemname || bi.name || "",
+              quantity: bi.quantity ?? bi.qty ?? 1,
+              qty: bi.quantity ?? bi.qty ?? 1,
+              isunlimited: Boolean(bi.isunlimited),
+            }))
+          : (Array.isArray(item.items)
+            ? item.items.map((bi) => ({
+                itemid: bi.itemid != null ? Number(bi.itemid) : undefined,
+                itemname: bi.itemname || bi.name || "",
+                quantity: bi.quantity ?? bi.qty ?? 1,
+                qty: bi.quantity ?? bi.qty ?? 1,
+                isunlimited: Boolean(bi.isunlimited),
+              }))
+            : []),
       };
       newCart = [...existingCart, resultingCartItem];
     }
@@ -223,6 +251,11 @@ export const getItemQuantitiesMap = () => {
     const id = String(item.itemId || item.itemid || item.id);
     if (id) {
       map[id] = (map[id] || 0) + (Number(item.quantity) || 1);
+    }
+    if (item.dealsbundlesid) {
+      const dealId = String(item.dealsbundlesid);
+      map[dealId] = (map[dealId] || 0) + (Number(item.quantity) || 1);
+      map[`deal-${dealId}`] = (map[`deal-${dealId}`] || 0) + (Number(item.quantity) || 1);
     }
   });
   return map;

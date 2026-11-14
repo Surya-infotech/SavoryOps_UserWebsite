@@ -417,12 +417,36 @@ const CartPage = () => {
         const itemAmount = Number((itemPrice * itemQuantity + itemAddonsTotal).toFixed(2));
         const resolvedItemId = item.itemid != null ? item.itemid : (item.itemId || item.id || item._id);
 
+        const isDealItem = Boolean(item.isDeal || item.dealsbundlesid);
+        const dealIdNum = item.dealsbundlesid != null && !isNaN(Number(item.dealsbundlesid)) ? Number(item.dealsbundlesid) : null;
+        const finalItemId = isDealItem && dealIdNum
+          ? dealIdNum
+          : (resolvedItemId != null && !isNaN(Number(resolvedItemId)) ? Number(resolvedItemId) : resolvedItemId);
+
+        const mappedBundleItems = Array.isArray(item.bundleItems) && item.bundleItems.length > 0
+          ? item.bundleItems.map((bi) => ({
+              itemid: bi.itemid != null && !isNaN(Number(bi.itemid)) ? Number(bi.itemid) : undefined,
+              itemname: bi.itemname || bi.name || "",
+              quantity: bi.quantity ?? bi.qty ?? 1,
+              qty: bi.quantity ?? bi.qty ?? 1,
+              isunlimited: Boolean(bi.isunlimited),
+            }))
+          : (Array.isArray(item.items)
+            ? item.items.map((bi) => ({
+                itemid: bi.itemid != null && !isNaN(Number(bi.itemid)) ? Number(bi.itemid) : undefined,
+                itemname: bi.itemname || bi.name || "",
+                quantity: bi.quantity ?? bi.qty ?? 1,
+                qty: bi.quantity ?? bi.qty ?? 1,
+                isunlimited: Boolean(bi.isunlimited),
+              }))
+            : []);
+
         return {
           ...item,
           cartItemId: item.cartItemId,
-          itemid: resolvedItemId != null && !isNaN(Number(resolvedItemId)) ? Number(resolvedItemId) : resolvedItemId,
-          itemId: resolvedItemId,
-          id: resolvedItemId,
+          itemid: finalItemId,
+          itemId: finalItemId,
+          id: finalItemId,
           name: item.name || item.itemname,
           itemname: item.name || item.itemname,
           quantity: itemQuantity,
@@ -435,6 +459,10 @@ const CartPage = () => {
           appliedTaxes: item.appliedTaxes || item.taxes || [],
           itemtype: item.itemtype || (item.isVeg ? "Veg" : "Non-Veg"),
           specialInstructions: item.specialInstructions || "",
+          isDeal: isDealItem,
+          dealsbundlesid: dealIdNum,
+          bundletype: item.bundletype || (isDealItem ? "Combo" : null),
+          bundleItems: mappedBundleItems,
         };
       });
     };
@@ -831,7 +859,24 @@ const CartPage = () => {
                             />
                           )}
                           <h4 className="cart-item-title">{item.name}</h4>
+                          {item.isDeal && (
+                            <span
+                              className={`tag-badge deal-ribbon-badge ${String(item.bundletype || "combo").toLowerCase()}`}
+                              style={{ position: "static", fontSize: "0.7rem", padding: "2px 8px" }}
+                            >
+                              {item.bundletype ? item.bundletype.toUpperCase() : "COMBO"}
+                            </span>
+                          )}
                         </div>
+
+                        {item.isDeal && Array.isArray(item.bundleItems) && item.bundleItems.length > 0 && (
+                          <div className="cart-deal-bundle-preview" style={{ marginTop: "4px", marginBottom: "6px", fontSize: "0.82rem", color: "#64748b" }}>
+                            <span style={{ fontWeight: 600, color: "#166534" }}>
+                              🍽️ {item.bundleItems.length} {item.bundleItems.length === 1 ? translations.itemincluded : translations.itemsincluded}:
+                            </span>{" "}
+                            {item.bundleItems.map((bi) => `${bi.isunlimited ? "∞" : `${bi.quantity ?? bi.qty ?? 1}x`} ${bi.itemname}`).join(", ")}
+                          </div>
+                        )}
 
                         <span className="cart-item-unit-price">
                           {formatPriceFromBranch(itemPrice, selectedBranch)}

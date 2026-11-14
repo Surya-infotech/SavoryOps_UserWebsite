@@ -542,12 +542,36 @@ const CheckoutPage = () => {
         const itemAmount = Number((itemPrice * itemQuantity + itemAddonsTotal).toFixed(2));
         const resolvedItemId = item.itemid != null ? item.itemid : (item.itemId || item.id || item._id);
 
+        const isDealItem = Boolean(item.isDeal || item.dealsbundlesid);
+        const dealIdNum = item.dealsbundlesid != null && !isNaN(Number(item.dealsbundlesid)) ? Number(item.dealsbundlesid) : null;
+        const finalItemId = isDealItem && dealIdNum
+          ? dealIdNum
+          : (resolvedItemId != null && !isNaN(Number(resolvedItemId)) ? Number(resolvedItemId) : resolvedItemId);
+
+        const mappedBundleItems = Array.isArray(item.bundleItems) && item.bundleItems.length > 0
+          ? item.bundleItems.map((bi) => ({
+              itemid: bi.itemid != null && !isNaN(Number(bi.itemid)) ? Number(bi.itemid) : undefined,
+              itemname: bi.itemname || bi.name || "",
+              quantity: bi.quantity ?? bi.qty ?? 1,
+              qty: bi.quantity ?? bi.qty ?? 1,
+              isunlimited: Boolean(bi.isunlimited),
+            }))
+          : (Array.isArray(item.items)
+            ? item.items.map((bi) => ({
+                itemid: bi.itemid != null && !isNaN(Number(bi.itemid)) ? Number(bi.itemid) : undefined,
+                itemname: bi.itemname || bi.name || "",
+                quantity: bi.quantity ?? bi.qty ?? 1,
+                qty: bi.quantity ?? bi.qty ?? 1,
+                isunlimited: Boolean(bi.isunlimited),
+              }))
+            : []);
+
         return {
           ...item,
           cartItemId: item.cartItemId,
-          itemid: resolvedItemId != null && !isNaN(Number(resolvedItemId)) ? Number(resolvedItemId) : resolvedItemId,
-          itemId: resolvedItemId,
-          id: resolvedItemId,
+          itemid: finalItemId,
+          itemId: finalItemId,
+          id: finalItemId,
           name: item.name || item.itemname,
           itemname: item.name || item.itemname,
           quantity: itemQuantity,
@@ -560,6 +584,10 @@ const CheckoutPage = () => {
           appliedTaxes: item.appliedTaxes || item.taxes || [],
           itemtype: item.itemtype || (item.isVeg ? "Veg" : "Non-Veg"),
           specialInstructions: item.specialInstructions || "",
+          isDeal: isDealItem,
+          dealsbundlesid: dealIdNum,
+          bundletype: item.bundletype || (isDealItem ? "Combo" : null),
+          bundleItems: mappedBundleItems,
         };
       });
 
@@ -848,7 +876,22 @@ const CheckoutPage = () => {
                       <div className="checkout-item-main">
                         <span className="checkout-item-qty">{item.quantity}x</span>
                         <div className="checkout-item-names">
-                          <span className="checkout-item-title">{item.name}</span>
+                          <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                            <span className="checkout-item-title">{item.name}</span>
+                            {item.isDeal && (
+                              <span
+                                className={`tag-badge deal-ribbon-badge ${String(item.bundletype || "combo").toLowerCase()}`}
+                                style={{ position: "static", fontSize: "0.65rem", padding: "1px 6px" }}
+                              >
+                                {item.bundletype ? item.bundletype.toUpperCase() : "COMBO"}
+                              </span>
+                            )}
+                          </div>
+                          {item.isDeal && Array.isArray(item.bundleItems) && item.bundleItems.length > 0 && (
+                            <span className="checkout-item-bundle-desc" style={{ display: "block", fontSize: "0.75rem", color: "#64748b", marginTop: "2px" }}>
+                              🍽️ {item.bundleItems.map((bi) => `${bi.isunlimited ? "∞" : `${bi.quantity ?? bi.qty ?? 1}x`} ${bi.itemname}`).join(", ")}
+                            </span>
+                          )}
                           {(item.addons || []).filter(a => a && a.selected !== false).length > 0 && (
                             <span className="checkout-item-addons">
                               + {(item.addons || []).filter(a => a && a.selected !== false).map(a => a.addonname || a.name).join(", ")}
