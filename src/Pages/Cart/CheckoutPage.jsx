@@ -31,6 +31,7 @@ import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurren
 import { getCart, clearCart, saveCart } from "../../utils/cartService.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
+import { clearSelectedTable } from "../../utils/qrTableService.js";
 import "../../Scss/Pages/Cart/checkoutpage.scss";
 import "../../Scss/Pages/Profile/manageaddress.scss";
 
@@ -161,6 +162,10 @@ const CheckoutPage = () => {
     const handleOrderTypeChange = (e) => {
       const ot = e?.detail?.orderType;
       if (ot) setSelectedOrderType(ot);
+      if (!e?.detail?.isQrScan) {
+        setSelectedTableNo(null);
+        clearSelectedTable();
+      }
     };
 
     const handleBranchSettingChange = (e) => {
@@ -170,9 +175,11 @@ const CheckoutPage = () => {
     const handleStorage = (e) => {
       if (e.key === "selectedOrderType" && e.newValue) {
         setSelectedOrderType(e.newValue);
+        setSelectedTableNo(null);
+        clearSelectedTable();
       }
-      if ((e.key === "selectedTableNo" || e.key === "selectedTable") && e.newValue) {
-        setSelectedTableNo(e.newValue);
+      if (e.key === "selectedTableNo" || e.key === "selectedTable") {
+        setSelectedTableNo(e.newValue || null);
       }
     };
 
@@ -182,7 +189,7 @@ const CheckoutPage = () => {
         setSelectedTableNo(String(tableVal));
       } else {
         setSelectedTableNo(
-          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable")
+          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable") || null
         );
       }
     };
@@ -623,12 +630,13 @@ const CheckoutPage = () => {
 
       if (response.ok) {
         clearCart();
+        clearSelectedTable();
+        setSelectedTableNo(null);
+
         if (isUpdate) {
           localStorage.removeItem("currentOrderNo");
           localStorage.removeItem("currentOrderId");
           localStorage.removeItem("orderType");
-          localStorage.removeItem("selectedTableId");
-          localStorage.removeItem("selectedTableNo");
           showSnackbar(
             translations.orderupdatedsuccessfully,
             "success",
@@ -685,7 +693,7 @@ const CheckoutPage = () => {
               )}
               <span>{resolvedOrderTypeName}</span>
             </div>
-            {selectedTableNo && (
+            {isDineIn && selectedTableNo && (
               <div className="checkout-ordertype-pill table-badge-pill">
                 <TableRestaurantIcon fontSize="small" />
                 <span>

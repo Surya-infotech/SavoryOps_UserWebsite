@@ -671,6 +671,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             const firstTable = area.tables[0];
             if (firstTable.tableno) {
               localStorage.setItem("selectedTableNo", String(firstTable.tableno));
+              localStorage.setItem("selectedTable", String(firstTable.tableno));
             }
             if (firstTable._id || firstTable.tableid) {
               localStorage.setItem(
@@ -678,6 +679,14 @@ const OrderDetails = ({ orderId, onBack }) => {
                 String(firstTable._id || firstTable.tableid)
               );
             }
+            window.dispatchEvent(
+              new CustomEvent("tableChange", {
+                detail: {
+                  tableNo: String(firstTable.tableno),
+                  tableId: String(firstTable._id || firstTable.tableid),
+                },
+              })
+            );
             break;
           }
         }

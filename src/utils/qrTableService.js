@@ -147,7 +147,7 @@ const applyTableAndBranchSettings = ({
 
     window.dispatchEvent(
       new CustomEvent("orderTypeChange", {
-        detail: { orderType: dineInType },
+        detail: { orderType: dineInType, isQrScan: true },
       })
     );
 
@@ -278,6 +278,20 @@ export const processTableQrCode = async (scannedText) => {
     success: false,
     message: "Unrecognized QR code format",
   };
+};
+
+/**
+ * Clears table details from localStorage and dispatches a tableChange event.
+ */
+export const clearSelectedTable = () => {
+  if (typeof localStorage !== "undefined") {
+    localStorage.removeItem("selectedTable");
+    localStorage.removeItem("selectedTableNo");
+    localStorage.removeItem("selectedTableId");
+  }
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("tableChange", { detail: null }));
+  }
 };
 
 export default processTableQrCode;

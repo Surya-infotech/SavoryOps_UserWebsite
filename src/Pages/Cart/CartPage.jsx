@@ -33,6 +33,7 @@ import {
 } from "../../utils/cartService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
+import { clearSelectedTable } from "../../utils/qrTableService.js";
 import "../../Scss/Pages/Cart/cartpage.scss";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
@@ -139,6 +140,10 @@ const CartPage = () => {
       if (ot) {
         setSelectedOrderType(ot);
       }
+      if (!e?.detail?.isQrScan) {
+        setSelectedTableNo(null);
+        clearSelectedTable();
+      }
     };
     const handleBranchSettingChange = (e) => {
       if (e?.detail) {
@@ -151,16 +156,18 @@ const CartPage = () => {
         setSelectedTableNo(String(tableVal));
       } else {
         setSelectedTableNo(
-          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable")
+          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable") || null
         );
       }
     };
     const handleStorage = (e) => {
       if (e.key === "selectedOrderType" && e.newValue) {
         setSelectedOrderType(e.newValue);
+        setSelectedTableNo(null);
+        clearSelectedTable();
       }
-      if ((e.key === "selectedTableNo" || e.key === "selectedTable") && e.newValue) {
-        setSelectedTableNo(e.newValue);
+      if (e.key === "selectedTableNo" || e.key === "selectedTable") {
+        setSelectedTableNo(e.newValue || null);
       }
       if (e.key === "selectedBranchId") {
         setSelectedBranch(getActiveBranch());
@@ -352,8 +359,7 @@ const CartPage = () => {
     localStorage.removeItem("currentOrderNo");
     localStorage.removeItem("currentOrderId");
     localStorage.removeItem("orderType");
-    localStorage.removeItem("selectedTableId");
-    localStorage.removeItem("selectedTableNo");
+    clearSelectedTable();
     setCurrentOrderNo(null);
     setCurrentOrderId(null);
     setSelectedTableNo(null);
@@ -499,8 +505,7 @@ const CartPage = () => {
           localStorage.removeItem("currentOrderNo");
           localStorage.removeItem("currentOrderId");
           localStorage.removeItem("orderType");
-          localStorage.removeItem("selectedTableId");
-          localStorage.removeItem("selectedTableNo");
+          clearSelectedTable();
           setCurrentOrderNo(null);
           setCurrentOrderId(null);
           setSelectedTableNo(null);
@@ -609,8 +614,10 @@ const CartPage = () => {
           localStorage.removeItem("currentOrderNo");
           localStorage.removeItem("currentOrderId");
           localStorage.removeItem("orderType");
+          clearSelectedTable();
           setCurrentOrderNo(null);
           setCurrentOrderId(null);
+          setSelectedTableNo(null);
 
           if (typeof showSnackbar === "function") {
             showSnackbar(
@@ -687,7 +694,7 @@ const CartPage = () => {
 
       <div className="cart-container">
         {/* Info Cards Row (Order Type, Table No, Order No) - Matches SavoryOps_UserApp */}
-        {(effectiveOrderType || selectedTableNo || currentOrderNo) && (
+        {(effectiveOrderType || (isDineIn && selectedTableNo) || currentOrderNo) && (
           <div className="cart-info-cards-row">
             {effectiveOrderType && (
               <div className="cart-info-card-wrapper">
@@ -704,7 +711,7 @@ const CartPage = () => {
               </div>
             )}
 
-            {selectedTableNo && (
+            {isDineIn && selectedTableNo && (
               <div className="cart-info-card-wrapper">
                 <div className="cart-info-card table-no-card">
                   <div className="cart-info-icon-box">

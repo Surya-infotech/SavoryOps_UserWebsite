@@ -27,6 +27,7 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getCartTotalCount } from "../../utils/cartService.js";
 import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
+import { clearSelectedTable } from "../../utils/qrTableService.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
 import NotificationDropdown from "./NotificationDropdown.jsx";
@@ -209,6 +210,9 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
     window.__selectedBranch = branch;
     setIsOpen(false);
     setSearch("");
+
+    // Remove table details when switching branch
+    clearSelectedTable();
 
     if (typeof onBranchChange === "function") {
       onBranchChange(branch);
@@ -411,6 +415,7 @@ const OrderTypeDropdown = ({ className = "" }) => {
             const first = enabled[0].ordertypename;
             setSelectedOrderType(first);
             localStorage.setItem("selectedOrderType", first);
+            clearSelectedTable();
             window.dispatchEvent(
               new CustomEvent("orderTypeChange", {
                 detail: { orderType: first },
@@ -499,6 +504,8 @@ const OrderTypeDropdown = ({ className = "" }) => {
   const handleSelect = (typeName) => {
     setSelectedOrderType(typeName);
     localStorage.setItem("selectedOrderType", typeName);
+    // Remove table details when order type changes
+    clearSelectedTable();
     setIsOpen(false);
     window.dispatchEvent(
       new CustomEvent("orderTypeChange", {
