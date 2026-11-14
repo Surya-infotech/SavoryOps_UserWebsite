@@ -494,6 +494,8 @@ const generateInvoiceBodyHTML = (
         : "";
   const hasCustomerEmail = customerEmail !== "" && customerEmail.toLowerCase() !== "n/a";
 
+  const isOrderCancelled =
+    String(orderData.orderstatus || orderData.orderStatus || "").toLowerCase() === "cancelled";
   const isItemCancelled = (it) =>
     String(it?.itemstatus || it?.itemStatus || it?.status || "").toLowerCase() === "cancelled";
 
@@ -503,7 +505,7 @@ const generateInvoiceBodyHTML = (
       : Array.isArray(orderData.items)
         ? orderData.items
         : []
-  ).filter((p) => !isItemCancelled(p));
+  ).filter((p) => isOrderCancelled || !isItemCancelled(p));
 
   let itemsRows = "";
   if (activeProducts.length > 0) {
@@ -511,8 +513,10 @@ const generateInvoiceBodyHTML = (
       const productName = product.productname || product.itemname || product.name || "Item";
       const productPrice = product.price || 0;
       const productQuantity = product.quantity || product.qty || 1;
-      const productAmount =
-        product.amount !== undefined ? product.amount : (parseFloat(productPrice) || 0) * productQuantity;
+      const regularTotal = (parseFloat(productPrice) || 0) * productQuantity;
+      const productAmount = isOrderCancelled
+        ? (product.amount !== undefined && Number(product.amount) > 0 ? product.amount : regularTotal)
+        : (product.amount !== undefined ? product.amount : regularTotal);
 
       const isDeal = Boolean(
         product.isDeal ||
@@ -640,7 +644,7 @@ const generateInvoiceBodyHTML = (
     if (list.length === 0 && Array.isArray(orderData.items)) {
       const itemTaxMap = new Map();
       for (const item of orderData.items || []) {
-        if (isItemCancelled(item)) continue;
+        if (!isOrderCancelled && isItemCancelled(item)) continue;
         const itemTaxesList =
           item.appliedTaxes && item.appliedTaxes.length > 0 ? item.appliedTaxes : item.taxes || [];
         for (const t of itemTaxesList) {

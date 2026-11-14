@@ -267,6 +267,7 @@ const OrderDetails = ({ orderId, onBack }) => {
 
       const data = await response.json();
       if (response.ok && data) {
+        const isOrderCancelled = String(data.orderstatus || data.orderStatus || "").toLowerCase() === "cancelled";
         const hasItems = Array.isArray(data.items) && data.items.length > 0;
         const hasNonCancelledItems =
           hasItems && data.items.some((it) => !isItemCancelled(it));
@@ -274,7 +275,7 @@ const OrderDetails = ({ orderId, onBack }) => {
         let calculatedSubtotal = 0;
         if (hasItems) {
           data.items.forEach((item) => {
-            if (isItemCancelled(item)) return;
+            if (!isOrderCancelled && isItemCancelled(item)) return;
             const itemQty = item.qty || item.quantity || 1;
             calculatedSubtotal += (parseFloat(item.price) || 0) * itemQty;
             if (item.addons && item.addons.length > 0) {
@@ -294,7 +295,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             : null;
 
         let effectiveSubtotal;
-        if (!hasNonCancelledItems && hasItems) {
+        if (!isOrderCancelled && !hasNonCancelledItems && hasItems) {
           effectiveSubtotal = 0;
         } else if (
           serverSubtotal !== null &&
@@ -320,6 +321,10 @@ const OrderDetails = ({ orderId, onBack }) => {
             const addonPrice = parseFloat(addon.addonprice || addon.price) || 0;
             return sum + addonPrice * itemQty;
           }, 0);
+          const regularItemTotal = baseAmount + addonsAmount;
+          const itemAmount = isOrderCancelled
+            ? (item.amount !== undefined && Number(item.amount) > 0 ? Number(item.amount) : regularItemTotal)
+            : (cancelled ? 0 : (item.amount !== undefined && item.amount !== null ? Number(item.amount) : regularItemTotal));
 
           const cancelReason =
             item.cancelreason ||
@@ -341,8 +346,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             productname: item.itemname || item.name,
             quantity: itemQty,
             price: item.price,
-            amount:
-              item.amount !== undefined ? item.amount : baseAmount + addonsAmount,
+            amount: itemAmount,
             itemtype: item.itemtype || "Veg",
             isDeal: Boolean(
               item.isDeal ||
@@ -370,7 +374,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             cancelreason: cancelReason,
             cancelledby: cancelledBy,
             cancelledat: cancelledAt,
-            appliedTaxes: cancelled ? [] : item.appliedTaxes || item.taxes || [],
+            appliedTaxes: (!isOrderCancelled && cancelled) ? [] : item.appliedTaxes || item.taxes || [],
           };
         });
 
@@ -449,7 +453,7 @@ const OrderDetails = ({ orderId, onBack }) => {
               "apply_all";
             let units = 0;
             (data.items || []).forEach((it) => {
-              if (isItemCancelled(it)) return;
+              if (!isOrderCancelled && isItemCancelled(it)) return;
               const itTaxes = it.appliedTaxes?.length
                 ? it.appliedTaxes
                 : it.taxes || [];
@@ -467,7 +471,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             } else if (
               taxObj.calculatedAmount != null &&
               Number(taxObj.calculatedAmount) > 0 &&
-              hasNonCancelledItems
+              (isOrderCancelled || hasNonCancelledItems)
             ) {
               amt = Number(taxObj.calculatedAmount);
             } else {
@@ -487,7 +491,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             : null;
 
         let finalTax;
-        if (!hasNonCancelledItems && hasItems) {
+        if (!isOrderCancelled && !hasNonCancelledItems && hasItems) {
           finalTax = 0;
         } else if (
           serverTax !== null &&
@@ -514,7 +518,7 @@ const OrderDetails = ({ orderId, onBack }) => {
           roundAmt;
 
         let finalTotalPrice;
-        if (!hasNonCancelledItems && hasItems) {
+        if (!isOrderCancelled && !hasNonCancelledItems && hasItems) {
           finalTotalPrice = serverTotalPrice !== null ? serverTotalPrice : 0;
         } else if (
           serverTotalPrice !== null &&
