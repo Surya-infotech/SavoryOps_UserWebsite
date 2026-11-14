@@ -16,6 +16,7 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Profile/manageaddress.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -142,8 +143,13 @@ const ManageAddressPage = () => {
         }
       );
 
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) {
+        setLoading(false);
+        return;
+      }
+
       if (response.ok) {
-        const data = await response.json();
         setAddresses(Array.isArray(data) ? data : []);
       } else {
         setAddresses([]);
@@ -341,6 +347,12 @@ const ManageAddressPage = () => {
         body: JSON.stringify(payload),
       });
 
+      const resData = await response.json().catch(() => null);
+      if (HandleUnauthorized(resData, null, navigate)) {
+        setIsSaving(false);
+        return;
+      }
+
       if (response.ok) {
         showSnackbar(
           editingAddressId
@@ -352,8 +364,7 @@ const ManageAddressPage = () => {
         setEditingAddressId(null);
         await fetchAddresses();
       } else {
-        const errData = await response.json().catch(() => null);
-        showSnackbar(errData?.message || translations.failedtosaveaddress, "error");
+        showSnackbar(resData?.message || translations.failedtosaveaddress, "error");
       }
     } catch (err) {
       console.error("Error saving address:", err);
@@ -396,14 +407,19 @@ const ManageAddressPage = () => {
         }
       );
 
+      const resData = await response.json().catch(() => null);
+      if (HandleUnauthorized(resData, null, navigate)) {
+        setIsDeleting(false);
+        return;
+      }
+
       if (response.ok) {
         showSnackbar(translations.addressdeletedsuccessfully, "success");
         setDeleteModalOpen(false);
         setAddressToDelete(null);
         await fetchAddresses();
       } else {
-        const errData = await response.json().catch(() => null);
-        showSnackbar(errData?.message || translations.failedtodeleteaddress, "error");
+        showSnackbar(resData?.message || translations.failedtodeleteaddress, "error");
       }
     } catch (err) {
       console.error("Error deleting address:", err);

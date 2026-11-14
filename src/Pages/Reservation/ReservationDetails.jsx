@@ -31,6 +31,7 @@ import {
 } from "./reservationHelpers.js";
 import ReservationStatusHistoryModal from "./ReservationStatusHistoryModal.jsx";
 import ReservationCancelModal from "./ReservationCancelModal.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Orders/orderdetails.scss";
 import "../../Scss/Pages/Reservation/tablereservation.scss";
 
@@ -149,8 +150,13 @@ const ReservationDetails = ({
         }
       );
 
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data)) {
+        setLoading(false);
+        return;
+      }
+
       if (response.ok) {
-        const data = await response.json();
         setReservation(data);
       } else {
         showSnackbar(
@@ -202,7 +208,11 @@ const ReservationDetails = ({
         }
       );
 
-      const resData = await response.json();
+      const resData = await response.json().catch(() => null);
+      if (HandleUnauthorized(resData)) {
+        setIsCancelling(false);
+        return;
+      }
 
       if (response.ok) {
         showSnackbar(

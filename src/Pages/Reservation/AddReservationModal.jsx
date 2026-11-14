@@ -15,6 +15,7 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { formatTime12h, getTodayDateInputString } from "./reservationHelpers.js";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -344,7 +345,11 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
         }
       );
 
-      const result = await response.json();
+      const result = await response.json().catch(() => null);
+      if (HandleUnauthorized(result)) {
+        setIsSubmitting(false);
+        return;
+      }
 
       if (response.ok) {
         showSnackbar(

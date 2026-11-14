@@ -11,6 +11,7 @@ import {
   getStoredTimeFormat,
   getStoredTimeZone,
 } from "./reservationHelpers.js";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Reservation/tablereservation.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -97,8 +98,13 @@ const ReservationPage = () => {
         }
       );
 
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) {
+        setLoading(false);
+        return;
+      }
+
       if (response.ok) {
-        const data = await response.json();
         setReservations(Array.isArray(data) ? data : []);
       } else {
         setReservations([]);

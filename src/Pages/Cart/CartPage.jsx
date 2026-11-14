@@ -34,6 +34,7 @@ import {
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
 import { clearSelectedTable } from "../../utils/qrTableService.js";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Cart/cartpage.scss";
 
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
@@ -526,6 +527,10 @@ const CartPage = () => {
         );
 
         const data = await response.json().catch(() => ({}));
+        if (HandleUnauthorized(data, null, navigate)) {
+          setIsOrderPlacing(false);
+          return;
+        }
 
         if (response.ok) {
           clearCart();
@@ -636,6 +641,10 @@ const CartPage = () => {
         );
 
         const data = await response.json().catch(() => ({}));
+        if (HandleUnauthorized(data, null, navigate)) {
+          setIsOrderPlacing(false);
+          return;
+        }
 
         if (response.ok) {
           clearCart();

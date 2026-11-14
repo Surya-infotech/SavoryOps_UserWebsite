@@ -11,6 +11,7 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
 
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
@@ -118,8 +119,13 @@ const MyReviewsPage = () => {
         headers: { "Content-Type": "application/json", "x-user": "customer", "Authorization": `Bearer ${token}`, },
       });
 
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data)) {
+        setLoading(false);
+        return;
+      }
+
       if (response.ok) {
-        const data = await response.json();
         setReviews(Array.isArray(data) ? data : []);
       } else {
         showSnackbar(

@@ -265,6 +265,49 @@ export const resetCustomerFcmSessionCache = () => {
 };
 
 /**
+ * Remove customer FCM token from server and clear local session cache.
+ * Mirrors removeOwnerFcmToken in OwnerWeb.
+ *
+ * @param {string} [token] - Optional customer JWT token for authorization header
+ */
+export const removeCustomerFcmToken = async (token) => {
+  const fcmToken =
+    typeof localStorage !== "undefined"
+      ? localStorage.getItem(CUSTOMER_FCM_STORAGE_KEY)
+      : null;
+
+  const customerTokenKey = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
+  const activeToken =
+    token ||
+    (typeof localStorage !== "undefined" && customerTokenKey
+      ? localStorage.getItem(customerTokenKey)
+      : "");
+
+  resetCustomerFcmSessionCache();
+
+  if (!fcmToken) return;
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  if (backendUrl) {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        "x-user": "customer",
+      };
+      if (activeToken) headers["Authorization"] = `Bearer ${activeToken}`;
+
+      await fetch(`${backendUrl}/Website/General/remove-fcm-token`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ fcmToken }),
+      });
+    } catch (err) {
+      console.error("[FCM] Error removing customer FCM token:", err);
+    }
+  }
+};
+
+/**
  * Listen for foreground Firebase messages on User Website and sync with Notification dropdown & order screens.
  *
  * @param {Function} [onReceive]

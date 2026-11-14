@@ -28,6 +28,7 @@ import {
   formatOrderPrice,
 } from "./orderHelpers.js";
 import OrderStatusIcon from "./OrderStatusIcon.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Orders/orderspage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -109,7 +110,12 @@ const OrderList = ({ onSelectOrder }) => {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data)) {
+        setLoading(false);
+        return;
+      }
+
       if (response.ok && Array.isArray(data)) {
         setOrders(data);
         setFilteredOrders(data);

@@ -1,4 +1,5 @@
 import { getWebsiteSubdomain } from "../Pages/Partials/UnderMaintenance.jsx";
+import HandleUnauthorized from "./HandleUnauthorized.jsx";
 
 /**
  * Centralized Notification Service for SavoryOps User Website
@@ -261,6 +262,8 @@ export const syncNotificationsFromServer = async ({ force = false } = {}) => {
       );
 
       if (!response.ok) {
+        const errData = await response.json().catch(() => null);
+        if (errData && HandleUnauthorized(errData)) return [];
         return getNotifications();
       }
 

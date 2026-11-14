@@ -27,6 +27,7 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getCartTotalCount } from "../../utils/cartService.js";
 import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import { clearSelectedTable } from "../../utils/qrTableService.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
@@ -608,12 +609,12 @@ const useCustomerAuth = () => {
         },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data) {
-          setCustomerDetails(data);
-          setIsLoggedIn(true);
-        }
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, handleSignOut)) return;
+
+      if (response.ok && data) {
+        setCustomerDetails(data);
+        setIsLoggedIn(true);
       }
     } catch (error) {
       console.error("Error fetching customer details:", error);

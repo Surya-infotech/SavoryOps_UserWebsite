@@ -17,6 +17,7 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { Country, State, City } from "country-state-city";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Profile/profile.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -116,8 +117,10 @@ const ProfilePage = () => {
           headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
         });
 
+        const data = await response.json().catch(() => null);
+        if (HandleUnauthorized(data, null, navigate)) return;
+
         if (response.ok) {
-          const data = await response.json();
           if (data) {
             setFirstName(data.customerfirstname || "");
             setLastName(data.customerlastname || "");
@@ -375,6 +378,7 @@ const ProfilePage = () => {
       });
 
       const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) return;
 
       if (response.ok) {
         showSnackbar(translations.profileupdatedsuccessfully, "success");

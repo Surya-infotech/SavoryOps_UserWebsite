@@ -14,6 +14,7 @@ import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import { clearStorageOnLogout } from "../../utils/authUtils.js";
 import { resetCustomerFcmSessionCache } from "../../utils/firebase.js";
 import "../../Scss/Pages/Settings/settings.scss";
@@ -99,8 +100,9 @@ const SettingsPage = () => {
         `${adminPanelBackendPath}/Website/General/GetCustomerDetails/${customerId}`, {
         headers: { "Content-Type": "application/json", "x-user": "customer", Authorization: `Bearer ${token}`, },
       });
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) return;
       if (response.ok) {
-        const data = await response.json();
         if (data?.phone) {
           const str = String(data.phone).trim();
           if (str.length > 4) {
@@ -131,8 +133,13 @@ const SettingsPage = () => {
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) {
+        setIsLoadingSettings(false);
+        return;
+      }
+
+      if (response.ok && data) {
         const loadedTimezone = data.timezone || data.timeZone;
         const loadedDateFormat = data.dateformat || data.dateFormat;
         const loadedTimeFormat = data.timeformat || data.timeFormat;
@@ -205,7 +212,11 @@ const SettingsPage = () => {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) {
+        setIsSaving(false);
+        return;
+      }
 
       if (response.ok) {
         // Persist to local storage
@@ -302,6 +313,10 @@ const SettingsPage = () => {
       });
 
       const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) {
+        setIsSendingDeleteOtp(false);
+        return;
+      }
 
       if (response.ok) {
         setDeleteOtpSent(true);
@@ -367,6 +382,10 @@ const SettingsPage = () => {
       });
 
       const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) {
+        setIsDeleting(false);
+        return;
+      }
 
       if (response.ok) {
         resetCustomerFcmSessionCache();

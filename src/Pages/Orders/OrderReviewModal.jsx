@@ -4,6 +4,7 @@ import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CircularProgress from "@mui/material/CircularProgress";
 import RateReviewIcon from "@mui/icons-material/RateReview";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Orders/orderreviewmodal.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -73,7 +74,11 @@ const OrderReviewModal = ({
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data)) {
+        setIsSubmitting(false);
+        return;
+      }
       if (response.ok) {
         const successMessage = isEdit
           ? translations.yourreviewupdated

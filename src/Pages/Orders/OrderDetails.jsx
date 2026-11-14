@@ -54,6 +54,7 @@ import OrderStatusIcon from "./OrderStatusIcon.jsx";
 import "../../Scss/Pages/Orders/orderdetails.scss";
 import OrderStatusHistoryModal from "./OrderStatusHistoryModal.jsx";
 import OrderReviewModal from "./OrderReviewModal.jsx";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
@@ -206,7 +207,11 @@ const OrderDetails = ({ orderId, onBack }) => {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data)) {
+        setIsDeletingReview(false);
+        return;
+      }
       if (response.ok) {
         showSnackbar(
           translations.yourreviewdeleted,
@@ -266,7 +271,11 @@ const OrderDetails = ({ orderId, onBack }) => {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data)) {
+        setLoading(false);
+        return;
+      }
       if (response.ok && data) {
         const isOrderCancelled = String(data.orderstatus || data.orderStatus || "").toLowerCase() === "cancelled";
         const hasItems = Array.isArray(data.items) && data.items.length > 0;

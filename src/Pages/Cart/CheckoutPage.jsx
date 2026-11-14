@@ -32,6 +32,7 @@ import { getCart, clearCart, saveCart } from "../../utils/cartService.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import { clearSelectedTable } from "../../utils/qrTableService.js";
+import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Cart/checkoutpage.scss";
 import "../../Scss/Pages/Profile/manageaddress.scss";
 
@@ -283,8 +284,13 @@ const CheckoutPage = () => {
         }
       );
 
+      const data = await response.json().catch(() => null);
+      if (HandleUnauthorized(data, null, navigate)) {
+        setLoadingAddresses(false);
+        return;
+      }
+
       if (response.ok) {
-        const data = await response.json();
         const list = Array.isArray(data) ? data : [];
         setAddresses(list);
         if (list.length > 0) {
@@ -460,15 +466,19 @@ const CheckoutPage = () => {
         }
       );
 
+      const resData = await response.json().catch(() => ({}));
+      if (HandleUnauthorized(resData, null, navigate)) {
+        setIsSavingAddress(false);
+        return;
+      }
+
       if (response.ok) {
-        const resData = await response.json().catch(() => ({}));
         showSnackbar(translations.addressaddedsuccess, "success");
         setIsAddAddressModalOpen(false);
         const newId = resData?.data?._id || resData?._id || resData?.addressid;
         await fetchAddresses(newId);
       } else {
-        const data = await response.json().catch(() => ({}));
-        showSnackbar(data.message || translations.failedtosaveaddress, "error");
+        showSnackbar(resData.message || translations.failedtosaveaddress, "error");
       }
     } catch (err) {
       console.error("Error saving address:", err);
@@ -655,6 +665,10 @@ const CheckoutPage = () => {
       );
 
       const data = await response.json().catch(() => ({}));
+      if (HandleUnauthorized(data, null, navigate)) {
+        setIsSubmitting(false);
+        return;
+      }
 
       if (response.ok) {
         clearCart();
