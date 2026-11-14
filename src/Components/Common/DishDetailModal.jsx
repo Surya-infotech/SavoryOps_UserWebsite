@@ -157,8 +157,8 @@ export const DishDetailModal = ({
             <div>
               <h3 className="dish-modal-title">{item.title}</h3>
               <div className="dish-modal-tags">
-                {item.categoryname && <span className="tag-badge">{item.categoryname}</span>}
-                {item.tag && item.tag !== item.categoryname && <span className="tag-badge">{item.tag}</span>}
+                {!isComboItem && item.categoryname && <span className="tag-badge">{item.categoryname}</span>}
+                {!isComboItem && item.tag && item.tag !== item.categoryname && <span className="tag-badge">{item.tag}</span>}
                 {item.menuname && <span className="tag-badge">{item.menuname}</span>}
                 {item.bundletype && (
                   <span className={`tag-badge deal-ribbon-badge ${item.bundletype}`} style={{ position: "static" }}>
