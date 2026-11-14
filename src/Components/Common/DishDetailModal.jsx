@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import AllInclusiveRoundedIcon from "@mui/icons-material/AllInclusiveRounded";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { formatPriceFromBranch } from "../../utils/formatCurrency.js";
@@ -115,7 +116,12 @@ export const DishDetailModal = ({
     onClose?.();
   };
 
-  const includedItems = item.includedItems || (Array.isArray(item.items) ? item.items : []);
+  const includedItems =
+    Array.isArray(item.items) && item.items.length > 0 && typeof item.items[0] === "object"
+      ? item.items
+      : (Array.isArray(item.includedItems) && item.includedItems.length > 0
+          ? item.includedItems
+          : (Array.isArray(item.items) ? item.items : []));
   const prepTime = item.preparationtime ? `${item.preparationtime} ${translations.min}` : (item.prepTime || "");
 
   return (
@@ -182,14 +188,26 @@ export const DishDetailModal = ({
               <div className="addons-list">
                 {includedItems.map((it, idx) => {
                   const itemName = typeof it === "string" ? it : (it.itemname || it.name || it.title || "");
-                  const qty = it.quantity;
+                  const isItemUnlimited = Boolean(it?.isunlimited);
+                  const qty = it?.quantity;
+
                   return (
                     <div key={idx} className="addon-item-row not-selectable">
                       <div className="addon-check-label">
                         <CheckCircleOutlinedIcon style={{ color: "#028802", fontSize: "1.1rem" }} />
                         <span>{itemName}</span>
                       </div>
-                      {qty && <span className="addon-price">x{qty}</span>}
+                      {isItemUnlimited ? (
+                        <span
+                          className="addon-price addon-unlimited-pill"
+                          title={translations.unlimited || "Unlimited"}
+                          aria-label={translations.unlimited || "Unlimited"}
+                        >
+                          <AllInclusiveRoundedIcon style={{ fontSize: "1.25rem", verticalAlign: "middle" }} />
+                        </span>
+                      ) : (
+                        qty && <span className="addon-price">x{qty}</span>
+                      )}
                     </div>
                   );
                 })}

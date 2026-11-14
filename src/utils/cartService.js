@@ -170,6 +170,10 @@ export const addItemToCart = (item, options = {}) => {
         addons: addons,
         availableAddons: options.availableAddons || item.availableAddons || item.addons || addons,
         specialInstructions: specialInstructions || item.specialInstructions || "",
+        isDeal: Boolean(item.isDeal || item.dealsbundlesid || item.bundletype),
+        dealsbundlesid: item.dealsbundlesid,
+        bundletype: item.bundletype,
+        bundleItems: item.items || item.bundleItems || [],
       };
       newCart = [...existingCart, resultingCartItem];
     }

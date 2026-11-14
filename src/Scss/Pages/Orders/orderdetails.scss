@@ -923,6 +923,17 @@
                 font-weight: 700;
                 color: #2563eb;
                 font-size: 0.72rem;
+
+                &.unlimited {
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  line-height: 1;
+
+                  svg {
+                    font-size: 0.95rem;
+                  }
+                }
               }
 
               .bundle-item-name {

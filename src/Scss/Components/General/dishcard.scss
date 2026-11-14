@@ -444,6 +444,22 @@
     .addon-price {
       font-weight: 700;
       color: #028802;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      &.addon-unlimited-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #028802;
+        line-height: 1;
+
+        svg {
+          font-size: 1.25rem;
+          color: #028802;
+        }
+      }
     }
   }
 }

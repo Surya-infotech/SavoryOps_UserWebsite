@@ -32,6 +32,7 @@ import FormatQuoteOutlinedIcon from "@mui/icons-material/FormatQuoteOutlined";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import AllInclusiveRoundedIcon from "@mui/icons-material/AllInclusiveRounded";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -1173,12 +1174,27 @@ const OrderDetails = ({ orderId, onBack }) => {
                             <span className="bundle-count-pill">{product.bundleItems.length}</span>
                           </div>
                           <div className="bundle-items-flow">
-                            {product.bundleItems.map((bi, biIdx) => (
-                              <div key={biIdx} className="bundle-item-row">
-                                <span className="bundle-pill-qty">{bi.qty || 1}x</span>
-                                <span className="bundle-item-name">{bi.itemname}</span>
-                              </div>
-                            ))}
+                            {product.bundleItems.map((bi, biIdx) => {
+                              const isItemUnlim = Boolean(bi?.isunlimited);
+                              const qty = bi?.qty || bi?.quantity || 1;
+
+                              return (
+                                <div key={biIdx} className="bundle-item-row">
+                                  {isItemUnlim ? (
+                                    <span
+                                      className="bundle-pill-qty unlimited"
+                                      title={translations.unlimited || "Unlimited"}
+                                      style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                                    >
+                                      <AllInclusiveRoundedIcon style={{ fontSize: "0.95rem" }} />
+                                    </span>
+                                  ) : (
+                                    <span className="bundle-pill-qty">{qty}x</span>
+                                  )}
+                                  <span className="bundle-item-name">{bi.itemname}</span>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}

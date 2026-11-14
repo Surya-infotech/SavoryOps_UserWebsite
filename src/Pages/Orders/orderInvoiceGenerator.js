@@ -553,11 +553,16 @@ const generateInvoiceBodyHTML = (
             <div style="display: flex; flex-direction: column; gap: 3px;">
               ${bundleItems
                 .map((bi) => {
-                  const biQty = bi.qty || bi.quantity || 1;
-                  const biName = bi.itemname || bi.name || bi.productname || "";
+                  const isBiUnlim = Boolean(bi?.isunlimited);
+                  const biQty = bi?.qty || bi?.quantity || 1;
+                  const biName = bi?.itemname || bi?.name || bi?.productname || "";
+                  const qtyBadge = isBiUnlim
+                    ? `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 11px; line-height: 1;">&infin;</span>`
+                    : `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>`;
+
                   return `
                     <div style="display: flex; align-items: center; gap: 5px; font-size: 10px; color: #374151; background: #ffffff; border: 1px solid #E5E7EB; border-radius: 4px; padding: 2px 6px;">
-                      <span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>
+                      ${qtyBadge}
                       <span>${escapeHtml(biName)}</span>
                     </div>
                   `;

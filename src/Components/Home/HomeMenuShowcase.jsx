@@ -312,7 +312,7 @@ const CarouselRow = ({
                 isDeal: isDeal,
                 bundletype: isUnlimited ? "unlimited" : isCombo ? "combo" : bundleTypeLower,
                 items: rawDish.items || [],
-                includedItems: Array.isArray(rawDish.items) ? rawDish.items.map((i) => i.itemname || i) : (rawDish.includedItems || []),
+                includedItems: rawDish.items || rawDish.includedItems || [],
                 includedCount: Array.isArray(rawDish.items) ? rawDish.items.length : (rawDish.includedCount || 0),
                 price: effectivePrice,
                 rawPrice: rawBasePrice,
