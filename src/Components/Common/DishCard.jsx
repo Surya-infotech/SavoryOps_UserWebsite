@@ -53,6 +53,7 @@ const DishCard = ({
   const isCombo = isDeal && (bundleTypeLower === "combo" || dish.isCombo);
   const isUnlimited = isDeal && (bundleTypeLower === "unlimited" || dish.isUnlimited);
   const isComboOrUnlimited = isCombo || isUnlimited || isDeal;
+  const canShowActions = !isDeal || isCombo;
 
   const formattedPrice =
     priceFormatted ||
@@ -202,8 +203,8 @@ const DishCard = ({
           </div>
 
           <div className="dish-card-actions">
-            {/* Customizable Add-on Button (hidden on combo, unlimited, or deals) */}
-            {!isComboOrUnlimited && dish.addons && dish.addons.length > 0 && typeof onOpenAddonModal === "function" && (
+            {/* Customizable Add-on Button (shown on regular dishes and combo deals) */}
+            {canShowActions && dish.addons && dish.addons.length > 0 && typeof onOpenAddonModal === "function" && (
               <button
                 type="button"
                 className="dish-addon-btn"
@@ -215,8 +216,8 @@ const DishCard = ({
               </button>
             )}
 
-            {/* Direct Add to Cart Button (hidden on combo, unlimited, or deals) */}
-            {!isComboOrUnlimited && typeof onAddToCart === "function" && (
+            {/* Direct Add to Cart Button (shown on regular dishes and combo deals) */}
+            {canShowActions && typeof onAddToCart === "function" && (
               <button
                 type="button"
                 className={`dish-add-btn ${count > 0 ? "added" : ""}`}

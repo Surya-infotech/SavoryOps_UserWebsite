@@ -5,11 +5,13 @@ import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
 import { useLanguage } from "../../Context/useLanguage.js";
+import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
-import DishCard, { DishDetailModal } from "../../Components/Common/DishCard.jsx";
+import DishCard, { DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
 import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
+import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 import "../../Scss/Pages/Offers/offerspage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -17,6 +19,7 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 const OffersPage = () => {
   const { translations = {}, isRtl } = useLanguage();
+  const { showSnackbar } = useSnackbar();
   const { business } = useWebsiteStatus();
   const businessDisplayName = business?.businessname;
 
@@ -31,12 +34,24 @@ const OffersPage = () => {
     return typeof window !== "undefined" ? window.__branchSetting : null;
   });
 
+  // Cart Quantities Tracking (reactive to cartUpdated events)
+  const [addedItems, setAddedItems] = useState(getItemQuantitiesMap);
+
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      setAddedItems(getItemQuantitiesMap());
+    };
+    window.addEventListener("cartUpdated", handleCartUpdated);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdated);
+  }, []);
+
   // Filter States: Deal Type (all | combo | unlimited) and Diet (all | veg | nonveg)
   const [selectedType, setSelectedType] = useState("all");
   const [selectedDiet, setSelectedDiet] = useState("all");
 
-  // Interactive Detail Modal
+  // Interactive Detail and Addon Modals
   const [selectedItemModal, setSelectedItemModal] = useState(null);
+  const [addonModalItem, setAddonModalItem] = useState(null);
 
   useEffect(() => {
     const pageTitle = translations.specialoffers;
@@ -266,6 +281,36 @@ const OffersPage = () => {
     setSelectedItemModal(dish);
   };
 
+  const handleOpenAddonModal = (e, dish) => {
+    e.stopPropagation();
+    setAddonModalItem(dish);
+  };
+
+  const handleAddToCart = (e, item) => {
+    e.stopPropagation();
+    const effectivePrice = calculateItemPrice(item, posPayload, selectedOrderType);
+    const itemWithPrice = {
+      ...item,
+      price: effectivePrice,
+    };
+    const addons = itemWithPrice.addons
+      ? itemWithPrice.addons.map((addon) => ({
+          addonid: addon.addonid || addon._id || addon.id,
+          addonname: addon.addonname || addon.name,
+          price: Number(addon.price ?? addon.addonprice ?? 0),
+          selected: false,
+        }))
+      : [];
+
+    addItemToCart(itemWithPrice, {
+      addons,
+      availableAddons: itemWithPrice.addons || [],
+      image: itemWithPrice.image || itemWithPrice.imageUrl,
+      description: itemWithPrice.desc || itemWithPrice.description,
+      showToast: showSnackbar,
+    });
+  };
+
   const handleClearFilters = () => {
     setSelectedType("all");
     setSelectedDiet("all");
@@ -275,12 +320,21 @@ const OffersPage = () => {
 
   // Centralized deal card renderer
   const renderDealCard = (dish) => {
+    const count =
+      addedItems[dish.id] ||
+      addedItems[dish.dealsbundlesid] ||
+      addedItems[String(dish.dealsbundlesid)] ||
+      0;
+
     return (
       <DishCard
         key={dish.id}
         dish={dish}
         selectedBranch={selectedBranch}
+        count={count}
         onCardClick={handleCardClick}
+        onAddToCart={handleAddToCart}
+        onOpenAddonModal={handleOpenAddonModal}
       />
     );
   };
@@ -462,6 +516,23 @@ const OffersPage = () => {
       <DishDetailModal
         item={selectedItemModal}
         onClose={() => setSelectedItemModal(null)}
+        selectedBranch={selectedBranch}
+        posPayload={posPayload}
+        selectedOrderType={selectedOrderType}
+        initialQuantity={
+          selectedItemModal
+            ? addedItems[selectedItemModal.id] ||
+              addedItems[selectedItemModal.dealsbundlesid] ||
+              addedItems[String(selectedItemModal.dealsbundlesid)] ||
+              1
+            : 1
+        }
+      />
+
+      {/* Centralized Quick Add-on Customization Popup Modal */}
+      <DishAddonModal
+        item={addonModalItem}
+        onClose={() => setAddonModalItem(null)}
         selectedBranch={selectedBranch}
         posPayload={posPayload}
         selectedOrderType={selectedOrderType}
