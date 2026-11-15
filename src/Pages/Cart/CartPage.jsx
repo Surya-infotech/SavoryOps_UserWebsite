@@ -730,64 +730,6 @@ const CartPage = () => {
       />
 
       <div className="cart-container">
-        {/* Info Cards Row (Order Type, Table No, Order No) - Matches SavoryOps_UserApp */}
-        {(effectiveOrderType || (isDineIn && selectedTableNo) || currentOrderNo) && (
-          <div className="cart-info-cards-row">
-            {effectiveOrderType && (
-              <div className="cart-info-card-wrapper">
-                <div className="cart-info-card order-type-card">
-                  <div className="cart-info-icon-box">
-                    {getOrderTypeIcon(effectiveOrderType)}
-                  </div>
-                  <div className="cart-info-text-box">
-                    <span className="cart-info-value">
-                      {translations[effectiveOrderType] || effectiveOrderType}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {isDineIn && selectedTableNo && (
-              <div className="cart-info-card-wrapper">
-                <div className="cart-info-card table-no-card">
-                  <div className="cart-info-icon-box">
-                    <TableRestaurantIcon fontSize="small" />
-                  </div>
-                  <div className="cart-info-text-box">
-                    <span className="cart-info-value">
-                      {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
-                        ? selectedTableNo
-                        : `${translations.tablelabel} ${selectedTableNo}`}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentOrderNo && (
-              <div className="cart-info-card-wrapper">
-                <div className="cart-info-card order-no-card">
-                  <div className="cart-info-icon-box">
-                    <ReceiptLongOutlinedIcon fontSize="small" />
-                  </div>
-                  <div className="cart-info-text-box">
-                    <span className="cart-info-value">#{currentOrderNo}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="cart-info-cancel-btn"
-                    onClick={handleCancelOrderUpdate}
-                    title={translations.cancelupdate}
-                    aria-label="Cancel update"
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
         {/* Empty State */}
         {cartItems.length === 0 ? (
           <div className="address-empty-card cart-empty-state">
@@ -805,15 +747,66 @@ const CartPage = () => {
           </div>
         ) : (
           <>
-            {/* Header with Title */}
-            <div className="cart-header-row">
-              <div className="cart-title-group">
-                <h1 className="cart-page-title">{translations.yourcart}</h1>
-                <span className="cart-badge-count">
-                  {totalQuantity} {totalQuantity === 1 ? translations.item : translations.items}
-                </span>
+            {/* Header with Order Type / Info Badges */}
+            {(effectiveOrderType || (isDineIn && selectedTableNo) || currentOrderNo) && (
+              <div className="cart-header-row">
+                <div className="cart-info-cards-row">
+                  {effectiveOrderType && (
+                    <div className="cart-info-card-wrapper">
+                      <div className="cart-info-card order-type-card">
+                        <div className="cart-info-icon-box">
+                          {getOrderTypeIcon(effectiveOrderType)}
+                        </div>
+                        <div className="cart-info-text-box">
+                          <span className="cart-info-value">
+                            {translations[effectiveOrderType] || effectiveOrderType}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {isDineIn && selectedTableNo && (
+                    <div className="cart-info-card-wrapper">
+                      <div className="cart-info-card table-no-card">
+                        <div className="cart-info-icon-box">
+                          <TableRestaurantIcon fontSize="small" />
+                        </div>
+                        <div className="cart-info-text-box">
+                          <span className="cart-info-value">
+                            {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
+                              ? selectedTableNo
+                              : `${translations.tablelabel} ${selectedTableNo}`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {currentOrderNo && (
+                    <div className="cart-info-card-wrapper">
+                      <div className="cart-info-card order-no-card">
+                        <div className="cart-info-icon-box">
+                          <ReceiptLongOutlinedIcon fontSize="small" />
+                        </div>
+                        <div className="cart-info-text-box">
+                          <span className="cart-info-value">#{currentOrderNo}</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="cart-info-cancel-btn"
+                          onClick={handleCancelOrderUpdate}
+                          title={translations.cancelupdate}
+                          aria-label="Cancel update"
+                        >
+                          <CloseIcon fontSize="inherit" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Main Cart Grid */}
             <div className="cart-layout-grid">
