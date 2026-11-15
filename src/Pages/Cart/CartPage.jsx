@@ -747,68 +747,77 @@ const CartPage = () => {
           </div>
         ) : (
           <>
-            {/* Header with Order Type / Info Badges */}
-            {(effectiveOrderType || (isDineIn && selectedTableNo) || currentOrderNo) && (
-              <div className="cart-header-row">
-                <div className="cart-info-cards-row">
-                  {effectiveOrderType && (
-                    <div className="cart-info-card-wrapper">
-                      <div className="cart-info-card order-type-card">
-                        <div className="cart-info-icon-box">
-                          {getOrderTypeIcon(effectiveOrderType)}
-                        </div>
-                        <div className="cart-info-text-box">
-                          <span className="cart-info-value">
-                            {translations[effectiveOrderType] || effectiveOrderType}
-                          </span>
+            {/* Header Row: Left is Order Badges, Right is Bill Details Heading in ONE Row */}
+            <div className="cart-header-grid-row">
+              <div className="cart-header-left">
+                {(effectiveOrderType || (isDineIn && selectedTableNo) || currentOrderNo) && (
+                  <div className="cart-info-cards-row">
+                    {effectiveOrderType && (
+                      <div className="cart-info-card-wrapper">
+                        <div className="cart-info-card order-type-card">
+                          <div className="cart-info-icon-box">
+                            {getOrderTypeIcon(effectiveOrderType)}
+                          </div>
+                          <div className="cart-info-text-box">
+                            <span className="cart-info-value">
+                              {translations[effectiveOrderType] || effectiveOrderType}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {isDineIn && selectedTableNo && (
-                    <div className="cart-info-card-wrapper">
-                      <div className="cart-info-card table-no-card">
-                        <div className="cart-info-icon-box">
-                          <TableRestaurantIcon fontSize="small" />
-                        </div>
-                        <div className="cart-info-text-box">
-                          <span className="cart-info-value">
-                            {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
-                              ? selectedTableNo
-                              : `${translations.tablelabel} ${selectedTableNo}`}
-                          </span>
+                    {isDineIn && selectedTableNo && (
+                      <div className="cart-info-card-wrapper">
+                        <div className="cart-info-card table-no-card">
+                          <div className="cart-info-icon-box">
+                            <TableRestaurantIcon fontSize="small" />
+                          </div>
+                          <div className="cart-info-text-box">
+                            <span className="cart-info-value">
+                              {/^(table|tbl)[\s:#\-_]*/i.test(String(selectedTableNo).trim())
+                                ? selectedTableNo
+                                : `${translations.tablelabel} ${selectedTableNo}`}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {currentOrderNo && (
-                    <div className="cart-info-card-wrapper">
-                      <div className="cart-info-card order-no-card">
-                        <div className="cart-info-icon-box">
-                          <ReceiptLongOutlinedIcon fontSize="small" />
+                    {currentOrderNo && (
+                      <div className="cart-info-card-wrapper">
+                        <div className="cart-info-card order-no-card">
+                          <div className="cart-info-icon-box">
+                            <ReceiptLongOutlinedIcon fontSize="small" />
+                          </div>
+                          <div className="cart-info-text-box">
+                            <span className="cart-info-value">#{currentOrderNo}</span>
+                          </div>
+                          <button
+                            type="button"
+                            className="cart-info-cancel-btn"
+                            onClick={handleCancelOrderUpdate}
+                            title={translations.cancelupdate}
+                            aria-label="Cancel update"
+                          >
+                            <CloseIcon fontSize="inherit" />
+                          </button>
                         </div>
-                        <div className="cart-info-text-box">
-                          <span className="cart-info-value">#{currentOrderNo}</span>
-                        </div>
-                        <button
-                          type="button"
-                          className="cart-info-cancel-btn"
-                          onClick={handleCancelOrderUpdate}
-                          title={translations.cancelupdate}
-                          aria-label="Cancel update"
-                        >
-                          <CloseIcon fontSize="inherit" />
-                        </button>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="cart-header-right">
+                <div className="bill-header-outside">
+                  <ReceiptLongOutlinedIcon className="bill-icon" />
+                  <h3 className="bill-title">{translations.billdetails}</h3>
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* Main Cart Grid */}
+            {/* Main Cards Row: Item Card and Billing Card Start from the Same Line */}
             <div className="cart-layout-grid">
               {/* Left Column: Cart Items List */}
               <div className="cart-items-list">
@@ -1004,16 +1013,17 @@ const CartPage = () => {
                     </div>
                   );
                 })}
-              </div>
+                </div>
 
               {/* Right Column: Bill Details / Order Summary Card */}
               <div className="cart-summary-sidebar">
-                <div className="cart-bill-summary-card">
-                  <div className="bill-header">
-                    <ReceiptLongOutlinedIcon className="bill-icon" />
-                    <h3>{translations.billdetails}</h3>
-                  </div>
+                {/* Mobile-only header (desktop header is in cart-header-grid-row) */}
+                <div className="bill-header-mobile">
+                  <ReceiptLongOutlinedIcon className="bill-icon" />
+                  <h3 className="bill-title">{translations.billdetails}</h3>
+                </div>
 
+                <div className="cart-bill-summary-card">
                   <div className="bill-rows-container">
                     {/* Sub Total */}
                     <div className="bill-row">

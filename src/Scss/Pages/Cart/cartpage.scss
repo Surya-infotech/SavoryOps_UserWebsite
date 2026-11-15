@@ -145,44 +145,61 @@
   }
 }
 
-.cart-header-row {
-  display: flex;
+/* Header Grid Row: Order Type Badges on Left & Bill Details Heading on Right in ONE Row */
+.cart-header-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 390px;
+  gap: 2rem;
   align-items: center;
-  justify-content: flex-start;
   margin-bottom: 0.85rem;
-  flex-wrap: wrap;
-  gap: 1rem;
 
-  .cart-title-group {
+  .cart-header-left {
+    min-width: 0;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
 
-    .cart-page-title {
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0;
-      letter-spacing: -0.02em;
-    }
-
-    .cart-badge-count {
-      background: rgba(2, 136, 2, 0.1);
-      color: #028802;
-      font-size: 0.85rem;
-      font-weight: 700;
-      padding: 0.3rem 0.75rem;
-      border-radius: 9999px;
-      border: 1px solid rgba(2, 136, 2, 0.2);
+    .cart-info-cards-row {
+      margin-bottom: 0;
     }
   }
 
-  .cart-info-cards-row {
-    margin-bottom: 0;
+  .cart-header-right {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+
+    .bill-header-outside {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0;
+
+      .bill-icon {
+        color: #028802;
+        font-size: 1.35rem;
+      }
+
+      .bill-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+
+    .cart-header-right {
+      display: none;
+    }
   }
 }
 
-/* Two-column layout grid */
+/* Two-column layout grid: Item Card and Billing Card Start from the Exact Same Line */
 .cart-layout-grid {
   display: grid;
   grid-template-columns: 1fr 390px;
@@ -191,6 +208,7 @@
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
@@ -199,6 +217,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
+  min-width: 0;
 }
 
 .cart-item-card {
@@ -528,10 +547,39 @@
   }
 }
 
+/* Right Column: Bill Details / Order Summary Sidebar */
+.cart-summary-sidebar {
+  position: sticky;
+  top: 90px;
+  min-width: 0;
+
+  .bill-header-mobile {
+    display: none;
+
+    @media (max-width: 1024px) {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.75rem;
+
+      .bill-icon {
+        color: #028802;
+        font-size: 1.35rem;
+      }
+
+      .bill-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+    }
+  }
+}
+
 /* Bill Details / Order Summary Card */
 .cart-bill-summary-card {
-  position: sticky;
-  top: 100px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
