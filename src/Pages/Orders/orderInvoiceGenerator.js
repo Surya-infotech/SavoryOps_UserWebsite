@@ -371,6 +371,182 @@ const generateInvoiceStyles = () => `
     margin-top: 8px;
     color: #28a745;
   }
+  .invoice-wrapper .cancelled-section-title {
+    color: #dc2626;
+    margin: 18px 0 10px 0;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .invoice-wrapper .cancelled-section-title::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #dc2626;
+  }
+  .invoice-wrapper .cancelled-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #fecaca;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-size: 11px;
+  }
+  .invoice-wrapper .cancelled-items-table th {
+    background-color: #dc2626;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 6px 8px;
+    border: 1px solid #dc2626;
+    text-align: left;
+  }
+  .invoice-wrapper .cancelled-items-table td {
+    border: 1px solid #fee2e2;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .invoice-wrapper .cancelled-items-table tr:nth-child(even) {
+    background-color: #fffbfb;
+  }
+  .invoice-wrapper .cancelled-badge {
+    display: inline-block;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-weight: bold;
+    margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+  }
+  .invoice-wrapper .cancelled-item-name {
+    color: #991b1b;
+  }
+  .invoice-wrapper .cancellation-info-box {
+    margin-top: 6px;
+    padding: 6px 8px;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 4px;
+    font-size: 10px;
+    color: #7f1d1d;
+    line-height: 1.45;
+  }
+  .invoice-wrapper .cancellation-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 2px;
+  }
+  .invoice-wrapper .cancellation-meta-row:last-child {
+    margin-bottom: 0;
+  }
+  .invoice-wrapper .cancellation-meta-row .meta-label {
+    font-weight: bold;
+    color: #b91c1c;
+  }
+  .invoice-wrapper .cancellation-meta-row .meta-value {
+    color: #450a0a;
+  }
+  .invoice-wrapper .cancelled-price-text {
+    color: #991b1b;
+  }
+  .invoice-wrapper .refund-deduction-row {
+    font-weight: bold;
+    color: #dc2626;
+    background-color: #fef2f2;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-top: 6px;
+    border: 1px dashed #fca5a5;
+  }
+  .invoice-wrapper .net-total-row {
+    font-weight: bold;
+    font-size: 13px;
+    color: #1e293b;
+    border-top: 2px solid #28a745;
+    padding-top: 6px;
+    margin-top: 6px;
+  }
+  .invoice-wrapper .refund-card {
+    margin-top: 15px;
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e9d5ff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+  }
+  .invoice-wrapper .refund-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f3e8ff;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+  .invoice-wrapper .refund-card-header h3 {
+    color: #7c3aed;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .invoice-wrapper .refund-badge {
+    background-color: #f5f3ff;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .invoice-wrapper .refund-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  .invoice-wrapper .refund-table th {
+    background-color: #f5f3ff;
+    color: #6b21a8;
+    font-weight: bold;
+    font-size: 10px;
+    padding: 6px 8px;
+    border: 1px solid #e9d5ff;
+    text-align: left;
+  }
+  .invoice-wrapper .refund-table td {
+    border: 1px solid #f3e8ff;
+    padding: 6px 8px;
+    vertical-align: top;
+  }
+  .invoice-wrapper .refund-table tr:nth-child(even) {
+    background-color: #faf5ff;
+  }
+  .invoice-wrapper .refund-meta {
+    margin-top: 3px;
+    font-size: 10px;
+    color: #6b7280;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .invoice-wrapper .refund-meta span em {
+    font-style: normal;
+    font-weight: 600;
+    color: #4b5563;
+  }
   .invoice-wrapper .footer {
     margin-top: 15px;
     text-align: center;
@@ -394,6 +570,7 @@ const generateInvoiceStyles = () => `
     .invoice-wrapper .header,
     .invoice-wrapper .info-card,
     .invoice-wrapper .summary,
+    .invoice-wrapper .refund-card,
     .invoice-wrapper .footer {
       box-shadow: none;
       border: 1px solid #dddddd;
@@ -499,13 +676,16 @@ const generateInvoiceBodyHTML = (
   const isItemCancelled = (it) =>
     String(it?.itemstatus || it?.itemStatus || it?.status || "").toLowerCase() === "cancelled";
 
-  const activeProducts = (
+  const allProducts = (
     Array.isArray(orderData.products) && orderData.products.length > 0
       ? orderData.products
       : Array.isArray(orderData.items)
         ? orderData.items
         : []
-  ).filter((p) => isOrderCancelled || !isItemCancelled(p));
+  );
+
+  const activeProducts = allProducts.filter((p) => isOrderCancelled || !isItemCancelled(p));
+  const cancelledProducts = isOrderCancelled ? [] : allProducts.filter((p) => isItemCancelled(p));
 
   let itemsRows = "";
   if (activeProducts.length > 0) {
@@ -587,6 +767,36 @@ const generateInvoiceBodyHTML = (
         specialInstructionsHtml = `<span class="special-instructions">${escapeHtml(getTranslation("specialinstructions"))}: ${escapeHtml(product.specialInstructions)}</span>`;
       }
 
+      const cancelReason = product.cancelreason || product.cancelReason || product.reason || "";
+      const cancelledBy = product.cancelledby || product.cancelledBy || "";
+      const cancelledAt = product.cancelledat || product.cancelledtime || product.cancelledTime || product.cancelledAt || null;
+
+      let cancellationBoxHtml = "";
+      if (isOrderCancelled && (cancelReason || cancelledBy || cancelledAt)) {
+        cancellationBoxHtml = `
+          <div class="cancellation-info-box">
+            ${cancelReason ? `
+              <div class="cancellation-meta-row">
+                <span class="meta-label">${escapeHtml(getTranslation("cancellationreason") || "Cancellation Reason")}:</span>
+                <span class="meta-value">${escapeHtml(cancelReason)}</span>
+              </div>
+            ` : ""}
+            ${cancelledBy ? `
+              <div class="cancellation-meta-row">
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledby") || "Cancelled By")}:</span>
+                <span class="meta-value">${escapeHtml(cancelledBy)}</span>
+              </div>
+            ` : ""}
+            ${cancelledAt ? `
+              <div class="cancellation-meta-row">
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledtime") || "Cancelled Time")}:</span>
+                <span class="meta-value">${formatOrderDateTime(cancelledAt, dateFormat, timeFormat, timeZone)}</span>
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }
+
       itemsRows += `
         <tr>
           <td>
@@ -594,6 +804,7 @@ const generateInvoiceBodyHTML = (
             ${bundleItemsHtml}
             ${addonsHtml}
             ${specialInstructionsHtml}
+            ${cancellationBoxHtml}
           </td>
           <td style="text-align: center;">${productQuantity}</td>
           <td class="price-column">${formatPrice(productPrice)}</td>
@@ -609,6 +820,134 @@ const generateInvoiceBodyHTML = (
         </td>
       </tr>
     `;
+  }
+
+  let cancelledItemsRows = "";
+  if (cancelledProducts.length > 0) {
+    cancelledProducts.forEach((product) => {
+      const productName = product.productname || product.itemname || product.name || "Item";
+      const productPrice = product.price || 0;
+      const productQuantity = product.quantity || product.qty || 1;
+      const regularTotal = (parseFloat(productPrice) || 0) * productQuantity;
+      const productAmount =
+        product.amount !== undefined && Number(product.amount) > 0 ? product.amount : regularTotal;
+
+      const isDeal = Boolean(
+        product.isDeal ||
+        product.isdeal ||
+        product.bundletype ||
+        product.bundleType ||
+        (Array.isArray(product.bundleItems) && product.bundleItems.length > 0) ||
+        (Array.isArray(product.bundleitems) && product.bundleitems.length > 0)
+      );
+      const bundletype = product.bundletype || product.bundleType || null;
+      const bundleItems = Array.isArray(product.bundleItems)
+        ? product.bundleItems
+        : Array.isArray(product.bundleitems)
+          ? product.bundleitems
+          : [];
+
+      let dealTagHtml = "";
+      if (isDeal) {
+        const dealLabel = bundletype
+          ? getTranslation(bundletype.toLowerCase()) || bundletype
+          : getTranslation("deal") || "Deal";
+        dealTagHtml = ` <span style="display: inline-block; background-color: #FEF3C7; color: #D97706; border: 1px solid #FCD34D; border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: bold; margin-left: 4px; text-transform: uppercase;">${escapeHtml(dealLabel)}</span>`;
+      }
+
+      let bundleItemsHtml = "";
+      if (bundleItems.length > 0) {
+        const includedItemsLabel = getTranslation("includeditems") || "Included Items";
+        bundleItemsHtml = `
+          <div style="margin-top: 6px; padding: 6px 8px; background-color: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 6px;">
+            <div style="font-size: 9px; font-weight: bold; color: #166534; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+              <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background-color: #16A34A; margin-right: 4px;"></span>
+              ${escapeHtml(includedItemsLabel)} (${bundleItems.length})
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 3px;">
+              ${bundleItems
+                .map((bi) => {
+                  const isBiUnlim = Boolean(bi?.isunlimited);
+                  const biQty = bi?.qty || bi?.quantity || 1;
+                  const biName = bi?.itemname || bi?.name || bi?.productname || "";
+                  const qtyBadge = isBiUnlim
+                    ? `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 11px; line-height: 1;">&infin;</span>`
+                    : `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>`;
+
+                  return `
+                    <div style="display: flex; align-items: center; gap: 5px; font-size: 10px; color: #374151; background: #ffffff; border: 1px solid #E5E7EB; border-radius: 4px; padding: 2px 6px;">
+                      ${qtyBadge}
+                      <span>${escapeHtml(biName)}</span>
+                    </div>
+                  `;
+                })
+                .join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      let addonsHtml = "";
+      if (Array.isArray(product.addons) && product.addons.length > 0) {
+        product.addons.forEach((addon) => {
+          const addonName = addon.addonname || addon.name || "";
+          const addonPrice = addon.addonprice || addon.price || 0;
+          addonsHtml += `<span class="addon-item">+ ${escapeHtml(addonName)} (${formatPrice(addonPrice)})</span>`;
+        });
+      }
+
+      let specialInstructionsHtml = "";
+      if (product.specialInstructions) {
+        specialInstructionsHtml = `<span class="special-instructions">${escapeHtml(getTranslation("specialinstructions") || "Special Instructions")}: ${escapeHtml(product.specialInstructions)}</span>`;
+      }
+
+      const cancelReason = product.cancelreason || product.cancelReason || product.reason || "";
+      const cancelledBy = product.cancelledby || product.cancelledBy || "";
+      const cancelledAt = product.cancelledat || product.cancelledtime || product.cancelledTime || product.cancelledAt || null;
+
+      let cancellationBoxHtml = "";
+      if (cancelReason || cancelledBy || cancelledAt) {
+        cancellationBoxHtml = `
+          <div class="cancellation-info-box">
+            ${cancelReason ? `
+              <div class="cancellation-meta-row">
+                <span class="meta-label">${escapeHtml(getTranslation("cancellationreason") || "Cancellation Reason")}:</span>
+                <span class="meta-value">${escapeHtml(cancelReason)}</span>
+              </div>
+            ` : ""}
+            ${cancelledBy ? `
+              <div class="cancellation-meta-row">
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledby") || "Cancelled By")}:</span>
+                <span class="meta-value">${escapeHtml(cancelledBy)}</span>
+              </div>
+            ` : ""}
+            ${cancelledAt ? `
+              <div class="cancellation-meta-row">
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledtime") || "Cancelled Time")}:</span>
+                <span class="meta-value">${formatOrderDateTime(cancelledAt, dateFormat, timeFormat, timeZone)}</span>
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }
+
+      cancelledItemsRows += `
+        <tr>
+          <td>
+            <strong class="cancelled-item-name">${escapeHtml(productName)}</strong>
+            <span class="cancelled-badge">${escapeHtml(getTranslation("cancelled") || "Cancelled")}</span>
+            ${dealTagHtml}
+            ${bundleItemsHtml}
+            ${addonsHtml}
+            ${specialInstructionsHtml}
+            ${cancellationBoxHtml}
+          </td>
+          <td style="text-align: center;">${productQuantity}</td>
+          <td class="price-column cancelled-price-text">${formatPrice(productPrice)}</td>
+          <td class="amount-column cancelled-price-text">${formatPrice(productAmount)}</td>
+        </tr>
+      `;
+    });
   }
 
   // Before-tax charges
@@ -743,6 +1082,66 @@ const generateInvoiceBodyHTML = (
   const paymentStatus = String(orderData.paymentstatus || "paid").toLowerCase().replace(/\s+/g, "-");
   const paymentStatusLabel = getTranslation(orderData.paymentstatus) || orderData.paymentstatus || getTranslation("paid");
 
+  const explicitRefundAmt = Number(orderData.refundAmount || 0);
+  const refundDetailsList = Array.isArray(orderData.refundDetails) ? orderData.refundDetails : [];
+  const refundDetailsSum = refundDetailsList.reduce((s, r) => s + (Number(r?.amount) || 0), 0);
+  const isRefundedStatus = String(orderData.paymentstatus || "").toLowerCase() === "refunded";
+  const isPaidStatus = String(orderData.paymentstatus || "").toLowerCase() === "paid";
+
+  const cancelledItemsTotal = cancelledProducts.reduce((sum, p) => {
+    const qty = p.quantity || p.qty || 1;
+    const price = parseFloat(p.price) || 0;
+    const addonsTotal = Array.isArray(p.addons)
+      ? p.addons.reduce((aSum, a) => aSum + (parseFloat(a.addonprice || a.price) || 0) * qty, 0)
+      : 0;
+    const baseTotal = (price * qty) + addonsTotal;
+    const itemAmt = p.amount !== undefined && p.amount !== null && Number(p.amount) > 0
+      ? Number(p.amount)
+      : baseTotal;
+    return sum + itemAmt;
+  }, 0);
+
+  let effectiveRefund = 0;
+  if (explicitRefundAmt > 0) {
+    effectiveRefund = explicitRefundAmt;
+  } else if (refundDetailsSum > 0) {
+    effectiveRefund = refundDetailsSum;
+  } else if (isRefundedStatus && Number(orderData.totalprice || 0) > 0) {
+    effectiveRefund = Number(orderData.totalprice || 0);
+  } else if (cancelledItemsTotal > 0 && (isPaidStatus || isRefundedStatus)) {
+    effectiveRefund = cancelledItemsTotal;
+  }
+
+  const grandTotalNum = Number(orderData.totalprice) || 0;
+  const netTotalDisplay = Math.max(0, grandTotalNum - effectiveRefund);
+
+  // Derive refund items list for the dedicated card
+  const rawRefundDetails = refundDetailsList.length > 0
+    ? refundDetailsList
+    : cancelledProducts.map((p) => {
+        const qty = p.quantity || p.qty || 1;
+        const price = parseFloat(p.price) || 0;
+        const addonsTotal = Array.isArray(p.addons)
+          ? p.addons.reduce((aSum, a) => aSum + (parseFloat(a.addonprice || a.price) || 0) * qty, 0)
+          : 0;
+        const baseTotal = (price * qty) + addonsTotal;
+        const itemAmt = p.amount !== undefined && p.amount !== null && Number(p.amount) > 0
+          ? Number(p.amount)
+          : baseTotal;
+        return {
+          itemname: p.productname || p.itemname || p.name || "Item",
+          qty,
+          amount: itemAmt,
+          reason: p.cancelreason || p.cancelReason || p.reason || "",
+          cancelledBy: p.cancelledby || p.cancelledBy || "",
+          refundedAt: p.cancelledat || p.cancelledtime || p.cancelledTime || p.cancelledAt || null,
+        };
+      });
+
+  const effectiveRefundDetails = rawRefundDetails.filter(
+    (r) => Number(r?.amount || 0) > 0 || r?.itemname
+  );
+
   return `
     <div class="invoice-wrapper">
       <!-- Header Card with UserApp parity -->
@@ -844,6 +1243,24 @@ const generateInvoiceBodyHTML = (
         </tbody>
       </table>
 
+      ${cancelledProducts.length > 0 ? `
+        <!-- Cancelled Items Section -->
+        <h3 class="cancelled-section-title">${escapeHtml(getTranslation("cancelleditems") || "Cancelled Items")}</h3>
+        <table class="cancelled-items-table">
+          <thead>
+            <tr>
+              <th>${escapeHtml(getTranslation("items"))}</th>
+              <th style="text-align: center;">${escapeHtml(getTranslation("qty"))}</th>
+              <th class="price-column">${escapeHtml(getTranslation("price"))}</th>
+              <th class="amount-column">${escapeHtml(getTranslation("total"))}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cancelledItemsRows}
+          </tbody>
+        </table>
+      ` : ""}
+
       <!-- Bill Summary Card -->
       <div class="summary">
         <h3>${escapeHtml(getTranslation("billsummary"))}</h3>
@@ -859,7 +1276,63 @@ const generateInvoiceBodyHTML = (
           <span>${escapeHtml(getTranslation("grandtotal"))}</span>
           <span>${formatPrice(orderData.totalprice)}</span>
         </div>
+        ${effectiveRefund > 0 ? `
+          <div class="summary-row refund-deduction-row">
+            <span>${escapeHtml(getTranslation("refundamount") || "Refund Amount")}</span>
+            <span>-${formatPrice(effectiveRefund)}</span>
+          </div>
+          <div class="summary-row net-total-row">
+            <span>${escapeHtml(getTranslation("nettotal") || getTranslation("netamountpaid") || "Net Total")}</span>
+            <span>${formatPrice(netTotalDisplay)}</span>
+          </div>
+        ` : ""}
       </div>
+
+      ${(effectiveRefund > 0 || effectiveRefundDetails.length > 0) ? `
+        <!-- Refund Details Card -->
+        <div class="refund-card">
+          <div class="refund-card-header">
+            <h3>${escapeHtml(getTranslation("refunddetails") || "Refund Details")}</h3>
+            <span class="refund-badge">${escapeHtml(getTranslation("refundamount") || "Refund Amount")}: ${formatPrice(effectiveRefund)}</span>
+          </div>
+          <table class="refund-table">
+            <thead>
+              <tr>
+                <th>${escapeHtml(getTranslation("refundeditems") || getTranslation("items") || "Refunded Item")}</th>
+                <th style="text-align: center;">${escapeHtml(getTranslation("qty") || "Qty")}</th>
+                <th class="amount-column">${escapeHtml(getTranslation("refundamount") || "Refund Amount")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${effectiveRefundDetails.map((rd) => {
+                const rName = rd.itemname || rd.name || (rd.refundType === "order" ? (getTranslation("entireorder") || "Entire Order Refund") : "Item");
+                const rQty = rd.qty || 1;
+                const rAmt = Number(rd.amount) || 0;
+                const rReason = rd.reason || rd.cancelreason || "";
+                const rBy = rd.cancelledBy || rd.refundedBy || "";
+                const rAt = rd.refundedAt || rd.cancelledat || null;
+
+                return `
+                  <tr>
+                    <td>
+                      <strong>${escapeHtml(rName)}</strong>
+                      ${(rReason || rBy || rAt) ? `
+                        <div class="refund-meta">
+                          ${rReason ? `<span><em>${escapeHtml(getTranslation("reason") || "Reason")}:</em> ${escapeHtml(rReason)}</span>` : ""}
+                          ${rBy ? `<span><em>${escapeHtml(getTranslation("processedby") || getTranslation("cancelledby") || "Processed By")}:</em> ${escapeHtml(rBy)}</span>` : ""}
+                          ${rAt ? `<span><em>${escapeHtml(getTranslation("date") || "Date")}:</em> ${formatOrderDateTime(rAt, dateFormat, timeFormat, timeZone)}</span>` : ""}
+                        </div>
+                      ` : ""}
+                    </td>
+                    <td style="text-align: center;">${rQty}</td>
+                    <td class="amount-column" style="color: #7c3aed; font-weight: bold;">${formatPrice(rAmt)}</td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      ` : ""}
 
       <!-- Footer Card -->
       <div class="footer">

@@ -388,7 +388,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                 (parseFloat(addon.addonprice || addon.price) || 0) * itemQty,
             })),
             specialInstructions: item.specialInstructions || "",
-            itemstatus: item.itemStatus,
+            itemstatus: item.itemStatus || item.itemstatus || item.status,
             cancelreason: cancelReason,
             cancelledby: cancelledBy,
             cancelledat: cancelledAt,
