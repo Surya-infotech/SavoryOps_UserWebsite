@@ -1486,8 +1486,16 @@ const OrderDetails = ({ orderId, onBack }) => {
                 </div>
 
                 {/* Refund Amount Banner */}
-                {(Number(order.refundAmount || 0) > 0 || (order.paymentstatus === "Refunded" && Number(order.totalprice || 0) > 0)) && (() => {
-                  const refundAmt = Number(order.refundAmount || 0) > 0 ? Number(order.refundAmount) : Number(order.totalprice || 0);
+                {(() => {
+                  const currentPayStatus = String(order.paymentstatus || order.paymentStatus || "").toLowerCase();
+                  const isPaidOrRefunded = currentPayStatus === "paid" || currentPayStatus === "refunded";
+                  if (!isPaidOrRefunded) return null;
+
+                  const refundAmt = Number(order.refundAmount || 0) > 0
+                    ? Number(order.refundAmount)
+                    : (currentPayStatus === "refunded" ? Number(order.totalprice || 0) : 0);
+                  if (refundAmt <= 0) return null;
+
                   const refundList = Array.isArray(order.refundDetails) ? order.refundDetails : [];
                   const itemNames = refundList
                     .filter(r => r.itemname)
