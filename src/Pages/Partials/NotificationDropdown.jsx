@@ -94,6 +94,10 @@ const NotificationDropdown = ({ className = "" }) => {
     return notificationList.filter((n) => !n.isRead).length;
   }, [notificationList]);
 
+  const displayedNotifications = useMemo(() => {
+    return (notificationList || []).slice(0, 10);
+  }, [notificationList]);
+
   const handleToggle = () => {
     setPushStatus(getCustomerPushStatus());
     setIsOpen((prev) => {
@@ -241,7 +245,7 @@ const NotificationDropdown = ({ className = "" }) => {
               </div>
             ) : (
               <div className="notification-items-list">
-                {notificationList.map((item) => (
+                {displayedNotifications.map((item) => (
                   <div
                     key={item.id}
                     className={`notification-item ${!item.isRead ? "unread" : "read"} ${item.type || "general"
