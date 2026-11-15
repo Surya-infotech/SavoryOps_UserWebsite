@@ -247,22 +247,32 @@ const ReservationDetails = ({
   if (!reservation) {
     return (
       <div className={`order-details-container ${isRtl ? "is-rtl" : ""}`}>
-        <div className="order-details-empty-state">
-          <CancelOutlinedIcon className="empty-icon" />
-          <h3>
+        <div className="address-empty-card order-details-empty-state">
+          <div className="empty-icon-wrap error">
+            <CancelOutlinedIcon className="empty-icon" />
+          </div>
+          <h2 className="empty-title">
             {translations.reservationnotfound}
-          </h3>
-          <p>
+          </h2>
+          <p className="empty-subtitle">
             {translations.reservationnotfounddesc}
           </p>
           <div className="empty-actions">
-            <button type="button" className="secondary-btn" onClick={onBack}>
+            <button
+              type="button"
+              className="empty-add-btn secondary"
+              onClick={onBack}
+            >
               <ArrowBackIcon fontSize="small" />
               <span>
                 {translations.backtoreservations}
               </span>
             </button>
-            <button type="button" className="primary-btn" onClick={fetchDetails}>
+            <button
+              type="button"
+              className="empty-add-btn primary"
+              onClick={fetchDetails}
+            >
               <RefreshIcon fontSize="small" />
               <span>{translations.taptoretry}</span>
             </button>
