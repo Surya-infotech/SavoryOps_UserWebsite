@@ -1115,33 +1115,6 @@ const generateInvoiceBodyHTML = (
   const grandTotalNum = Number(orderData.totalprice) || 0;
   const netTotalDisplay = Math.max(0, grandTotalNum - effectiveRefund);
 
-  // Derive refund items list for the dedicated card
-  const rawRefundDetails = refundDetailsList.length > 0
-    ? refundDetailsList
-    : cancelledProducts.map((p) => {
-        const qty = p.quantity || p.qty || 1;
-        const price = parseFloat(p.price) || 0;
-        const addonsTotal = Array.isArray(p.addons)
-          ? p.addons.reduce((aSum, a) => aSum + (parseFloat(a.addonprice || a.price) || 0) * qty, 0)
-          : 0;
-        const baseTotal = (price * qty) + addonsTotal;
-        const itemAmt = p.amount !== undefined && p.amount !== null && Number(p.amount) > 0
-          ? Number(p.amount)
-          : baseTotal;
-        return {
-          itemname: p.productname || p.itemname || p.name || "Item",
-          qty,
-          amount: itemAmt,
-          reason: p.cancelreason || p.cancelReason || p.reason || "",
-          cancelledBy: p.cancelledby || p.cancelledBy || "",
-          refundedAt: p.cancelledat || p.cancelledtime || p.cancelledTime || p.cancelledAt || null,
-        };
-      });
-
-  const effectiveRefundDetails = rawRefundDetails.filter(
-    (r) => Number(r?.amount || 0) > 0 || r?.itemname
-  );
-
   return `
     <div class="invoice-wrapper">
       <!-- Header Card with UserApp parity -->
@@ -1287,52 +1260,6 @@ const generateInvoiceBodyHTML = (
           </div>
         ` : ""}
       </div>
-
-      ${(effectiveRefund > 0 || effectiveRefundDetails.length > 0) ? `
-        <!-- Refund Details Card -->
-        <div class="refund-card">
-          <div class="refund-card-header">
-            <h3>${escapeHtml(getTranslation("refunddetails") || "Refund Details")}</h3>
-            <span class="refund-badge">${escapeHtml(getTranslation("refundamount") || "Refund Amount")}: ${formatPrice(effectiveRefund)}</span>
-          </div>
-          <table class="refund-table">
-            <thead>
-              <tr>
-                <th>${escapeHtml(getTranslation("refundeditems") || getTranslation("items") || "Refunded Item")}</th>
-                <th style="text-align: center;">${escapeHtml(getTranslation("qty") || "Qty")}</th>
-                <th class="amount-column">${escapeHtml(getTranslation("refundamount") || "Refund Amount")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${effectiveRefundDetails.map((rd) => {
-                const rName = rd.itemname || rd.name || (rd.refundType === "order" ? (getTranslation("entireorder") || "Entire Order Refund") : "Item");
-                const rQty = rd.qty || 1;
-                const rAmt = Number(rd.amount) || 0;
-                const rReason = rd.reason || rd.cancelreason || "";
-                const rBy = rd.cancelledBy || rd.refundedBy || "";
-                const rAt = rd.refundedAt || rd.cancelledat || null;
-
-                return `
-                  <tr>
-                    <td>
-                      <strong>${escapeHtml(rName)}</strong>
-                      ${(rReason || rBy || rAt) ? `
-                        <div class="refund-meta">
-                          ${rReason ? `<span><em>${escapeHtml(getTranslation("reason") || "Reason")}:</em> ${escapeHtml(rReason)}</span>` : ""}
-                          ${rBy ? `<span><em>${escapeHtml(getTranslation("processedby") || getTranslation("cancelledby") || "Processed By")}:</em> ${escapeHtml(rBy)}</span>` : ""}
-                          ${rAt ? `<span><em>${escapeHtml(getTranslation("date") || "Date")}:</em> ${formatOrderDateTime(rAt, dateFormat, timeFormat, timeZone)}</span>` : ""}
-                        </div>
-                      ` : ""}
-                    </td>
-                    <td style="text-align: center;">${rQty}</td>
-                    <td class="amount-column" style="color: #7c3aed; font-weight: bold;">${formatPrice(rAmt)}</td>
-                  </tr>
-                `;
-              }).join("")}
-            </tbody>
-          </table>
-        </div>
-      ` : ""}
 
       <!-- Footer Card -->
       <div class="footer">
