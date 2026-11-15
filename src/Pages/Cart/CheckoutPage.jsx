@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import EditLocationAltOutlinedIcon from "@mui/icons-material/EditLocationAltOutlined";
@@ -66,6 +66,8 @@ const CheckoutPage = () => {
   const { business } = useWebsiteStatus();
   const { showSnackbar } = useSnackbar();
   const businessDisplayName = business?.businessname || "";
+
+  const isOrderPlacedRef = useRef(false);
 
   const [cartItems, setCartItems] = useState(getCart);
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
@@ -150,6 +152,7 @@ const CheckoutPage = () => {
     const handleCartUpdated = (e) => {
       const items = e?.detail || getCart();
       setCartItems(items);
+      if (isOrderPlacedRef.current) return;
       if (!items || items.length === 0) {
         navigate("/cart", { replace: true });
       }
@@ -215,8 +218,9 @@ const CheckoutPage = () => {
     };
   }, [navigate]);
 
-  // If cart is empty, redirect back to cart
+  // If cart is empty, redirect back to cart (unless an order was just placed)
   useEffect(() => {
+    if (isOrderPlacedRef.current) return;
     if (!cartItems || cartItems.length === 0) {
       navigate("/cart", { replace: true });
     }
@@ -671,6 +675,7 @@ const CheckoutPage = () => {
       }
 
       if (response.ok) {
+        isOrderPlacedRef.current = true;
         clearCart();
         clearSelectedTable();
         setSelectedTableNo(null);
@@ -684,8 +689,14 @@ const CheckoutPage = () => {
             "success",
             4000
           );
-          if (currentOrderId) {
-            navigate(`/orderdetails/${currentOrderId}`);
+          const targetOrderId =
+            currentOrderId ||
+            data?.customerOrder?._id ||
+            data?.order?._id ||
+            data?.orderId ||
+            data?._id;
+          if (targetOrderId) {
+            navigate(`/orderdetails/${targetOrderId}`);
           } else {
             navigate("/orders");
           }
@@ -695,7 +706,16 @@ const CheckoutPage = () => {
             "success",
             4000
           );
-          navigate("/orders");
+          const targetOrderId =
+            data?.customerOrder?._id ||
+            data?.order?._id ||
+            data?.orderId ||
+            data?._id;
+          if (targetOrderId) {
+            navigate(`/orderdetails/${targetOrderId}`);
+          } else {
+            navigate("/orders");
+          }
         }
       } else {
         const errorMsg = data?.message || (isUpdate ? "Failed to add items to order. Please try again." : "Failed to process order. Please try again.");
