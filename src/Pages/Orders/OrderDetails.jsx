@@ -396,13 +396,17 @@ const OrderDetails = ({ orderId, onBack }) => {
 
         const rawAdditionalCharges = (data.additionalCharges || []).map((c) => {
           const chg = c.toObject ? c.toObject() : { ...c };
-          if (chg.chargetype === "percentage" && chg.chargevalue) {
+          if (chg.amount != null && !isNaN(parseFloat(chg.amount))) {
+            chg.amount = parseFloat(Number(chg.amount).toFixed(data.decimal || 2));
+          } else if (chg.chargetype === "percentage" && chg.chargevalue) {
             chg.amount = parseFloat(
               (
                 (effectiveSubtotal * parseFloat(chg.chargevalue)) /
                 100
               ).toFixed(data.decimal || 2)
             );
+          } else {
+            chg.amount = parseFloat(Number(chg.amount || 0).toFixed(data.decimal || 2));
           }
           return chg;
         });
@@ -410,10 +414,10 @@ const OrderDetails = ({ orderId, onBack }) => {
         const beforeTaxAmt = rawAdditionalCharges
           .filter((c) => c.applicationtiming === "before_tax")
           .reduce((s, c) => s + (parseFloat(c.amount) || 0), 0);
-        const afterTaxAmt = (data.specialDayCharges || []).reduce(
-          (s, c) => s + (parseFloat(c.amount) || 0),
-          0
-        );
+        const afterTaxAmt = rawAdditionalCharges
+          .filter((c) => c.applicationtiming === "after_tax")
+          .concat(data.specialDayCharges || [])
+          .reduce((s, c) => s + (parseFloat(c.amount) || 0), 0);
         const roundAmt = Number(
           data.roundoff?.roundedAmount ?? data.roundoffAmount ?? 0
         );
