@@ -180,17 +180,22 @@ const generateInvoiceStyles = () => `
     font-size: 11px;
     color: #444444;
   }
-  .invoice-wrapper .customer-info {
+  .invoice-wrapper .order-info {
     margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
   }
-  .invoice-wrapper .customer-info-row {
+  .invoice-wrapper .order-info-row-full {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
     gap: 15px;
   }
-  .invoice-wrapper .customer-info-row .info-item {
-    flex: 1 1 30%;
-    min-width: 120px;
+  .invoice-wrapper .order-info-row-full .info-item {
+    display: flex;
+    align-items: center;
+    padding: 0;
   }
   .invoice-wrapper .info-row-wrapper {
     display: flex;
@@ -1130,30 +1135,29 @@ const generateInvoiceBodyHTML = (
         </div>
       </div>
 
-      <!-- Customer Info Card -->
-      <div class="customer-info info-card">
-        <h3>${escapeHtml(getTranslation("customerinfo"))}</h3>
-        <div class="customer-info-row">
-          <div class="info-item">
-            <span class="info-label">${escapeHtml(getTranslation("customername"))}:</span>
-            <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerName))}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">${escapeHtml(getTranslation("customerphone"))}:</span>
-            <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerPhone))}</span>
-          </div>
-          ${hasCustomerEmail
-      ? `<div class="info-item">
-                  <span class="info-label">${escapeHtml(getTranslation("customeremail"))}:</span>
-                  <span class="info-value">${escapeHtml(customerEmail)}</span>
-                </div>`
-      : ""
-    }
-        </div>
-      </div>
-
-      <!-- Business Info & Order Info Cards Side-by-Side -->
+      <!-- Customer Info & Business Info Cards Side-by-Side (Row 1) -->
       <div class="info-row-wrapper">
+        <div class="customer-info info-card">
+          <h3>${escapeHtml(getTranslation("customerinfo"))}</h3>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-label">${escapeHtml(getTranslation("customername"))}:</span>
+              <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerName))}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">${escapeHtml(getTranslation("customerphone"))}:</span>
+              <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerPhone))}</span>
+            </div>
+            ${hasCustomerEmail
+        ? `<div class="info-item">
+                    <span class="info-label">${escapeHtml(getTranslation("customeremail"))}:</span>
+                    <span class="info-value">${escapeHtml(customerEmail)}</span>
+                  </div>`
+        : ""
+      }
+          </div>
+        </div>
+
         <div class="business-info info-card">
           <h3>${escapeHtml(getTranslation("businessinfo"))}</h3>
           <div class="info-list">
@@ -1166,36 +1170,35 @@ const generateInvoiceBodyHTML = (
               <span class="info-value">${escapeHtml(branchAddressDisplay)}</span>
             </div>
             ${tableDetailsHTML
-      ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
-                    <div class="info-item" style="margin-bottom: 6px;"><span class="info-label" style="font-weight: bold; color: #28a745;">${escapeHtml(getTranslation("tabledetails"))}</span></div>
-                    ${tableDetailsHTML}
-                  </div>`
-      : ""
-    }
+        ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
+                      <div class="info-item" style="margin-bottom: 6px;"><span class="info-label" style="font-weight: bold; color: #28a745;">${escapeHtml(getTranslation("tabledetails"))}</span></div>
+                      ${tableDetailsHTML}
+                    </div>`
+        : ""
+      }
           </div>
         </div>
+      </div>
 
-        <div class="order-info info-card">
-          <h3>${escapeHtml(getTranslation("orderinfo"))}</h3>
-          <div class="info-list">
-            <div class="info-item order-info-row">
-              <div class="info-pair">
-                <span class="info-label">${escapeHtml(getTranslation("orderno"))}:</span>
-                <span class="info-value">#${escapeHtml(orderData.orderno || "")}</span>
-              </div>
-              <div class="info-pair info-pair-right">
-                <span class="info-label">${escapeHtml(getTranslation("ordertype"))}:</span>
-                <span class="info-value">${escapeHtml(getTranslation(orderData.ordertype) || orderData.ordertype || "")}</span>
-              </div>
-            </div>
-            <div class="info-item">
-              <span class="info-label">${escapeHtml(getTranslation("orderdate"))}:</span>
-              <span class="info-value">${formatOrderDateTime(orderData.createdAt, dateFormat, timeFormat, timeZone)}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">${escapeHtml(getTranslation("payment"))}:</span>
-              <span class="status-badge status-${paymentStatus}">${escapeHtml(paymentStatusLabel)}</span>
-            </div>
+      <!-- Order Info Card Full Width (Row 2) -->
+      <div class="order-info info-card">
+        <h3>${escapeHtml(getTranslation("orderinfo"))}</h3>
+        <div class="order-info-row-full">
+          <div class="info-item">
+            <span class="info-label">${escapeHtml(getTranslation("orderno"))}:</span>
+            <span class="info-value">#${escapeHtml(orderData.orderno || "")}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">${escapeHtml(getTranslation("ordertype"))}:</span>
+            <span class="info-value">${escapeHtml(getTranslation(orderData.ordertype) || orderData.ordertype || "")}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">${escapeHtml(getTranslation("orderdate"))}:</span>
+            <span class="info-value">${formatOrderDateTime(orderData.createdAt, dateFormat, timeFormat, timeZone)}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">${escapeHtml(getTranslation("payment"))}:</span>
+            <span class="status-badge status-${paymentStatus}">${escapeHtml(paymentStatusLabel)}</span>
           </div>
         </div>
       </div>
