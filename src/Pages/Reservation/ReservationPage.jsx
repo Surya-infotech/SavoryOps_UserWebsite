@@ -12,7 +12,7 @@ import {
   getStoredTimeZone,
 } from "./reservationHelpers.js";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
-import "../../Scss/Pages/Reservation/tablereservation.scss";
+import "../../Scss/Pages/Reservation/reservationpage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;

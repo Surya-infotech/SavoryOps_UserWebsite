@@ -34,7 +34,6 @@ import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import { clearSelectedTable } from "../../utils/qrTableService.js";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Cart/checkoutpage.scss";
-import "../../Scss/Pages/Profile/manageaddress.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
@@ -1174,24 +1173,24 @@ const CheckoutPage = () => {
         </div>
       )}
 
-      {/* --- ADD NEW ADDRESS MODAL (Exact design and details matching Manage Address / Image 2) --- */}
+      {/* --- ADD NEW ADDRESS MODAL --- */}
       {isAddAddressModalOpen && (
-        <div className="address-modal-overlay" onClick={handleCloseAddAddressModal}>
+        <div className="checkout-address-modal-overlay" onClick={handleCloseAddAddressModal}>
           <div
-            className="address-modal-dialog"
+            className="checkout-address-modal-dialog"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="checkout-address-modal-title"
           >
             {/* Modal Header */}
-            <div className="modal-header">
-              <h2 id="checkout-address-modal-title" className="modal-title">
+            <div className="checkout-address-modal-header">
+              <h2 id="checkout-address-modal-title" className="checkout-address-modal-title">
                 {translations.addaddress || translations.addnewaddress}
               </h2>
               <button
                 type="button"
-                className="modal-close-btn"
+                className="checkout-address-modal-close-btn"
                 onClick={handleCloseAddAddressModal}
                 disabled={isSavingAddress}
                 aria-label="Close dialog"
@@ -1201,13 +1200,13 @@ const CheckoutPage = () => {
             </div>
 
             {/* Modal Form */}
-            <form onSubmit={handleSaveNewAddress} className="address-modal-form" noValidate autoComplete="off">
+            <form onSubmit={handleSaveNewAddress} className="checkout-address-modal-form" noValidate autoComplete="off">
               {/* Address Type Chips */}
-              <div className="form-group span-full">
-                <label className="form-label">
+              <div className="checkout-address-form-group span-full">
+                <label className="checkout-address-form-label">
                   {translations.addresstype}
                 </label>
-                <div className="address-type-selector">
+                <div className="checkout-address-type-selector">
                   {ADDRESS_TYPES.map((typeObj) => {
                     const isSelected = addressType === typeObj.id;
                     const IconComp = typeObj.icon;
@@ -1215,7 +1214,7 @@ const CheckoutPage = () => {
                       <button
                         key={typeObj.id}
                         type="button"
-                        className={`type-select-btn ${isSelected ? "selected" : ""}`}
+                        className={`checkout-type-select-btn ${isSelected ? "selected" : ""}`}
                         onClick={() => setAddressType(typeObj.id)}
                       >
                         <IconComp fontSize="small" />
@@ -1227,11 +1226,11 @@ const CheckoutPage = () => {
               </div>
 
               {/* Street Address */}
-              <div className="form-group span-full">
-                <label className="form-label" htmlFor="checkout-address-street">
+              <div className="checkout-address-form-group span-full">
+                <label className="checkout-address-form-label" htmlFor="checkout-address-street">
                   {translations.address} <span className="req">*</span>
                 </label>
-                <div className={`textarea-field-wrap ${addressError ? "has-error" : ""}`}>
+                <div className={`checkout-address-textarea-wrap ${addressError ? "has-error" : ""}`}>
                   <HomeOutlinedIcon className="field-icon textarea-icon" />
                   <textarea
                     id="checkout-address-street"
@@ -1251,7 +1250,7 @@ const CheckoutPage = () => {
               </div>
 
               {/* Country Dropdown */}
-              <div className="form-group">
+              <div className="checkout-address-form-group">
                 <Dropdown
                   id="checkout-address-country-dropdown"
                   label={translations.country}
@@ -1268,7 +1267,7 @@ const CheckoutPage = () => {
               </div>
 
               {/* State Dropdown */}
-              <div className="form-group">
+              <div className="checkout-address-form-group">
                 <Dropdown
                   id="checkout-address-state-dropdown"
                   label={translations.state}
@@ -1288,7 +1287,7 @@ const CheckoutPage = () => {
               </div>
 
               {/* City Dropdown */}
-              <div className="form-group">
+              <div className="checkout-address-form-group">
                 <Dropdown
                   id="checkout-address-city-dropdown"
                   label={translations.city}
@@ -1308,11 +1307,11 @@ const CheckoutPage = () => {
               </div>
 
               {/* Postal Code / Pincode */}
-              <div className="form-group">
-                <label className="form-label" htmlFor="checkout-address-postalcode">
+              <div className="checkout-address-form-group">
+                <label className="checkout-address-form-label" htmlFor="checkout-address-postalcode">
                   {translations.postalcode} <span className="req">*</span>
                 </label>
-                <div className={`input-field-wrap ${pincodeError ? "has-error" : ""}`}>
+                <div className={`checkout-address-input-wrap ${pincodeError ? "has-error" : ""}`}>
                   <MarkunreadMailboxOutlinedIcon className="field-icon" />
                   <input
                     id="checkout-address-postalcode"
@@ -1332,10 +1331,10 @@ const CheckoutPage = () => {
               </div>
 
               {/* Modal Footer Buttons */}
-              <div className="modal-footer">
+              <div className="checkout-address-modal-footer">
                 <button
                   type="button"
-                  className="modal-cancel-btn"
+                  className="checkout-address-modal-cancel-btn"
                   onClick={handleCloseAddAddressModal}
                   disabled={isSavingAddress}
                 >
@@ -1343,7 +1342,7 @@ const CheckoutPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="modal-save-btn"
+                  className="checkout-address-modal-save-btn"
                   disabled={isSavingAddress}
                 >
                   {isSavingAddress ? (

@@ -32,8 +32,7 @@ import {
 import ReservationStatusHistoryModal from "./ReservationStatusHistoryModal.jsx";
 import ReservationCancelModal from "./ReservationCancelModal.jsx";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
-import "../../Scss/Pages/Orders/orderdetails.scss";
-import "../../Scss/Pages/Reservation/tablereservation.scss";
+import "../../Scss/Pages/Reservation/reservationdetails.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
@@ -56,18 +55,17 @@ const StatusIcon = ({ iconType, fontSize = "inherit" }) => {
 
 /**
  * Modern Skeleton Shimmer for Reservation Details
- * Mirrors Order Details Shimmer
  */
 const ReservationDetailsShimmer = () => (
-  <div className="order-details-container order-details-shimmer reservation-details-unified">
+  <div className="reservation-details-container reservation-details-shimmer">
     {/* Nav Header Shimmer */}
-    <div className="order-details-nav-header">
+    <div className="reservation-details-nav-header">
       <div
-        className="shimmer-line order-title-shimmer"
+        className="shimmer-line reservation-title-shimmer"
         style={{ width: 220, height: 34, borderRadius: 8 }}
       />
       <div
-        className="shimmer-pill order-btn-shimmer"
+        className="shimmer-pill reservation-btn-shimmer"
         style={{ width: 190, height: 38, borderRadius: 9999 }}
       />
     </div>
@@ -98,7 +96,7 @@ const ReservationDetailsShimmer = () => (
 
       {/* Booking Information Shimmer */}
       <div
-        className="order-details-section shimmer-section"
+        className="reservation-details-section shimmer-section"
         style={{ marginTop: "1.5rem" }}
       >
         <div className="section-header-outside shimmer-section-header">
@@ -246,8 +244,8 @@ const ReservationDetails = ({
 
   if (!reservation) {
     return (
-      <div className={`order-details-container ${isRtl ? "is-rtl" : ""}`}>
-        <div className="address-empty-card order-details-empty-state">
+      <div className={`reservation-details-container ${isRtl ? "is-rtl" : ""}`}>
+        <div className="reservations-empty-state">
           <div className="empty-icon-wrap error">
             <CancelOutlinedIcon className="empty-icon" />
           </div>
@@ -319,12 +317,11 @@ const ReservationDetails = ({
 
   return (
     <div
-      className={`order-details-container reservation-details-unified ${isRtl ? "is-rtl" : ""
-        }`}
+      className={`reservation-details-container ${isRtl ? "is-rtl" : ""}`}
     >
-      {/* Top Header Bar - Exact Match with Order Details */}
-      <div className="order-details-nav-header">
-        <div className="header-order-title">
+      {/* Top Header Bar */}
+      <div className="reservation-details-nav-header">
+        <div className="header-reservation-title">
           <h2>
             {translations.reservationNo} #{reservation.reservationid}
           </h2>
@@ -457,7 +454,7 @@ const ReservationDetails = ({
         </div>
 
         {/* Booking Information Section - Outside Header + Detail Card */}
-        <div className="order-details-section">
+        <div className="reservation-details-section">
           <div className="section-header-outside">
             <div className="section-header-left">
               <TableRestaurantIcon className="section-header-icon" />
@@ -570,7 +567,7 @@ const ReservationDetails = ({
 
         {/* Special Requests Section (if any) */}
         {reservation.specialnotes && (
-          <div className="order-details-section">
+          <div className="reservation-details-section">
             <div className="section-header-outside">
               <div className="section-header-left">
                 <NotesOutlinedIcon className="section-header-icon" />
@@ -594,7 +591,7 @@ const ReservationDetails = ({
 
         {/* Cancellation or Rejection Reason Section */}
         {reasonText && (
-          <div className="order-details-section">
+          <div className="reservation-details-section">
             <div className="section-header-outside">
               <div className="section-header-left">
                 <CancelOutlinedIcon className="section-header-icon red" />

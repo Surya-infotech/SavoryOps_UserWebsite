@@ -16,6 +16,7 @@ import { getActiveBranch } from "../../utils/formatCurrency.js";
 import { formatTime12h, getTodayDateInputString } from "./reservationHelpers.js";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
+import "../../Scss/Pages/Reservation/addreservationmodal.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;

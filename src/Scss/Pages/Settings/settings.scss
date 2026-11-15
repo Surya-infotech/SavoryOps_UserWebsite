@@ -13,688 +13,290 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-}
 
-.settings-container {
-  max-width: 1320px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-/* Main Layout: Vertical Tabs + Content Panel */
-.settings-layout {
-  display: grid;
-  grid-template-columns: 290px 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-
-/* Left Sidebar - Vertical Tabs */
-.settings-sidebar {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 0.75rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.settings-tab-btn {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 0.95rem 1.1rem;
-  border-radius: 12px;
-  background: transparent;
-  border: 1px solid transparent;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-  position: relative;
-  width: 100%;
-
-  .tab-icon-wrapper {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: #f1f5f9;
-    color: #64748b;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-
-    svg {
-      font-size: 1.25rem;
-    }
+  .settings-container {
+    max-width: 1320px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.5rem;
   }
 
-  .tab-text-group {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    flex: 1;
-
-    .tab-title {
-      font-size: 0.925rem;
-      font-weight: 700;
-      color: #1e293b;
-      transition: color 0.2s ease;
-    }
-
-    .tab-subtitle {
-      font-size: 0.75rem;
-      color: #94a3b8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 1px;
-    }
-  }
-
-  &:hover {
-    background: #ffffff;
-
-    .tab-icon-wrapper {
-      background: rgba(2, 136, 2, 0.1);
-      color: #028802;
-    }
-
-    .tab-title {
-      color: #028802;
-    }
-  }
-
-  &.active {
-    background: rgba(2, 136, 2, 0.08);
-    border-color: rgba(2, 136, 2, 0.25);
-
-    .tab-icon-wrapper {
-      background: #028802;
-      color: #ffffff;
-      box-shadow: 0 4px 10px rgba(2, 136, 2, 0.3);
-    }
-
-    .tab-title {
-      color: #028802;
-      font-weight: 800;
-    }
-  }
-
-  /* Danger Tab Variant */
-  &.tab-danger {
-    &:hover {
-      background: #fff5f5;
-
-      .tab-icon-wrapper {
-        background: #fee2e2;
-        color: #dc2626;
-      }
-
-      .tab-title {
-        color: #dc2626;
-      }
-    }
-
-    &.active {
-      background: #fef2f2;
-      border-color: #fecaca;
-
-      .tab-icon-wrapper {
-        background: #dc2626;
-        color: #ffffff;
-        box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
-      }
-
-      .tab-title {
-        color: #dc2626;
-        font-weight: 800;
-      }
-    }
-  }
-}
-
-/* Right Content Panel */
-.settings-content-panel {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 2rem 2.25rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-/* Preview Banner (Date & Time) */
-.preview-banner {
-  background: linear-gradient(135deg, rgba(2, 136, 2, 0.08) 0%, rgba(105, 232, 105, 0.08) 100%);
-  border: 1.5px solid rgba(2, 136, 2, 0.2);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  .preview-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .preview-label-group {
-      display: flex;
-      flex-direction: column;
-
-      .preview-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #028802;
-      }
-
-      .preview-timezone-note {
-        font-size: 0.8rem;
-        color: #64748b;
-        margin-top: 2px;
-      }
-    }
-  }
-
-  .preview-value-text {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: #0f172a;
-    font-family: 'Inter', monospace, sans-serif;
-    letter-spacing: -0.2px;
-    background: #ffffff;
-    padding: 6px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(2, 136, 2, 0.15);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  }
-}
-
-/* Settings Form Controls */
-.settings-form-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-
-  .settings-form-row-2col {
+  /* Main Layout: Vertical Tabs + Content Panel */
+  .settings-layout {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-
-    @media (max-width: 680px) {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
+    grid-template-columns: 290px 1fr;
+    gap: 2rem;
+    align-items: start;
   }
-}
 
-/* Action Footer */
-.settings-save-footer {
-  margin-top: 2.25rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
+  /* Left Sidebar - Vertical Tabs */
+  .settings-sidebar {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 0.75rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 
-  .save-primary-btn {
-    display: inline-flex;
+  .settings-tab-btn {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 0.75rem 1.75rem;
-    background: #028802;
-    color: #ffffff;
-    font-size: 0.925rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 10px;
+    gap: 14px;
+    padding: 0.95rem 1.1rem;
+    border-radius: 12px;
+    background: transparent;
+    border: 1px solid transparent;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+    text-align: left;
     transition: all 0.2s ease;
+    position: relative;
+    width: 100%;
 
-    &:hover:not(:disabled) {
-      background: #026b02;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
-    }
-
-    &:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-  }
-}
-
-/* ==========================================================================
-   Delete Account Tab Styles
-   ========================================================================== */
-
-.delete-account-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-.danger-warning-box {
-  background: #fef2f2;
-  border: 1.5px solid #fecaca;
-  border-radius: 12px;
-  padding: 1.5rem;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-
-  .danger-icon-pill {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: #fee2e2;
-    color: #dc2626;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    svg {
-      font-size: 1.35rem;
-    }
-  }
-
-  .danger-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-
-    h4 {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #991b1b;
-      margin: 0;
-    }
-
-    p {
-      font-size: 0.88rem;
-      color: #7f1d1d;
-      margin: 0;
-      line-height: 1.5;
-    }
-  }
-}
-
-.consequences-card {
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  background: #fafafa;
-
-  h5 {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin: 0 0 1rem;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-
-    li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.875rem;
-      color: #475569;
-      line-height: 1.45;
-
-      .bullet-cross {
-        color: #dc2626;
-        font-weight: 800;
-        font-size: 0.9rem;
-        flex-shrink: 0;
-      }
-    }
-  }
-}
-
-/* Phone info pill / card (Matching SavoryOps_UserApp) */
-.delete-phone-info-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
-
-  .phone-icon-pill {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: rgba(2, 136, 2, 0.1);
-    color: #028802;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    svg {
-      font-size: 1.3rem;
-    }
-  }
-
-  .phone-info-text {
-    font-size: 0.9rem;
-    color: #334155;
-    line-height: 1.5;
-    font-weight: 500;
-  }
-}
-
-.delete-send-otp-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0.85rem 1.75rem;
-  background: #028802;
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
-  transition: all 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background: #026e02;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
-/* Delete Account OTP Card & 6-Digit Grid */
-.delete-otp-card {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 1.5rem 1.75rem;
-  max-width: 460px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  transition: all 0.25s ease;
-
-  .otp-card-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .otp-shield-pill {
-      width: 42px;
-      height: 42px;
+    .tab-icon-wrapper {
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fee2e2;
+      background: #f1f5f9;
+      color: #64748b;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: all 0.2s ease;
 
       svg {
-        font-size: 1.35rem;
+        font-size: 1.25rem;
       }
     }
 
-    .otp-header-info {
-      .otp-card-title {
-        font-size: 1rem;
+    .tab-text-group {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex: 1;
+
+      .tab-title {
+        font-size: 0.925rem;
         font-weight: 700;
-        color: #0f172a;
-        margin: 0 0 2px;
+        color: #1e293b;
+        transition: color 0.2s ease;
       }
 
-      .otp-card-subtitle {
-        font-size: 0.825rem;
-        color: #64748b;
-        margin: 0;
-        line-height: 1.4;
+      .tab-subtitle {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+      }
+    }
+
+    &:hover {
+      background: #ffffff;
+
+      .tab-icon-wrapper {
+        background: rgba(2, 136, 2, 0.1);
+        color: #028802;
+      }
+
+      .tab-title {
+        color: #028802;
+      }
+    }
+
+    &.active {
+      background: rgba(2, 136, 2, 0.08);
+      border-color: rgba(2, 136, 2, 0.25);
+
+      .tab-icon-wrapper {
+        background: #028802;
+        color: #ffffff;
+        box-shadow: 0 4px 10px rgba(2, 136, 2, 0.3);
+      }
+
+      .tab-title {
+        color: #028802;
+        font-weight: 800;
+      }
+    }
+
+    /* Danger Tab Variant */
+    &.tab-danger {
+      &:hover {
+        background: #fff5f5;
+
+        .tab-icon-wrapper {
+          background: #fee2e2;
+          color: #dc2626;
+        }
+
+        .tab-title {
+          color: #dc2626;
+        }
+      }
+
+      &.active {
+        background: #fef2f2;
+        border-color: #fecaca;
+
+        .tab-icon-wrapper {
+          background: #dc2626;
+          color: #ffffff;
+          box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+        }
+
+        .tab-title {
+          color: #dc2626;
+          font-weight: 800;
+        }
       }
     }
   }
 
-  .otp-card-body {
+  /* Right Content Panel */
+  .settings-content-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Preview Banner (Date & Time) */
+  .preview-banner {
+    background: linear-gradient(135deg, rgba(2, 136, 2, 0.08) 0%, rgba(105, 232, 105, 0.08) 100%);
+    border: 1.5px solid rgba(2, 136, 2, 0.2);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 1rem;
 
-    .otp-boxes-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
-      width: 100%;
-      max-width: 360px;
-      margin: 4px 0 2px;
-
-      .otp-digit-box {
-        height: 52px;
-        width: 100%;
-        text-align: center;
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: #0f172a;
-        background: #ffffff;
-        border: 1.8px solid #cbd5e1;
-        border-radius: 10px;
-        outline: none;
-        transition: all 0.2s ease;
-
-        &:focus {
-          border-color: #dc2626;
-          box-shadow: 0 0 0 3.5px rgba(220, 38, 38, 0.15);
-          background: #fef2f2;
-          transform: translateY(-1px);
-        }
-
-        &.filled {
-          border-color: #dc2626;
-          background: rgba(220, 38, 38, 0.02);
-        }
-
-        &.error {
-          border-color: #ef4444;
-          background: #fff5f5;
-        }
-      }
-    }
-
-    .delete-otp-error-text {
-      font-size: 0.825rem;
-      color: #dc2626;
-      font-weight: 600;
-      margin-top: -2px;
-    }
-
-    .delete-resend-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.875rem;
-
-      .resend-countdown-label {
-        color: #64748b;
-        font-size: 0.875rem;
-
-        strong {
-          color: #0f172a;
-          font-weight: 700;
-        }
-      }
-
-      .delete-resend-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: none;
-        border: none;
-        color: #028802;
-        font-size: 0.875rem;
-        font-weight: 700;
-        cursor: pointer;
-        padding: 0;
-        transition: color 0.15s ease;
-
-        &:hover:not(:disabled) {
-          color: #026e02;
-          text-decoration: underline;
-        }
-
-        &:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-      }
-    }
-
-    .delete-card-actions {
+    .preview-left {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-top: 1rem;
-      border-top: 1px solid #f1f5f9;
-      margin-top: 0.25rem;
 
-      .delete-cancel-btn {
-        padding: 0.75rem 1.4rem;
-        background: #ffffff;
-        color: #475569;
-        font-size: 0.9rem;
-        font-weight: 600;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.2s ease;
+      .preview-label-group {
+        display: flex;
+        flex-direction: column;
 
-        &:hover:not(:disabled) {
-          background: #f1f5f9;
-          color: #0f172a;
-          border-color: #cbd5e1;
+        .preview-label {
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: #028802;
         }
 
-        &:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-      }
-
-      .delete-danger-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0.75rem 1.6rem;
-        background: #dc2626;
-        color: #ffffff;
-        font-size: 0.9rem;
-        font-weight: 700;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
-        transition: all 0.2s ease;
-
-        &:hover:not(:disabled) {
-          background: #b91c1c;
-          transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
-        }
-
-        &:disabled {
-          background: #f1f5f9;
-          color: #94a3b8;
-          border: 1px solid #e2e8f0;
-          box-shadow: none;
-          cursor: not-allowed;
-          transform: none;
+        .preview-timezone-note {
+          font-size: 0.8rem;
+          color: #64748b;
+          margin-top: 2px;
         }
       }
     }
+
+    .preview-value-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0f172a;
+      font-family: 'Inter', monospace, sans-serif;
+      letter-spacing: -0.2px;
+      background: #ffffff;
+      padding: 6px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(2, 136, 2, 0.15);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
   }
-}
 
-.delete-actions-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding-top: 0.5rem;
-}
+  /* Settings Form Controls */
+  .settings-form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
 
-/* Delete Confirmation Modal */
-.delete-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
-  z-index: 999999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  animation: modalFadeIn 0.2s ease-out;
-}
+    .settings-form-row-2col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
+      @media (max-width: 680px) {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+    }
   }
-  to {
-    opacity: 1;
-  }
-}
 
-.delete-modal-box {
-  background: #ffffff;
-  border-radius: 18px;
-  width: 100%;
-  max-width: 480px;
-  padding: 2rem;
-  box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  animation: modalScaleUp 0.2s ease-out;
-
-  .modal-danger-header {
+  /* Action Footer */
+  .settings-save-footer {
+    margin-top: 2.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: flex-end;
+    gap: 12px;
 
-    .modal-warning-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+    .save-primary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.75rem 1.75rem;
+      background: #028802;
+      color: #ffffff;
+      font-size: 0.925rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: #026b02;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  /* ==========================================================================
+   Delete Account Tab Styles
+   ========================================================================== */
+
+  .delete-account-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .danger-warning-box {
+    background: #fef2f2;
+    border: 1.5px solid #fecaca;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+
+    .danger-icon-pill {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       background: #fee2e2;
       color: #dc2626;
       display: flex;
@@ -703,124 +305,524 @@
       flex-shrink: 0;
 
       svg {
-        font-size: 1.6rem;
+        font-size: 1.35rem;
       }
     }
 
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0;
-      letter-spacing: -0.3px;
+    .danger-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #991b1b;
+        margin: 0;
+      }
+
+      p {
+        font-size: 0.88rem;
+        color: #7f1d1d;
+        margin: 0;
+        line-height: 1.5;
+      }
     }
   }
 
-  .modal-body-text {
-    font-size: 0.9rem;
-    color: #475569;
-    line-height: 1.55;
-    margin: 0;
+  .consequences-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: #fafafa;
+
+    h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 0.875rem;
+        color: #475569;
+        line-height: 1.45;
+
+        .bullet-cross {
+          color: #dc2626;
+          font-weight: 800;
+          font-size: 0.9rem;
+          flex-shrink: 0;
+        }
+      }
+    }
   }
 
-  .modal-actions-row {
+  /* Phone info pill / card (Matching SavoryOps_UserApp) */
+  .delete-phone-info-card {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 0.5rem;
+    gap: 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
 
-    .modal-cancel-btn {
-      padding: 0.65rem 1.25rem;
+    .phone-icon-pill {
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
-      background: #f1f5f9;
-      color: #475569;
-      border: 1px solid #e2e8f0;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease;
-
-      &:hover {
-        background: #e2e8f0;
-      }
-    }
-
-    .modal-confirm-delete-btn {
-      padding: 0.65rem 1.4rem;
-      border-radius: 10px;
-      background: #dc2626;
-      color: #ffffff;
-      border: none;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
+      background: rgba(2, 136, 2, 0.1);
+      color: #028802;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
-      transition: background 0.2s ease;
+      justify-content: center;
+      flex-shrink: 0;
 
-      &:hover:not(:disabled) {
-        background: #b91c1c;
-      }
-
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
+      svg {
+        font-size: 1.3rem;
       }
     }
-  }
-}
 
-@keyframes modalScaleUp {
-  from {
-    transform: scale(0.95);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-/* Responsive Breakpoints */
-@media (max-width: 860px) {
-  .settings-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .settings-sidebar {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 0.5rem;
-  }
-
-  .settings-tab-btn {
-    white-space: nowrap;
-    padding: 0.75rem 1rem;
-
-    .tab-text-group .tab-subtitle {
-      display: none;
+    .phone-info-text {
+      font-size: 0.9rem;
+      color: #334155;
+      line-height: 1.5;
+      font-weight: 500;
     }
   }
 
-  .settings-content-panel {
-    padding: 1.5rem;
-  }
-}
+  .delete-send-otp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.85rem 1.75rem;
+    background: #028802;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+    transition: all 0.2s ease;
 
-@media (max-width: 576px) {
-  .settings-page-wrapper {
-    padding: 0 0 3rem;
+    &:hover:not(:disabled) {
+      background: #026e02;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Delete Account OTP Card & 6-Digit Grid */
+  .delete-otp-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    max-width: 460px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: all 0.25s ease;
+
+    .otp-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .otp-shield-pill {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fee2e2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        svg {
+          font-size: 1.35rem;
+        }
+      }
+
+      .otp-header-info {
+        .otp-card-title {
+          font-size: 1rem;
+          font-weight: 700;
+          color: #0f172a;
+          margin: 0 0 2px;
+        }
+
+        .otp-card-subtitle {
+          font-size: 0.825rem;
+          color: #64748b;
+          margin: 0;
+          line-height: 1.4;
+        }
+      }
+    }
+
+    .otp-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .otp-boxes-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        width: 100%;
+        max-width: 360px;
+        margin: 4px 0 2px;
+
+        .otp-digit-box {
+          height: 52px;
+          width: 100%;
+          text-align: center;
+          font-size: 1.35rem;
+          font-weight: 700;
+          color: #0f172a;
+          background: #ffffff;
+          border: 1.8px solid #cbd5e1;
+          border-radius: 10px;
+          outline: none;
+          transition: all 0.2s ease;
+
+          &:focus {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3.5px rgba(220, 38, 38, 0.15);
+            background: #fef2f2;
+            transform: translateY(-1px);
+          }
+
+          &.filled {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.02);
+          }
+
+          &.error {
+            border-color: #ef4444;
+            background: #fff5f5;
+          }
+        }
+      }
+
+      .delete-otp-error-text {
+        font-size: 0.825rem;
+        color: #dc2626;
+        font-weight: 600;
+        margin-top: -2px;
+      }
+
+      .delete-resend-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.875rem;
+
+        .resend-countdown-label {
+          color: #64748b;
+          font-size: 0.875rem;
+
+          strong {
+            color: #0f172a;
+            font-weight: 700;
+          }
+        }
+
+        .delete-resend-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: none;
+          border: none;
+          color: #028802;
+          font-size: 0.875rem;
+          font-weight: 700;
+          cursor: pointer;
+          padding: 0;
+          transition: color 0.15s ease;
+
+          &:hover:not(:disabled) {
+            color: #026e02;
+            text-decoration: underline;
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+
+      .delete-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 1rem;
+        border-top: 1px solid #f1f5f9;
+        margin-top: 0.25rem;
+
+        .delete-cancel-btn {
+          padding: 0.75rem 1.4rem;
+          background: #ffffff;
+          color: #475569;
+          font-size: 0.9rem;
+          font-weight: 600;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover:not(:disabled) {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+
+        .delete-danger-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0.75rem 1.6rem;
+          background: #dc2626;
+          color: #ffffff;
+          font-size: 0.9rem;
+          font-weight: 700;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+          transition: all 0.2s ease;
+
+          &:hover:not(:disabled) {
+            background: #b91c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
+          }
+
+          &:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+      }
+    }
   }
 
   .delete-actions-row {
-    flex-direction: column;
-    align-items: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
 
-    .delete-danger-btn {
-      width: 100%;
-      justify-content: center;
+  /* Delete Confirmation Modal */
+  .delete-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: modalFadeIn 0.2s ease-out;
+  }
+
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .delete-modal-box {
+    background: #ffffff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    animation: modalScaleUp 0.2s ease-out;
+
+    .modal-danger-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      .modal-warning-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #fee2e2;
+        color: #dc2626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        svg {
+          font-size: 1.6rem;
+        }
+      }
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        letter-spacing: -0.3px;
+      }
+    }
+
+    .modal-body-text {
+      font-size: 0.9rem;
+      color: #475569;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .modal-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 0.5rem;
+
+      .modal-cancel-btn {
+        padding: 0.65rem 1.25rem;
+        border-radius: 10px;
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: #e2e8f0;
+        }
+      }
+
+      .modal-confirm-delete-btn {
+        padding: 0.65rem 1.4rem;
+        border-radius: 10px;
+        background: #dc2626;
+        color: #ffffff;
+        border: none;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        transition: background 0.2s ease;
+
+        &:hover:not(:disabled) {
+          background: #b91c1c;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  @keyframes modalScaleUp {
+    from {
+      transform: scale(0.95);
+    }
+
+    to {
+      transform: scale(1);
+    }
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 860px) {
+    .settings-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .settings-sidebar {
+      flex-direction: row;
+      overflow-x: auto;
+      padding: 0.5rem;
+    }
+
+    .settings-tab-btn {
+      white-space: nowrap;
+      padding: 0.75rem 1rem;
+
+      .tab-text-group .tab-subtitle {
+        display: none;
+      }
+    }
+
+    .settings-content-panel {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .settings-page-wrapper {
+      padding: 0 0 3rem;
+    }
+
+    .delete-actions-row {
+      flex-direction: column;
+      align-items: stretch;
+
+      .delete-danger-btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   }
 }

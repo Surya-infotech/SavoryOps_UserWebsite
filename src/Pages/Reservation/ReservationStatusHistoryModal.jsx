@@ -12,7 +12,7 @@ import {
   getReservationStatusConfig,
   formatReservationDateTime,
 } from "./reservationHelpers.js";
-import "../../Scss/Pages/Orders/orderstatushistorymodal.scss";
+import "../../Scss/Pages/Reservation/reservationstatushistorymodal.scss";
 
 const ReservationStatusIcon = ({ iconType, fontSize = "inherit" }) => {
   switch (iconType) {
@@ -54,11 +54,11 @@ const ReservationStatusHistoryModal = ({
 
   return (
     <div
-      className={`order-history-modal-backdrop ${isRtl ? "is-rtl" : ""}`}
+      className={`reservation-history-modal-backdrop ${isRtl ? "is-rtl" : ""}`}
       onClick={onClose}
     >
       <div
-        className="order-history-modal-dialog"
+        className="reservation-history-modal-dialog"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -74,7 +74,7 @@ const ReservationStatusHistoryModal = ({
                 {translations.reservationstatushistory}
               </h3>
               {reservationNo && (
-                <span className="modal-orderno-badge">
+                <span className="modal-reservationno-badge">
                   {translations.reservationNo} #{reservationNo}
                 </span>
               )}
@@ -92,7 +92,7 @@ const ReservationStatusHistoryModal = ({
 
         <div className="modal-body">
           {sortedStatusLogs.length > 0 ? (
-            <div className="status-timeline">
+            <div className="reservation-status-timeline">
               {sortedStatusLogs.map((log, index) => {
                 const statusConfig = getReservationStatusConfig(
                   log.newStatus,

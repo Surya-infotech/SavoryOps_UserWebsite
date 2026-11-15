@@ -17,7 +17,7 @@ import {
   formatReservationDate,
   formatReservationTime,
 } from "./reservationHelpers.js";
-import "../../Scss/Pages/Reservation/tablereservation.scss";
+import "../../Scss/Pages/Reservation/reservationpage.scss";
 
 const StatusBadgeIcon = ({ iconType, fontSize = "inherit" }) => {
   switch (iconType) {

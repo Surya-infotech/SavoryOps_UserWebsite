@@ -183,7 +183,7 @@ const MyReviewsPage = () => {
           </div>
         ) : reviews.length === 0 ? (
           /* Empty State - Unified parity with Manage Address and Orders */
-          <div className="address-empty-card my-reviews-empty-state">
+          <div className="my-reviews-empty-state">
             <div className="empty-icon-wrap">
               <RateReviewOutlinedIcon className="empty-icon" />
             </div>

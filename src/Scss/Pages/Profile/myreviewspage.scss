@@ -21,470 +21,448 @@
       transform: scaleX(-1);
     }
   }
-}
 
-.my-reviews-container {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 0.5rem 1.5rem 0;
-}
+  .my-reviews-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem 0;
+  }
 
-/* ==========================================================================
-   Loading State (Unified brand spinner)
-   ========================================================================== */
-.address-loading-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 320px;
-  gap: 1rem;
-  color: #64748b;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
+  /* Reviews Grid */
+  .my-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1.5rem;
+  }
 
-/* ==========================================================================
-   Reviews Grid (Matching OrdersPage & ManageAddress)
-   ========================================================================== */
-.my-reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 1.5rem;
-}
-
-/* ==========================================================================
+  /* ==========================================================================
    Review Card Tile (Modern Tile matching order-card-tile)
    ========================================================================== */
-.review-card-tile {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 18px -4px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.25s ease;
-  display: flex;
-  flex-direction: column;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.1), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
-    border-color: #cbd5e1;
-  }
-
-  .card-accent-bar {
-    height: 4px;
-    width: 100%;
-    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
-  }
-
-  .review-card-main {
-    padding: 1.25rem 1.35rem;
+  .review-card-tile {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 18px -4px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease;
     display: flex;
     flex-direction: column;
-    gap: 1.15rem;
-    flex: 1;
-  }
 
-  /* 1. Header: Order # Badge & Star Rating */
-  .review-tile-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-
-    .order-no-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      background: #f1f5f9;
-      color: #0f172a;
-      font-weight: 800;
-      font-size: 0.9rem;
-      padding: 0.28rem 0.75rem;
-      border-radius: 9999px;
-      letter-spacing: -0.01em;
-
-      .order-no-icon {
-        font-size: 1.05rem;
-        color: #028802;
-      }
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.1), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+      border-color: #cbd5e1;
     }
 
-    .rating-stars-container {
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-
-      .star-icon {
-        font-size: 1.15rem;
-      }
-
-      .star-filled {
-        color: #f59e0b;
-      }
-
-      .star-empty {
-        color: #cbd5e1;
-      }
-    }
-  }
-
-  /* 2. Restaurant & Branch Identity */
-  .review-restaurant-row {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-
-    .restaurant-avatar-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(2, 136, 2, 0.1) 0%, rgba(34, 197, 94, 0.15) 100%);
-      color: #028802;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border: 1px solid rgba(2, 136, 2, 0.15);
-
-      svg {
-        font-size: 1.35rem;
-      }
+    .card-accent-bar {
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
     }
 
-    .restaurant-meta-col {
+    .review-card-main {
+      padding: 1.25rem 1.35rem;
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
-      min-width: 0;
+      gap: 1.15rem;
       flex: 1;
+    }
 
-      .restaurant-brand-name {
-        margin: 0;
-        font-size: 1.05rem;
-        font-weight: 800;
-        color: #0f172a;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        letter-spacing: -0.01em;
-      }
+    /* 1. Header: Order # Badge & Star Rating */
+    .review-tile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
 
-      .restaurant-branch-subline {
+      .order-no-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.3rem;
-        font-size: 0.82rem;
-        color: #64748b;
-        font-weight: 500;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        gap: 0.35rem;
+        background: #f1f5f9;
+        color: #0f172a;
+        font-weight: 800;
+        font-size: 0.9rem;
+        padding: 0.28rem 0.75rem;
+        border-radius: 9999px;
+        letter-spacing: -0.01em;
 
-        .branch-pin-icon {
-          font-size: 0.95rem;
-          color: #94a3b8;
-          flex-shrink: 0;
+        .order-no-icon {
+          font-size: 1.05rem;
+          color: #028802;
+        }
+      }
+
+      .rating-stars-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+
+        .star-icon {
+          font-size: 1.15rem;
+        }
+
+        .star-filled {
+          color: #f59e0b;
+        }
+
+        .star-empty {
+          color: #cbd5e1;
         }
       }
     }
-  }
 
-  /* 3. Review Quote Body */
-  .review-quote-box {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.65rem;
-    padding: 0.85rem 1rem;
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
-    border-radius: 14px;
-    flex: 1;
-
-    .quote-icon {
-      color: #028802;
-      font-size: 1.35rem;
-      opacity: 0.75;
-      flex-shrink: 0;
-      margin-top: -2px;
-    }
-
-    .review-text-content {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: #334155;
-      margin: 0;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-weight: 450;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  }
-
-  /* 4. Footer: Date */
-  .review-tile-footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 0.85rem;
-    border-top: 1px dashed #e2e8f0;
-
-    .review-date-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      color: #64748b;
-      font-size: 0.8rem;
-      font-weight: 500;
-
-      svg {
-        font-size: 0.95rem;
-        color: #94a3b8;
-      }
-    }
-  }
-}
-
-/* ==========================================================================
-   Shimmer Loading State (Grid Layout)
-   ========================================================================== */
-.review-shimmer-tile {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-
-  .shimmer-bar {
-    height: 4px;
-    width: 100%;
-    background: #e2e8f0;
-  }
-
-  .shimmer-tile-main {
-    padding: 1.25rem 1.35rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.15rem;
-
-    .shimmer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .shimmer-box.badge {
-        width: 90px;
-        height: 24px;
-        border-radius: 9999px;
-      }
-
-      .shimmer-box.stars {
-        width: 110px;
-        height: 24px;
-        border-radius: 9999px;
-      }
-    }
-
-    .shimmer-restaurant-row {
+    /* 2. Restaurant & Branch Identity */
+    .review-restaurant-row {
       display: flex;
       align-items: center;
       gap: 0.85rem;
 
-      .shimmer-avatar {
+      .restaurant-avatar-box {
         width: 44px;
         height: 44px;
         border-radius: 12px;
+        background: linear-gradient(135deg, rgba(2, 136, 2, 0.1) 0%, rgba(34, 197, 94, 0.15) 100%);
+        color: #028802;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 1px solid rgba(2, 136, 2, 0.15);
+
+        svg {
+          font-size: 1.35rem;
+        }
       }
 
-      .shimmer-meta {
+      .restaurant-meta-col {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0.2rem;
+        min-width: 0;
         flex: 1;
 
-        .shimmer-box.title {
-          width: 60%;
-          height: 18px;
-          border-radius: 4px;
+        .restaurant-brand-name {
+          margin: 0;
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #0f172a;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          letter-spacing: -0.01em;
         }
 
-        .shimmer-box.subtitle {
-          width: 40%;
-          height: 14px;
-          border-radius: 4px;
+        .restaurant-branch-subline {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          font-size: 0.82rem;
+          color: #64748b;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          .branch-pin-icon {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+          }
         }
       }
     }
 
-    .shimmer-quote-box {
-      padding: 1rem;
+    /* 3. Review Quote Body */
+    .review-quote-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.85rem 1rem;
       background: #f8fafc;
+      border: 1px solid #f1f5f9;
       border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      flex: 1;
 
-      .shimmer-box.line {
-        height: 14px;
-        border-radius: 4px;
+      .quote-icon {
+        color: #028802;
+        font-size: 1.35rem;
+        opacity: 0.75;
+        flex-shrink: 0;
+        margin-top: -2px;
+      }
 
-        &.full {
-          width: 100%;
-        }
-
-        &.mid {
-          width: 70%;
-        }
+      .review-text-content {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: #334155;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-weight: 450;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
     }
 
-    .shimmer-footer {
+    /* 4. Footer: Date */
+    .review-tile-footer {
       display: flex;
-      justify-content: flex-start;
       align-items: center;
+      justify-content: flex-start;
       padding-top: 0.85rem;
       border-top: 1px dashed #e2e8f0;
 
-      .shimmer-box.date {
-        width: 120px;
-        height: 16px;
-        border-radius: 4px;
+      .review-date-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: #64748b;
+        font-size: 0.8rem;
+        font-weight: 500;
+
+        svg {
+          font-size: 0.95rem;
+          color: #94a3b8;
+        }
       }
     }
   }
 
-  .shimmer-box,
-  .shimmer-avatar,
-  .shimmer-bar {
-    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-    background-size: 200% 100%;
-    animation: shimmerWave 1.5s infinite;
-  }
-}
-
-@keyframes shimmerWave {
-  0% {
-    background-position: 200% 0;
-  }
-
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* ==========================================================================
-   Empty States (Unified Parity with Manage Address & Orders)
+  /* ==========================================================================
+   Shimmer Loading State (Grid Layout)
    ========================================================================== */
-.address-empty-card,
-.my-reviews-empty-state {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  outline: none;
-  border-radius: 20px;
-  padding: 4rem 2rem;
-  text-align: center;
-  box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.05);
-  width: 100%;
-  margin: 0 auto;
+  .review-shimmer-tile {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
-  .empty-icon-wrap {
-    width: 84px;
-    height: 84px;
-    border-radius: 50%;
-    background: linear-gradient(
-      135deg,
-      rgba(2, 136, 2, 0.1) 0%,
-      rgba(34, 197, 94, 0.18) 100%
-    );
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
+    .shimmer-bar {
+      height: 4px;
+      width: 100%;
+      background: #e2e8f0;
+    }
 
-    .empty-icon {
-      font-size: 2.75rem !important;
-      color: #028802;
+    .shimmer-tile-main {
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+
+      .shimmer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .shimmer-box.badge {
+          width: 90px;
+          height: 24px;
+          border-radius: 9999px;
+        }
+
+        .shimmer-box.stars {
+          width: 110px;
+          height: 24px;
+          border-radius: 9999px;
+        }
+      }
+
+      .shimmer-restaurant-row {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+
+        .shimmer-avatar {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+        }
+
+        .shimmer-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          flex: 1;
+
+          .shimmer-box.title {
+            width: 60%;
+            height: 18px;
+            border-radius: 4px;
+          }
+
+          .shimmer-box.subtitle {
+            width: 40%;
+            height: 14px;
+            border-radius: 4px;
+          }
+        }
+      }
+
+      .shimmer-quote-box {
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .shimmer-box.line {
+          height: 14px;
+          border-radius: 4px;
+
+          &.full {
+            width: 100%;
+          }
+
+          &.mid {
+            width: 70%;
+          }
+        }
+      }
+
+      .shimmer-footer {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 0.85rem;
+        border-top: 1px dashed #e2e8f0;
+
+        .shimmer-box.date {
+          width: 120px;
+          height: 16px;
+          border-radius: 4px;
+        }
+      }
+    }
+
+    .shimmer-box,
+    .shimmer-avatar,
+    .shimmer-bar {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmerWave 1.5s infinite;
     }
   }
 
-  .empty-title,
-  h2,
-  h3 {
-    font-size: 1.45rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 0.5rem;
-    letter-spacing: -0.02em;
+  @keyframes shimmerWave {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
   }
 
-  .empty-subtitle,
-  p {
-    font-size: 0.95rem;
-    color: #64748b;
-    max-width: 440px;
-    margin: 0 auto 1.75rem;
-    line-height: 1.55;
-  }
+  /* Empty States */
+  .my-reviews-empty-state {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    outline: none;
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.05);
+    width: 100%;
+    margin: 0 auto;
 
-  .empty-add-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.75rem;
-    background: #028802;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 0.95rem;
-    border-radius: 12px;
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
-    transition: all 0.2s ease;
+    .empty-icon-wrap {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,
+          rgba(2, 136, 2, 0.1) 0%,
+          rgba(34, 197, 94, 0.18) 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
 
-    &:hover {
-      background: #016b01;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
+      .empty-icon {
+        font-size: 2.75rem !important;
+        color: #028802;
+      }
+    }
+
+    .empty-title,
+    h2,
+    h3 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .empty-subtitle,
+    p {
+      font-size: 0.95rem;
+      color: #64748b;
+      max-width: 440px;
+      margin: 0 auto 1.75rem;
+      line-height: 1.55;
+    }
+
+    .empty-add-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      background: #028802;
       color: #ffffff;
-    }
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(2, 136, 2, 0.25);
+      transition: all 0.2s ease;
 
-    svg {
-      font-size: 1.25rem;
+      &:hover {
+        background: #016b01;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(2, 136, 2, 0.35);
+        color: #ffffff;
+      }
+
+      svg {
+        font-size: 1.25rem;
+      }
     }
   }
-}
 
-/* ==========================================================================
+  /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
-@media (max-width: 900px) {
-  .my-reviews-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .my-reviews-grid {
-    grid-template-columns: 1fr;
-    gap: 1.15rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .my-reviews-container {
-    padding: 0.5rem 1rem 0;
+  @media (max-width: 900px) {
+    .my-reviews-grid {
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
   }
 
-  .review-card-tile .review-card-main {
-    padding: 1.15rem 1rem;
+  @media (max-width: 768px) {
+    .my-reviews-grid {
+      grid-template-columns: 1fr;
+      gap: 1.15rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .my-reviews-container {
+      padding: 0.5rem 1rem 0;
+    }
+
+    .review-card-tile .review-card-main {
+      padding: 1.15rem 1rem;
+    }
   }
 }

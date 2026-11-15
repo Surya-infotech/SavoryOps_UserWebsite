@@ -152,7 +152,7 @@ const NotificationsPage = () => {
 
           {/* Notifications List or Empty State - Exact Parity with Orders Page */}
           {notificationList.length === 0 ? (
-            <div className="address-empty-card notifications-empty-state">
+            <div className="notifications-empty-state">
               <div className="empty-icon-wrap">
                 <NotificationsOutlinedIcon className="empty-icon" />
               </div>

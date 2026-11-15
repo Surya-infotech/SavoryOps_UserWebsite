@@ -1,0 +1,286 @@
+/* ==========================================================================
+   SavoryOps User Website - Reservation Status History Modal SCSS
+   Modern, polished timeline modal matching the user website design system
+   ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
+
+.reservation-history-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  animation: resHistoryBackdropFade 0.25s ease-out;
+
+  &.is-rtl {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+.reservation-history-modal-dialog {
+  background: #ffffff;
+  border-radius: 24px;
+  max-width: 440px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  animation: resHistoryModalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+
+  .modal-header {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f1f5f9;
+
+    .modal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .modal-header-icon-box {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(2, 136, 2, 0.1);
+        color: #028802;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .modal-header-icon {
+          font-size: 1.45rem;
+        }
+      }
+
+      .modal-title-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        h3 {
+          margin: 0;
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: #0f172a;
+          line-height: 1.25;
+        }
+
+        .modal-reservationno-badge {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #64748b;
+        }
+      }
+    }
+
+    .modal-close-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+
+      &:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+        transform: scale(1.06);
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+    max-height: 65vh;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+  }
+
+  .reservation-status-timeline {
+    display: flex;
+    flex-direction: column;
+
+    .timeline-item {
+      display: flex;
+      gap: 1rem;
+      position: relative;
+
+      .timeline-rail {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 20px;
+        flex-shrink: 0;
+
+        .timeline-dot {
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          margin-top: 6px;
+          z-index: 2;
+          transition: transform 0.2s ease;
+        }
+
+        .timeline-line {
+          width: 2px;
+          flex: 1;
+          background: #e2e8f0;
+          margin-top: 4px;
+          margin-bottom: -4px;
+          min-height: 36px;
+        }
+      }
+
+      .timeline-content-card {
+        flex: 1;
+        padding-bottom: 1.25rem;
+
+        .timeline-status-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.45rem;
+
+          .status-pill {
+            padding: 0.28rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border: 1px solid;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+
+            svg {
+              font-size: 1rem;
+            }
+          }
+        }
+
+        .timeline-timestamp {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: #64748b;
+
+          svg {
+            font-size: 0.95rem;
+            color: #94a3b8;
+          }
+        }
+      }
+
+      &:last-child {
+        .timeline-content-card {
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .empty-history-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: #94a3b8;
+
+    .empty-history-icon {
+      font-size: 3.25rem;
+      color: #cbd5e1;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #64748b;
+    }
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+
+    .modal-close-submit-btn {
+      width: 100%;
+      height: 44px;
+      background: #028802;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(2, 136, 2, 0.25);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #027502;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(2, 136, 2, 0.32);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes resHistoryBackdropFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes resHistoryModalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

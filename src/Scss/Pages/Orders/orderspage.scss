@@ -37,7 +37,7 @@
    Order List Section
    ========================================================================== */
 
-.address-loading-wrap {
+.orders-loading-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -545,7 +545,6 @@
   }
 }
 
-.address-empty-card,
 .orders-empty-state {
   background: #ffffff;
   border: 1px solid #e2e8f0;

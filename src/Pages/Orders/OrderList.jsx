@@ -200,7 +200,7 @@ const OrderList = ({ onSelectOrder }) => {
         </div>
       ) : orders.length === 0 ? (
         /* Empty State (No Orders Placed) - Exact parity with Offers Page */
-        <div className="address-empty-card orders-empty-state">
+        <div className="orders-empty-state">
           <div className="empty-icon-wrap">
             <ReceiptLongOutlinedIcon className="empty-icon" />
           </div>
@@ -217,7 +217,7 @@ const OrderList = ({ onSelectOrder }) => {
         </div>
       ) : filteredOrders.length === 0 ? (
         /* Search Empty State */
-        <div className="address-empty-card orders-empty-state search-empty">
+        <div className="orders-empty-state search-empty">
           <div className="empty-icon-wrap search">
             <SearchOffIcon className="empty-icon" />
           </div>

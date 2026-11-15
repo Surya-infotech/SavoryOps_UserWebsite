@@ -4,6 +4,7 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useLanguage } from "../../Context/useLanguage.js";
+import "../../Scss/Pages/Reservation/reservationcancelmodal.scss";
 
 const ReservationCancelModal = ({
   isOpen,

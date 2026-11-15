@@ -8,6 +8,7 @@ import jsQR from "jsqr";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { processTableQrCode } from "../../utils/qrTableService.js";
+import "../../Scss/Pages/Partials/qrscannermodal.scss";
 
 const QrScannerModal = ({ isOpen, onClose }) => {
   const { translations = {} } = useLanguage();

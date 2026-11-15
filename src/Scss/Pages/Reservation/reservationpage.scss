@@ -1,0 +1,490 @@
+/* ==========================================================================
+   SavoryOps User Website - Reservation Page Styles (SCSS)
+   Matches User App Table Reservation UX & Website Design System
+   ========================================================================== */
+
+@use "../../Customize/var.scss" as var;
+
+.reservation-page-wrapper {
+  background: #ffffff;
+  min-height: calc(100vh - 120px);
+  padding: 0 0 5rem;
+
+  .site-breadcrumb-container {
+    max-width: 1320px;
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  &.is-rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .reservation-page-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Reservations List & Header */
+  .reservations-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .reservations-header-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .add-reservation-primary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #028802 0%, #026b02 100%);
+      color: #ffffff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(2, 136, 2, 0.28);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: linear-gradient(135deg, #029902 0%, #027a02 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(2, 136, 2, 0.35);
+      }
+    }
+  }
+
+  /* Reservations Cards Grid */
+  .reservations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .reservation-card-tile {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    .card-accent-bar {
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, #028802 0%, #22c55e 100%);
+    }
+
+    .reservation-card-main {
+      padding: 1.35rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.95rem;
+    }
+
+    .card-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+
+      .badge-tag-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+
+        .reservation-no-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 0.35rem 0.75rem;
+          background: #f1f5f9;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #334155;
+
+          svg {
+            font-size: 0.95rem;
+            color: #64748b;
+          }
+        }
+
+        .reservation-type-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 0.35rem 0.7rem;
+          border-radius: 8px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          border: 1px solid transparent;
+
+          &.pickspot {
+            background: rgba(14, 116, 144, 0.1);
+            color: #0e7490;
+            border-color: rgba(14, 116, 144, 0.22);
+          }
+
+          &.quickseat {
+            background: rgba(2, 136, 2, 0.1);
+            color: #028802;
+            border-color: rgba(2, 136, 2, 0.22);
+          }
+
+          svg {
+            font-size: 0.95rem;
+          }
+        }
+      }
+
+      .status-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0.35rem 0.8rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+
+        svg {
+          font-size: 0.95rem;
+        }
+      }
+    }
+
+    .restaurant-meta-block {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .restaurant-icon-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(2, 136, 2, 0.12) 0%, rgba(34, 197, 94, 0.1) 100%);
+        color: #028802;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        svg {
+          font-size: 1.35rem;
+        }
+      }
+
+      .restaurant-info-text {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .restaurant-brand-name {
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #0f172a;
+          margin: 0 0 2px;
+          line-height: 1.25;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .branch-location-line {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.82rem;
+          color: #64748b;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          svg {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+
+    .booking-summary-strip {
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 12px;
+      padding: 0.75rem 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+
+      .summary-col {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .col-icon {
+          font-size: 1.15rem;
+          color: #028802;
+          flex-shrink: 0;
+        }
+
+        .col-details {
+          display: flex;
+          flex-direction: column;
+
+          .label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+          }
+
+          .value {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1e293b;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+
+  /* Shimmer Placeholder Cards */
+  .shimmer-tile {
+    pointer-events: none;
+    cursor: default;
+
+    .shimmer-line {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: resShimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+
+    .line-bar {
+      height: 4px;
+    }
+
+    .shimmer-body {
+      padding: 1.35rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+    }
+
+    .shimmer-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .shimmer-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        flex-shrink: 0;
+      }
+
+      .shimmer-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        .line-title {
+          height: 16px;
+          width: 60%;
+        }
+
+        .line-sub {
+          height: 12px;
+          width: 40%;
+        }
+      }
+    }
+
+    .line-pill {
+      height: 26px;
+      width: 45%;
+      border-radius: 8px;
+    }
+
+    .shimmer-divider {
+      height: 1px;
+      background: #f1f5f9;
+    }
+
+    .line-meta {
+      height: 48px;
+      width: 100%;
+      border-radius: 12px;
+
+      &.short {
+        height: 20px;
+        width: 50%;
+      }
+    }
+  }
+
+  /* Empty State */
+  .reservations-empty-state {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    outline: none;
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.05);
+
+    .empty-icon-wrap {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: #f0fdf4;
+      color: #028802;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(2, 136, 2, 0.15);
+
+      .empty-icon {
+        font-size: 2.85rem;
+      }
+    }
+
+    .empty-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.65rem;
+    }
+
+    .empty-subtitle {
+      color: #64748b;
+      font-size: 0.95rem;
+      max-width: 420px;
+      line-height: 1.6;
+      margin: 0 0 1.75rem;
+    }
+
+    .empty-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.75rem 1.6rem;
+      background: #028802;
+      color: #ffffff;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(2, 136, 2, 0.28);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #026b02;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes resShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes resFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes resScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reservation-page-wrapper {
+    .reservations-header-row {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .add-reservation-primary-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .reservations-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .reservations-empty-state {
+      padding: 3rem 1.5rem;
+
+      .empty-icon-wrap {
+        width: 76px;
+        height: 76px;
+      }
+
+      .empty-title {
+        font-size: 1.35rem;
+      }
+    }
+  }
+}
