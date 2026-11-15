@@ -80,16 +80,16 @@ const getOrderTypeComponentIcon = (orderType) => {
  */
 const OrderDetailsShimmer = () => (
   <div className="order-details-container order-details-shimmer">
-    {/* Nav Header Shimmer */}
-    <div className="order-details-nav-header">
-      <div className="shimmer-line order-title-shimmer" />
-      <div className="shimmer-pill order-btn-shimmer" />
-    </div>
-
     {/* Content Grid Shimmer */}
     <div className="order-details-content-grid">
       {/* Left Column Shimmer */}
       <div className="details-main-column">
+        {/* Nav Header Shimmer */}
+        <div className="order-details-nav-header">
+          <div className="shimmer-line order-title-shimmer" />
+          <div className="shimmer-pill order-btn-shimmer" />
+        </div>
+
         {/* Overview Card Shimmer */}
         <div className="detail-card shimmer-card overview-shimmer">
           <div className="shimmer-accent-bar" />
@@ -789,30 +789,30 @@ const OrderDetails = ({ orderId, onBack }) => {
 
   return (
     <div className={`order-details-container ${isRtl ? "is-rtl" : ""}`}>
-      {/* Top Header Bar */}
-      <div className="order-details-nav-header">
-        <div className="header-order-title">
-          <h2>
-            {translations.orderno} #{order.orderno}
-          </h2>
-        </div>
-
-        <div className="header-actions">
-          <button
-            type="button"
-            className="history-btn"
-            onClick={() => setIsHistoryModalOpen(true)}
-            title={translations.orderstatushistory}
-          >
-            <HistoryIcon fontSize="small" />
-            <span>{translations.orderstatushistory}</span>
-          </button>
-        </div>
-      </div>
-
       <div className="order-details-content-grid">
         {/* Left Column: Status, Items & Tables */}
         <div className="details-main-column">
+          {/* Top Header Bar for Main Column (Order No & Status History Button) */}
+          <div className="order-details-nav-header">
+            <div className="header-order-title">
+              <h2>
+                {translations.orderno} #{order.orderno}
+              </h2>
+            </div>
+
+            <div className="header-actions">
+              <button
+                type="button"
+                className="history-btn"
+                onClick={() => setIsHistoryModalOpen(true)}
+                title={translations.orderstatushistory}
+              >
+                <HistoryIcon fontSize="small" />
+                <span>{translations.orderstatushistory}</span>
+              </button>
+            </div>
+          </div>
+
           {/* Top Status & Meta Card */}
           <div className="detail-card overview-card">
             <div className="card-top-accent green" />
