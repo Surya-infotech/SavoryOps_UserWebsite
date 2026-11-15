@@ -347,11 +347,11 @@ const OffersPage = () => {
       <div className="offers-main-content-container">
         {/* Filter Bar (matching MenuPage ultra-compact design, fully responsive on mobile/tablet) */}
         {!loading && formattedDeals.length > 0 && (
-          <div className="menu-filters-wrapper offers-filters-wrapper">
-            <div className="menu-filter-bar offers-filter-bar">
+          <div className="offers-filters-wrapper">
+            <div className="offers-filter-bar">
               {/* Category Pills Bar (Left) */}
               <div
-                className="menu-category-pills-bar"
+                className="offers-category-pills-bar"
                 role="tablist"
                 aria-label="Deals Categories"
               >
@@ -359,7 +359,7 @@ const OffersPage = () => {
                   type="button"
                   role="tab"
                   aria-selected={selectedType === "all"}
-                  className={`category-pill-btn ${selectedType === "all" ? "active" : ""}`}
+                  className={`offers-category-pill-btn ${selectedType === "all" ? "active" : ""}`}
                   onClick={() => setSelectedType("all")}
                 >
                   <span>{translations.alloffers}</span>
@@ -370,7 +370,7 @@ const OffersPage = () => {
                     type="button"
                     role="tab"
                     aria-selected={selectedType === "combo"}
-                    className={`category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
+                    className={`offers-category-pill-btn ${selectedType === "combo" ? "active" : ""}`}
                     onClick={() => setSelectedType("combo")}
                   >
                     <span>{translations.combos}</span>
@@ -382,7 +382,7 @@ const OffersPage = () => {
                     type="button"
                     role="tab"
                     aria-selected={selectedType === "unlimited"}
-                    className={`category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
+                    className={`offers-category-pill-btn ${selectedType === "unlimited" ? "active" : ""}`}
                     onClick={() => setSelectedType("unlimited")}
                   >
                     <span>{translations.unlimitedmeals}</span>
@@ -391,12 +391,12 @@ const OffersPage = () => {
               </div>
 
               {/* Diet Filter (Veg / Non-Veg) - positioned on left next to Category Pills */}
-              <div className="filter-item-wrap diet-toggle-wrap">
-                <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
+              <div className="offers-diet-toggle-wrap">
+                <div className="offers-diet-segmented-group" role="group" aria-label="Dietary preference">
                   <button
                     type="button"
                     tabIndex={-1}
-                    className={`diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
+                    className={`offers-diet-segment-btn ${selectedDiet === "all" ? "active" : ""}`}
                     onClick={() => setSelectedDiet("all")}
                     onMouseDown={(e) => e.preventDefault()}
                     onFocus={(e) => e.target.blur()}
@@ -406,26 +406,26 @@ const OffersPage = () => {
                   <button
                     type="button"
                     tabIndex={-1}
-                    className={`diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
+                    className={`offers-diet-segment-btn diet-veg ${selectedDiet === "veg" ? "active" : ""}`}
                     onClick={() => setSelectedDiet("veg")}
                     onMouseDown={(e) => e.preventDefault()}
                     onFocus={(e) => e.target.blur()}
                   >
-                    <span className="diet-box">
-                      <span className="diet-dot" />
+                    <span className="offers-diet-box">
+                      <span className="offers-diet-dot" />
                     </span>
                     <span>{translations.veg}</span>
                   </button>
                   <button
                     type="button"
                     tabIndex={-1}
-                    className={`diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
+                    className={`offers-diet-segment-btn diet-nonveg ${selectedDiet === "nonveg" ? "active" : ""}`}
                     onClick={() => setSelectedDiet("nonveg")}
                     onMouseDown={(e) => e.preventDefault()}
                     onFocus={(e) => e.target.blur()}
                   >
-                    <span className="diet-box">
-                      <span className="diet-dot" />
+                    <span className="offers-diet-box">
+                      <span className="offers-diet-dot" />
                     </span>
                     <span>{translations.nonveg}</span>
                   </button>
@@ -434,10 +434,10 @@ const OffersPage = () => {
 
               {/* Filter Reset Action (Right-aligned) */}
               {isFilterActive && (
-                <div className="filter-actions-wrap">
+                <div className="offers-filter-actions-wrap">
                   <button
                     type="button"
-                    className="filter-clear-btn"
+                    className="offers-filter-clear-btn"
                     onClick={handleClearFilters}
                     title={translations.resetfilters}
                   >
@@ -452,9 +452,9 @@ const OffersPage = () => {
 
         {/* Content Section: Loading Shimmer, Grid, or Empty State */}
         {loading ? (
-          <div className="dishes-grid">
+          <div className="offers-grid">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-              <div key={n} className="dish-skeleton-card">
+              <div key={n} className="offers-skeleton-card">
                 <div className="skeleton-img" />
                 <div className="skeleton-body">
                   <div className="skeleton-line title" />
@@ -466,12 +466,12 @@ const OffersPage = () => {
             ))}
           </div>
         ) : filteredDeals.length > 0 ? (
-          <div className="dishes-grid offers-grid">
+          <div className="offers-grid">
             {filteredDeals.map(renderDealCard)}
           </div>
         ) : formattedDeals.length > 0 ? (
           /* Filter Empty State - Exact parity with Manage Address */
-          <div className="address-empty-card menu-filter-empty-state">
+          <div className="offers-empty-state offers-filter-empty-state">
             <div className="empty-icon-wrap search">
               <SearchOffIcon className="empty-icon" />
             </div>
@@ -494,7 +494,7 @@ const OffersPage = () => {
           </div>
         ) : (
           /* Empty State (No Deals at Branch) - Exact parity with Manage Address */
-          <div className="address-empty-card no-dishes-state">
+          <div className="offers-empty-state no-offers-state">
             <div className="empty-icon-wrap">
               <LocalOfferOutlinedIcon className="empty-icon" />
             </div>

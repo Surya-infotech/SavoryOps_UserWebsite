@@ -1,23 +1,616 @@
+/* ==========================================================================
+   SavoryOps User Website - Offers Page Styles (SCSS)
+   Unified Grid Layout matching Menu Page, Offer Page Scoped Classes
+   ========================================================================== */
+
 @use "../../Customize/var.scss" as var;
-@use "../Menu/menupage.scss";
 
 .offers-page-wrapper {
   width: 100%;
   min-height: 85vh;
   padding-bottom: 6rem;
   background-color: #ffffff;
-}
 
-.offers-main-content-container {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  .offers-main-content-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
 
+    @media (max-width: 768px) {
+      padding: 0 1rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0 0.85rem;
+    }
+  }
+
+  /* --- Ultra-Compact Modern Offers Filters Bar --- */
+  .offers-filters-wrapper {
+    position: relative;
+    z-index: 20;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px -2px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+      padding: 0.65rem 0.85rem;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.55rem 0.65rem;
+      border-radius: 11px;
+      margin-bottom: 1rem;
+    }
+
+    .offers-filter-bar {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 0.75rem 1rem;
+      flex-wrap: wrap;
+
+      @media (max-width: 768px) {
+        gap: 0.65rem;
+      }
+    }
+
+    /* Category Pills Bar (Left) */
+    .offers-category-pills-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+      flex-wrap: nowrap;
+      padding: 2px 2px 4px 2px;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .offers-category-pill-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        font-size: 0.825rem;
+        font-weight: 600;
+        border-radius: 10px;
+        height: 38px;
+        padding: 0 0.85rem;
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        flex-shrink: 0;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        -webkit-tap-highlight-color: transparent;
+
+        &:hover:not(.active) {
+          background: #f1f5f9;
+          border-color: #cbd5e1;
+          color: #028802;
+        }
+
+        &.active {
+          background: #028802;
+          border-color: #028802;
+          color: #ffffff;
+          box-shadow: 0 2px 8px rgba(2, 136, 2, 0.2);
+        }
+      }
+    }
+
+    /* Diet Toggle Wrap */
+    .offers-diet-toggle-wrap {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* Diet Segmented Group (All / Veg / Non-Veg) */
+    .offers-diet-segmented-group {
+      display: inline-flex;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 10px;
+      height: 38px;
+      box-sizing: border-box;
+      gap: 2px;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+
+      &:focus,
+      &:focus-visible,
+      &:active,
+      &:focus-within {
+        outline: none !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .offers-diet-segment-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border: none !important;
+        outline: none !important;
+        background: transparent;
+        height: 32px;
+        padding: 0 0.75rem;
+        border-radius: 7px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        white-space: nowrap;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent !important;
+
+        &:hover:not(.active) {
+          color: #0f172a;
+          background: rgba(255, 255, 255, 0.5);
+        }
+
+        &.active {
+          background: #ffffff;
+          color: #0f172a;
+          font-weight: 700;
+          box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+          border: none !important;
+          outline: none !important;
+
+          &.diet-veg {
+            color: #028802;
+            background: #f0fdf4;
+            border: none !important;
+            box-shadow: 0 2px 6px rgba(2, 136, 2, 0.12) !important;
+          }
+
+          &.diet-nonveg {
+            color: #dc2626;
+            background: #fef2f2;
+            border: none !important;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.12) !important;
+          }
+        }
+
+        &:focus,
+        &:focus-visible,
+        &:active,
+        &:focus-within,
+        &.active:focus,
+        &.active:focus-visible,
+        &.active:active {
+          outline: none !important;
+          border: none !important;
+          box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        .offers-diet-box {
+          width: 13px;
+          height: 13px;
+          border-radius: 3px;
+          background: #ffffff;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+          border: 1.5px solid #2e7d32;
+
+          .offers-diet-dot {
+            width: 5.5px;
+            height: 5.5px;
+            border-radius: 50%;
+            background: #2e7d32;
+          }
+        }
+
+        &.diet-nonveg .offers-diet-box {
+          border-color: #c62828;
+
+          .offers-diet-dot {
+            background: #c62828;
+          }
+        }
+      }
+    }
+
+    /* Actions wrap (Right-aligned) */
+    .offers-filter-actions-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-inline-start: auto;
+      flex-shrink: 0;
+
+      .offers-filter-clear-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(239, 68, 68, 0.08);
+        color: #dc2626;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 10px;
+        height: 38px;
+        padding: 0 0.85rem;
+        font-size: 0.785rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+
+        &:hover {
+          background: #dc2626;
+          color: #ffffff;
+          border-color: #dc2626;
+        }
+      }
+    }
+  }
+
+  /* --- Row-Wise Grid of Offers (identical to Menu Page) --- */
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  /* Skeleton Loading Shimmer */
+  .offers-skeleton-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    overflow: hidden;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+
+    .skeleton-img {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmerOffersLoading 1.5s infinite;
+    }
+
+    .skeleton-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 12px;
+    }
+
+    .skeleton-line {
+      border-radius: 6px;
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmerOffersLoading 1.5s infinite;
+
+      &.title {
+        height: 20px;
+        width: 75%;
+      }
+
+      &.desc1 {
+        height: 14px;
+        width: 95%;
+      }
+
+      &.desc2 {
+        height: 14px;
+        width: 60%;
+      }
+
+      &.footer {
+        height: 26px;
+        width: 40%;
+        margin-top: auto;
+      }
+    }
+  }
+
+  @keyframes shimmerOffersLoading {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Empty States */
+  .offers-empty-state {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.05);
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0 auto;
+
+    .empty-icon-wrap {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(2, 136, 2, 0.1) 0%, rgba(34, 197, 94, 0.18) 100%);
+      color: #028802;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+
+      .empty-icon,
+      svg {
+        font-size: 2.75rem !important;
+        color: #028802;
+      }
+
+      &.search {
+        background: linear-gradient(135deg, rgba(148, 163, 184, 0.15) 0%, rgba(203, 213, 225, 0.25) 100%);
+
+        .empty-icon,
+        svg {
+          color: #64748b;
+        }
+      }
+    }
+
+    .empty-title,
+    h2,
+    h3,
+    h4 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .empty-subtitle,
+    p {
+      font-size: 0.95rem;
+      color: #64748b;
+      max-width: 440px;
+      margin: 0 auto 1.75rem;
+      line-height: 1.55;
+    }
+
+    .empty-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.75rem 1.6rem;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #028802 0%, #026b02 100%);
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(2, 136, 2, 0.28);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      margin-top: 0;
+
+      &:hover {
+        background: linear-gradient(135deg, #029902 0%, #027a02 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(2, 136, 2, 0.35);
+        color: #ffffff;
+      }
+    }
+
+    @media (max-width: 640px) {
+      padding: 3rem 1.5rem;
+      border-radius: 20px;
+
+      .empty-icon-wrap {
+        width: 76px;
+        height: 76px;
+        margin-bottom: 1.25rem;
+
+        .empty-icon,
+        svg {
+          font-size: 2.4rem !important;
+        }
+      }
+
+      .empty-title,
+      h2,
+      h3,
+      h4 {
+        font-size: 1.35rem;
+      }
+
+      .empty-subtitle,
+      p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+
+  /* Responsive Grid Breakpoints */
+  @media (max-width: 1200px) {
+    .offers-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .offers-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .offers-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Responsive Filters Bar Breakpoints (Tablet & Phone) */
   @media (max-width: 768px) {
-    padding: 0 1rem;
+    .offers-filters-wrapper {
+      padding: 0.65rem 0.85rem;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+
+      .offers-filter-bar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.65rem;
+
+        .offers-category-pills-bar {
+          display: flex;
+          width: 100%;
+          max-width: 100%;
+          flex: 0 0 100%;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          -webkit-overflow-scrolling: touch;
+          flex-wrap: nowrap;
+          padding-bottom: 3px;
+          gap: 0.45rem;
+
+          &::-webkit-scrollbar {
+            display: none;
+          }
+        }
+
+        .offers-diet-toggle-wrap {
+          flex-shrink: 0;
+        }
+
+        .offers-filter-actions-wrap {
+          margin-inline-start: auto;
+          flex-shrink: 0;
+        }
+      }
+
+      .offers-category-pills-bar {
+        gap: 0.45rem;
+
+        .offers-category-pill-btn {
+          height: 35px;
+          padding: 0 0.75rem;
+          font-size: 0.8rem;
+          border-radius: 9px;
+          gap: 5px;
+        }
+      }
+
+      .offers-diet-segmented-group {
+        height: 35px;
+        padding: 2.5px;
+        border-radius: 9px;
+
+        .offers-diet-segment-btn {
+          height: 30px;
+          padding: 0 0.65rem;
+          font-size: 0.78rem;
+          border-radius: 7px;
+          gap: 4px;
+
+          .offers-diet-box {
+            width: 12px;
+            height: 12px;
+
+            .offers-diet-dot {
+              width: 5px;
+              height: 5px;
+            }
+          }
+        }
+      }
+
+      .offers-filter-clear-btn {
+        height: 35px;
+        padding: 0 0.75rem;
+        font-size: 0.76rem;
+        border-radius: 9px;
+      }
+    }
   }
 
   @media (max-width: 480px) {
-    padding: 0 0.85rem;
+    .offers-filters-wrapper {
+      padding: 0.55rem 0.65rem;
+      border-radius: 11px;
+      margin-bottom: 1rem;
+
+      .offers-category-pills-bar {
+        gap: 0.38rem;
+
+        .offers-category-pill-btn {
+          height: 33px;
+          padding: 0 0.65rem;
+          font-size: 0.775rem;
+          border-radius: 8px;
+        }
+      }
+
+      .offers-diet-segmented-group {
+        height: 33px;
+        padding: 2px;
+        border-radius: 8px;
+
+        .offers-diet-segment-btn {
+          height: 29px;
+          padding: 0 0.55rem;
+          font-size: 0.75rem;
+          border-radius: 6px;
+          gap: 3.5px;
+
+          .offers-diet-box {
+            width: 11px;
+            height: 11px;
+
+            .offers-diet-dot {
+              width: 4.5px;
+              height: 4.5px;
+            }
+          }
+        }
+      }
+
+      .offers-filter-clear-btn {
+        height: 33px;
+        padding: 0 0.65rem;
+        font-size: 0.74rem;
+        border-radius: 8px;
+      }
+    }
   }
 }

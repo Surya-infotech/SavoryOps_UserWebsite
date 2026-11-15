@@ -69,66 +69,6 @@
       }
     }
 
-    /* Specific styling for Offers Page Filter Bar */
-    .offers-filter-bar {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      gap: 0.75rem 1rem;
-      flex-wrap: wrap;
-
-      .menu-category-pills-bar {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-shrink: 0;
-      }
-
-      .diet-toggle-wrap {
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-      }
-
-      .filter-actions-wrap {
-        margin-inline-start: auto;
-        flex-shrink: 0;
-      }
-
-      @media (max-width: 768px) {
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.65rem;
-
-        .menu-category-pills-bar {
-          display: flex;
-          width: 100%;
-          max-width: 100%;
-          flex: 0 0 100%;
-          overflow-x: auto;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-          -webkit-overflow-scrolling: touch;
-          flex-wrap: nowrap;
-          padding-bottom: 3px;
-          gap: 0.45rem;
-
-          &::-webkit-scrollbar {
-            display: none;
-          }
-        }
-
-        .diet-toggle-wrap {
-          flex-shrink: 0;
-        }
-
-        .filter-actions-wrap {
-          margin-inline-start: auto;
-          flex-shrink: 0;
-        }
-      }
-    }
 
     .filter-controls-group {
       display: flex;
@@ -651,7 +591,7 @@
       border-radius: 12px;
       margin-bottom: 1.25rem;
 
-      .menu-filter-bar:not(.offers-filter-bar) {
+      .menu-filter-bar {
         flex-direction: column;
         align-items: stretch;
         gap: 0.65rem;
@@ -749,7 +689,7 @@
       border-radius: 11px;
       margin-bottom: 1rem;
 
-      .menu-filter-bar:not(.offers-filter-bar) {
+      .menu-filter-bar {
         .filter-controls-group {
           gap: 0.5rem;
 
