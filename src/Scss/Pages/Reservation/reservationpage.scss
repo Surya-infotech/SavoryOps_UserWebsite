@@ -420,6 +420,17 @@
       .empty-icon {
         font-size: 2.85rem;
       }
+
+      &.error {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(248, 113, 113, 0.2) 100%);
+        color: #ef4444;
+        border: none;
+
+        .empty-icon {
+          font-size: 2.75rem;
+          color: #ef4444;
+        }
+      }
     }
 
     .empty-title {
@@ -437,6 +448,14 @@
       margin: 0 0 1.75rem;
     }
 
+    .empty-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
     .empty-add-btn {
       display: inline-flex;
       align-items: center;
@@ -450,11 +469,45 @@
       border: none;
       cursor: pointer;
       box-shadow: 0 4px 14px rgba(2, 136, 2, 0.28);
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
       &:hover {
         background: #026b02;
         transform: translateY(-2px);
+      }
+
+      &.primary {
+        background: linear-gradient(135deg, #028802 0%, #026b02 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(2, 136, 2, 0.28);
+
+        &:hover {
+          background: linear-gradient(135deg, #029902 0%, #027a02 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 18px rgba(2, 136, 2, 0.35);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
+      &.secondary {
+        background: #ffffff;
+        border: 1.5px solid #cbd5e1;
+        color: #334155;
+        box-shadow: none;
+
+        &:hover {
+          border-color: #028802;
+          color: #028802;
+          background: #f0fdf4;
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
       }
     }
   }

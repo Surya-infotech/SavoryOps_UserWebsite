@@ -245,7 +245,7 @@ const ReservationDetails = ({
   if (!reservation) {
     return (
       <div className={`reservation-details-container ${isRtl ? "is-rtl" : ""}`}>
-        <div className="reservations-empty-state">
+        <div className="reservation-details-empty-state reservations-empty-state">
           <div className="empty-icon-wrap error">
             <CancelOutlinedIcon className="empty-icon" />
           </div>
