@@ -123,27 +123,27 @@ const ReservationList = ({
                 onClick={() => onSelectReservation(res)}
               >
                 {/* Top Accent Gradient Bar */}
-                <div className="card-accent-bar" />
+                <div className="reservation-card-accent-bar card-accent-bar" />
 
-                <div className="card-main-content">
+                <div className="reservation-card-main card-main-content">
                   {/* Card Header: Storefront + Branch info & Status */}
-                  <div className="card-top-row">
-                    <div className="branch-meta-group">
-                      <div className="branch-avatar-circle">
+                  <div className="reservation-card-header card-top-row">
+                    <div className="reservation-branch-group branch-meta-group">
+                      <div className="reservation-branch-avatar branch-avatar-circle">
                         <StorefrontIcon />
                       </div>
-                      <div className="branch-titles">
-                        <h4 className="branch-name" title={res.branchname}>
+                      <div className="reservation-branch-titles branch-titles">
+                        <h4 className="reservation-branch-name branch-name" title={res.branchname}>
                           {res.branchname}
                         </h4>
-                        <span className="business-name" title={res.businessname}>
+                        <span className="reservation-business-name business-name" title={res.businessname}>
                           {res.businessname}
                         </span>
                       </div>
                     </div>
 
                     <span
-                      className="status-pill"
+                      className="reservation-status-badge status-pill"
                       style={{
                         backgroundColor: statusConfig.bgColor,
                         color: statusConfig.color,
@@ -155,37 +155,49 @@ const ReservationList = ({
                     </span>
                   </div>
 
-                  {/* Reservation # Pill */}
-                  <div className="reservation-no-pill">
-                    <TableRestaurantIcon fontSize="inherit" />
-                    <span>
-                      {translations.reservationNo} #
-                      {res.reservationid}
-                    </span>
+                  {/* Meta / Tag Row: Reservation # & Type */}
+                  <div className="reservation-meta-row">
+                    <div className="reservation-no-pill">
+                      <TableRestaurantIcon fontSize="inherit" />
+                      <span>
+                        {translations.reservationNo} #{res.reservationid}
+                      </span>
+                    </div>
+
+                    {res.reservationtype && (
+                      <span className={`reservation-type-chip ${res.reservationtype}`}>
+                        <EventSeatIcon fontSize="inherit" />
+                        <span>
+                          {res.reservationtype === "quickseat"
+                            ? translations.quickseat
+                            : translations.pickspot}
+                        </span>
+                      </span>
+                    )}
                   </div>
 
                   {/* Divider Line */}
-                  <div className="card-divider" />
+                  <div className="reservation-card-divider card-divider" />
 
                   {/* Date & Time Row */}
                   <div className="reservation-schedule-row">
-                    <div className="schedule-item">
-                      <div className="schedule-icon-wrap date">
+                    <div className="reservation-schedule-item schedule-item">
+                      <div className="reservation-schedule-icon-wrap schedule-icon-wrap date">
                         <CalendarMonthOutlinedIcon fontSize="small" />
                       </div>
-                      <div className="schedule-texts">
-                        <span className="value">
+                      <div className="reservation-schedule-texts schedule-texts">
+                        <span className="reservation-schedule-value value">
                           {formatReservationDate(res.reservationdate, dateFormat, timeZone)}
                         </span>
                       </div>
                     </div>
 
-                    <div className="schedule-item">
-                      <div className="schedule-icon-wrap time">
+                    <div className="reservation-schedule-item schedule-item">
+                      <div className="reservation-schedule-icon-wrap schedule-icon-wrap time">
                         <AccessTimeIcon fontSize="small" />
                       </div>
-                      <div className="schedule-texts">
-                        <span className="value">
+                      <div className="reservation-schedule-texts schedule-texts">
+                        <span className="reservation-schedule-value value">
                           {formatReservationTime(res.reservationtime, timeFormat, timeZone)}
                         </span>
                       </div>
