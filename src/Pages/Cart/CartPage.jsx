@@ -16,12 +16,14 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
+import NightsStayIcon from "@mui/icons-material/NightsStay";
 import { isDineInOrderType } from "../Orders/orderHelpers.js";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
+import { evaluateBranchOperatingHours } from "../../utils/operatingHoursHelper.js";
 import {
   getCart,
   saveCart,
@@ -107,6 +109,9 @@ const CartPage = () => {
   const [posPayload, setPosPayload] = useState(() => {
     return typeof window !== "undefined" ? window.__branchSetting : null;
   });
+  const [branchHours, setBranchHours] = useState(() => {
+    return typeof window !== "undefined" ? window.__branchHours : null;
+  });
 
   // Addon Customization Modal State
   const [editingCartItem, setEditingCartItem] = useState(null);
@@ -151,6 +156,12 @@ const CartPage = () => {
         setPosPayload(e.detail);
       }
     };
+    const handleBranchSettingsLoaded = (e) => {
+      if (e?.detail) {
+        if (e.detail.branchSetting) setPosPayload(e.detail.branchSetting);
+        if (e.detail.branchHours) setBranchHours(e.detail.branchHours);
+      }
+    };
     const handleTableChange = (e) => {
       const tableVal = e?.detail?.tableNo || e?.detail?.tableno || e?.detail;
       if (tableVal) {
@@ -178,6 +189,7 @@ const CartPage = () => {
     window.addEventListener("branchChange", handleBranchChange);
     window.addEventListener("orderTypeChange", handleOrderTypeChange);
     window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("branchSettingsLoaded", handleBranchSettingsLoaded);
     window.addEventListener("tableChange", handleTableChange);
     window.addEventListener("storage", handleStorage);
     window.dispatchEvent(new CustomEvent("requestBranch"));
@@ -187,10 +199,19 @@ const CartPage = () => {
       window.removeEventListener("branchChange", handleBranchChange);
       window.removeEventListener("orderTypeChange", handleOrderTypeChange);
       window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("branchSettingsLoaded", handleBranchSettingsLoaded);
       window.removeEventListener("tableChange", handleTableChange);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
+
+  const operatingHoursEval = useMemo(() => {
+    return evaluateBranchOperatingHours({
+      branchHoursDoc: branchHours,
+      branchSetting: posPayload,
+      requestedOrderType: selectedOrderType,
+    });
+  }, [branchHours, posPayload, selectedOrderType]);
 
   // Dynamically update cart items price when order type or branch tax settings change
   useEffect(() => {
@@ -373,6 +394,17 @@ const CartPage = () => {
     if (!cartItems.length) {
       if (typeof showSnackbar === "function") {
         showSnackbar(translations.emptycartmessage, "warning");
+      }
+      return;
+    }
+
+    if (!operatingHoursEval.canOrder) {
+      if (typeof showSnackbar === "function") {
+        showSnackbar(
+          operatingHoursEval.statusMessage || "Ordering is currently unavailable.",
+          "warning",
+          4000
+        );
       }
       return;
     }
@@ -1132,12 +1164,40 @@ const CartPage = () => {
                     </span>
                   </div>
 
+                  {/* After-Hours / Operating Hours Alert */}
+                  {operatingHoursEval.isAfterHours && (
+                    <div className={`after-hours-cart-banner ${operatingHoursEval.canOrder ? 'is-allowed' : 'is-blocked'}`}>
+                      <div className="banner-title">
+                        <NightsStayIcon fontSize="small" />
+                        <span>After-Hours Ordering Active</span>
+                      </div>
+                      {operatingHoursEval.noticeMessage && (
+                        <p className="banner-notice">{operatingHoursEval.noticeMessage}</p>
+                      )}
+                      {!operatingHoursEval.canOrder && (
+                        <p className="banner-blocked-warning">
+                          {selectedOrderType} is not available after hours. Please select: {operatingHoursEval.allowedOrderTypes.join(", ")}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {operatingHoursEval.isBranchClosed && !operatingHoursEval.isAfterHours && (
+                    <div className="after-hours-cart-banner is-closed">
+                      <div className="banner-title">
+                        <span className="closed-dot"></span>
+                        <span>Branch is Currently Closed</span>
+                      </div>
+                      <p className="banner-notice">Operating hours are complete. Orders cannot be placed at this time.</p>
+                    </div>
+                  )}
+
                   {/* Proceed to Checkout CTA / Add Order CTA / Update Order CTA */}
                   <button
                     type="button"
-                    className="cart-checkout-btn"
+                    className={`cart-checkout-btn ${!operatingHoursEval.canOrder ? "is-disabled-closed" : ""}`}
                     onClick={handleProceedCheckout}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !operatingHoursEval.canOrder}
                   >
                     {isSubmitting ? (
                       <>
@@ -1150,6 +1210,8 @@ const CartPage = () => {
                               : translations.processing}
                         </span>
                       </>
+                    ) : !operatingHoursEval.canOrder ? (
+                      <span>{operatingHoursEval.isAfterHours ? "Unavailable After Hours" : "Branch Closed"}</span>
                     ) : currentOrderNo ? (
                       <>
                         <span>

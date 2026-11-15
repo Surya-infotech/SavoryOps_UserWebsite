@@ -1156,3 +1156,74 @@
     padding: 0;
   }
 }
+
+/* --- After-Hours & Operating Hours Cart Banners --- */
+.after-hours-cart-banner {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .banner-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .banner-notice {
+    margin: 0;
+    font-size: 0.74rem;
+    line-height: 1.35;
+  }
+
+  .banner-blocked-warning {
+    margin: 2px 0 0 0;
+    font-size: 0.74rem;
+    font-weight: 600;
+  }
+
+  &.is-allowed {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    color: #3730a3;
+
+    svg {
+      color: #4f46e5;
+    }
+  }
+
+  &.is-blocked {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+
+    svg {
+      color: #d97706;
+    }
+  }
+
+  &.is-closed {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+
+    .closed-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: inline-block;
+    }
+  }
+}
+
+.cart-checkout-btn.is-disabled-closed {
+  background: #94a3b8 !important;
+  border-color: #94a3b8 !important;
+  cursor: not-allowed !important;
+  opacity: 0.8;
+}

@@ -22,6 +22,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
+import NightsStayIcon from "@mui/icons-material/NightsStay";
 import QrScannerModal from "./QrScannerModal.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -29,6 +30,7 @@ import { getCartTotalCount } from "../../utils/cartService.js";
 import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import { clearSelectedTable } from "../../utils/qrTableService.js";
+import { getAvailableOrderTypes } from "../../utils/operatingHoursHelper.js";
 import { useWebsiteStatus, getWebsiteSubdomain } from "./UnderMaintenance.jsx";
 import { LanguageDropdown } from "./LanguageDropdown.jsx";
 import NotificationDropdown from "./NotificationDropdown.jsx";
@@ -352,9 +354,12 @@ const getOrderTypeNavIcon = (typeName = "") => {
 };
 
 const OrderTypeDropdown = ({ className = "" }) => {
-  const { isRtl } = useLanguage();
+  const { isRtl, translations = {} } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [orderTypes, setOrderTypes] = useState([]);
+  const [isAfterHours, setIsAfterHours] = useState(false);
+  const [isBranchClosed, setIsBranchClosed] = useState(false);
+  const [afterHoursNotice, setAfterHoursNotice] = useState("");
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
     return localStorage.getItem("selectedOrderType") || "";
   });
@@ -400,29 +405,36 @@ const OrderTypeDropdown = ({ className = "" }) => {
             },
           })
         );
-        const rawTypes = data.branchSetting.ordertypes;
-        if (Array.isArray(rawTypes)) {
-          const enabled = rawTypes.filter((t) => t.isEnabled === true);
-          setOrderTypes(enabled);
 
-          const saved = localStorage.getItem("selectedOrderType");
-          const exists = enabled.some(
-            (t) => t.ordertypename.toLowerCase() === (saved || "").toLowerCase()
+        const hoursInfo = getAvailableOrderTypes({
+          branchSetting: data.branchSetting,
+          branchHoursDoc: data.branchHours,
+        });
+
+        setIsAfterHours(Boolean(hoursInfo.isAfterHours));
+        setIsBranchClosed(!hoursInfo.isOpen);
+        setAfterHoursNotice(hoursInfo.noticeMessage || "");
+
+        const available = hoursInfo.activeOrderTypes || [];
+        setOrderTypes(available);
+
+        const saved = localStorage.getItem("selectedOrderType");
+        const exists = available.some(
+          (t) => t.ordertypename.toLowerCase() === (saved || "").toLowerCase()
+        );
+
+        if (exists) {
+          setSelectedOrderType(saved);
+        } else if (available.length > 0) {
+          const first = available[0].ordertypename;
+          setSelectedOrderType(first);
+          localStorage.setItem("selectedOrderType", first);
+          clearSelectedTable();
+          window.dispatchEvent(
+            new CustomEvent("orderTypeChange", {
+              detail: { orderType: first },
+            })
           );
-
-          if (exists) {
-            setSelectedOrderType(saved);
-          } else if (enabled.length > 0) {
-            const first = enabled[0].ordertypename;
-            setSelectedOrderType(first);
-            localStorage.setItem("selectedOrderType", first);
-            clearSelectedTable();
-            window.dispatchEvent(
-              new CustomEvent("orderTypeChange", {
-                detail: { orderType: first },
-              })
-            );
-          }
         }
       }
     } catch (err) {
@@ -516,6 +528,14 @@ const OrderTypeDropdown = ({ className = "" }) => {
   };
 
   if (orderTypes.length === 0) {
+    if (isBranchClosed) {
+      return (
+        <div className={`order-type-closed-badge ${className}`} title={translations.branchclosed || "Branch is Closed"}>
+          <span className="closed-status-dot"></span>
+          <span className="closed-status-text">{translations.branchclosed || "Closed"}</span>
+        </div>
+      );
+    }
     return null;
   }
 
@@ -529,14 +549,23 @@ const OrderTypeDropdown = ({ className = "" }) => {
     >
       <button
         type="button"
-        className="order-type-trigger-btn"
+        className={`order-type-trigger-btn ${isAfterHours ? "is-after-hours-trigger" : ""}`}
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={`Order Mode: ${activeName}`}
+        title={isAfterHours ? `After-Hours Ordering: ${activeName}` : `Order Mode: ${activeName}`}
       >
-        {getOrderTypeNavIcon(activeName)}
+        {isAfterHours ? (
+          <NightsStayIcon className="order-type-icon-pin after-hours-nav-icon" />
+        ) : (
+          getOrderTypeNavIcon(activeName)
+        )}
         <span className="order-type-active-name">{activeName}</span>
+        {isAfterHours && (
+          <span className="after-hours-nav-tag" title="After-Hours Ordering Active">
+            Night
+          </span>
+        )}
         <KeyboardArrowDownIcon
           className={`order-type-chevron ${isOpen ? "rotated" : ""}`}
         />
@@ -548,6 +577,21 @@ const OrderTypeDropdown = ({ className = "" }) => {
           role="listbox"
           dir={isRtl ? "rtl" : "ltr"}
         >
+          {isAfterHours && (
+            <div className="after-hours-dropdown-banner">
+              <div className="banner-title-row">
+                <NightsStayIcon fontSize="small" />
+                <span>{translations.afterhoursordering || "After-Hours Ordering"}</span>
+              </div>
+              {afterHoursNotice ? (
+                <p className="banner-notice-text">{afterHoursNotice}</p>
+              ) : (
+                <p className="banner-notice-text">
+                  {translations.branchclosedafterhoursnote || "Branch is closed. Only allowed after-hours order types are shown."}
+                </p>
+              )}
+            </div>
+          )}
           <ul className="dropdown-items-list order-type-items-list" role="listbox">
             {orderTypes.map((ot) => {
               const isSelected =
