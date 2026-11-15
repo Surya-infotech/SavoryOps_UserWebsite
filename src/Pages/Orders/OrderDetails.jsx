@@ -80,16 +80,21 @@ const getOrderTypeComponentIcon = (orderType) => {
  */
 const OrderDetailsShimmer = () => (
   <div className="order-details-container order-details-shimmer">
+    {/* Header Grid Shimmer */}
+    <div className="order-details-header-grid">
+      <div className="order-details-nav-header">
+        <div className="shimmer-line order-title-shimmer" />
+        <div className="shimmer-pill order-btn-shimmer" />
+      </div>
+      <div className="order-details-side-header">
+        <div className="shimmer-line" style={{ width: 120, height: 22 }} />
+      </div>
+    </div>
+
     {/* Content Grid Shimmer */}
     <div className="order-details-content-grid">
       {/* Left Column Shimmer */}
       <div className="details-main-column">
-        {/* Nav Header Shimmer */}
-        <div className="order-details-nav-header">
-          <div className="shimmer-line order-title-shimmer" />
-          <div className="shimmer-pill order-btn-shimmer" />
-        </div>
-
         {/* Overview Card Shimmer */}
         <div className="detail-card shimmer-card overview-shimmer">
           <div className="shimmer-accent-bar" />
@@ -789,30 +794,41 @@ const OrderDetails = ({ orderId, onBack }) => {
 
   return (
     <div className={`order-details-container ${isRtl ? "is-rtl" : ""}`}>
+      {/* Header Grid: Synchronized top row across both columns */}
+      <div className="order-details-header-grid">
+        <div className="order-details-nav-header">
+          <div className="header-order-title">
+            <h2>
+              {translations.orderno} #{order.orderno}
+            </h2>
+          </div>
+
+          <div className="header-actions">
+            <button
+              type="button"
+              className="history-btn"
+              onClick={() => setIsHistoryModalOpen(true)}
+              title={translations.orderstatushistory}
+            >
+              <HistoryIcon fontSize="small" />
+              <span>{translations.orderstatushistory}</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="order-details-side-header">
+          <div className="section-header-outside">
+            <div className="section-header-left">
+              <AccountBalanceWalletOutlinedIcon className="section-header-icon" />
+              <h3>{translations.billdetails}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="order-details-content-grid">
         {/* Left Column: Status, Items & Tables */}
         <div className="details-main-column">
-          {/* Top Header Bar for Main Column (Order No & Status History Button) */}
-          <div className="order-details-nav-header">
-            <div className="header-order-title">
-              <h2>
-                {translations.orderno} #{order.orderno}
-              </h2>
-            </div>
-
-            <div className="header-actions">
-              <button
-                type="button"
-                className="history-btn"
-                onClick={() => setIsHistoryModalOpen(true)}
-                title={translations.orderstatushistory}
-              >
-                <HistoryIcon fontSize="small" />
-                <span>{translations.orderstatushistory}</span>
-              </button>
-            </div>
-          </div>
-
           {/* Top Status & Meta Card */}
           <div className="detail-card overview-card">
             <div className="card-top-accent green" />
@@ -1297,7 +1313,8 @@ const OrderDetails = ({ orderId, onBack }) => {
         <div className="details-side-column">
           {/* Bill Summary Card */}
           <div className="order-details-section bill-summary-section">
-            <div className="section-header-outside">
+            {/* Mobile-only Bill Details Header (desktop header is in order-details-header-grid) */}
+            <div className="section-header-outside bill-header-mobile">
               <div className="section-header-left">
                 <AccountBalanceWalletOutlinedIcon className="section-header-icon" />
                 <h3>{translations.billdetails}</h3>

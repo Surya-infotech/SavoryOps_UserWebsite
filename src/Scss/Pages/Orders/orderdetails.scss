@@ -24,47 +24,21 @@
     text-align: right;
   }
 
-  /* Nav Header */
-  .order-details-nav-header {
-    display: flex;
+  /* Header Grid: Synchronized top row across Left and Right Columns in ONE Row */
+  .order-details-header-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 1.5rem;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
 
-    .back-btn {
-      display: inline-flex;
+    .order-details-nav-header {
+      display: flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.6rem 1.15rem;
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 9999px;
-      color: #334155;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
 
-      &:hover {
-        border-color: #028802;
-        color: #028802;
-        background: #f0fdf4;
-      }
-    }
-
-    .header-order-title {
-      h2 {
-        margin: 0;
-        font-size: 1.85rem;
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.02em;
-      }
-    }
-
-    .header-actions {
-      .history-btn {
+      .back-btn {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
@@ -72,16 +46,87 @@
         background: #ffffff;
         border: 1.5px solid #e2e8f0;
         border-radius: 9999px;
-        color: #028802;
+        color: #334155;
         font-size: 0.88rem;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.2s ease;
 
         &:hover {
-          background: #f0fdf4;
           border-color: #028802;
+          color: #028802;
+          background: #f0fdf4;
         }
+      }
+
+      .header-order-title {
+        h2 {
+          margin: 0;
+          font-size: 1.85rem;
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: -0.02em;
+        }
+      }
+
+      .header-actions {
+        .history-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.6rem 1.15rem;
+          background: #ffffff;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 9999px;
+          color: #028802;
+          font-size: 0.88rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #f0fdf4;
+            border-color: #028802;
+          }
+        }
+      }
+    }
+
+    .order-details-side-header {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+
+      .section-header-outside {
+        display: flex;
+        align-items: center;
+        padding: 0 0.25rem;
+
+        .section-header-left {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          .section-header-icon {
+            color: #028802;
+            font-size: 1.25rem;
+          }
+
+          h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #0f172a;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 980px) {
+      grid-template-columns: 1fr;
+
+      .order-details-side-header {
+        display: none;
       }
     }
   }
@@ -1132,6 +1177,16 @@
             }
           }
         }
+      }
+    }
+  }
+
+  .bill-summary-section {
+    .section-header-outside.bill-header-mobile {
+      display: none;
+
+      @media (max-width: 980px) {
+        display: flex;
       }
     }
   }
