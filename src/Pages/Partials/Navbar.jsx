@@ -359,7 +359,6 @@ const OrderTypeDropdown = ({ className = "" }) => {
   const [orderTypes, setOrderTypes] = useState([]);
   const [isAfterHours, setIsAfterHours] = useState(false);
   const [isBranchClosed, setIsBranchClosed] = useState(false);
-  const [afterHoursNotice, setAfterHoursNotice] = useState("");
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
     return localStorage.getItem("selectedOrderType") || "";
   });
@@ -413,7 +412,6 @@ const OrderTypeDropdown = ({ className = "" }) => {
 
         setIsAfterHours(Boolean(hoursInfo.isAfterHours));
         setIsBranchClosed(!hoursInfo.isOpen);
-        setAfterHoursNotice(hoursInfo.noticeMessage || "");
 
         const available = hoursInfo.activeOrderTypes || [];
         setOrderTypes(available);

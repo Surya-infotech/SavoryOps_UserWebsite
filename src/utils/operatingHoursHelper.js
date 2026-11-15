@@ -16,7 +16,7 @@ export const parseToMinutes = (t) => {
  * @param {Object} options.branchHoursDoc - { timezone, workinghours }
  * @param {Object} options.branchSetting - { afterHoursOrdering, ordertypes }
  * @param {String} [options.requestedOrderType] - "Delivery", "Pickup", etc.
- * @returns {Object} { isOpen, isAfterHours, canOrder, statusMessage, allowedOrderTypes, noticeMessage, isBranchClosed }
+ * @returns {Object} { isOpen, isAfterHours, canOrder, statusMessage, allowedOrderTypes, isBranchClosed }
  */
 export function evaluateBranchOperatingHours({
   branchHoursDoc,
@@ -33,7 +33,6 @@ export function evaluateBranchOperatingHours({
       canOrder: true,
       statusMessage: "Branch is Open",
       allowedOrderTypes: allowed,
-      noticeMessage: afterHours?.noticeMessage || "",
       isBranchClosed: false,
     };
   }
@@ -89,7 +88,6 @@ export function evaluateBranchOperatingHours({
   const allowedOrderTypes = Array.isArray(afterHours?.allowedOrderTypes)
     ? afterHours.allowedOrderTypes
     : [];
-  const noticeMessage = afterHours?.noticeMessage || "";
 
   if (isOpen) {
     return {
@@ -98,7 +96,6 @@ export function evaluateBranchOperatingHours({
       canOrder: true,
       statusMessage: "Branch is Open",
       allowedOrderTypes,
-      noticeMessage: "",
       isBranchClosed: false,
     };
   }
@@ -111,7 +108,6 @@ export function evaluateBranchOperatingHours({
       canOrder: false,
       statusMessage,
       allowedOrderTypes: [],
-      noticeMessage: "",
       isBranchClosed: true,
     };
   }
@@ -130,7 +126,6 @@ export function evaluateBranchOperatingHours({
         ? `After-hours ordering active for ${requestedOrderType}`
         : `${requestedOrderType} is not available after branch hours. Available: ${allowedOrderTypes.join(", ") || "None"}`,
       allowedOrderTypes,
-      noticeMessage,
       isBranchClosed: true,
     };
   }
@@ -141,7 +136,6 @@ export function evaluateBranchOperatingHours({
     canOrder: allowedOrderTypes.length > 0,
     statusMessage: `After-hours ordering active for: ${allowedOrderTypes.join(", ")}`,
     allowedOrderTypes,
-    noticeMessage,
     isBranchClosed: true,
   };
 }
@@ -151,7 +145,7 @@ export function evaluateBranchOperatingHours({
  * @param {Object} options
  * @param {Object} options.branchSetting
  * @param {Object} options.branchHoursDoc
- * @returns {{ activeOrderTypes: Array, isAfterHours: Boolean, isOpen: Boolean, noticeMessage: String, statusMessage: String }}
+ * @returns {{ activeOrderTypes: Array, isAfterHours: Boolean, isOpen: Boolean, statusMessage: String }}
  */
 export function getAvailableOrderTypes({ branchSetting, branchHoursDoc } = {}) {
   const rawTypes = Array.isArray(branchSetting?.ordertypes)
@@ -168,7 +162,6 @@ export function getAvailableOrderTypes({ branchSetting, branchHoursDoc } = {}) {
       activeOrderTypes: rawTypes,
       isAfterHours: false,
       isOpen: true,
-      noticeMessage: "",
       statusMessage: "Branch is Open",
     };
   }
@@ -184,7 +177,6 @@ export function getAvailableOrderTypes({ branchSetting, branchHoursDoc } = {}) {
       activeOrderTypes: filtered,
       isAfterHours: true,
       isOpen: false,
-      noticeMessage: evaluation.noticeMessage,
       statusMessage: evaluation.statusMessage,
     };
   }
@@ -193,7 +185,6 @@ export function getAvailableOrderTypes({ branchSetting, branchHoursDoc } = {}) {
     activeOrderTypes: [],
     isAfterHours: false,
     isOpen: false,
-    noticeMessage: "",
     statusMessage: evaluation.statusMessage,
   };
 }
