@@ -284,6 +284,7 @@ const OrderDetails = ({ orderId, onBack }) => {
       }
       if (response.ok && data) {
         const isOrderCancelled = String(data.orderstatus || data.orderStatus || "").toLowerCase() === "cancelled";
+        const isOrderPaid = String(data.paymentstatus || data.paymentStatus || "").toLowerCase() === "paid" || String(data.paymentstatus || data.paymentStatus || "").toLowerCase() === "refunded";
         const hasItems = Array.isArray(data.items) && data.items.length > 0;
         const hasNonCancelledItems =
           hasItems && data.items.some((it) => !isItemCancelled(it));
@@ -291,7 +292,7 @@ const OrderDetails = ({ orderId, onBack }) => {
         let calculatedSubtotal = 0;
         if (hasItems) {
           data.items.forEach((item) => {
-            if (!isOrderCancelled && isItemCancelled(item)) return;
+            if (!isOrderCancelled && !isOrderPaid && isItemCancelled(item)) return;
             const itemQty = item.qty || item.quantity || 1;
             calculatedSubtotal += (parseFloat(item.price) || 0) * itemQty;
             if (item.addons && item.addons.length > 0) {
@@ -311,7 +312,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             : null;
 
         let effectiveSubtotal;
-        if (!isOrderCancelled && !hasNonCancelledItems && hasItems) {
+        if (!isOrderCancelled && !isOrderPaid && !hasNonCancelledItems && hasItems) {
           effectiveSubtotal = 0;
         } else if (
           serverSubtotal !== null &&
@@ -338,7 +339,8 @@ const OrderDetails = ({ orderId, onBack }) => {
             return sum + addonPrice * itemQty;
           }, 0);
           const regularItemTotal = baseAmount + addonsAmount;
-          const itemAmount = isOrderCancelled
+          const isOrderPaid = String(data.paymentstatus || data.paymentStatus || "").toLowerCase() === "paid" || String(data.paymentstatus || data.paymentStatus || "").toLowerCase() === "refunded";
+          const itemAmount = (isOrderCancelled || isOrderPaid)
             ? (item.amount !== undefined && Number(item.amount) > 0 ? Number(item.amount) : regularItemTotal)
             : (cancelled ? 0 : (item.amount !== undefined && item.amount !== null ? Number(item.amount) : regularItemTotal));
 
@@ -390,7 +392,7 @@ const OrderDetails = ({ orderId, onBack }) => {
             cancelreason: cancelReason,
             cancelledby: cancelledBy,
             cancelledat: cancelledAt,
-            appliedTaxes: (!isOrderCancelled && cancelled) ? [] : item.appliedTaxes || item.taxes || [],
+            appliedTaxes: (!isOrderCancelled && !isOrderPaid && cancelled) ? [] : item.appliedTaxes || item.taxes || [],
           };
         });
 
@@ -473,7 +475,7 @@ const OrderDetails = ({ orderId, onBack }) => {
               "apply_all";
             let units = 0;
             (data.items || []).forEach((it) => {
-              if (!isOrderCancelled && isItemCancelled(it)) return;
+              if (!isOrderCancelled && !isOrderPaid && isItemCancelled(it)) return;
               const itTaxes = it.appliedTaxes?.length
                 ? it.appliedTaxes
                 : it.taxes || [];
@@ -538,7 +540,7 @@ const OrderDetails = ({ orderId, onBack }) => {
           roundAmt;
 
         let finalTotalPrice;
-        if (!isOrderCancelled && !hasNonCancelledItems && hasItems) {
+        if (!isOrderCancelled && !isOrderPaid && !hasNonCancelledItems && hasItems) {
           finalTotalPrice = serverTotalPrice !== null ? serverTotalPrice : 0;
         } else if (
           serverTotalPrice !== null &&
