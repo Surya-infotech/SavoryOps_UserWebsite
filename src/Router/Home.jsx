@@ -1,10 +1,8 @@
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-import { useLanguage } from "../Context/useLanguage.js";
 import HomePage from "../Pages/Home/HomePage.jsx";
 import SigninPage from "../Pages/Partials/SigninPage.jsx";
 import PolicyPage from "../Pages/Partials/PolicyPage.jsx";
 import PageNotFound from "../Pages/Partials/PageNotFound.jsx";
-import SubpagePlaceholder from "../Pages/Partials/SubpagePlaceholder.jsx";
 import SettingsPage from "../Pages/Settings/SettingsPage.jsx";
 import ProfilePage from "../Pages/Profile/ProfilePage.jsx";
 import ManageAddressPage from "../Pages/Profile/ManageAddressPage.jsx";
@@ -34,8 +32,6 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const HomeRouter = () => {
-  const { translations = {} } = useLanguage();
-
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -78,16 +74,6 @@ const HomeRouter = () => {
         }
       />
       <Route path="/about" element={<AboutPage />} />
-      <Route
-        path="/contact"
-        element={
-          <SubpagePlaceholder
-            icon="📞"
-            title={translations.contactcatering}
-            subtitle={translations.contactsubtitle}
-          />
-        }
-      />
       <Route
         path="/orders"
         element={
