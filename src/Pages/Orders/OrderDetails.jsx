@@ -19,6 +19,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import SpeakerNotesOutlinedIcon from "@mui/icons-material/SpeakerNotesOutlined";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -583,6 +584,8 @@ const OrderDetails = ({ orderId, onBack }) => {
           taxes: formattedTaxes,
           totaltax: finalTax,
           totalprice: finalTotalPrice,
+          refundAmount: Number(data.refundAmount) || 0,
+          refundDetails: Array.isArray(data.refundDetails) ? data.refundDetails : [],
           customerPhone: customerPhone || null,
           customerEmail: customerEmail || null,
           customerName: customerName || null,
@@ -1475,6 +1478,37 @@ const OrderDetails = ({ orderId, onBack }) => {
                     {formatOrderPrice(order.totalprice, order)}
                   </span>
                 </div>
+
+                {/* Refund Amount Banner */}
+                {(Number(order.refundAmount || 0) > 0 || (order.paymentstatus === "Refunded" && Number(order.totalprice || 0) > 0)) && (() => {
+                  const refundAmt = Number(order.refundAmount || 0) > 0 ? Number(order.refundAmount) : Number(order.totalprice || 0);
+                  const refundList = Array.isArray(order.refundDetails) ? order.refundDetails : [];
+                  const itemNames = refundList
+                    .filter(r => r.itemname)
+                    .map(r => `${r.itemname} (x${r.qty || 1})`);
+                  return (
+                    <div className="bill-refund-banner">
+                      <div className="refund-label">
+                        <div className="refund-icon-wrap">
+                          <CurrencyExchangeOutlinedIcon fontSize="small" />
+                        </div>
+                        <div className="refund-text-group">
+                          <span className="refund-title">
+                            {translations.refundamount || translations.refundedamount || translations.Refunded || "Refund Amount"}
+                          </span>
+                          {itemNames.length > 0 && (
+                            <span className="refund-subtitle">
+                              {itemNames.join(", ")}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <span className="refund-value">
+                        {formatOrderPrice(refundAmt, order)}
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Invoice Button (Parity with UserApp: only show when order is Paid and Completed/Delivered) */}

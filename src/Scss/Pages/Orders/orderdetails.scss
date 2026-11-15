@@ -1440,6 +1440,72 @@
           letter-spacing: -0.01em;
         }
       }
+
+      /* Refund Amount Highlight Banner */
+      .bill-refund-banner {
+        margin-top: 0.65rem;
+        padding: 0.85rem 1rem;
+        background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+        border: 1px solid #fecdd3;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        box-sizing: border-box;
+        box-shadow: 0 1px 3px rgba(225, 29, 72, 0.05);
+
+        .refund-label {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          text-align: start;
+
+          .refund-icon-wrap {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #ffe4e6;
+            color: #e11d48;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            .MuiSvgIcon-root {
+              font-size: 1.15rem;
+            }
+          }
+
+          .refund-text-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .refund-title {
+              color: #9f1239;
+              font-weight: 800;
+              font-size: 1.02rem;
+              letter-spacing: -0.01em;
+            }
+
+            .refund-subtitle {
+              font-size: 0.78rem;
+              color: #be123c;
+              font-weight: 500;
+            }
+          }
+        }
+
+        .refund-value {
+          font-size: 1.35rem;
+          font-weight: 800;
+          color: #e11d48;
+          letter-spacing: -0.01em;
+          font-variant-numeric: tabular-nums;
+          text-align: end;
+        }
+      }
     }
 
     .invoice-action-wrap {
