@@ -1164,34 +1164,6 @@ const CartPage = () => {
                     </span>
                   </div>
 
-                  {/* After-Hours / Operating Hours Alert */}
-                  {operatingHoursEval.isAfterHours && (
-                    <div className={`after-hours-cart-banner ${operatingHoursEval.canOrder ? 'is-allowed' : 'is-blocked'}`}>
-                      <div className="banner-title">
-                        <NightsStayIcon fontSize="small" />
-                        <span>After-Hours Ordering Active</span>
-                      </div>
-                      {operatingHoursEval.noticeMessage && (
-                        <p className="banner-notice">{operatingHoursEval.noticeMessage}</p>
-                      )}
-                      {!operatingHoursEval.canOrder && (
-                        <p className="banner-blocked-warning">
-                          {selectedOrderType} is not available after hours. Please select: {operatingHoursEval.allowedOrderTypes.join(", ")}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {operatingHoursEval.isBranchClosed && !operatingHoursEval.isAfterHours && (
-                    <div className="after-hours-cart-banner is-closed">
-                      <div className="banner-title">
-                        <span className="closed-dot"></span>
-                        <span>Branch is Currently Closed</span>
-                      </div>
-                      <p className="banner-notice">Operating hours are complete. Orders cannot be placed at this time.</p>
-                    </div>
-                  )}
-
                   {/* Proceed to Checkout CTA / Add Order CTA / Update Order CTA */}
                   <button
                     type="button"

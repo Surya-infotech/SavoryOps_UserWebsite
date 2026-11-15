@@ -583,13 +583,6 @@ const OrderTypeDropdown = ({ className = "" }) => {
                 <NightsStayIcon fontSize="small" />
                 <span>{translations.afterhoursordering || "After-Hours Ordering"}</span>
               </div>
-              {afterHoursNotice ? (
-                <p className="banner-notice-text">{afterHoursNotice}</p>
-              ) : (
-                <p className="banner-notice-text">
-                  {translations.branchclosedafterhoursnote || "Branch is closed. Only allowed after-hours order types are shown."}
-                </p>
-              )}
             </div>
           )}
           <ul className="dropdown-items-list order-type-items-list" role="listbox">
