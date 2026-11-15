@@ -762,26 +762,34 @@ const OrderDetails = ({ orderId, onBack }) => {
 
   if (!order) {
     return (
-      <div className="order-details-empty-state">
-        <CancelOutlinedIcon className="empty-icon" />
-        <h3>{translations.orderdetilsnotfound}</h3>
-        <p>
-          We couldn't retrieve the details for this order. It might have been
-          removed or an error occurred.
-        </p>
-        <div className="empty-actions">
-          <button type="button" className="secondary-btn" onClick={onBack}>
-            <ArrowBackIcon fontSize="small" />
-            <span>{translations.backtoorders}</span>
-          </button>
-          <button
-            type="button"
-            className="primary-btn"
-            onClick={fetchOrderDetail}
-          >
-            <RefreshIcon fontSize="small" />
-            <span>{translations.taptoretry}</span>
-          </button>
+      <div className={`order-details-container ${isRtl ? "is-rtl" : ""}`}>
+        <div className="address-empty-card order-details-empty-state">
+          <div className="empty-icon-wrap error">
+            <CancelOutlinedIcon className="empty-icon" />
+          </div>
+          <h2 className="empty-title">{translations.orderdetilsnotfound}</h2>
+          <p className="empty-subtitle">
+            We couldn't retrieve the details for this order. It might have been
+            removed or an error occurred.
+          </p>
+          <div className="empty-actions">
+            <button
+              type="button"
+              className="empty-add-btn secondary"
+              onClick={onBack}
+            >
+              <ArrowBackIcon fontSize="small" />
+              <span>{translations.backtoorders}</span>
+            </button>
+            <button
+              type="button"
+              className="empty-add-btn primary"
+              onClick={fetchOrderDetail}
+            >
+              <RefreshIcon fontSize="small" />
+              <span>{translations.taptoretry}</span>
+            </button>
+          </div>
         </div>
       </div>
     );
