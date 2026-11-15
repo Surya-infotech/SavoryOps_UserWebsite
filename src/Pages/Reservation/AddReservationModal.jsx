@@ -380,19 +380,19 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="reservation-modal-overlay" onClick={onClose}>
+    <div className="add-reservation-modal-overlay reservation-modal-overlay" onClick={onClose}>
       <div
-        className="reservation-modal-card add-reservation-modal"
+        className="add-reservation-modal-card reservation-modal-card add-reservation-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header (Matching Manage Address modal header design) */}
-        <div className="modal-header">
-          <h2 className="modal-title">
+        {/* Modal Header */}
+        <div className="add-reservation-modal-header modal-header">
+          <h2 className="add-reservation-modal-title modal-title">
             {translations.addreservation}
           </h2>
           <button
             type="button"
-            className="modal-close-btn"
+            className="add-reservation-modal-close-btn modal-close-btn"
             onClick={onClose}
             aria-label="Close dialog"
           >
@@ -401,10 +401,10 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
         </div>
 
         {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="reservation-form">
-          <div className="modal-scroll-body">
-            {/* 1. Branch Selector (Dropdown matching ManageAddress dropdown design) */}
-            <div className="form-group branch-form-group">
+        <form onSubmit={handleSubmit} className="add-reservation-form reservation-form">
+          <div className="add-reservation-modal-body modal-scroll-body reservation-modal-body">
+            {/* 1. Branch Selector */}
+            <div className="add-reservation-form-group form-group branch-form-group">
               {loadingBranches ? (
                 <div className="field-loading-placeholder">
                   <CircularProgress size={18} />
@@ -440,14 +440,14 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             </div>
 
             {/* 2. Reservation Type Selector (Pick Spot vs Quick Seat) */}
-            <div className="form-group">
-              <label className="form-label">
+            <div className="add-reservation-form-group form-group">
+              <label className="add-reservation-form-label form-label">
                 <span>{translations.reservationtype}</span>
               </label>
-              <div className="type-toggle-container">
+              <div className="add-reservation-type-container type-toggle-container">
                 <button
                   type="button"
-                  className={`type-toggle-card ${reservationType === "pickspot" ? "active" : ""
+                  className={`add-reservation-type-card type-toggle-card ${reservationType === "pickspot" ? "active" : ""
                     }`}
                   onClick={() => {
                     setReservationType("pickspot");
@@ -466,7 +466,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
 
                 <button
                   type="button"
-                  className={`type-toggle-card ${reservationType === "quickseat" ? "active" : ""
+                  className={`add-reservation-type-card type-toggle-card ${reservationType === "quickseat" ? "active" : ""
                     }`}
                   onClick={() => {
                     setReservationType("quickseat");
@@ -487,9 +487,9 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
 
             {/* 3. Seating Options: Pick Spot (Area & Table) vs Quick Seat (Guests) */}
             {reservationType === "pickspot" ? (
-              <div className="pick-spot-fields">
-                {/* Area Selector (Dropdown matching ManageAddress dropdown design) */}
-                <div className="form-group area-form-group">
+              <div className="add-reservation-pick-spot-fields pick-spot-fields">
+                {/* Area Selector */}
+                <div className="add-reservation-form-group form-group area-form-group">
                   {loadingTables ? (
                     <div className="field-loading-placeholder">
                       <CircularProgress size={18} />
@@ -532,8 +532,8 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   )}
                 </div>
 
-                {/* Table Selector (Dropdown matching ManageAddress dropdown design) */}
-                <div className="form-group table-form-group">
+                {/* Table Selector */}
+                <div className="add-reservation-form-group form-group table-form-group">
                   <Dropdown
                     id="reservation-table-dropdown"
                     label={translations.tablelabel}
@@ -566,15 +566,15 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
               </div>
             ) : (
               /* Quick Seat: Guest Input */
-              <div className="form-group guest-form-group">
-                <label className="form-label" htmlFor="reservation-guests-input">
+              <div className="add-reservation-form-group form-group guest-form-group">
+                <label className="add-reservation-form-label form-label" htmlFor="reservation-guests-input">
                   <GroupsOutlinedIcon fontSize="small" className="label-icon" />
                   <span>{translations.guest}</span>
                 </label>
                 <input
                   id="reservation-guests-input"
                   type="number"
-                  className={`form-input guest-input ${errors.guests ? "has-error" : ""}`}
+                  className={`add-reservation-input form-input guest-input ${errors.guests ? "has-error" : ""}`}
                   min="1"
                   max="100"
                   placeholder={
@@ -598,15 +598,15 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   }}
                 />
                 {errors.guests && (
-                  <span className="error-message">{errors.guests}</span>
+                  <span className="field-error-msg error-message">{errors.guests}</span>
                 )}
               </div>
             )}
 
             {/* 4. Date & Time Row */}
-            <div className="form-grid-row">
-              <div className="form-group">
-                <label className="form-label">
+            <div className="add-reservation-form-grid-row form-grid-row">
+              <div className="add-reservation-form-group form-group">
+                <label className="add-reservation-form-label form-label">
                   <CalendarMonthOutlinedIcon
                     fontSize="small"
                     className="label-icon"
@@ -615,7 +615,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                 </label>
                 <input
                   type="date"
-                  className={`form-input ${errors.date ? "has-error" : ""}`}
+                  className={`add-reservation-input form-input ${errors.date ? "has-error" : ""}`}
                   min={getTodayDateInputString()}
                   value={selectedDate}
                   onChange={(e) => {
@@ -625,18 +625,18 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   required
                 />
                 {errors.date && (
-                  <span className="error-message">{errors.date}</span>
+                  <span className="field-error-msg error-message">{errors.date}</span>
                 )}
               </div>
 
-              <div className="form-group">
-                <label className="form-label">
+              <div className="add-reservation-form-group form-group">
+                <label className="add-reservation-form-label form-label">
                   <AccessTimeIcon fontSize="small" className="label-icon" />
                   <span>{translations.time}</span>
                 </label>
                 <input
                   type="time"
-                  className={`form-input ${errors.time ? "has-error" : ""}`}
+                  className={`add-reservation-input form-input ${errors.time ? "has-error" : ""}`}
                   value={selectedTime}
                   onChange={(e) => {
                     setSelectedTime(e.target.value);
@@ -645,27 +645,27 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
                   required
                 />
                 {errors.time && (
-                  <span className="error-message">{errors.time}</span>
+                  <span className="field-error-msg error-message">{errors.time}</span>
                 )}
               </div>
             </div>
 
             {/* Timezone Indicator */}
             {branchTimezone && (
-              <div className="branch-timezone-badge">
+              <div className="add-reservation-timezone-badge branch-timezone-badge">
                 <PublicIcon fontSize="inherit" />
                 <span>{branchTimezone}</span>
               </div>
             )}
 
             {/* 5. Special Notes */}
-            <div className="form-group">
-              <label className="form-label">
+            <div className="add-reservation-form-group form-group">
+              <label className="add-reservation-form-label form-label">
                 <NotesOutlinedIcon fontSize="small" className="label-icon" />
                 <span>{translations.specialnotes}</span>
               </label>
               <textarea
-                className="form-textarea"
+                className="add-reservation-textarea form-textarea"
                 rows={3}
                 placeholder={
                   translations.enterspecialnotes
@@ -678,10 +678,10 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
           </div>
 
           {/* Modal Footer */}
-          <div className="modal-footer">
+          <div className="add-reservation-modal-footer modal-footer modal-footer-sticky">
             <button
               type="button"
-              className="modal-cancel-btn"
+              className="add-reservation-cancel-btn modal-cancel-btn cancel-ghost-btn"
               onClick={onClose}
               disabled={isSubmitting}
             >
@@ -689,7 +689,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             </button>
             <button
               type="submit"
-              className="modal-submit-btn"
+              className="add-reservation-submit-btn modal-submit-btn submit-confirm-btn"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

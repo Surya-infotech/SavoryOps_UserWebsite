@@ -1,9 +1,12 @@
 /* ==========================================================================
    SavoryOps User Website - Add Reservation Modal Styles (SCSS)
+   Matches User App Table Reservation UX & Website Design System
+   Scoped cleanly with add-reservation-* class names
    ========================================================================== */
 
 @use "../../Customize/var.scss" as var;
 
+.add-reservation-modal-overlay,
 .reservation-modal-overlay {
   position: fixed;
   inset: 0;
@@ -23,6 +26,7 @@
   }
 }
 
+.add-reservation-modal-card,
 .reservation-modal-card {
   background: #ffffff;
   border-radius: 24px;
@@ -36,6 +40,8 @@
   box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(15, 23, 42, 0.06);
   animation: resScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
+  /* Modal Header */
+  .add-reservation-modal-header,
   .modal-header {
     display: flex;
     align-items: center;
@@ -46,6 +52,7 @@
     border-top-right-radius: 24px;
     background: #ffffff;
 
+    .add-reservation-modal-title,
     .modal-title {
       font-size: 1.28rem;
       font-weight: 800;
@@ -54,34 +61,14 @@
       letter-spacing: -0.3px;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-
-      .header-icon-box {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: rgba(2, 136, 2, 0.1);
-        color: #028802;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        svg {
-          font-size: 1.35rem;
-        }
-      }
-    }
-
+    .add-reservation-modal-close-btn,
     .modal-close-btn {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       color: #64748b;
       cursor: pointer;
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -96,29 +83,45 @@
     }
   }
 
+  /* Modal Body */
+  .add-reservation-modal-body,
+  .modal-scroll-body,
   .reservation-modal-body {
-    padding: 1.75rem;
+    padding: 1.5rem 1.75rem;
     max-height: calc(85vh - 140px);
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
   }
 
+  .add-reservation-form,
   .reservation-form {
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
 
+    .add-reservation-form-group,
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
 
+      .add-reservation-form-label,
       .form-label {
         font-size: 0.88rem;
         font-weight: 700;
         color: #334155;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
+        gap: 0.45rem;
+        margin: 0;
+
+        .label-icon {
+          font-size: 1.15rem;
+          color: #028802;
+          flex-shrink: 0;
+        }
 
         .req {
           color: #dc2626;
@@ -126,7 +129,8 @@
         }
       }
 
-      .field-error-msg {
+      .field-error-msg,
+      .error-message {
         font-size: 0.78rem;
         color: #dc2626;
         font-weight: 600;
@@ -135,11 +139,13 @@
     }
 
     /* Type Selector (Pick Spot vs Quick Seat) */
+    .add-reservation-type-container,
     .type-toggle-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.85rem;
 
+      .add-reservation-type-card,
       .type-toggle-card {
         background: #f8fafc;
         border: 2px solid #e2e8f0;
@@ -210,201 +216,95 @@
     }
 
     /* Pick Spot Fields */
+    .add-reservation-pick-spot-fields,
     .pick-spot-fields {
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
-
-      .tables-select-block {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        .tables-chips-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-          gap: 0.65rem;
-          max-height: 200px;
-          overflow-y: auto;
-          padding: 2px;
-
-          .table-pill-chip {
-            background: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 0.6rem 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-
-            .table-chip-no {
-              font-size: 0.88rem;
-              font-weight: 700;
-              color: #1e293b;
-            }
-
-            .table-chip-cap {
-              font-size: 0.75rem;
-              font-weight: 600;
-              color: #64748b;
-              background: #f1f5f9;
-              padding: 2px 6px;
-              border-radius: 6px;
-            }
-
-            &:hover {
-              border-color: #cbd5e1;
-              background: #f8fafc;
-            }
-
-            &.selected {
-              background: #028802;
-              border-color: #028802;
-              box-shadow: 0 4px 10px rgba(2, 136, 2, 0.25);
-
-              .table-chip-no,
-              .table-chip-cap {
-                color: #ffffff;
-              }
-
-              .table-chip-cap {
-                background: rgba(255, 255, 255, 0.25);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    /* Quick Seat Fields */
-    .quick-seat-fields {
-      .stepper-control-box {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        max-width: 220px;
-        background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        overflow: hidden;
-
-        .stepper-btn {
-          width: 44px;
-          height: 42px;
-          background: #ffffff;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          color: #475569;
-          font-size: 1.15rem;
-          font-weight: 700;
-          transition: all 0.15s ease;
-
-          &:hover:not(:disabled) {
-            background: #f1f5f9;
-            color: #028802;
-          }
-
-          &:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-          }
-        }
-
-        .stepper-input {
-          flex: 1;
-          border: none;
-          background: transparent;
-          text-align: center;
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: #0f172a;
-          outline: none;
-          width: 60px;
-        }
-      }
     }
 
     /* Form Grid Row (Date & Time) */
+    .add-reservation-form-grid-row,
     .form-grid-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
 
-    .datetime-input-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
+    /* Inputs (Date, Time, Guest Number) */
+    .add-reservation-input,
+    .form-input {
+      width: 100%;
+      height: 44px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0 0.95rem;
+      font-size: 0.92rem;
+      color: #0f172a;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      font-family: inherit;
 
-      .datetime-icon {
-        position: absolute;
-        left: 12px;
-        color: #94a3b8;
-        font-size: 1.2rem;
-        pointer-events: none;
+      &:focus {
+        background: #ffffff;
+        border-color: #028802;
+        box-shadow: 0 0 0 3px rgba(2, 136, 2, 0.12);
       }
 
-      .form-datetime-input {
-        width: 100%;
-        background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 0.72rem 0.95rem 0.72rem 2.6rem;
-        font-size: 0.92rem;
-        color: #0f172a;
-        font-weight: 600;
-        outline: none;
-        transition: all 0.2s ease;
-        font-family: inherit;
-
-        &:focus {
-          background: #ffffff;
-          border-color: #028802;
-          box-shadow: 0 0 0 3.5px rgba(2, 136, 2, 0.12);
-        }
-      }
-
-      &.has-error .form-datetime-input {
+      &.has-error {
         border-color: #dc2626;
       }
     }
 
-    .textarea-field-wrap {
-      position: relative;
+    /* Timezone Badge */
+    .add-reservation-timezone-badge,
+    .branch-timezone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #028802;
+      background: rgba(2, 136, 2, 0.08);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(2, 136, 2, 0.15);
+      width: fit-content;
+      margin-top: -0.35rem;
+      margin-bottom: 0.25rem;
 
-      .textarea-icon {
-        position: absolute;
-        left: 12px;
-        top: 14px;
-        color: #94a3b8;
-        font-size: 1.2rem;
-        pointer-events: none;
+      svg {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* Special Notes Textarea */
+    .add-reservation-textarea,
+    .form-textarea {
+      width: 100%;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0.75rem 0.95rem;
+      font-size: 0.92rem;
+      color: #0f172a;
+      outline: none;
+      resize: vertical;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+
+      &:focus {
+        background: #ffffff;
+        border-color: #028802;
+        box-shadow: 0 0 0 3px rgba(2, 136, 2, 0.12);
       }
 
-      .form-textarea-input {
-        width: 100%;
-        background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 0.75rem 0.95rem 0.75rem 2.6rem;
-        font-size: 0.92rem;
-        color: #0f172a;
-        outline: none;
-        resize: vertical;
-        font-family: inherit;
-        transition: all 0.2s ease;
-
-        &:focus {
-          background: #ffffff;
-          border-color: #028802;
-          box-shadow: 0 0 0 3.5px rgba(2, 136, 2, 0.12);
-        }
+      &::placeholder {
+        color: #94a3b8;
       }
     }
 
@@ -427,6 +327,9 @@
     }
   }
 
+  /* Modal Footer */
+  .add-reservation-modal-footer,
+  .modal-footer,
   .modal-footer-sticky {
     padding: 1.25rem 1.75rem;
     border-top: 1px solid #f1f5f9;
@@ -438,9 +341,11 @@
     border-bottom-left-radius: 24px;
     border-bottom-right-radius: 24px;
 
+    .add-reservation-cancel-btn,
+    .modal-cancel-btn,
     .cancel-ghost-btn {
-      padding: 0.72rem 1.4rem;
-      background: transparent;
+      padding: 0.68rem 1.4rem;
+      background: #ffffff;
       border: 1.5px solid #cbd5e1;
       color: #475569;
       border-radius: 12px;
@@ -449,18 +354,25 @@
       cursor: pointer;
       transition: all 0.2s ease;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background: #f8fafc;
         border-color: #94a3b8;
         color: #0f172a;
       }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
     }
 
+    .add-reservation-submit-btn,
+    .modal-submit-btn,
     .submit-confirm-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 0.72rem 1.75rem;
+      padding: 0.68rem 1.75rem;
       background: linear-gradient(135deg, #028802 0%, #026b02 100%);
       color: #ffffff;
       border-radius: 12px;
@@ -486,13 +398,36 @@
 }
 
 @media (max-width: 768px) {
-  .reservation-modal-card .reservation-form {
-    .type-toggle-container {
-      grid-template-columns: 1fr;
+
+  .add-reservation-modal-card,
+  .reservation-modal-card {
+
+    .add-reservation-form,
+    .reservation-form {
+
+      .add-reservation-type-container,
+      .type-toggle-container {
+        grid-template-columns: 1fr;
+      }
+
+      .add-reservation-form-grid-row,
+      .form-grid-row {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .form-grid-row {
-      grid-template-columns: 1fr;
+    .add-reservation-modal-footer,
+    .modal-footer {
+      flex-direction: column-reverse;
+      gap: 0.65rem;
+
+      .add-reservation-cancel-btn,
+      .add-reservation-submit-btn,
+      .modal-cancel-btn,
+      .modal-submit-btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   }
 }
