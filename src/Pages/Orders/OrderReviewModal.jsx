@@ -107,10 +107,10 @@ const OrderReviewModal = ({
         className="order-review-modal-dialog"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="modal-header">
-          <div className="modal-title-wrap">
-            <RateReviewIcon className="modal-header-icon" />
-            <h3>
+        <div className="order-review-modal-header modal-header">
+          <div className="order-review-modal-title-wrap modal-title-wrap">
+            <RateReviewIcon className="order-review-modal-header-icon modal-header-icon" />
+            <h3 className="order-review-modal-title">
               {isEdit
                 ? translations.editreview
                 : translations.writeareview}
@@ -118,7 +118,7 @@ const OrderReviewModal = ({
           </div>
           <button
             type="button"
-            className="modal-close-btn"
+            className="order-review-modal-close-btn modal-close-btn"
             onClick={onClose}
             aria-label="Close"
           >
@@ -127,19 +127,19 @@ const OrderReviewModal = ({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="modal-body">
-            <div className="review-order-summary">
-              <span className="order-tag">Order #{order.orderno}</span>
-              <span className="restaurant-name">{order.businessname}</span>
+          <div className="order-review-modal-body modal-body">
+            <div className="order-review-order-summary review-order-summary">
+              <span className="order-review-order-tag order-tag">Order #{order.orderno}</span>
+              <span className="order-review-restaurant-name restaurant-name">{order.businessname}</span>
             </div>
 
             {/* Star Rating Section */}
-            <div className="rating-selector-wrap">
-              <label className="rating-label">
-                {translations.yourrating}
+            <div className="order-review-rating-section rating-selector-wrap">
+              <label className="order-review-rating-label rating-label">
+                {translations.yourrating || "Your Overall Rating"}
               </label>
               <div
-                className="stars-row"
+                className="order-review-stars-row stars-row rating-stars"
                 onMouseLeave={() => setHoverRating(0)}
               >
                 {[1, 2, 3, 4, 5].map((starValue) => {
@@ -151,33 +151,41 @@ const OrderReviewModal = ({
                     <button
                       key={starValue}
                       type="button"
-                      className="star-btn"
+                      className={`order-review-star-btn star-btn ${isFilled ? "filled active" : "empty"}`}
                       onClick={() => setRating(starValue)}
                       onMouseEnter={() => setHoverRating(starValue)}
                       aria-label={`${starValue} Stars`}
                     >
                       {isFilled ? (
-                        <StarIcon className="star-icon filled" />
+                        <StarIcon className="order-review-star-icon star-icon filled" />
                       ) : (
-                        <StarBorderIcon className="star-icon outline" />
+                        <StarBorderIcon className="order-review-star-icon star-icon outline" />
                       )}
                     </button>
                   );
                 })}
               </div>
-              <span className="rating-hint">
-                {rating === 1 && "Poor"}
-                {rating === 2 && "Fair"}
-                {rating === 3 && "Good"}
-                {rating === 4 && "Very Good"}
-                {rating === 5 && "Excellent!"}
-              </span>
+              <div className="order-review-rating-badge-wrap">
+                {(hoverRating || rating) > 0 ? (
+                  <span className={`order-review-rating-badge rating-hint rating-caption rate-${hoverRating || rating}`}>
+                    {(hoverRating || rating) === 1 && "Poor"}
+                    {(hoverRating || rating) === 2 && "Fair"}
+                    {(hoverRating || rating) === 3 && "Good"}
+                    {(hoverRating || rating) === 4 && "Very Good"}
+                    {(hoverRating || rating) === 5 && "Excellent!"}
+                  </span>
+                ) : (
+                  <span className="order-review-rating-badge rating-hint rating-caption empty">
+                    {translations.pleaseselectrating || "Tap a star to rate"}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Review Comment Area */}
-            <div className="review-input-group">
-              <label htmlFor="reviewTextArea">
-                {translations.yourreviewtext}
+            <div className="order-review-input-group review-input-group">
+              <label htmlFor="reviewTextArea" className="order-review-input-label">
+                {translations.yourreviewtext || "Your Review"}
               </label>
               <textarea
                 id="reviewTextArea"
@@ -185,37 +193,38 @@ const OrderReviewModal = ({
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
                 placeholder={
-                  translations.enteryourreview
+                  translations.enteryourreview || "Write your review here..."
                 }
                 maxLength={1000}
+                className="order-review-textarea"
               />
-              <div className="char-count">{reviewText.length} / 1000</div>
+              <div className="order-review-char-count char-count">{reviewText.length} / 1000</div>
             </div>
 
-            {errorMsg && <div className="form-error-banner">{errorMsg}</div>}
+            {errorMsg && <div className="order-review-error-banner form-error-banner">{errorMsg}</div>}
           </div>
 
-          <div className="modal-footer">
-            <div className="footer-right-actions">
+          <div className="order-review-modal-footer modal-footer">
+            <div className="order-review-footer-actions footer-right-actions">
               <button
                 type="button"
-                className="secondary-btn"
+                className="order-review-cancel-btn secondary-btn"
                 onClick={onClose}
                 disabled={isSubmitting}
               >
-                {translations.cancel}
+                {translations.cancel || "Cancel"}
               </button>
               <button
                 type="submit"
-                className="primary-btn"
+                className="order-review-submit-btn primary-btn"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <CircularProgress size={18} color="inherit" />
                 ) : isEdit ? (
-                  translations.update
+                  translations.update || "Update Review"
                 ) : (
-                  translations.submitreview
+                  translations.submitreview || "Submit Review"
                 )}
               </button>
             </div>
