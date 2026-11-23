@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { formatOrderDateTime, formatOrderPrice } from "./orderHelpers.js";
+import { formatOrderDateTime, formatOrderPrice, consolidateOrderItems } from "./orderHelpers.js";
 
 const escapeHtml = (value) =>
   String(value || "")
@@ -681,13 +681,14 @@ const generateInvoiceBodyHTML = (
   const isItemCancelled = (it) =>
     String(it?.itemstatus || it?.itemStatus || it?.status || "").toLowerCase() === "cancelled";
 
-  const allProducts = (
+  const rawProducts = (
     Array.isArray(orderData.products) && orderData.products.length > 0
       ? orderData.products
       : Array.isArray(orderData.items)
         ? orderData.items
         : []
   );
+  const allProducts = consolidateOrderItems(rawProducts, orderData.decimal || 2);
 
   const activeProducts = allProducts.filter((p) => isOrderCancelled || !isItemCancelled(p));
   const cancelledProducts = isOrderCancelled ? [] : allProducts.filter((p) => isItemCancelled(p));

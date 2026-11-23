@@ -49,6 +49,7 @@ import {
   formatLocationAddressType,
   formatOrderDateTime,
   formatOrderPrice,
+  consolidateOrderItems,
 } from "./orderHelpers.js";
 import { downloadOrderInvoicePDF } from "./orderInvoiceGenerator.js";
 import OrderStatusIcon from "./OrderStatusIcon.jsx";
@@ -283,15 +284,17 @@ const OrderDetails = ({ orderId, onBack }) => {
         return;
       }
       if (response.ok && data) {
+        const rawItems = consolidateOrderItems(data.items || [], data.decimal || 2);
+        data.items = rawItems;
         const isOrderCancelled = String(data.orderstatus || data.orderStatus || "").toLowerCase() === "cancelled";
         const isOrderPaid = String(data.paymentstatus || data.paymentStatus || "").toLowerCase() === "paid" || String(data.paymentstatus || data.paymentStatus || "").toLowerCase() === "refunded";
-        const hasItems = Array.isArray(data.items) && data.items.length > 0;
+        const hasItems = Array.isArray(rawItems) && rawItems.length > 0;
         const hasNonCancelledItems =
-          hasItems && data.items.some((it) => !isItemCancelled(it));
+          hasItems && rawItems.some((it) => !isItemCancelled(it));
 
         let calculatedSubtotal = 0;
         if (hasItems) {
-          data.items.forEach((item) => {
+          rawItems.forEach((item) => {
             if (!isOrderCancelled && !isOrderPaid && isItemCancelled(item)) return;
             const itemQty = item.qty || item.quantity || 1;
             calculatedSubtotal += (parseFloat(item.price) || 0) * itemQty;
@@ -328,7 +331,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                 : 0;
         }
 
-        const formattedProducts = (data.items || []).map((item) => {
+        const formattedProducts = rawItems.map((item) => {
           const hasAddons = Array.isArray(item.addons) && item.addons.length > 0;
           const addonsForProduct = hasAddons ? item.addons : [];
           const itemQty = item.qty || item.quantity || 1;
