@@ -253,73 +253,6 @@
       }
     }
 
-    /* Category Pills Bar (for Offers page or chip styles) */
-    .menu-category-pills-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      max-width: 100%;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      -webkit-overflow-scrolling: touch;
-      flex-wrap: nowrap;
-      padding: 2px 2px 4px 2px;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-
-      .category-pill-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        color: #475569;
-        font-size: 0.825rem;
-        font-weight: 600;
-        border-radius: 10px;
-        height: 38px;
-        padding: 0 0.85rem;
-        white-space: nowrap;
-        cursor: pointer;
-        user-select: none;
-        -webkit-user-select: none;
-        flex-shrink: 0;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        -webkit-tap-highlight-color: transparent;
-
-        .pill-badge {
-          font-size: 0.725rem;
-          font-weight: 700;
-          background: #e2e8f0;
-          color: #64748b;
-          padding: 1px 6px;
-          border-radius: 9999px;
-          transition: all 0.2s ease;
-        }
-
-        &:hover:not(.active) {
-          background: #f1f5f9;
-          border-color: #cbd5e1;
-          color: #028802;
-        }
-
-        &.active {
-          background: #028802;
-          border-color: #028802;
-          color: #ffffff;
-          box-shadow: 0 2px 8px rgba(2, 136, 2, 0.2);
-
-          .pill-badge {
-            background: rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-          }
-        }
-      }
-    }
-
     /* Actions wrap (Right aligned) */
     .filter-actions-wrap {
       display: flex;
@@ -632,24 +565,6 @@
         }
       }
 
-      .menu-category-pills-bar {
-        gap: 0.45rem;
-        width: 100%;
-
-        .category-pill-btn {
-          height: 35px;
-          padding: 0 0.75rem;
-          font-size: 0.8rem;
-          border-radius: 9px;
-          gap: 5px;
-
-          .pill-badge {
-            font-size: 0.7rem;
-            padding: 1px 5.5px;
-          }
-        }
-      }
-
       .diet-segmented-group {
         height: 35px;
         padding: 2.5px;
@@ -697,22 +612,6 @@
           .filter-item-wrap.category-dropdown-wrap {
             flex: 1 1 100%;
             min-width: 100%;
-          }
-        }
-      }
-
-      .menu-category-pills-bar {
-        gap: 0.38rem;
-
-        .category-pill-btn {
-          height: 33px;
-          padding: 0 0.65rem;
-          font-size: 0.775rem;
-          border-radius: 8px;
-
-          .pill-badge {
-            font-size: 0.68rem;
-            padding: 1px 4.5px;
           }
         }
       }
