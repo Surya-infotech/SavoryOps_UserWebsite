@@ -258,7 +258,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
             type="button"
             className="qr-modal-close-btn"
             onClick={onClose}
-            aria-label="Close scanner"
+            aria-label={translations.close}
           >
             <CloseIcon fontSize="small" />
           </button>

@@ -825,7 +825,7 @@ const CartPage = () => {
                             className="cart-info-cancel-btn"
                             onClick={handleCancelOrderUpdate}
                             title={translations.cancelupdate}
-                            aria-label="Cancel update"
+                            aria-label={translations.cancelupdate}
                           >
                             <CloseIcon fontSize="inherit" />
                           </button>
@@ -1010,7 +1010,7 @@ const CartPage = () => {
                               type="button"
                               className="qty-btn"
                               onClick={() => handleDecrease(item.cartItemId)}
-                              aria-label="Decrease quantity"
+                              aria-label={translations.decreasequantity}
                             >
                               <RemoveIcon fontSize="inherit" />
                             </button>
@@ -1019,7 +1019,7 @@ const CartPage = () => {
                               type="button"
                               className="qty-btn"
                               onClick={() => handleIncrease(item.cartItemId)}
-                              aria-label="Increase quantity"
+                              aria-label={translations.increasequantity}
                             >
                               <AddIcon fontSize="inherit" />
                             </button>
@@ -1270,7 +1270,7 @@ const CartPage = () => {
                 type="button"
                 className="addon-modal-close-btn"
                 onClick={() => setEditingCartItem(null)}
-                aria-label="Close"
+                aria-label={translations.close}
               >
                 <CloseIcon fontSize="small" />
               </button>

@@ -251,7 +251,7 @@ export const DishAddonModal = ({
             onClick={handleConfirm}
             disabled={!isAvail}
             aria-label={translations.addtocart}
-            title={!isAvail ? (item.availabilityBadge || "Unavailable") : translations.addtocart}
+            title={!isAvail ? (item.availabilityBadge || translations.unavailable) : translations.addtocart}
           >
             <ShoppingCartOutlinedIcon className="confirm-btn-icon" fontSize="small" />
             <span className="addon-total-price">

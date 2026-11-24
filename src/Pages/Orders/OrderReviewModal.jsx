@@ -120,7 +120,7 @@ const OrderReviewModal = ({
             type="button"
             className="order-review-modal-close-btn modal-close-btn"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={translations.close}
           >
             <CloseIcon fontSize="small" />
           </button>
@@ -136,7 +136,7 @@ const OrderReviewModal = ({
             {/* Star Rating Section */}
             <div className="order-review-rating-section rating-selector-wrap">
               <label className="order-review-rating-label rating-label">
-                {translations.yourrating || "Your Overall Rating"}
+                {translations.yourrating}
               </label>
               <div
                 className="order-review-stars-row stars-row rating-stars"
@@ -154,7 +154,7 @@ const OrderReviewModal = ({
                       className={`order-review-star-btn star-btn ${isFilled ? "filled active" : "empty"}`}
                       onClick={() => setRating(starValue)}
                       onMouseEnter={() => setHoverRating(starValue)}
-                      aria-label={`${starValue} Stars`}
+                      aria-label={`${starValue} ${translations.stars}`}
                     >
                       {isFilled ? (
                         <StarIcon className="order-review-star-icon star-icon filled" />
@@ -168,15 +168,15 @@ const OrderReviewModal = ({
               <div className="order-review-rating-badge-wrap">
                 {(hoverRating || rating) > 0 ? (
                   <span className={`order-review-rating-badge rating-hint rating-caption rate-${hoverRating || rating}`}>
-                    {(hoverRating || rating) === 1 && "Poor"}
-                    {(hoverRating || rating) === 2 && "Fair"}
-                    {(hoverRating || rating) === 3 && "Good"}
-                    {(hoverRating || rating) === 4 && "Very Good"}
-                    {(hoverRating || rating) === 5 && "Excellent!"}
+                    {(hoverRating || rating) === 1 && translations.poor}
+                    {(hoverRating || rating) === 2 && translations.fair}
+                    {(hoverRating || rating) === 3 && translations.good}
+                    {(hoverRating || rating) === 4 && translations.verygood}
+                    {(hoverRating || rating) === 5 && translations.excellent}
                   </span>
                 ) : (
                   <span className="order-review-rating-badge rating-hint rating-caption empty">
-                    {translations.pleaseselectrating || "Tap a star to rate"}
+                    {translations.tapastartorate}
                   </span>
                 )}
               </div>
@@ -185,16 +185,14 @@ const OrderReviewModal = ({
             {/* Review Comment Area */}
             <div className="order-review-input-group review-input-group">
               <label htmlFor="reviewTextArea" className="order-review-input-label">
-                {translations.yourreviewtext || "Your Review"}
+                {translations.yourreviewtext}
               </label>
               <textarea
                 id="reviewTextArea"
                 rows={4}
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
-                placeholder={
-                  translations.enteryourreview || "Write your review here..."
-                }
+                placeholder={translations.writereviewplaceholder}
                 maxLength={1000}
                 className="order-review-textarea"
               />
@@ -212,7 +210,7 @@ const OrderReviewModal = ({
                 onClick={onClose}
                 disabled={isSubmitting}
               >
-                {translations.cancel || "Cancel"}
+                {translations.cancel}
               </button>
               <button
                 type="submit"
@@ -222,9 +220,9 @@ const OrderReviewModal = ({
                 {isSubmitting ? (
                   <CircularProgress size={18} color="inherit" />
                 ) : isEdit ? (
-                  translations.update || "Update Review"
+                  translations.updatereview
                 ) : (
-                  translations.submitreview || "Submit Review"
+                  translations.submitreview
                 )}
               </button>
             </div>

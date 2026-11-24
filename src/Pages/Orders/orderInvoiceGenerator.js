@@ -783,19 +783,19 @@ const generateInvoiceBodyHTML = (
           <div class="cancellation-info-box">
             ${cancelReason ? `
               <div class="cancellation-meta-row">
-                <span class="meta-label">${escapeHtml(getTranslation("cancellationreason") || "Cancellation Reason")}:</span>
+                <span class="meta-label">${escapeHtml(getTranslation("cancellationreason"))}:</span>
                 <span class="meta-value">${escapeHtml(cancelReason)}</span>
               </div>
             ` : ""}
             ${cancelledBy ? `
               <div class="cancellation-meta-row">
-                <span class="meta-label">${escapeHtml(getTranslation("cancelledby") || "Cancelled By")}:</span>
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledby"))}:</span>
                 <span class="meta-value">${escapeHtml(cancelledBy)}</span>
               </div>
             ` : ""}
             ${cancelledAt ? `
               <div class="cancellation-meta-row">
-                <span class="meta-label">${escapeHtml(getTranslation("cancelledtime") || "Cancelled Time")}:</span>
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledtime"))}:</span>
                 <span class="meta-value">${formatOrderDateTime(cancelledAt, dateFormat, timeFormat, timeZone)}</span>
               </div>
             ` : ""}
@@ -857,13 +857,13 @@ const generateInvoiceBodyHTML = (
       if (isDeal) {
         const dealLabel = bundletype
           ? getTranslation(bundletype.toLowerCase()) || bundletype
-          : getTranslation("deal") || "Deal";
+          : getTranslation("deal");
         dealTagHtml = ` <span style="display: inline-block; background-color: #FEF3C7; color: #D97706; border: 1px solid #FCD34D; border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: bold; margin-left: 4px; text-transform: uppercase;">${escapeHtml(dealLabel)}</span>`;
       }
 
       let bundleItemsHtml = "";
       if (bundleItems.length > 0) {
-        const includedItemsLabel = getTranslation("includeditems") || "Included Items";
+        const includedItemsLabel = getTranslation("includeditems");
         bundleItemsHtml = `
           <div style="margin-top: 6px; padding: 6px 8px; background-color: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 6px;">
             <div style="font-size: 9px; font-weight: bold; color: #166534; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
@@ -904,7 +904,7 @@ const generateInvoiceBodyHTML = (
 
       let specialInstructionsHtml = "";
       if (product.specialInstructions) {
-        specialInstructionsHtml = `<span class="special-instructions">${escapeHtml(getTranslation("specialinstructions") || "Special Instructions")}: ${escapeHtml(product.specialInstructions)}</span>`;
+        specialInstructionsHtml = `<span class="special-instructions">${escapeHtml(getTranslation("specialinstructions"))}: ${escapeHtml(product.specialInstructions)}</span>`;
       }
 
       const cancelReason = product.cancelreason || product.cancelReason || product.reason || "";
@@ -917,19 +917,19 @@ const generateInvoiceBodyHTML = (
           <div class="cancellation-info-box">
             ${cancelReason ? `
               <div class="cancellation-meta-row">
-                <span class="meta-label">${escapeHtml(getTranslation("cancellationreason") || "Cancellation Reason")}:</span>
+                <span class="meta-label">${escapeHtml(getTranslation("cancellationreason"))}:</span>
                 <span class="meta-value">${escapeHtml(cancelReason)}</span>
               </div>
             ` : ""}
             ${cancelledBy ? `
               <div class="cancellation-meta-row">
-                <span class="meta-label">${escapeHtml(getTranslation("cancelledby") || "Cancelled By")}:</span>
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledby"))}:</span>
                 <span class="meta-value">${escapeHtml(cancelledBy)}</span>
               </div>
             ` : ""}
             ${cancelledAt ? `
               <div class="cancellation-meta-row">
-                <span class="meta-label">${escapeHtml(getTranslation("cancelledtime") || "Cancelled Time")}:</span>
+                <span class="meta-label">${escapeHtml(getTranslation("cancelledtime"))}:</span>
                 <span class="meta-value">${formatOrderDateTime(cancelledAt, dateFormat, timeFormat, timeZone)}</span>
               </div>
             ` : ""}
@@ -941,7 +941,7 @@ const generateInvoiceBodyHTML = (
         <tr>
           <td>
             <strong class="cancelled-item-name">${escapeHtml(productName)}</strong>
-            <span class="cancelled-badge">${escapeHtml(getTranslation("cancelled") || "Cancelled")}</span>
+            <span class="cancelled-badge">${escapeHtml(getTranslation("cancelled"))}</span>
             ${dealTagHtml}
             ${bundleItemsHtml}
             ${addonsHtml}
@@ -1222,7 +1222,7 @@ const generateInvoiceBodyHTML = (
 
       ${cancelledProducts.length > 0 ? `
         <!-- Cancelled Items Section -->
-        <h3 class="cancelled-section-title">${escapeHtml(getTranslation("cancelleditems") || "Cancelled Items")}</h3>
+        <h3 class="cancelled-section-title">${escapeHtml(getTranslation("cancelleditems"))}</h3>
         <table class="cancelled-items-table">
           <thead>
             <tr>
@@ -1255,11 +1255,11 @@ const generateInvoiceBodyHTML = (
         </div>
         ${effectiveRefund > 0 ? `
           <div class="summary-row refund-deduction-row">
-            <span>${escapeHtml(getTranslation("refundamount") || "Refund Amount")}</span>
+            <span>${escapeHtml(getTranslation("refundamount"))}</span>
             <span>-${formatPrice(effectiveRefund)}</span>
           </div>
           <div class="summary-row net-total-row">
-            <span>${escapeHtml(getTranslation("nettotal") || getTranslation("netamountpaid") || "Net Total")}</span>
+            <span>${escapeHtml(getTranslation("nettotal") || getTranslation("netamountpaid"))}</span>
             <span>${formatPrice(netTotalDisplay)}</span>
           </div>
         ` : ""}

@@ -452,8 +452,8 @@ const ProfilePage = () => {
                   type="button"
                   className="avatar-edit-btn"
                   onClick={() => fileInputRef.current?.click()}
-                  title="Upload profile photo"
-                  aria-label="Upload profile photo"
+                  title={translations.choosephoto}
+                  aria-label={translations.choosephoto}
                 >
                   <CameraAltOutlinedIcon fontSize="small" />
                 </button>

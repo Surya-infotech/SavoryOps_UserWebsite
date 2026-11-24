@@ -329,8 +329,8 @@ const NavSearchBar = ({ branch, branchId }) => {
 
                       <div className="nav-search-item-info">
                         <div className="nav-search-item-title-row">
-                          {dish.isVeg && <span className="diet-dot-veg" title="Veg" />}
-                          {dish.isNonVeg && <span className="diet-dot-nonveg" title="Non-Veg" />}
+                          {dish.isVeg && <span className="diet-dot-veg" title={translations.veg} />}
+                          {dish.isNonVeg && <span className="diet-dot-nonveg" title={translations.nonveg} />}
                           <span className="nav-search-item-name">{dish.title || dish.name}</span>
                         </div>
                         {(dish.categoryName || dish.categoryname) && (

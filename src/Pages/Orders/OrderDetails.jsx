@@ -1105,7 +1105,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                   className="inline-add-more-btn"
                   onClick={handleAddMoreItems}
                   title={translations.addmoreitems}
-                  aria-label="Add more items"
+                  aria-label={translations.addmoreitems}
                 >
                   <AddIcon fontSize="small" />
                 </button>
@@ -1228,7 +1228,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                                   {isItemUnlim ? (
                                     <span
                                       className="bundle-pill-qty unlimited"
-                                      title={translations.unlimited || "Unlimited"}
+                                      title={translations.unlimited}
                                       style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                                     >
                                       <AllInclusiveRoundedIcon style={{ fontSize: "0.95rem" }} />
@@ -1511,7 +1511,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                         </div>
                         <div className="refund-text-group">
                           <span className="refund-title">
-                            {translations.refundamount || translations.refundedamount || translations.Refunded || "Refund Amount"}
+                            {translations.refundamount}
                           </span>
                           {itemNames.length > 0 && (
                             <span className="refund-subtitle">

@@ -572,7 +572,7 @@ const ManageAddressPage = () => {
                 className="modal-close-btn"
                 onClick={handleCloseModal}
                 disabled={isSaving}
-                aria-label="Close dialog"
+                aria-label={translations.close}
               >
                 <CloseIcon />
               </button>

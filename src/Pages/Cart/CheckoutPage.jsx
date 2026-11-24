@@ -1193,7 +1193,7 @@ const CheckoutPage = () => {
                 className="checkout-address-modal-close-btn"
                 onClick={handleCloseAddAddressModal}
                 disabled={isSavingAddress}
-                aria-label="Close dialog"
+                aria-label={translations.close}
               >
                 <CloseIcon />
               </button>

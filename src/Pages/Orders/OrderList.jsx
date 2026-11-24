@@ -182,7 +182,7 @@ const OrderList = ({ onSelectOrder }) => {
                 type="button"
                 className="search-clear-btn"
                 onClick={() => setSearch("")}
-                aria-label="Clear search"
+                aria-label={translations.clearsearch}
               >
                 <CloseIcon fontSize="small" />
               </button>

@@ -229,8 +229,8 @@ export const DishDetailModal = ({
                       {isItemUnlimited ? (
                         <span
                           className="addon-price addon-unlimited-pill"
-                          title={translations.unlimited || "Unlimited"}
-                          aria-label={translations.unlimited || "Unlimited"}
+                          title={translations.unlimited}
+                          aria-label={translations.unlimited}
                         >
                           <AllInclusiveRoundedIcon style={{ fontSize: "1.25rem", verticalAlign: "middle" }} />
                         </span>

@@ -394,7 +394,7 @@ const AddReservationModal = ({ isOpen, onClose, onSuccess }) => {
             type="button"
             className="add-reservation-modal-close-btn modal-close-btn"
             onClick={onClose}
-            aria-label="Close dialog"
+            aria-label={translations.close}
           >
             <CloseIcon />
           </button>

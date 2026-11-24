@@ -752,7 +752,7 @@ const HomeReviews = () => {
                 type="button"
                 className="modal-close-btn"
                 onClick={() => setIsWriteModalOpen(false)}
-                aria-label="Close"
+                aria-label={translations.close}
               >
                 <CloseIcon fontSize="inherit" />
               </button>

@@ -528,16 +528,16 @@ const OrderTypeDropdown = ({ className = "" }) => {
   if (orderTypes.length === 0) {
     if (isBranchClosed) {
       return (
-        <div className={`order-type-closed-badge ${className}`} title={translations.branchclosed || "Branch is Closed"}>
+        <div className={`order-type-closed-badge ${className}`} title={translations.branchclosed}>
           <span className="closed-status-dot"></span>
-          <span className="closed-status-text">{translations.branchclosed || "Closed"}</span>
+          <span className="closed-status-text">{translations.closed}</span>
         </div>
       );
     }
     return null;
   }
 
-  const activeName = selectedOrderType || orderTypes[0]?.ordertypename || "Order Mode";
+  const activeName = selectedOrderType || orderTypes[0]?.ordertypename || translations.ordertype;
 
   return (
     <div
@@ -551,7 +551,7 @@ const OrderTypeDropdown = ({ className = "" }) => {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={isAfterHours ? `After-Hours Ordering: ${activeName}` : `Order Mode: ${activeName}`}
+        title={isAfterHours ? `${translations.afterhoursordering}: ${activeName}` : `${translations.ordertype}: ${activeName}`}
       >
         {isAfterHours ? (
           <NightsStayIcon className="order-type-icon-pin after-hours-nav-icon" />
@@ -560,7 +560,7 @@ const OrderTypeDropdown = ({ className = "" }) => {
         )}
         <span className="order-type-active-name">{activeName}</span>
         {isAfterHours && (
-          <span className="after-hours-nav-tag" title="After-Hours Ordering Active">
+          <span className="after-hours-nav-tag" title={translations.afterhoursorderingactive}>
             Night
           </span>
         )}
@@ -579,7 +579,7 @@ const OrderTypeDropdown = ({ className = "" }) => {
             <div className="after-hours-dropdown-banner">
               <div className="banner-title-row">
                 <NightsStayIcon fontSize="small" />
-                <span>{translations.afterhoursordering || "After-Hours Ordering"}</span>
+                <span>{translations.afterhoursordering}</span>
               </div>
             </div>
           )}
@@ -1274,7 +1274,7 @@ const Navbar = () => {
                   type="button"
                   className="mobile-drawer-close"
                   onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Close menu"
+                  aria-label={translations.close}
                 >
                   <CloseIcon fontSize="small" />
                 </button>

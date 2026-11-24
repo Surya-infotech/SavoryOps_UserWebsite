@@ -232,7 +232,7 @@ const DishCard = ({
                 className="dish-addon-btn"
                 onClick={handleAddonClick}
                 disabled={!isAvail}
-                title={!isAvail ? (dish.availabilityBadge || "Unavailable") : `${translations.addons} - ${dish.title}`}
+                title={!isAvail ? (dish.availabilityBadge || translations.unavailable) : `${translations.addons} - ${dish.title}`}
                 aria-label={`${dish.title} ${translations.addons}`}
               >
                 <AddIcon className="addon-btn-icon" />
