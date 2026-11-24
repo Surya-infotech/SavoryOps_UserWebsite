@@ -92,9 +92,9 @@ const applyTableAndBranchSettings = ({
   const tableid = tableDetails?._id != null ? String(tableDetails._id) : null;
 
   // 1. Save Table & QR Owner Details
+  localStorage.removeItem("selectedTable");
   if (tableno) {
     localStorage.setItem("selectedTableNo", tableno);
-    localStorage.setItem("selectedTable", tableno);
   }
   if (tableid) {
     localStorage.setItem("selectedTableId", tableid);

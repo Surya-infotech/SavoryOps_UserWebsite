@@ -74,7 +74,7 @@ const CheckoutPage = () => {
     return localStorage.getItem("selectedOrderType") || "Delivery";
   });
   const [selectedTableNo, setSelectedTableNo] = useState(() => {
-    return localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
+    return localStorage.getItem("selectedTableNo");
   });
   const [posPayload, setPosPayload] = useState(() => {
     return typeof window !== "undefined" ? window.__branchSetting : null;
@@ -181,7 +181,7 @@ const CheckoutPage = () => {
         setSelectedTableNo(null);
         clearSelectedTable();
       }
-      if (e.key === "selectedTableNo" || e.key === "selectedTable") {
+      if (e.key === "selectedTableNo") {
         setSelectedTableNo(e.newValue || null);
       }
     };
@@ -191,9 +191,7 @@ const CheckoutPage = () => {
       if (tableVal) {
         setSelectedTableNo(String(tableVal));
       } else {
-        setSelectedTableNo(
-          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable") || null
-        );
+        setSelectedTableNo(localStorage.getItem("selectedTableNo") || null);
       }
     };
 

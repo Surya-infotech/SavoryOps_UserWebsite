@@ -700,8 +700,8 @@ const OrderDetails = ({ orderId, onBack }) => {
           if (Array.isArray(area?.tables) && area.tables.length > 0) {
             const firstTable = area.tables[0];
             if (firstTable.tableno) {
+              localStorage.removeItem("selectedTable");
               localStorage.setItem("selectedTableNo", String(firstTable.tableno));
-              localStorage.setItem("selectedTable", String(firstTable.tableno));
             }
             if (firstTable._id || firstTable.tableid) {
               localStorage.setItem(

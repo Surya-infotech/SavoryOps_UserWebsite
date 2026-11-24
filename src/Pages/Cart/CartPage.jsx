@@ -101,7 +101,7 @@ const CartPage = () => {
   const [currentOrderNo, setCurrentOrderNo] = useState(() => localStorage.getItem("currentOrderNo"));
   const [currentOrderId, setCurrentOrderId] = useState(() => localStorage.getItem("currentOrderId"));
   const [selectedTableNo, setSelectedTableNo] = useState(() => {
-    return localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
+    return localStorage.getItem("selectedTableNo");
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -166,9 +166,7 @@ const CartPage = () => {
       if (tableVal) {
         setSelectedTableNo(String(tableVal));
       } else {
-        setSelectedTableNo(
-          localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable") || null
-        );
+        setSelectedTableNo(localStorage.getItem("selectedTableNo") || null);
       }
     };
     const handleStorage = (e) => {
@@ -177,7 +175,7 @@ const CartPage = () => {
         setSelectedTableNo(null);
         clearSelectedTable();
       }
-      if (e.key === "selectedTableNo" || e.key === "selectedTable") {
+      if (e.key === "selectedTableNo") {
         setSelectedTableNo(e.newValue || null);
       }
       if (e.key === "selectedBranchId") {
@@ -603,8 +601,7 @@ const CartPage = () => {
     // Direct Dine-in Order Placement from Cart Page (same as UserApp)
     if (isDineIn) {
       const storedTableId = localStorage.getItem("selectedTableId");
-      const storedTableNo =
-        localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
+      const storedTableNo = localStorage.getItem("selectedTableNo");
 
       if (!storedTableId || !storedTableNo) {
         if (typeof showSnackbar === "function") {

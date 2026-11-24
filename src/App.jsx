@@ -52,8 +52,7 @@ const customerTokenKey = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 
 const readStoredTableDetails = () => {
   if (typeof localStorage === "undefined") return null;
-  const tableNo =
-    localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
+  const tableNo = localStorage.getItem("selectedTableNo");
   if (!tableNo) return null;
   return {
     tableNo,

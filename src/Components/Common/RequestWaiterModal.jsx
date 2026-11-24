@@ -49,9 +49,7 @@ const resolveStoredBranchId = (branchId) =>
 
 const resolveStoredTableNo = (tableNo) =>
   tableNo ||
-  (typeof localStorage !== "undefined"
-    ? localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable")
-    : "") ||
+  (typeof localStorage !== "undefined" ? localStorage.getItem("selectedTableNo") : "") ||
   "";
 
 const RequestWaiterDialog = ({
@@ -117,10 +115,7 @@ const RequestWaiterDialog = ({
         activeBranchId ||
         localStorage.getItem("selectedBranchid") ||
         localStorage.getItem("selectedBranchId");
-      activeTableNo =
-        activeTableNo ||
-        localStorage.getItem("selectedTableNo") ||
-        localStorage.getItem("selectedTable");
+      activeTableNo = activeTableNo || localStorage.getItem("selectedTableNo");
       activeTableId = activeTableId || localStorage.getItem("selectedTableId");
     }
 
