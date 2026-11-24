@@ -250,6 +250,12 @@ const OffersPage = () => {
         items: b.items || [],
         addons: b.addons || [],
         isDeal: true,
+        availability: b.availability,
+        isAvailable: b.isAvailable,
+        availabilityBadge: b.availabilityBadge,
+        sessionBadge: b.sessionBadge,
+        statusColor: b.statusColor,
+        mealsessions: b.mealsessions,
       };
     });
   }, [rawDealsBundles, branchCurrencySymbol, translations, posPayload, selectedOrderType]);
@@ -283,11 +289,25 @@ const OffersPage = () => {
 
   const handleOpenAddonModal = (e, dish) => {
     e.stopPropagation();
+    if (dish?.isDeal && dish?.isAvailable === false) {
+      showSnackbar(
+        `${dish.title || dish.dealsbundlesname || "This deal"} is currently unavailable (${dish.availabilityBadge || "Unavailable"})`,
+        "warning"
+      );
+      return;
+    }
     setAddonModalItem(dish);
   };
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
+    if (item?.isDeal && item?.isAvailable === false) {
+      showSnackbar(
+        `${item.title || item.dealsbundlesname || "This deal"} is currently unavailable (${item.availabilityBadge || "Unavailable"})`,
+        "warning"
+      );
+      return;
+    }
     const effectivePrice = calculateItemPrice(item, posPayload, selectedOrderType);
     const itemWithPrice = {
       ...item,

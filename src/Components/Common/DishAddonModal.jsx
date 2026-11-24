@@ -69,6 +69,20 @@ export const DishAddonModal = ({
   const isVeg = !isNonVeg && (rawType.includes("veg") || item?.isVeg === true);
   const showDiet = Boolean(isVeg || isNonVeg || item?.hasDiet);
 
+  const isDeal = Boolean(
+    item?.isDeal ||
+    item?.bundletype ||
+    item?.dealsbundlesid
+  );
+  const isDealScheduleAvailable = (it) => {
+    if (!it) return false;
+    if (it.isAvailable !== undefined) return Boolean(it.isAvailable);
+    const badge = String(it.availabilityBadge || "").trim().toLowerCase();
+    if (badge) return badge === "available" || badge === "available today" || badge === "limited offer";
+    return true;
+  };
+  const isAvail = !isDeal || isDealScheduleAvailable(item);
+
   if (!item) return null;
 
   const toggleAddon = (addonKey) => {
@@ -80,6 +94,13 @@ export const DishAddonModal = ({
   };
 
   const handleConfirm = () => {
+    if (isDeal && !isAvail) {
+      showSnackbar(
+        `${item.title || "This deal"} is currently unavailable (${item.availabilityBadge || "Unavailable"})`,
+        "warning"
+      );
+      return;
+    }
     const selectedAddons = (item.addons || []).map((addon) => {
       const addonKey = addon.addonid || addon._id || addon.id;
       const isSelected = selectedAddonIds.includes(addonKey);
@@ -140,6 +161,11 @@ export const DishAddonModal = ({
               {prepTime && (
                 <span className="addon-prep-time">
                   <AccessTimeIcon fontSize="inherit" /> {prepTime}
+                </span>
+              )}
+              {isDeal && (item.availabilityBadge || item.isAvailable !== undefined) && (
+                <span className={`dish-status-badge dish-status-badge--${item.statusColor || (isAvail ? "success" : "warning")}`}>
+                  {item.availabilityBadge || (isAvail ? "Available" : "Unavailable")}
                 </span>
               )}
             </div>
@@ -221,9 +247,11 @@ export const DishAddonModal = ({
 
           <button
             type="button"
-            className="addon-add-cart-btn"
+            className={`addon-add-cart-btn ${!isAvail ? "is-disabled" : ""}`}
             onClick={handleConfirm}
+            disabled={!isAvail}
             aria-label={translations.addtocart}
+            title={!isAvail ? (item.availabilityBadge || "Unavailable") : translations.addtocart}
           >
             <ShoppingCartOutlinedIcon className="confirm-btn-icon" fontSize="small" />
             <span className="addon-total-price">

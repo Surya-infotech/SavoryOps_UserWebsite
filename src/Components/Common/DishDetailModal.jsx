@@ -54,6 +54,15 @@ export const DishDetailModal = ({
     item?.isDeal
   );
 
+  const isDealScheduleAvailable = (it) => {
+    if (!it) return false;
+    if (it.isAvailable !== undefined) return Boolean(it.isAvailable);
+    const badge = String(it.availabilityBadge || "").trim().toLowerCase();
+    if (badge) return badge === "available" || badge === "available today" || badge === "limited offer";
+    return true;
+  };
+  const isAvail = !isComboItem || isDealScheduleAvailable(item);
+
   const effectivePrice = useMemo(() => {
     if (!item) return 0;
     return calculateItemPrice(item, effectiveSettings, selectedOrderType);
@@ -87,6 +96,13 @@ export const DishDetailModal = ({
   };
 
   const handleConfirm = () => {
+    if (isComboItem && !isAvail) {
+      showSnackbar(
+        `${item.title || "This deal"} is currently unavailable (${item.availabilityBadge || "Unavailable"})`,
+        "warning"
+      );
+      return;
+    }
     const selectedAddons = (item.addons || []).map((addon) => {
       const addonKey = addon.addonid || addon._id || addon.id;
       const isSelected = selectedAddonIds.includes(addonKey);
@@ -163,6 +179,19 @@ export const DishDetailModal = ({
                 {item.bundletype && (
                   <span className={`tag-badge deal-ribbon-badge ${item.bundletype}`} style={{ position: "static" }}>
                     {item.bundletype === "combo" ? (translations.combo) : (translations.unlimited)}
+                  </span>
+                )}
+                {isComboItem && (item.availabilityBadge || item.isAvailable !== undefined) && (
+                  <span
+                    className={`tag-badge dish-status-badge dish-status-badge--${item.statusColor || (isAvail ? "success" : "warning")}`}
+                    style={{ position: "static" }}
+                  >
+                    {item.availabilityBadge || (isAvail ? "Available" : "Unavailable")}
+                  </span>
+                )}
+                {isComboItem && item.sessionBadge && (
+                  <span className="tag-badge dish-session-badge" style={{ position: "static" }}>
+                    {item.sessionBadge}
                   </span>
                 )}
                 {prepTime && <span className="tag-badge">⏱ {prepTime}</span>}

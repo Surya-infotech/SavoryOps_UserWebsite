@@ -55,6 +55,15 @@ const DishCard = ({
   const isComboOrUnlimited = isCombo || isUnlimited || isDeal;
   const canShowActions = !isDeal || isCombo;
 
+  const isDealScheduleAvailable = (item) => {
+    if (!item) return false;
+    if (item.isAvailable !== undefined) return Boolean(item.isAvailable);
+    const badge = String(item.availabilityBadge || "").trim().toLowerCase();
+    if (badge) return badge === "available" || badge === "available today" || badge === "limited offer";
+    return true;
+  };
+  const isAvail = !isDeal || isDealScheduleAvailable(dish);
+
   const formattedPrice =
     priceFormatted ||
     (selectedBranch ? formatPriceFromBranch(dish.price, selectedBranch) : `$${Number(dish.price || 0).toFixed(2)}`);
@@ -84,6 +93,7 @@ const DishCard = ({
     isDeal ? "deal-card" : "",
     isCombo ? "combo-card" : "",
     isUnlimited ? "unlimited-card" : "",
+    !isAvail ? "is-unavailable" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -103,6 +113,7 @@ const DishCard = ({
 
   const handleAddonClick = (e) => {
     e.stopPropagation();
+    if (!isAvail) return;
     if (typeof onOpenAddonModal === "function") {
       onOpenAddonModal(e, dish);
     }
@@ -110,6 +121,7 @@ const DishCard = ({
 
   const handleCartClick = (e) => {
     e.stopPropagation();
+    if (!isAvail) return;
     if (typeof onAddToCart === "function") {
       onAddToCart(e, dish);
     }
@@ -168,6 +180,17 @@ const DishCard = ({
           </span>
         )}
 
+        {/* Availability Badge for Deals */}
+        {isDeal && (dish.availabilityBadge || dish.isAvailable !== undefined) && (
+          <div className="dish-card-badge-row">
+            <span
+              className={`dish-status-badge dish-status-badge--${dish.statusColor || (isAvail ? "success" : "warning")}`}
+            >
+              {dish.availabilityBadge || (isAvail ? "Available" : "Unavailable")}
+            </span>
+          </div>
+        )}
+
         {/* Diet Indicator */}
         {showDiet && <DietIndicator isVeg={isVeg} />}
       </div>
@@ -209,7 +232,8 @@ const DishCard = ({
                 type="button"
                 className="dish-addon-btn"
                 onClick={handleAddonClick}
-                title={`${translations.addons} - ${dish.title}`}
+                disabled={!isAvail}
+                title={!isAvail ? (dish.availabilityBadge || "Unavailable") : `${translations.addons} - ${dish.title}`}
                 aria-label={`${dish.title} ${translations.addons}`}
               >
                 <AddIcon className="addon-btn-icon" />
@@ -222,8 +246,15 @@ const DishCard = ({
                 type="button"
                 className={`dish-add-btn ${count > 0 ? "added" : ""}`}
                 onClick={handleCartClick}
+                disabled={!isAvail}
                 aria-label={translations.addtocart}
-                title={count > 0 ? `${translations.added} (${count})` : (translations.addtocart)}
+                title={
+                  !isAvail
+                    ? (dish.availabilityBadge || "Unavailable")
+                    : count > 0
+                      ? `${translations.added} (${count})`
+                      : translations.addtocart
+                }
               >
                 <ShoppingCartOutlinedIcon fontSize="small" />
                 {count > 0 && <span className="dish-btn-count-badge">{count}</span>}

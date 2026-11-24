@@ -501,6 +501,13 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
   // Quick direct add-to-cart (from shopping cart button)
   const handleAddToCart = (e, dish) => {
     e.stopPropagation();
+    if (dish?.isDeal && dish?.isAvailable === false) {
+      showSnackbar(
+        `${dish.title || dish.dealsbundlesname || "This deal"} is currently unavailable (${dish.availabilityBadge || "Unavailable"})`,
+        "warning"
+      );
+      return;
+    }
     const effectivePrice = calculateItemPrice(dish, branchSetting, selectedOrderType);
     const dishWithPrice = {
       ...dish,
@@ -530,6 +537,13 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
   // '+' Button click -> Open Dedicated Add-on Modal
   const handleOpenAddonModal = (e, dish) => {
     e.stopPropagation();
+    if (dish?.isDeal && dish?.isAvailable === false) {
+      showSnackbar(
+        `${dish.title || dish.dealsbundlesname || "This deal"} is currently unavailable (${dish.availabilityBadge || "Unavailable"})`,
+        "warning"
+      );
+      return;
+    }
     setAddonModalDish(dish);
   };
 
