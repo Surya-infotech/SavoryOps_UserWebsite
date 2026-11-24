@@ -120,7 +120,7 @@ const RequestWaiterDialog = ({
     }
 
     if (!activeOwnerId || !activeBranchId || !activeTableNo) {
-      showSnackbar(translations.tablenotfound || "Table details not found", "error");
+      showSnackbar(translations.tablenotfound, "error");
       return;
     }
 
@@ -156,28 +156,17 @@ const RequestWaiterDialog = ({
         );
 
         if (data.alreadyNotified) {
-          showSnackbar(
-            translations.waiteralreadynotified ||
-              "Waiter has already been notified for your table. Please wait a moment.",
-            "info"
-          );
+          showSnackbar(translations.waiteralreadynotified, "info");
         } else {
-          showSnackbar(
-            translations.waiternotified ||
-              "Waiter has been notified! A staff member is on the way.",
-            "success"
-          );
+          showSnackbar(translations.waiternotified, "success");
         }
         onClose();
       } else {
-        showSnackbar(
-          data?.message || translations.somethingWentWrong || "Something went wrong.",
-          "error"
-        );
+        showSnackbar(data?.message || translations.somethingWentWrong, "error");
       }
     } catch (error) {
       console.error("Error requesting waiter:", error);
-      showSnackbar(translations.somethingWentWrong || "Something went wrong.", "error");
+      showSnackbar(translations.somethingWentWrong, "error");
     } finally {
       setLoading(false);
     }
@@ -211,10 +200,10 @@ const RequestWaiterDialog = ({
             </div>
             <div className="waiter-title-group">
               <h3 id="request-waiter-title" className="waiter-modal-title">
-                {translations.callwaiter || "Call Waiter"}
+                {translations.callwaiter}
               </h3>
               <p className="waiter-modal-subtitle">
-                {translations.tablelabel || "Table"} {resolvedTableNo}
+                {translations.tablelabel} {resolvedTableNo}
               </p>
             </div>
           </div>
@@ -224,7 +213,7 @@ const RequestWaiterDialog = ({
             className="waiter-close-btn"
             onClick={onClose}
             disabled={loading}
-            aria-label={translations.close || "Close"}
+            aria-label={translations.close}
           >
             <CloseIcon fontSize="small" />
           </button>
@@ -233,7 +222,7 @@ const RequestWaiterDialog = ({
         {/* Body */}
         <div className="waiter-modal-body">
           <p className="waiter-select-label">
-            {translations.selectassistance || "Select Assistance"}
+            {translations.selectassistance}
           </p>
 
           <div className="waiter-options-list" role="radiogroup">
@@ -253,7 +242,7 @@ const RequestWaiterDialog = ({
                     <OptionIcon fontSize="small" />
                   </div>
                   <span className="waiter-option-text">
-                    {translations[opt.key] || opt.reasonValue}
+                    {translations[opt.key]}
                   </span>
                   {isSelected ? (
                     <RadioButtonCheckedIcon className="waiter-radio-icon checked" fontSize="small" />
@@ -279,8 +268,8 @@ const RequestWaiterDialog = ({
                   <NotificationsActiveIcon fontSize="small" />
                   <span>
                     {cooldown > 0
-                      ? `${translations.waitercooldown || "Wait to recall"} (${cooldown}s)`
-                      : translations.requestwaiter || "Request Waiter"}
+                      ? `${translations.waitercooldown} (${cooldown}s)`
+                      : translations.requestwaiter}
                   </span>
                 </>
               )}
@@ -328,8 +317,8 @@ const CallWaiterFabInner = ({ onPress, tableNo, branchId }) => {
       type="button"
       className={`call-waiter-fab ${isRtl ? "is-rtl" : ""}`}
       onClick={onPress}
-      aria-label={translations.callwaiter || "Call Waiter"}
-      title={translations.callwaiter || "Call Waiter"}
+      aria-label={translations.callwaiter}
+      title={translations.callwaiter}
     >
       <div className="call-waiter-fab-inner">
         <div className="call-waiter-fab-icon-wrap">
@@ -337,10 +326,10 @@ const CallWaiterFabInner = ({ onPress, tableNo, branchId }) => {
         </div>
         <div className="call-waiter-fab-text-wrap">
           <span className="call-waiter-fab-title">
-            {cooldown > 0 ? `${cooldown}s` : translations.callwaiter || "Call Waiter"}
+            {cooldown > 0 ? `${cooldown}s` : translations.callwaiter}
           </span>
           <span className="call-waiter-fab-subtitle">
-            {translations.tablelabel || "Table"} {tableNo}
+            {translations.tablelabel} {tableNo}
           </span>
         </div>
       </div>

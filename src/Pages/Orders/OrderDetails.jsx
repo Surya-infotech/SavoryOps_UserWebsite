@@ -810,8 +810,7 @@ const OrderDetails = ({ orderId, onBack }) => {
           </div>
           <h2 className="empty-title">{translations.orderdetilsnotfound}</h2>
           <p className="empty-subtitle">
-            We couldn't retrieve the details for this order. It might have been
-            removed or an error occurred.
+            {translations.ordernotfounddesc}
           </p>
           <div className="empty-actions">
             <button
@@ -979,7 +978,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                       onClick={() => setIsWaiterModalOpen(true)}
                     >
                       <RoomServiceIcon fontSize="inherit" />
-                      <span>{translations.callwaiter || "Call Waiter"}</span>
+                      <span>{translations.callwaiter}</span>
                     </button>
                   )}
               </div>
@@ -1618,8 +1617,7 @@ const OrderDetails = ({ orderId, onBack }) => {
                         {translations.writeareview}
                       </span>
                       <p className="prompt-sub">
-                        Share your dining experience, dish flavor, and service
-                        ratings.
+                        {translations.writeareviewdesc}
                       </p>
                       <div className="stars-placeholder">
                         {[1, 2, 3, 4, 5].map((s) => (

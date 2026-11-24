@@ -87,7 +87,9 @@ const OrderReviewModal = ({
         onReviewSubmitted(data.review || { rating, review: reviewText.trim(), updatedAt: new Date().toISOString() });
         onClose();
       } else {
-        const err = data.message || (isEdit ? "Failed to update review" : "Failed to submit review");
+        const err =
+          data?.message ||
+          (isEdit ? translations.failedtoupdatereview : translations.failedtosubmitreview);
         setErrorMsg(err);
         showSnackbar(err, "error");
       }

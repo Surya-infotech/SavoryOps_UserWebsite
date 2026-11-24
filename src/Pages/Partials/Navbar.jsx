@@ -580,7 +580,7 @@ const OrderTypeDropdown = ({ className = "" }) => {
         <span className="order-type-active-name">{activeName}</span>
         {isAfterHours && (
           <span className="after-hours-nav-tag" title={translations.afterhoursorderingactive}>
-            Night
+            {translations.night}
           </span>
         )}
         <KeyboardArrowDownIcon

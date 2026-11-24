@@ -200,13 +200,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
       animationFrameRef.current = requestAnimationFrame(scanLoop);
     } catch (err) {
       console.warn("Mobile camera access error:", err);
-      let errorMsg =
-        translations.cameranotavailable;
-      if (err.name === "NotAllowedError") {
-        errorMsg =
-          "Camera permission was denied. Please allow camera permissions in your browser to scan QR codes.";
-      }
-      setCameraError(errorMsg);
+      setCameraError(translations.cameranotavailable);
     }
   }, [handleQrSuccess, stopCamera, translations]);
 
