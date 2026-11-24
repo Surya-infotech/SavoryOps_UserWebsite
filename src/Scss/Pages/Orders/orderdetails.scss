@@ -170,6 +170,36 @@
         }
       }
 
+      .call-waiter-header-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0.4rem 0.9rem;
+        border-radius: 9999px;
+        border: none;
+        background: #028802;
+        color: #ffffff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(2, 136, 2, 0.25);
+        transition: all 0.2s ease;
+
+        svg {
+          font-size: 1rem;
+        }
+
+        &:hover {
+          background: #026b02;
+          transform: translateY(-1px);
+          box-shadow: 0 5px 12px rgba(2, 136, 2, 0.34);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
       display: flex;
       align-items: center;
       justify-content: space-between;

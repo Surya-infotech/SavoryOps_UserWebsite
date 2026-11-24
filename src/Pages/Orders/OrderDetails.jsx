@@ -34,6 +34,7 @@ import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AllInclusiveRoundedIcon from "@mui/icons-material/AllInclusiveRounded";
+import RoomServiceIcon from "@mui/icons-material/RoomService";
 
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
@@ -56,6 +57,7 @@ import OrderStatusIcon from "./OrderStatusIcon.jsx";
 import "../../Scss/Pages/Orders/orderdetails.scss";
 import OrderStatusHistoryModal from "./OrderStatusHistoryModal.jsx";
 import OrderReviewModal from "./OrderReviewModal.jsx";
+import RequestWaiterModal from "../../Components/Common/RequestWaiterModal.jsx";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
@@ -192,6 +194,7 @@ const OrderDetails = ({ orderId, onBack }) => {
   const [isEditReview, setIsEditReview] = useState(false);
   const [isDeleteReviewModalOpen, setIsDeleteReviewModalOpen] = useState(false);
   const [isDeletingReview, setIsDeletingReview] = useState(false);
+  const [isWaiterModalOpen, setIsWaiterModalOpen] = useState(false);
 
   // Settings from localStorage (parity with SettingsPage)
   const dateFormat = localStorage.getItem("DateFormat") || "DD/MM/YYYY";
@@ -738,6 +741,21 @@ const OrderDetails = ({ orderId, onBack }) => {
     );
   }, [order]);
 
+  const firstTableInfo = useMemo(() => {
+    let tNo = order?.tableno;
+    let tId = order?.tableid;
+    if (!tNo && Array.isArray(order?.areatabledetails)) {
+      for (const a of order.areatabledetails) {
+        if (Array.isArray(a?.tables) && a.tables.length > 0) {
+          tNo = a.tables[0].tableno;
+          tId = a.tables[0]._id || a.tables[0].tableid;
+          break;
+        }
+      }
+    }
+    return { tableNo: tNo, tableId: tId };
+  }, [order]);
+
   const locationDetails = useMemo(() => normalizeLocationDetails(order), [order]);
 
   const showLocationDetails = useMemo(
@@ -940,6 +958,19 @@ const OrderDetails = ({ orderId, onBack }) => {
                   <TableRestaurantIcon className="section-header-icon teal" />
                   <h3>{translations.tabledetails}</h3>
                 </div>
+                {order?.orderstatus?.toLowerCase() !== "cancelled" &&
+                  order?.orderstatus?.toLowerCase() !== "complete" &&
+                  order?.orderstatus?.toLowerCase() !== "completed" &&
+                  firstTableInfo?.tableNo && (
+                    <button
+                      type="button"
+                      className="call-waiter-header-btn"
+                      onClick={() => setIsWaiterModalOpen(true)}
+                    >
+                      <RoomServiceIcon fontSize="inherit" />
+                      <span>{translations.callwaiter || "Call Waiter"}</span>
+                    </button>
+                  )}
               </div>
               <div className="detail-card table-details-card">
                 <div className="card-top-accent teal" />
@@ -1670,6 +1701,22 @@ const OrderDetails = ({ orderId, onBack }) => {
         showSnackbar={showSnackbar}
         translations={translations}
       />
+
+      {firstTableInfo?.tableNo && (
+        <RequestWaiterModal
+          isOpen={isWaiterModalOpen}
+          onClose={() => setIsWaiterModalOpen(false)}
+          tableNo={firstTableInfo.tableNo}
+          tableId={firstTableInfo.tableId}
+          branchId={
+            order?.branchid ||
+            (typeof localStorage !== "undefined"
+              ? localStorage.getItem("selectedBranchid") || localStorage.getItem("selectedBranchId")
+              : null)
+          }
+          ownerId={order?.owner_id || order?.ownerid}
+        />
+      )}
 
       {/* Delete Review Confirmation Modal (matching ManageAddress delete modal design) */}
       {isDeleteReviewModalOpen && (

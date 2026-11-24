@@ -107,6 +107,12 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
             if (!savedId || !data.branches.some(b => String(b._id) === String(savedId))) {
               localStorage.setItem("selectedBranchId", branchId);
             }
+            if (current.branchid != null) {
+              localStorage.setItem("selectedBranchid", String(current.branchid));
+            }
+            if (current.ownerid != null) {
+              localStorage.setItem("ownerid", String(current.ownerid));
+            }
             if (typeof onBranchChange === "function") {
               onBranchChange(current);
             }
@@ -141,6 +147,12 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
         window.__selectedBranch = matched;
         if (matched?._id) {
           localStorage.setItem("selectedBranchId", matched._id);
+        }
+        if (matched?.branchid != null) {
+          localStorage.setItem("selectedBranchid", String(matched.branchid));
+        }
+        if (matched?.ownerid != null) {
+          localStorage.setItem("ownerid", String(matched.ownerid));
         }
         if (typeof onBranchChange === "function") {
           onBranchChange(matched);
@@ -210,6 +222,13 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
     setSelectedBranch(branch);
     const branchId = branch._id;
     localStorage.setItem("selectedBranchId", branchId);
+    if (branch.branchid != null) {
+      localStorage.setItem("selectedBranchid", String(branch.branchid));
+    }
+    if (branch.ownerid != null) {
+      localStorage.setItem("ownerid", String(branch.ownerid));
+    }
+    localStorage.removeItem("owner_id");
     window.__selectedBranch = branch;
     setIsOpen(false);
     setSearch("");

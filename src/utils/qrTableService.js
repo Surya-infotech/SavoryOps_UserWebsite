@@ -80,6 +80,7 @@ const applyTableAndBranchSettings = ({
   tableDetails,
   fallbackTableNo,
   fallbackBranchId,
+  owner_id,
 }) => {
   const tableno =
     tableDetails?.tableno != null
@@ -90,13 +91,17 @@ const applyTableAndBranchSettings = ({
 
   const tableid = tableDetails?._id != null ? String(tableDetails._id) : null;
 
-  // 1. Save Table Details
+  // 1. Save Table & QR Owner Details
   if (tableno) {
     localStorage.setItem("selectedTableNo", tableno);
     localStorage.setItem("selectedTable", tableno);
   }
   if (tableid) {
     localStorage.setItem("selectedTableId", tableid);
+  }
+  if (owner_id) {
+    localStorage.setItem("owner_id", String(owner_id));
+    localStorage.setItem("qrcodescanner", "true");
   }
 
   // 2. Clear previous order references
@@ -110,6 +115,12 @@ const applyTableAndBranchSettings = ({
     const branchId = resolvedBranch._id || resolvedBranch.branchid || fallbackBranchId;
     if (branchId) {
       localStorage.setItem("selectedBranchId", String(branchId));
+    }
+    if (resolvedBranch.branchid != null) {
+      localStorage.setItem("selectedBranchid", String(resolvedBranch.branchid));
+    }
+    if (resolvedBranch.ownerid != null) {
+      localStorage.setItem("ownerid", String(resolvedBranch.ownerid));
     }
     if (resolvedBranch.branchname) {
       localStorage.setItem("selectedBranchName", resolvedBranch.branchname);
@@ -159,6 +170,11 @@ const applyTableAndBranchSettings = ({
             tableId: tableid,
             tableno,
             tableid,
+            ownerId: owner_id ? String(owner_id) : null,
+            branchId:
+              resolvedBranch?.branchid != null
+                ? String(resolvedBranch.branchid)
+                : resolvedBranch?._id || fallbackBranchId || null,
           },
         })
       );
@@ -168,6 +184,7 @@ const applyTableAndBranchSettings = ({
   return {
     tableno,
     tableid,
+    ownerId: owner_id ? String(owner_id) : null,
     branch: resolvedBranch,
     orderType: dineInType,
   };
@@ -230,12 +247,14 @@ export const processTableQrCode = async (scannedText) => {
         const applied = applyTableAndBranchSettings({
           branchDetails: apiData.branchDetails,
           tableDetails: apiData.tableDetails,
+          owner_id: ownerId,
         });
 
         return {
           success: true,
           tableNo: applied.tableno,
           tableId: applied.tableid,
+          ownerId: applied.ownerId,
           branch: applied.branch,
           branchName: applied.branch?.branchname || "",
         };
@@ -288,6 +307,7 @@ export const clearSelectedTable = () => {
     localStorage.removeItem("selectedTable");
     localStorage.removeItem("selectedTableNo");
     localStorage.removeItem("selectedTableId");
+    localStorage.removeItem("qrcodescanner");
   }
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent("tableChange", { detail: null }));

@@ -79,6 +79,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
                   tableId: result.tableId,
                   tableno: result.tableNo,
                   tableid: result.tableId,
+                  ownerId: result.ownerId || null,
                 },
               })
             );

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
@@ -10,6 +10,7 @@ import Footer from "./Pages/Partials/Footer.jsx";
 import { useLanguage } from "./Context/useLanguage.js";
 import HomeRouter from "./Router/Home.jsx";
 import { processTableQrCode } from "./utils/qrTableService.js";
+import RequestWaiterModal, { CallWaiterFab } from "./Components/Common/RequestWaiterModal.jsx";
 import {
   requestCustomerNotificationPermission,
   setupCustomerForegroundNotificationListener,
@@ -49,9 +50,47 @@ const LoadingSplash = ({ business }) => {
 
 const customerTokenKey = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 
+const readStoredTableDetails = () => {
+  if (typeof localStorage === "undefined") return null;
+  const tableNo =
+    localStorage.getItem("selectedTableNo") || localStorage.getItem("selectedTable");
+  if (!tableNo) return null;
+  return {
+    tableNo,
+    tableId: localStorage.getItem("selectedTableId") || "",
+    ownerId: localStorage.getItem("owner_id") || localStorage.getItem("ownerid") || "",
+    branchId:
+      localStorage.getItem("selectedBranchid") ||
+      localStorage.getItem("selectedBranchId") ||
+      "",
+  };
+};
+
 const AppContent = () => {
   const location = useLocation();
   const isAuthPage = location.pathname.toLowerCase() === "/signin";
+  const isOrderDetailsPage =
+    location.pathname.toLowerCase().startsWith("/orderdetails") ||
+    /^\/orders\/[^/]+/i.test(location.pathname);
+
+  const [tableDetails, setTableDetails] = useState(readStoredTableDetails);
+  const [waiterModalOpen, setWaiterModalOpen] = useState(false);
+
+  useEffect(() => {
+    const syncTableDetails = () => {
+      setTableDetails(readStoredTableDetails());
+    };
+
+    window.addEventListener("tableChange", syncTableDetails);
+    window.addEventListener("storage", syncTableDetails);
+    window.addEventListener("customerAuthChange", syncTableDetails);
+
+    return () => {
+      window.removeEventListener("tableChange", syncTableDetails);
+      window.removeEventListener("storage", syncTableDetails);
+      window.removeEventListener("customerAuthChange", syncTableDetails);
+    };
+  }, []);
 
   // Register Web Push notification token for logged-in customer website sessions
   useEffect(() => {
@@ -114,6 +153,25 @@ const AppContent = () => {
 
       {/* Modern Footer */}
       {!isAuthPage && <Footer />}
+
+      {/* Call Waiter Floating Button & Modal when seated at a scanned table */}
+      {!isAuthPage && !isOrderDetailsPage && tableDetails?.tableNo && (
+        <>
+          <CallWaiterFab
+            tableNo={tableDetails.tableNo}
+            branchId={tableDetails.branchId}
+            onPress={() => setWaiterModalOpen(true)}
+          />
+          <RequestWaiterModal
+            isOpen={waiterModalOpen}
+            onClose={() => setWaiterModalOpen(false)}
+            tableNo={tableDetails.tableNo}
+            tableId={tableDetails.tableId}
+            branchId={tableDetails.branchId}
+            ownerId={tableDetails.ownerId}
+          />
+        </>
+      )}
     </div>
   );
 };
