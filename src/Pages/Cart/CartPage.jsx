@@ -16,7 +16,6 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
-import NightsStayIcon from "@mui/icons-material/NightsStay";
 import { isDineInOrderType } from "../Orders/orderHelpers.js";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -356,10 +355,6 @@ const CartPage = () => {
   }, [cartItems, posPayload, selectedOrderType]);
 
   const grandTotal = billingSummary.grandTotal;
-
-  const totalQuantity = useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
-  }, [cartItems]);
 
   const modalAvailableAddons = useMemo(() => {
     if (!editingCartItem) return [];

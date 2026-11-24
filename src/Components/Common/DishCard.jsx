@@ -52,7 +52,6 @@ const DishCard = ({
   );
   const isCombo = isDeal && (bundleTypeLower === "combo" || dish.isCombo);
   const isUnlimited = isDeal && (bundleTypeLower === "unlimited" || dish.isUnlimited);
-  const isComboOrUnlimited = isCombo || isUnlimited || isDeal;
   const canShowActions = !isDeal || isCombo;
 
   const isDealScheduleAvailable = (item) => {

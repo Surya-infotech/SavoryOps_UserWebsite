@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
 
-export const parseToMinutes = (t) => {
+const parseToMinutes = (t) => {
   if (!t) return null;
   let h = Number(t.openingtimeHour || t.closeingtimeHour || t.hours || 0);
   const m = Number(t.openingtimeMinute || t.closeingtimeMinute || t.minutes || 0);
