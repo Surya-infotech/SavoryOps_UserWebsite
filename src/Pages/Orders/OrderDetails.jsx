@@ -62,6 +62,16 @@ import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
+const isEligibleForOrderReview = (orderObj) => {
+  const status = String(orderObj?.orderstatus || orderObj?.orderStatus || "")
+    .trim()
+    .toLowerCase();
+  const payment = String(orderObj?.paymentstatus || orderObj?.paymentStatus || "")
+    .trim()
+    .toLowerCase();
+  return (status === "completed" || status === "delivered") && payment === "paid";
+};
+
 const getOrderTypeComponentIcon = (orderType) => {
   const norm = String(orderType || "").toLowerCase().replace(/[-\s_]/g, "");
   switch (norm) {
@@ -604,7 +614,9 @@ const OrderDetails = ({ orderId, onBack }) => {
         };
 
         setOrder(formattedOrder);
-        await fetchOrderReview(data._id);
+        if (isEligibleForOrderReview(formattedOrder)) {
+          await fetchOrderReview(data._id);
+        }
       } else {
         showSnackbar(
           translations.orderdetilsnotfound,
@@ -763,11 +775,10 @@ const OrderDetails = ({ orderId, onBack }) => {
     [locationDetails, order?.ordertype]
   );
 
-  const showReviewAndInvoiceActions = useMemo(() => {
-    const status = String(order?.orderstatus || "").trim().toLowerCase();
-    const payment = String(order?.paymentstatus || "").trim().toLowerCase();
-    return (status === "completed" || status === "delivered") && payment === "paid";
-  }, [order?.orderstatus, order?.paymentstatus]);
+  const showReviewAndInvoiceActions = useMemo(
+    () => isEligibleForOrderReview(order),
+    [order]
+  );
 
   const beforeTaxCharges = useMemo(() => {
     return (order?.additionalCharges || [])
