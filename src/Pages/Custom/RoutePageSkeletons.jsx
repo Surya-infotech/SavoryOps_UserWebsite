@@ -1149,7 +1149,7 @@ export const AboutSkeleton = () => (
   <Box sx={{ pb: 6 }}>
     <Box
       sx={{
-        background: "linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)",
+        backgroundColor: "#ffffff",
         pb: 5,
       }}
     >
@@ -1289,7 +1289,7 @@ export const SigninSkeleton = () => (
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      bgcolor: "#f8fafc",
+      bgcolor: "#ffffff",
       p: 2,
     }}
   >
