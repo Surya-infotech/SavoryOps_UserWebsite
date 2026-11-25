@@ -11,6 +11,10 @@
   padding: 0 1.5rem;
   width: 100%;
   position: relative;
+
+  &:last-child {
+    margin-bottom: 4rem;
+  }
 }
 
 .customer-app-card {
