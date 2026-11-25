@@ -8,6 +8,7 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import Navbar from "./Pages/Partials/Navbar.jsx";
 import Footer from "./Pages/Partials/Footer.jsx";
 import LoadingSpinner from "./Pages/Custom/LoadingSpinner.jsx";
+import { getSkeletonTypeForPath } from "./utils/routeSkeleton.js";
 import { useLanguage } from "./Context/useLanguage.js";
 import { processTableQrCode } from "./utils/qrTableService.js";
 import RequestWaiterModal, { CallWaiterFab } from "./Components/Common/RequestWaiterModal.jsx";
@@ -152,7 +153,7 @@ const AppContent = () => {
         <Suspense
           fallback={
             <LoadingSpinner
-              type={location.pathname === "/" ? "home" : "page"}
+              type={getSkeletonTypeForPath(location.pathname, location.search)}
             />
           }
         >

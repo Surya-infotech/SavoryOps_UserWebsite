@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import LoadingSpinner from "../Pages/Custom/LoadingSpinner.jsx";
+import { getSkeletonTypeForPath } from "../utils/routeSkeleton.js";
 
 // Lazy-loaded route pages
 const HomePage = lazy(() => import("../Pages/Home/HomePage.jsx"));
@@ -35,115 +36,69 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const withRouteSkeleton = (element, type, isProtected = false) => {
+  const suspended = (
+    <Suspense fallback={<LoadingSpinner type={type} />}>{element}</Suspense>
+  );
+  return isProtected ? <ProtectedRoute>{suspended}</ProtectedRoute> : suspended;
+};
+
 const HomeRouter = () => {
+  const location = useLocation();
+  const routeSkeletonType = getSkeletonTypeForPath(location.pathname, location.search);
+  const reservationSkeletonType =
+    routeSkeletonType === "reservation-detail" ? "reservation-detail" : "reservation";
+  const ordersSkeletonType =
+    routeSkeletonType === "order-detail" ? "order-detail" : "orders";
+
   return (
-    <Suspense fallback={<LoadingSpinner type="page" />}>
+    <Suspense fallback={<LoadingSpinner type={routeSkeletonType} />}>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Suspense fallback={<LoadingSpinner type="home" />}>
-              <HomePage />
-            </Suspense>
-          }
-        />
-        <Route path="/signin" element={<SigninPage />} />
-        <Route path="/policy/:policyId" element={<PolicyPage />} />
-        <Route path="/policy" element={<PolicyPage />} />
-        <Route path="/menu" element={<MenuPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedRoute>
-              <CheckoutPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/offers" element={<OffersPage />} />
+        <Route path="/" element={withRouteSkeleton(<HomePage />, "home")} />
+        <Route path="/signin" element={withRouteSkeleton(<SigninPage />, "signin")} />
+        <Route path="/policy/:policyId" element={withRouteSkeleton(<PolicyPage />, "policy")} />
+        <Route path="/policy" element={withRouteSkeleton(<PolicyPage />, "policy")} />
+        <Route path="/menu" element={withRouteSkeleton(<MenuPage />, "menu")} />
+        <Route path="/cart" element={withRouteSkeleton(<CartPage />, "cart")} />
+        <Route path="/checkout" element={withRouteSkeleton(<CheckoutPage />, "checkout", true)} />
+        <Route path="/offers" element={withRouteSkeleton(<OffersPage />, "offers")} />
         <Route
           path="/reservation"
-          element={
-            <ProtectedRoute>
-              <ReservationPage />
-            </ProtectedRoute>
-          }
+          element={withRouteSkeleton(<ReservationPage />, reservationSkeletonType, true)}
         />
         <Route
           path="/reservation/:reservationId"
-          element={
-            <ProtectedRoute>
-              <ReservationPage />
-            </ProtectedRoute>
-          }
+          element={withRouteSkeleton(<ReservationPage />, "reservation-detail", true)}
         />
         <Route
           path="/reservationdetails/:reservationId"
-          element={
-            <ProtectedRoute>
-              <ReservationPage />
-            </ProtectedRoute>
-          }
+          element={withRouteSkeleton(<ReservationPage />, "reservation-detail", true)}
         />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/about" element={withRouteSkeleton(<AboutPage />, "about")} />
         <Route
           path="/orders"
-          element={
-            <ProtectedRoute>
-              <OrdersPage />
-            </ProtectedRoute>
-          }
+          element={withRouteSkeleton(<OrdersPage />, ordersSkeletonType, true)}
         />
         <Route
           path="/orderdetails/:orderId"
-          element={
-            <ProtectedRoute>
-              <OrdersPage />
-            </ProtectedRoute>
-          }
+          element={withRouteSkeleton(<OrdersPage />, "order-detail", true)}
         />
         <Route
           path="/orders/:orderId"
-          element={
-            <ProtectedRoute>
-              <OrdersPage />
-            </ProtectedRoute>
-          }
+          element={withRouteSkeleton(<OrdersPage />, "order-detail", true)}
         />
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/settings" element={withRouteSkeleton(<SettingsPage />, "settings", true)} />
+        <Route path="/profile" element={withRouteSkeleton(<ProfilePage />, "profile", true)} />
         <Route
           path="/manage-address"
-          element={
-            <ProtectedRoute>
-              <ManageAddressPage />
-            </ProtectedRoute>
-          }
+          element={withRouteSkeleton(<ManageAddressPage />, "addresses", true)}
         />
+        <Route path="/my-reviews" element={withRouteSkeleton(<MyReviewsPage />, "reviews", true)} />
         <Route
-          path="/my-reviews"
-          element={
-            <ProtectedRoute>
-              <MyReviewsPage />
-            </ProtectedRoute>
-          }
+          path="/notifications"
+          element={withRouteSkeleton(<NotificationsPage />, "notifications")}
         />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="*" element={<PageNotFound />} />
+        <Route path="*" element={withRouteSkeleton(<PageNotFound />, "page")} />
       </Routes>
     </Suspense>
   );

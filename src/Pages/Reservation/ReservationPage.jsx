@@ -166,7 +166,14 @@ const ReservationPage = () => {
       <Breadcrumbs items={breadcrumbItems} />
 
       <div className="reservation-page-container">
-        <Suspense fallback={<LoadingSpinner type="detail" />}>
+        <Suspense
+          fallback={
+            <LoadingSpinner
+              type={selectedReservationId ? "reservation-detail" : "reservation"}
+              showBreadcrumb={false}
+            />
+          }
+        >
           {selectedReservationId ? (
             <ReservationDetails
               reservationId={selectedReservationId}

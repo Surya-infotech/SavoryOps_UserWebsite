@@ -59,7 +59,14 @@ const OrdersPage = () => {
 
       <div className="orders-page-container">
         <div className="orders-page-content">
-          <Suspense fallback={<LoadingSpinner type="detail" />}>
+          <Suspense
+            fallback={
+              <LoadingSpinner
+                type={selectedOrderId ? "order-detail" : "orders"}
+                showBreadcrumb={false}
+              />
+            }
+          >
             {selectedOrderId ? (
               <OrderDetails
                 orderId={selectedOrderId}
