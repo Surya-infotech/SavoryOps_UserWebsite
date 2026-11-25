@@ -7,13 +7,13 @@
 
 .customer-app-section {
   max-width: 1320px;
-  margin: 3.5rem auto 0;
+  margin: 4rem auto;
   padding: 0 1.5rem;
   width: 100%;
   position: relative;
 
-  &:last-child {
-    margin-bottom: 4rem;
+  @media (max-width: 768px) {
+    margin: 3rem auto;
   }
 }
 
