@@ -2,9 +2,6 @@ import { removeCustomerFcmToken } from './firebase';
 import { clearStorageOnLogout } from './authUtils';
 
 const HandleUnauthorized = (result, logoutUser, navigate) => {
-    const currentUrl = window.location.href;
-    const URL = import.meta.env.VITE_URL || "/signin";
-
     const unauthorizedMessages = [
         "Unauthorized, Token Not Get",
         "Unauthorized, Token does not match",
@@ -14,7 +11,7 @@ const HandleUnauthorized = (result, logoutUser, navigate) => {
     ];
 
     if (unauthorizedMessages.includes(result?.message) || result?.status === 401) {
-        console.log("Unauthorized / Token expired. Cleaning FCM and redirecting to Signin...");
+        console.log("Unauthorized / Token expired. Cleaning FCM and redirecting to Home...");
         try {
             removeCustomerFcmToken();
         } catch { /* ignore */ }
@@ -34,13 +31,13 @@ const HandleUnauthorized = (result, logoutUser, navigate) => {
             }
         }
 
-        if (!currentUrl.includes(URL) && !window.location.pathname.includes("/signin")) {
+        if (typeof window !== "undefined" && window.location.pathname !== "/") {
             if (typeof navigate === "function") {
-                navigate("/signin");
+                navigate("/", { replace: true });
             } else {
-                window.location.href = URL;
+                const homeUrl = `${window.location.origin}/`;
+                window.location.replace(homeUrl);
             }
-            return true;
         }
         return true;
     }

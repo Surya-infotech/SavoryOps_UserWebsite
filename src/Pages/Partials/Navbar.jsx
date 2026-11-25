@@ -664,7 +664,7 @@ const useCustomerAuth = () => {
       });
 
       const data = await response.json().catch(() => null);
-      if (HandleUnauthorized(data, handleSignOut)) return;
+      if (HandleUnauthorized(data, handleSignOut, navigate)) return;
 
       if (response.ok && data) {
         setCustomerDetails(data);
