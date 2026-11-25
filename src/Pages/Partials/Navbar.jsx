@@ -90,7 +90,16 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
   useEffect(() => {
     const fetchBranches = async () => {
       const currentSubdomain = getWebsiteSubdomain();
-      if (!currentSubdomain) return;
+      let resolvedBranch = window.__selectedBranch || null;
+      if (!currentSubdomain) {
+        if (typeof window !== "undefined") {
+          window.__branchesLoaded = true;
+          window.dispatchEvent(
+            new CustomEvent("branchesLoaded", { detail: { branch: resolvedBranch } })
+          );
+        }
+        return;
+      }
       try {
         const res = await fetch(`${adminPanelBackendPath}/Website/Home/GetBranches`, {
           method: "GET",
@@ -102,6 +111,7 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
           const current = getStoredBranch(data.branches);
           setSelectedBranch(current);
           if (current) {
+            resolvedBranch = current;
             const branchId = current._id;
             window.__selectedBranch = current;
             const savedId = localStorage.getItem("selectedBranchId");
@@ -126,6 +136,13 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
         }
       } catch (err) {
         console.error("Error fetching website branches:", err);
+      } finally {
+        if (typeof window !== "undefined") {
+          window.__branchesLoaded = true;
+          window.dispatchEvent(
+            new CustomEvent("branchesLoaded", { detail: { branch: resolvedBranch } })
+          );
+        }
       }
     };
 

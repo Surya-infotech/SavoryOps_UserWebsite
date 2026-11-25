@@ -6,13 +6,10 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
-import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import { getActiveBranch } from "../../utils/formatCurrency.js";
 import DishCard, { DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
 import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
-
-const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 
 
 /**
@@ -344,7 +341,7 @@ const CarouselRow = ({
 /**
  * Main Home Menu Showcase Section Component
  */
-const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
+const HomeMenuShowcase = ({ showcases = [], branchSetting: propBranchSetting }) => {
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const { showSnackbar } = useSnackbar();
 
@@ -355,15 +352,14 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
     return localStorage.getItem("selectedOrderType");
   });
-  const [branchSetting, setBranchSetting] = useState(() => {
-    return propBranchSetting || (typeof window !== "undefined" ? window.__branchSetting : null);
+  const [eventBranchSetting, setEventBranchSetting] = useState(() => {
+    return typeof window !== "undefined" ? window.__branchSetting : null;
   });
 
-  useEffect(() => {
-    if (propBranchSetting) {
-      setBranchSetting(propBranchSetting);
-    }
-  }, [propBranchSetting]);
+  const branchSetting =
+    propBranchSetting ||
+    eventBranchSetting ||
+    (typeof window !== "undefined" ? window.__branchSetting : null);
 
   useEffect(() => {
     const handleCartUpdated = () => {
@@ -373,7 +369,7 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
     return () => window.removeEventListener("cartUpdated", handleCartUpdated);
   }, []);
 
-  // Listen to orderType and branchSetting changes from Navbar and Storage
+  // Listen to orderType, branch, and branchSetting changes from Navbar and Storage
   useEffect(() => {
     const handleOrderTypeChange = (e) => {
       const ot = e?.detail?.orderType;
@@ -384,7 +380,15 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
 
     const handleBranchSettingChange = (e) => {
       if (e?.detail) {
-        setBranchSetting(e.detail);
+        setEventBranchSetting(e.detail);
+      }
+    };
+
+    const handleBranchChange = (e) => {
+      if (e?.detail) {
+        setSelectedBranch(e.detail);
+      } else {
+        setSelectedBranch(getActiveBranch());
       }
     };
 
@@ -396,103 +400,22 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
 
     window.addEventListener("orderTypeChange", handleOrderTypeChange);
     window.addEventListener("branchSettingChange", handleBranchSettingChange);
+    window.addEventListener("branchChange", handleBranchChange);
     window.addEventListener("storage", handleStorage);
 
-    // Request branch setting from Navbar
+    // Request branch & setting from Navbar
+    window.dispatchEvent(new CustomEvent("requestBranch"));
     window.dispatchEvent(new CustomEvent("requestBranchSetting"));
 
     return () => {
       window.removeEventListener("orderTypeChange", handleOrderTypeChange);
       window.removeEventListener("branchSettingChange", handleBranchSettingChange);
+      window.removeEventListener("branchChange", handleBranchChange);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
 
-  // Dynamic showcases fetched from backend
-  const [dynamicShowcases, setDynamicShowcases] = useState([]);
-  const [loadingShowcases, setLoadingShowcases] = useState(true);
-
-  // Fetch dynamic showcases from backend based on subdomain and branch
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchShowcases = async () => {
-      const currentSubdomain = getWebsiteSubdomain();
-      if (!currentSubdomain) {
-        if (isMounted) setLoadingShowcases(false);
-        return;
-      }
-
-      // Strictly get stored branchId from localStorage
-      const branchId = localStorage.getItem("selectedBranchId");
-
-      // Without Branch ID in localStorage, data must NOT be fetched or displayed
-      if (!branchId) {
-        if (isMounted) {
-          setDynamicShowcases([]);
-          setLoadingShowcases(false);
-        }
-        return;
-      }
-
-      try {
-        if (isMounted) setLoadingShowcases(true);
-        const endpoint = `${adminPanelBackendPath}/Website/Home/GetShowcases/${branchId}`;
-
-        const response = await fetch(endpoint, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user": "admin",
-            "x-subdomain": currentSubdomain,
-          },
-        });
-
-        const data = await response.json();
-        if (isMounted) {
-          if (response.ok && data.success && Array.isArray(data.showcases) && data.showcases.length > 0) {
-            setDynamicShowcases(data.showcases);
-            if (data.branchSetting) {
-              setBranchSetting(data.branchSetting);
-              if (typeof window !== "undefined") {
-                window.__branchSetting = data.branchSetting;
-              }
-            }
-          } else {
-            setDynamicShowcases([]);
-          }
-        }
-
-      } catch (err) {
-        console.error("Error fetching dynamic menu showcases:", err);
-        if (isMounted) setDynamicShowcases([]);
-      } finally {
-        if (isMounted) setLoadingShowcases(false);
-      }
-    };
-
-    fetchShowcases();
-
-    const handleBranchChange = (e) => {
-      if (e?.detail) {
-        setSelectedBranch(e.detail);
-        fetchShowcases(e.detail._id);
-      } else {
-        setSelectedBranch(getActiveBranch());
-        fetchShowcases();
-      }
-    };
-
-    window.addEventListener("branchChange", handleBranchChange);
-    window.dispatchEvent(new CustomEvent("requestBranch"));
-
-    return () => {
-      isMounted = false;
-      window.removeEventListener("branchChange", handleBranchChange);
-    };
-  }, []);
-
-  const displaySections = dynamicShowcases;
+  const displaySections = Array.isArray(showcases) ? showcases : [];
 
   // Modal States
   const [selectedDishModal, setSelectedDishModal] = useState(null);
@@ -547,7 +470,7 @@ const HomeMenuShowcase = ({ branchSetting: propBranchSetting }) => {
     setAddonModalDish(dish);
   };
 
-  if (loadingShowcases || displaySections.length === 0) {
+  if (displaySections.length === 0) {
     return null;
   }
 

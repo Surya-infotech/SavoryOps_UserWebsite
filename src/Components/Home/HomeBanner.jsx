@@ -8,76 +8,18 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import StarIcon from "@mui/icons-material/Star";
 import SpaIcon from "@mui/icons-material/Spa";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homebanner.scss";
 
-const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const SLIDE_DURATION = 5000; // 5 seconds per slide
 
-const HomeBanner = ({ onBannerChange }) => {
+const HomeBanner = ({ banners = [] }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [backendBanners, setBackendBanners] = useState([]);
-  const [, setLoading] = useState(true);
   const timerRef = useRef(null);
 
-  // Fetch home banners from owner database via website API
-  const fetchBanners = useCallback(async () => {
-    const currentSubdomain = getWebsiteSubdomain();
-    if (!currentSubdomain) {
-      setLoading(false);
-      setBackendBanners([]);
-      return;
-    }
-
-    try {
-      const branchId = localStorage.getItem("selectedBranchId");
-      if (!branchId) {
-        setLoading(false);
-        return;
-      }
-      const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetHomeBanners/${branchId}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", "x-user": "admin", "x-subdomain": currentSubdomain, },
-      });
-
-      const data = await response.json();
-      if (response.ok && data.success && Array.isArray(data.banners) && data.banners.length > 0) {
-        setBackendBanners(data.banners);
-      } else {
-        setBackendBanners([]);
-      }
-    } catch (err) {
-      console.error("Error fetching home banners:", err);
-      setBackendBanners([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchBanners();
-
-    const handleStorageChange = (e) => {
-      if (e.key === "selectedBranchId") {
-        fetchBanners();
-      }
-    };
-    const handleBranchChange = () => {
-      fetchBanners();
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("branchChange", handleBranchChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("branchChange", handleBranchChange);
-    };
-  }, [fetchBanners]);
-
   const bannerSlides = useMemo(() => {
-    return backendBanners.map((item, idx) => ({
+    if (!Array.isArray(banners)) return [];
+    return banners.map((item, idx) => ({
       id: item._id || item.bannerid || idx + 1,
       image: item.image || "",
       tag: item.tag || "",
@@ -97,19 +39,10 @@ const HomeBanner = ({ onBannerChange }) => {
       featureBadge2: item.featureBadge2 || "",
       featureBadge3: item.featureBadge3 || "",
     }));
-  }, [backendBanners]);
+  }, [banners]);
 
-  useEffect(() => {
-    if (typeof onBannerChange === "function") {
-      onBannerChange(bannerSlides.length > 0);
-    }
-  }, [bannerSlides.length, onBannerChange]);
-
-  useEffect(() => {
-    if (currentSlide >= bannerSlides.length) {
-      setCurrentSlide(0);
-    }
-  }, [bannerSlides.length, currentSlide]);
+  const activeSlideIndex =
+    bannerSlides.length > 0 ? currentSlide % bannerSlides.length : 0;
 
   const nextSlide = useCallback(() => {
     if (bannerSlides.length <= 1) return;
@@ -174,7 +107,7 @@ const HomeBanner = ({ onBannerChange }) => {
       {/* Slides Track */}
       <div className="hero-slider-track">
         {bannerSlides.map((slide, index) => {
-          const isActive = index === currentSlide;
+          const isActive = index === activeSlideIndex;
           return (
             <div
               key={slide.id}
@@ -263,7 +196,7 @@ const HomeBanner = ({ onBannerChange }) => {
       {bannerSlides.length > 1 && (
         <div className="hero-indicators-container">
           {bannerSlides.map((slide, index) => {
-            const isActive = index === currentSlide;
+            const isActive = index === activeSlideIndex;
             return (
               <button
                 key={slide.id}
@@ -272,7 +205,7 @@ const HomeBanner = ({ onBannerChange }) => {
                 onClick={() => goToSlide(index)}
                 aria-label={`Go to slide ${index + 1}`}
               >
-                {isActive && <div className="hero-dot-progress" key={`progress-${currentSlide}`} />}
+                {isActive && <div className="hero-dot-progress" key={`progress-${activeSlideIndex}`} />}
               </button>
             );
           })}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import SpaIcon from "@mui/icons-material/Spa";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
@@ -9,7 +9,6 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import { useWebsiteStatus, getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homefeatures.scss";
 
 const ICON_MAP = {
@@ -30,54 +29,10 @@ const renderFeatureIcon = (iconKey) => {
   return <IconComp fontSize="inherit" />;
 };
 
-const HomeFeatures = ({ hasBanner = false }) => {
-  const { features: contextFeatures } = useWebsiteStatus();
-  const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-
-  const [featuresList, setFeaturesList] = useState(() =>
-    Array.isArray(contextFeatures) && contextFeatures.length > 0 ? contextFeatures : []
-  );
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchFeatures = async () => {
-      const currentSubdomain = getWebsiteSubdomain();
-      if (!currentSubdomain) return;
-
-      try {
-        const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetFeatures`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user": "admin",
-            "x-subdomain": currentSubdomain,
-          },
-        });
-
-        const data = await response.json();
-        if (isMounted && response.ok && data.success && Array.isArray(data.features) && data.features.length > 0) {
-          setFeaturesList(data.features);
-        }
-      } catch (err) {
-        console.error("Error fetching website features:", err);
-      }
-    };
-
-    fetchFeatures();
-    return () => {
-      isMounted = false;
-    };
-  }, [adminPanelBackendPath]);
-
-  useEffect(() => {
-    if (Array.isArray(contextFeatures) && contextFeatures.length > 0) {
-      setFeaturesList(contextFeatures);
-    }
-  }, [contextFeatures]);
-
+const HomeFeatures = ({ features = [], hasBanner = false }) => {
   const displayFeatures = useMemo(() => {
-    if (!Array.isArray(featuresList)) return [];
-    return featuresList
+    if (!Array.isArray(features)) return [];
+    return features
       .filter((item) => (item?.title && item.title.trim()) || (item?.desc && item.desc.trim()))
       .map((item) => ({
         _id: item._id,
@@ -86,7 +41,7 @@ const HomeFeatures = ({ hasBanner = false }) => {
         icon: renderFeatureIcon(item.icon),
         iconClass: item.iconClass || "feature-icon-green",
       }));
-  }, [featuresList]);
+  }, [features]);
 
   if (displayFeatures.length === 0) {
     return null;

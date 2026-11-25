@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -19,68 +19,30 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import ReplyIcon from "@mui/icons-material/Reply";
 import SparklesIcon from "@mui/icons-material/AutoAwesome";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { useWebsiteStatus, getWebsiteSubdomain } from "../../Pages/Partials/UnderMaintenance.jsx";
+import { useWebsiteStatus } from "../../Pages/Partials/UnderMaintenance.jsx";
 import "../../Scss/Components/Home/homereviews.scss";
 
-const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-
-const HomeReviews = () => {
+const HomeReviews = ({ reviews = [] }) => {
   const { translations = {}, isRtl } = useLanguage();
   const { business } = useWebsiteStatus();
   const brandName = business?.businessname || "SavoryOps Kitchen";
 
-  // State Management
-  const [reviewsList, setReviewsList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Local additions & helpful vote toggles layered on top of prop reviews
+  const [submittedReviews, setSubmittedReviews] = useState([]);
   const [likedReviews, setLikedReviews] = useState({});
 
-  // Fetch all reviews for this business from backend based on subdomain (without branch filtering)
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchReviews = async () => {
-      const currentSubdomain = getWebsiteSubdomain();
-      if (!currentSubdomain) {
-        if (isMounted) {
-          setLoading(false);
-          setReviewsList([]);
-        }
-        return;
-      }
-
-      try {
-        if (isMounted) setLoading(true);
-        const response = await fetch(`${adminPanelBackendPath}/Website/Home/GetReviews`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user": "admin",
-            "x-subdomain": currentSubdomain,
-          },
-        });
-
-        const data = await response.json();
-        if (isMounted) {
-          if (response.ok && data.success && Array.isArray(data.reviews)) {
-            setReviewsList(data.reviews);
-          } else {
-            setReviewsList([]);
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching website reviews:", err);
-        if (isMounted) setReviewsList([]);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchReviews();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const reviewsList = useMemo(() => {
+    const base = Array.isArray(reviews) ? reviews : [];
+    const combined = [...submittedReviews, ...base];
+    return combined.map((item) => {
+      const id = item.id ?? item._id;
+      if (!likedReviews[id]) return item;
+      return {
+        ...item,
+        helpfulCount: (Number(item.helpfulCount) || 0) + 1,
+      };
+    });
+  }, [reviews, submittedReviews, likedReviews]);
 
   // Modal Details State
   const [activeReviewDetails, setActiveReviewDetails] = useState(null);
@@ -260,22 +222,10 @@ const HomeReviews = () => {
   // Handle Likes / Helpful toggles
   const handleToggleHelpful = (reviewId, e) => {
     e.stopPropagation();
-    setLikedReviews((prev) => {
-      const isCurrentlyLiked = !!prev[reviewId];
-      const updated = { ...prev, [reviewId]: !isCurrentlyLiked };
-      setReviewsList((currentList) =>
-        currentList.map((item) => {
-          if (item.id === reviewId) {
-            return {
-              ...item,
-              helpfulCount: isCurrentlyLiked ? item.helpfulCount - 1 : item.helpfulCount + 1,
-            };
-          }
-          return item;
-        })
-      );
-      return updated;
-    });
+    setLikedReviews((prev) => ({
+      ...prev,
+      [reviewId]: !prev[reviewId],
+    }));
   };
 
   // Handle New Review Submission
@@ -342,7 +292,7 @@ const HomeReviews = () => {
       },
     };
 
-    setReviewsList((prev) => [createdReview, ...prev]);
+    setSubmittedReviews((prev) => [createdReview, ...prev]);
     setSubmitSuccess(true);
     setFormError("");
 
@@ -373,8 +323,8 @@ const HomeReviews = () => {
     return stars;
   };
 
-  // Hide reviews section if loading is complete and no reviews exist for this business
-  if (!loading && (!reviewsList || reviewsList.length === 0)) {
+  // Hide reviews section if no reviews exist for this business
+  if (!reviewsList || reviewsList.length === 0) {
     return null;
   }
 
