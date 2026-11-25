@@ -519,17 +519,24 @@ export const ReservationDetailSkeleton = ({ showBreadcrumb = true }) => (
  */
 export const CatalogSkeleton = ({ variant = "menu" }) => (
   <PageShell breadcrumbWidth={variant === "offers" ? 195 : 175}>
-    <SurfaceCard radius="16px" sx={{ p: 1.5, mb: 3 }}>
+    <SurfaceCard radius="14px" sx={{ p: "0.65rem 1rem", mb: 3 }}>
       <Box
         sx={{
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: variant === "offers" ? "flex-start" : "space-between",
           gap: 1.5,
         }}
       >
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5, flex: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1.25,
+            flex: variant === "offers" ? "0 1 auto" : 1,
+          }}
+        >
           {variant === "offers" ? (
             [105, 95, 130].map((w, idx) => (
               <Skeleton
@@ -538,16 +545,16 @@ export const CatalogSkeleton = ({ variant = "menu" }) => (
                 variant="rounded"
                 width={w}
                 height={38}
-                sx={{ borderRadius: "9999px" }}
+                sx={{ borderRadius: "10px" }}
               />
             ))
           ) : (
-            [185, 195].map((w, idx) => (
+            [200, 230].map((w, idx) => (
               <Skeleton
                 key={idx}
                 animation="wave"
                 variant="rounded"
-                sx={{ width: { xs: "100%", sm: w }, height: 42, borderRadius: "10px" }}
+                sx={{ width: { xs: "100%", sm: w }, height: 40, borderRadius: "10px" }}
               />
             ))
           )}
@@ -557,7 +564,7 @@ export const CatalogSkeleton = ({ variant = "menu" }) => (
           animation="wave"
           variant="rounded"
           width={200}
-          height={40}
+          height={38}
           sx={{ borderRadius: "10px" }}
         />
       </Box>
@@ -568,15 +575,18 @@ export const CatalogSkeleton = ({ variant = "menu" }) => (
 );
 
 /**
- * Orders List (/orders) skeleton matching search toolbar and 3-column order card grid.
+ * Orders List (/orders) skeleton matching right-aligned search pill and order card structure.
  */
 export const OrderListSkeleton = ({ showBreadcrumb = true }) => (
   <PageShell showBreadcrumb={showBreadcrumb} breadcrumbWidth={185}>
-    <Skeleton
-      animation="wave"
-      variant="rounded"
-      sx={{ width: { xs: "100%", sm: 380 }, height: 46, borderRadius: "12px", mb: 3 }}
-    />
+    <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", mb: 3 }}>
+      <Skeleton
+        animation="wave"
+        variant="rounded"
+        sx={{ width: "100%", maxWidth: 480, height: 46, borderRadius: "9999px" }}
+      />
+    </Box>
+
     <Box
       sx={{
         display: "grid",
@@ -586,26 +596,90 @@ export const OrderListSkeleton = ({ showBreadcrumb = true }) => (
     >
       {Array.from({ length: 6 }).map((_, idx) => (
         <SurfaceCard key={idx} accent>
-          <Box sx={{ p: "1.25rem 1.35rem", display: "flex", flexDirection: "column", gap: 1.5 }}>
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <Skeleton animation="wave" variant="rounded" width={110} height={24} />
+          <Box sx={{ p: "1.25rem 1.35rem 0.95rem", display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 1,
+                flexWrap: "wrap",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={82}
+                  height={28}
+                  sx={{ borderRadius: "9999px" }}
+                />
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={86}
+                  height={28}
+                  sx={{ borderRadius: "9999px" }}
+                />
+              </Box>
               <Skeleton
                 animation="wave"
                 variant="rounded"
-                width={88}
-                height={26}
+                width={90}
+                height={28}
                 sx={{ borderRadius: "9999px" }}
               />
             </Box>
 
             <IdentityMetaRow />
-            <Skeleton animation="wave" variant="text" width="76%" height={18} />
-            <Box sx={{ height: "1px", bgcolor: "#f1f5f9" }} />
 
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <Skeleton animation="wave" variant="text" width={85} height={26} />
-              <Skeleton animation="wave" variant="circular" width={36} height={36} />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                p: "0.55rem 0.8rem",
+                border: "1px solid #f1f5f9",
+                borderRadius: "12px",
+              }}
+            >
+              <Skeleton animation="wave" variant="rounded" width={58} height={22} sx={{ borderRadius: "6px" }} />
+              <Skeleton animation="wave" variant="text" width="60%" height={18} />
             </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 1,
+                pt: 1.5,
+                borderTop: "1px dashed #e2e8f0",
+              }}
+            >
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                width={78}
+                height={24}
+                sx={{ borderRadius: "9999px" }}
+              />
+              <Skeleton animation="wave" variant="text" width={130} height={18} />
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              p: "0.95rem 1.35rem",
+              background: "linear-gradient(180deg, #fbfcfd 0%, #f8fafc 100%)",
+              borderTop: "1px solid #f1f5f9",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Skeleton animation="wave" variant="text" width={88} height={26} />
+            <Skeleton animation="wave" variant="circular" width={38} height={38} />
           </Box>
         </SurfaceCard>
       ))}
@@ -815,7 +889,7 @@ export const CheckoutSkeleton = () => (
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: { xs: "1fr", lg: "1fr 390px" },
+        gridTemplateColumns: { xs: "1fr", lg: "1fr 400px" },
         gap: 3,
         alignItems: "start",
       }}
@@ -868,7 +942,7 @@ export const AddressListSkeleton = () => (
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: { xs: "1fr", md: "repeat(auto-fill, minmax(340px, 1fr))" },
+        gridTemplateColumns: { xs: "1fr", md: "repeat(auto-fill, minmax(320px, 1fr))" },
         gap: 3,
       }}
     >
@@ -922,7 +996,7 @@ export const ReviewsListSkeleton = () => (
 );
 
 /**
- * Notifications (/notifications) skeleton matching top action row + stacked notification cards grid.
+ * Notifications (/notifications) skeleton matching top action row + vertical notification card stack.
  */
 export const NotificationsListSkeleton = () => (
   <PageShell breadcrumbWidth={210}>
@@ -931,12 +1005,12 @@ export const NotificationsListSkeleton = () => (
     </Box>
     <Box
       sx={{
-        display: "grid",
-        gridTemplateColumns: { xs: "1fr", md: "repeat(auto-fill, minmax(340px, 1fr))" },
-        gap: 2.5,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
       }}
     >
-      {Array.from({ length: 6 }).map((_, idx) => (
+      {Array.from({ length: 5 }).map((_, idx) => (
         <SurfaceCard key={idx} accent>
           <Box sx={{ p: 2.25, display: "flex", flexDirection: "column", gap: 1.25 }}>
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -1023,7 +1097,7 @@ export const SettingsSkeleton = () => (
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: { xs: "1fr", md: "280px 1fr" },
+        gridTemplateColumns: { xs: "1fr", md: "290px 1fr" },
         gap: 3,
         alignItems: "start",
       }}
