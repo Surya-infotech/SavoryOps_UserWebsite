@@ -105,11 +105,17 @@ const AboutPage = () => {
   const business = apiBusiness || contextBusiness;
   const subdomain = contextSubdomain || getWebsiteSubdomain();
 
-  const businessName = business?.businessname || "Our Restaurant";
+  const businessName = (business?.businessname || "").trim();
   const businessLogo = business?.imageUrl;
   const businessEmail = business?.email;
   const businessAbout = business?.aboutus || "";
-  const socialMedia = business?.socialmedia || [];
+  const rawSocialMedia = business?.socialmedia;
+  const socialMedia = useMemo(() => {
+    if (!Array.isArray(rawSocialMedia)) return [];
+    return rawSocialMedia.filter(
+      (s) => (s?.platform && s.platform.trim()) || (s?.url && s.url.trim())
+    );
+  }, [rawSocialMedia]);
 
   const [selectedBranch, setSelectedBranch] = useState(() => {
     if (typeof window !== "undefined" && window.__selectedBranch) {
@@ -119,10 +125,11 @@ const AboutPage = () => {
   });
 
   useEffect(() => {
-    if (businessName) {
-      document.title = `${translations.aboutus} | ${businessName}`;
-    }
-  }, [businessName, translations]);
+    if (!translations.aboutus) return;
+    document.title = businessName
+      ? `${translations.aboutus} | ${businessName}`
+      : translations.aboutus;
+  }, [businessName, translations.aboutus]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.__selectedBranch) {
@@ -202,6 +209,15 @@ const AboutPage = () => {
     ctaTitle || ctaDesc || ctaMenuBtnText || ctaBookingBtnText
   );
 
+  const selectedBranchName = (selectedBranch?.branchname || "").trim();
+  const hasBrandOverview = Boolean(businessLogo || businessName);
+  const hasLeftDetails = Boolean(hasBrandOverview || storyQuote || socialMedia.length > 0);
+  const hasBranchContactDetails = Boolean(
+    selectedBranchName || fullAddress || branchPhone || businessEmail
+  );
+  const hasDetailsSection = Boolean(hasLeftDetails || hasBranchContactDetails);
+  const hasHeroMedia = Boolean(businessLogo || subdomain || businessName);
+
   return (
     <div className="about-page-wrapper">
       {/* 1. Hero Banner Section */}
@@ -219,25 +235,27 @@ const AboutPage = () => {
                 </div>
               )}
 
-              <h1 className="about-title">
-                {heroTitle ? (
-                  <>
-                    {heroTitle}
-                    {heroHighlight && (
-                      <span className="about-title-highlight"> {heroHighlight}</span>
-                    )}
-                  </>
-                ) : heroHighlight ? (
-                  <span className="about-title-highlight">{heroHighlight}</span>
-                ) : (
-                  <>
-                    {translations.aboutus}{" "}
-                    {businessName && (
-                      <span className="about-title-highlight">{businessName}</span>
-                    )}
-                  </>
-                )}
-              </h1>
+              {(heroTitle || heroHighlight || businessName || translations.aboutus) && (
+                <h1 className="about-title">
+                  {heroTitle ? (
+                    <>
+                      {heroTitle}
+                      {heroHighlight && (
+                        <span className="about-title-highlight"> {heroHighlight}</span>
+                      )}
+                    </>
+                  ) : heroHighlight ? (
+                    <span className="about-title-highlight">{heroHighlight}</span>
+                  ) : (
+                    <>
+                      {translations.aboutus}{" "}
+                      {businessName && (
+                        <span className="about-title-highlight">{businessName}</span>
+                      )}
+                    </>
+                  )}
+                </h1>
+              )}
 
               {heroLead && (
                 <p className="about-lead">
@@ -264,28 +282,36 @@ const AboutPage = () => {
             </div>
 
             {/* Hero Image Showcase */}
-            <div className="about-hero-media">
-              <div className="media-frame">
-                {businessLogo ? (
-                  <img
-                    src={businessLogo}
-                    alt={businessName}
-                    className="about-hero-image"
-                  />
-                ) : (
-                  <div className="about-hero-image-placeholder">
-                    <RestaurantIcon className="placeholder-icon" />
-                  </div>
-                )}
-                <div className="media-overlay-card">
-                  <div className="overlay-pill">
-                    <span className="pulse-dot" />
-                    <span>{subdomain ? `${subdomain}.savoryops.website` : "Online Kitchen"}</span>
-                  </div>
-                  <h4 className="overlay-heading">{businessName}</h4>
+            {hasHeroMedia && (
+              <div className="about-hero-media">
+                <div className="media-frame">
+                  {businessLogo ? (
+                    <img
+                      src={businessLogo}
+                      alt={businessName}
+                      className="about-hero-image"
+                    />
+                  ) : (
+                    <div className="about-hero-image-placeholder">
+                      <RestaurantIcon className="placeholder-icon" />
+                    </div>
+                  )}
+                  {(subdomain || businessName) && (
+                    <div className="media-overlay-card">
+                      {subdomain && (
+                        <div className="overlay-pill">
+                          <span className="pulse-dot" />
+                          <span>{`${subdomain}.savoryops.website`}</span>
+                        </div>
+                      )}
+                      {businessName && (
+                        <h4 className="overlay-heading">{businessName}</h4>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -320,132 +346,149 @@ const AboutPage = () => {
       )}
 
       {/* 3. Detailed Business Information & Active Branch */}
-      <section className="about-details-section">
-        <div className="section-container">
-          <div className="details-card-container">
-            <div className="details-left-col">
-              <div className="brand-overview-box">
-                {businessLogo && (
-                  <img
-                    src={businessLogo}
-                    alt={businessName}
-                    className="brand-avatar"
-                  />
-                )}
-                <div>
-                  <h3 className="brand-name">{businessName}</h3>
-                  <span className="brand-badge">{translations.officialrestaurantdetails}</span>
-                </div>
-              </div>
+      {hasDetailsSection && (
+        <section className="about-details-section">
+          <div className="section-container">
+            <div className="details-card-container">
+              {hasLeftDetails && (
+                <div className="details-left-col">
+                  {hasBrandOverview && (
+                    <div className="brand-overview-box">
+                      {businessLogo && (
+                        <img
+                          src={businessLogo}
+                          alt={businessName}
+                          className="brand-avatar"
+                        />
+                      )}
+                      {businessName && (
+                        <div>
+                          <h3 className="brand-name">{businessName}</h3>
+                          <span className="brand-badge">{translations.officialrestaurantdetails}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-              {storyQuote && (
-                <div className="story-quote-card">
-                  <p className="story-quote-text">
-                    "{storyQuote}"
-                  </p>
-                  {storyAuthor && (
-                    <span className="story-quote-author">
-                      {storyAuthor.startsWith("—") ? storyAuthor : `— ${storyAuthor}`}
-                    </span>
+                  {storyQuote && (
+                    <div className="story-quote-card">
+                      <p className="story-quote-text">
+                        "{storyQuote}"
+                      </p>
+                      {storyAuthor && (
+                        <span className="story-quote-author">
+                          {storyAuthor.startsWith("—") ? storyAuthor : `— ${storyAuthor}`}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Social Media Row */}
+                  {socialMedia.length > 0 && (
+                    <div className="about-social-block">
+                      <h4 className="social-block-title">{translations.followourculinaryjourney}</h4>
+                      <div className="social-links-list">
+                        {socialMedia.map((social, idx) => {
+                          const url = social.url
+                            ? social.url.startsWith("http")
+                              ? social.url
+                              : `https://${social.url}`
+                            : "#";
+                          const platformLabel = (social.platform || "").trim();
+                          return (
+                            <a
+                              key={social._id || idx}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="about-social-chip"
+                              title={platformLabel || undefined}
+                            >
+                              <span className="chip-icon-wrap">
+                                {getSocialIcon(platformLabel)}
+                              </span>
+                              {platformLabel && (
+                                <span className="chip-label">{platformLabel}</span>
+                              )}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
 
-              {/* Social Media Row */}
-              {Array.isArray(socialMedia) && socialMedia.length > 0 && (
-                <div className="about-social-block">
-                  <h4 className="social-block-title">{translations.followourculinaryjourney}</h4>
-                  <div className="social-links-list">
-                    {socialMedia.map((social, idx) => {
-                      const url = social.url
-                        ? social.url.startsWith("http")
-                          ? social.url
-                          : `https://${social.url}`
-                        : "#";
-                      return (
-                        <a
-                          key={social._id || idx}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="about-social-chip"
-                          title={social.platform || "Social Profile"}
-                        >
-                          <span className="chip-icon-wrap">
-                            {getSocialIcon(social.platform)}
-                          </span>
-                          <span className="chip-label">{social.platform || "Connect"}</span>
-                        </a>
-                      );
-                    })}
+              {/* Right: Selected Branch Location & Contact Info */}
+              {hasBranchContactDetails && (
+                <div className="details-right-col">
+                  <div className="contact-info-card">
+                    {(selectedBranchName || fullAddress || branchPhone) && (
+                      <div className="contact-card-header">
+                        <span className="contact-kicker">{translations.currentbranchlocation}</span>
+                        {selectedBranchName && (
+                          <h3 className="contact-branch-name">{selectedBranchName}</h3>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="contact-details-list">
+                      {fullAddress && (
+                        <div className="contact-detail-row">
+                          <div className="row-icon-box">
+                            <LocationOnIcon fontSize="small" />
+                          </div>
+                          <div className="row-content">
+                            <span className="row-label">{translations.branchaddress}</span>
+                            <span className="row-value">{fullAddress}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {branchPhone && (
+                        <div className="contact-detail-row">
+                          <div className="row-icon-box">
+                            <PhoneIcon fontSize="small" />
+                          </div>
+                          <div className="row-content">
+                            <span className="row-label">{translations.phoneandhelpline}</span>
+                            <a href={`tel:${branchPhone}`} className="row-link">
+                              {branchPhone}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+
+                      {businessEmail && (
+                        <div className="contact-detail-row">
+                          <div className="row-icon-box">
+                            <EmailOutlinedIcon fontSize="small" />
+                          </div>
+                          <div className="row-content">
+                            <span className="row-label">{translations.emailsupport}</span>
+                            <a href={`mailto:${businessEmail}`} className="row-link">
+                              {businessEmail}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {selectedBranchName && (
+                      <div className="branch-helper-note">
+                        <CheckCircleOutlinedIcon className="helper-icon" />
+                        <span>
+                          {translations.switchbranchhint}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
             </div>
-
-            {/* Right: Selected Branch Location & Contact Info */}
-            <div className="details-right-col">
-              <div className="contact-info-card">
-                <div className="contact-card-header">
-                  <span className="contact-kicker">{translations.currentbranchlocation}</span>
-                  <h3 className="contact-branch-name">
-                    {selectedBranch?.branchname || "Selected Branch"}
-                  </h3>
-                </div>
-
-                <div className="contact-details-list">
-                  {fullAddress && (
-                    <div className="contact-detail-row">
-                      <div className="row-icon-box">
-                        <LocationOnIcon fontSize="small" />
-                      </div>
-                      <div className="row-content">
-                        <span className="row-label">{translations.branchaddress}</span>
-                        <span className="row-value">{fullAddress}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {branchPhone && (
-                    <div className="contact-detail-row">
-                      <div className="row-icon-box">
-                        <PhoneIcon fontSize="small" />
-                      </div>
-                      <div className="row-content">
-                        <span className="row-label">{translations.phoneandhelpline}</span>
-                        <a href={`tel:${branchPhone}`} className="row-link">
-                          {branchPhone}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  {businessEmail && (
-                    <div className="contact-detail-row">
-                      <div className="row-icon-box">
-                        <EmailOutlinedIcon fontSize="small" />
-                      </div>
-                      <div className="row-content">
-                        <span className="row-label">{translations.emailsupport}</span>
-                        <a href={`mailto:${businessEmail}`} className="row-link">
-                          {businessEmail}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="branch-helper-note">
-                  <CheckCircleOutlinedIcon className="helper-icon" />
-                  <span>
-                    {translations.switchbranchhint}
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 4. Action CTA Strip */}
       {hasCtaSection && (
