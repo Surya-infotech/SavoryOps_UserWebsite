@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import LoadingSpinner from "../Custom/LoadingSpinner.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
-import OrderList from "./OrderList.jsx";
-import OrderDetails from "./OrderDetails.jsx";
 import "../../Scss/Pages/Orders/orderspage.scss";
+
+const OrderList = lazy(() => import("./OrderList.jsx"));
+const OrderDetails = lazy(() => import("./OrderDetails.jsx"));
 
 const OrdersPage = () => {
   const { orderId: paramOrderId } = useParams();
@@ -57,14 +59,16 @@ const OrdersPage = () => {
 
       <div className="orders-page-container">
         <div className="orders-page-content">
-          {selectedOrderId ? (
-            <OrderDetails
-              orderId={selectedOrderId}
-              onBack={handleBackToList}
-            />
-          ) : (
-            <OrderList onSelectOrder={handleSelectOrder} />
-          )}
+          <Suspense fallback={<LoadingSpinner type="detail" />}>
+            {selectedOrderId ? (
+              <OrderDetails
+                orderId={selectedOrderId}
+                onBack={handleBackToList}
+              />
+            ) : (
+              <OrderList onSelectOrder={handleSelectOrder} />
+            )}
+          </Suspense>
         </div>
       </div>
     </div>

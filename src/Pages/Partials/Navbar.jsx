@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -23,8 +23,9 @@ import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
-import QrScannerModal from "./QrScannerModal.jsx";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
+
+const QrScannerModal = lazy(() => import("./QrScannerModal.jsx"));
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getCartTotalCount } from "../../utils/cartService.js";
 import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
@@ -1265,10 +1266,14 @@ const Navbar = () => {
 
       {/* --- Mobile Drawer Navigation (Rendered in Body Portal) --- */}
       {/* QR Scanner & Table Ordering Modal */}
-      <QrScannerModal
-        isOpen={isScanModalOpen}
-        onClose={() => setIsScanModalOpen(false)}
-      />
+      {isScanModalOpen && (
+        <Suspense fallback={null}>
+          <QrScannerModal
+            isOpen={isScanModalOpen}
+            onClose={() => setIsScanModalOpen(false)}
+          />
+        </Suspense>
+      )}
 
       {typeof document !== "undefined" &&
         createPortal(

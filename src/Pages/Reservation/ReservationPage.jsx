@@ -1,11 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import LoadingSpinner from "../Custom/LoadingSpinner.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
-import ReservationList from "./ReservationList.jsx";
-import AddReservationModal from "./AddReservationModal.jsx";
-import ReservationDetails from "./ReservationDetails.jsx";
 import {
   getStoredDateFormat,
   getStoredTimeFormat,
@@ -13,6 +11,10 @@ import {
 } from "./reservationHelpers.js";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Reservation/reservationpage.scss";
+
+const ReservationList = lazy(() => import("./ReservationList.jsx"));
+const AddReservationModal = lazy(() => import("./AddReservationModal.jsx"));
+const ReservationDetails = lazy(() => import("./ReservationDetails.jsx"));
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
@@ -164,39 +166,45 @@ const ReservationPage = () => {
       <Breadcrumbs items={breadcrumbItems} />
 
       <div className="reservation-page-container">
-        {selectedReservationId ? (
-          <ReservationDetails
-            reservationId={selectedReservationId}
-            initialReservation={matchedReservation}
-            dateFormat={dateFormat}
-            timeFormat={timeFormat}
-            timeZone={timeZone}
-            onBack={handleBackToList}
-            onReservationUpdated={() => {
-              fetchReservations();
-            }}
-          />
-        ) : (
-          <ReservationList
-            reservations={reservations}
-            loading={loading}
-            dateFormat={dateFormat}
-            timeFormat={timeFormat}
-            timeZone={timeZone}
-            onSelectReservation={handleSelectReservation}
-            onOpenAddModal={() => setIsAddModalOpen(true)}
-          />
-        )}
+        <Suspense fallback={<LoadingSpinner type="detail" />}>
+          {selectedReservationId ? (
+            <ReservationDetails
+              reservationId={selectedReservationId}
+              initialReservation={matchedReservation}
+              dateFormat={dateFormat}
+              timeFormat={timeFormat}
+              timeZone={timeZone}
+              onBack={handleBackToList}
+              onReservationUpdated={() => {
+                fetchReservations();
+              }}
+            />
+          ) : (
+            <ReservationList
+              reservations={reservations}
+              loading={loading}
+              dateFormat={dateFormat}
+              timeFormat={timeFormat}
+              timeZone={timeZone}
+              onSelectReservation={handleSelectReservation}
+              onOpenAddModal={() => setIsAddModalOpen(true)}
+            />
+          )}
+        </Suspense>
       </div>
 
       {/* Add Table Reservation Modal */}
-      <AddReservationModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSuccess={() => {
-          fetchReservations();
-        }}
-      />
+      {isAddModalOpen && (
+        <Suspense fallback={null}>
+          <AddReservationModal
+            isOpen={isAddModalOpen}
+            onClose={() => setIsAddModalOpen(false)}
+            onSuccess={() => {
+              fetchReservations();
+            }}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

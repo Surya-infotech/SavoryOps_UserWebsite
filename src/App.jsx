@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
@@ -7,10 +7,12 @@ import { WebsiteStatusProvider, useWebsiteStatus, UnderMaintenance } from "./Pag
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import Navbar from "./Pages/Partials/Navbar.jsx";
 import Footer from "./Pages/Partials/Footer.jsx";
+import LoadingSpinner from "./Pages/Custom/LoadingSpinner.jsx";
 import { useLanguage } from "./Context/useLanguage.js";
-import HomeRouter from "./Router/Home.jsx";
 import { processTableQrCode } from "./utils/qrTableService.js";
 import RequestWaiterModal, { CallWaiterFab } from "./Components/Common/RequestWaiterModal.jsx";
+
+const HomeRouter = lazy(() => import("./Router/Home.jsx"));
 import {
   requestCustomerNotificationPermission,
   setupCustomerForegroundNotificationListener,
@@ -147,7 +149,9 @@ const AppContent = () => {
 
       {/* Main Content Router */}
       <Box component="main" className="user-app-main">
-        <HomeRouter />
+        <Suspense fallback={<LoadingSpinner type="page" />}>
+          <HomeRouter />
+        </Suspense>
       </Box>
 
       {/* Modern Footer */}
