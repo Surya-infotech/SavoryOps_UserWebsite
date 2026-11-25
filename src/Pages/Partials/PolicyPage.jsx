@@ -3,11 +3,11 @@ import { Link, useParams } from "react-router-dom";
 import PolicyOutlinedIcon from "@mui/icons-material/PolicyOutlined";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import CircularProgress from "@mui/material/CircularProgress";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { useWebsiteStatus } from "./UnderMaintenance.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import LoadingSpinner from "../Custom/LoadingSpinner.jsx";
 import "../../Scss/Pages/Partials/policypage.scss";
 
 const POLICY_TYPE_LABELS = {
@@ -105,15 +105,6 @@ const PolicyPage = () => {
     return html;
   }, [currentPolicy?.content]);
 
-  if (loading) {
-    return (
-      <div className="policy-page-loading">
-        <CircularProgress size={36} color="success" />
-        <p>{translations.loading}</p>
-      </div>
-    );
-  }
-
   return (
     <div className={`policy-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       {/* Site-wide Unified Breadcrumbs */}
@@ -122,6 +113,10 @@ const PolicyPage = () => {
       />
 
       <div className="policy-container">
+        {loading ? (
+          <LoadingSpinner type="policy" showBreadcrumb={false} />
+        ) : (
+        <>
         {/* Multi-Policy Navigation Tabs */}
         {activePolicies.length > 1 && (
           <div className="policy-tabs-bar no-print">
@@ -228,6 +223,8 @@ const PolicyPage = () => {
             </div>
           )}
         </main>
+        </>
+        )}
       </div>
     </div>
   );

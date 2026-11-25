@@ -70,13 +70,13 @@ const LoadingSpinner = ({ type = "page", size = 36, showBreadcrumb = true }) => 
     case "notifications":
       return <NotificationsListSkeleton />;
     case "profile":
-      return <ProfileSkeleton />;
+      return <ProfileSkeleton showBreadcrumb={showBreadcrumb} />;
     case "settings":
       return <SettingsSkeleton />;
     case "about":
       return <AboutSkeleton />;
     case "policy":
-      return <PolicySkeleton />;
+      return <PolicySkeleton showBreadcrumb={showBreadcrumb} />;
     case "signin":
       return <SigninSkeleton />;
     case "detail":

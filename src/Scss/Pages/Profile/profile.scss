@@ -588,19 +588,6 @@
     }
   }
 
-  /* Loading State */
-  .profile-page-loading {
-    min-height: 60vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    color: #64748b;
-    font-size: 0.95rem;
-    font-weight: 500;
-  }
-
   /* Responsive */
   @media (max-width: 1024px) {
     .profile-fields-grid {

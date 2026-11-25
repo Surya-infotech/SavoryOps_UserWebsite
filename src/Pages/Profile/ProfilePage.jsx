@@ -17,6 +17,7 @@ import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
 import { Country, State, City } from "country-state-city";
 import Dropdown from "../../Components/Dropdown/Dropdown.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import LoadingSpinner from "../Custom/LoadingSpinner.jsx";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import "../../Scss/Pages/Profile/profile.scss";
 
@@ -411,22 +412,15 @@ const ProfilePage = () => {
 
   const currentDisplayAvatar = previewImage || profileImage;
 
-  if (isLoading) {
-    return (
-      <div className="profile-page-loading">
-        <CircularProgress size={42} sx={{ color: "#028802" }} />
-        <p>{translations.loading}</p>
-      </div>
-    );
-  }
-
   return (
     <div className={`profile-page-wrapper ${isRtl ? "is-rtl" : ""}`}>
       {/* Site-wide Unified Breadcrumbs */}
       <Breadcrumbs currentPage={translations.myaccount} />
 
       <div className="profile-page-container">
-        {/* Profile Card Layout */}
+        {isLoading ? (
+          <LoadingSpinner type="profile" showBreadcrumb={false} />
+        ) : (
         <div className="profile-card">
           {/* Unified Card Header Banner */}
           <div className="profile-card-header">
@@ -781,6 +775,7 @@ const ProfilePage = () => {
             </div>
           </form>
         </div>
+        )}
       </div>
     </div>
   );

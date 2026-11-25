@@ -956,10 +956,11 @@ export const NotificationsListSkeleton = () => (
 );
 
 /**
- * Profile (/profile) skeleton matching header banner (avatar + completion badge) and 2-column form card.
+ * Profile (/profile) skeleton matching header banner (avatar + completion badge),
+ * 3-column 9-field form grid, and footer actions.
  */
-export const ProfileSkeleton = () => (
-  <PageShell breadcrumbWidth={205}>
+export const ProfileSkeleton = ({ showBreadcrumb = true }) => (
+  <PageShell showBreadcrumb={showBreadcrumb} breadcrumbWidth={205}>
     <SurfaceCard>
       <Box
         sx={{
@@ -987,19 +988,20 @@ export const ProfileSkeleton = () => (
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "repeat(3, 1fr)" },
             gap: 2.5,
             mb: 3,
           }}
         >
-          {Array.from({ length: 6 }).map((_, idx) => (
+          {Array.from({ length: 9 }).map((_, idx) => (
             <Box key={idx}>
               <Skeleton animation="wave" variant="text" width={110} height={18} sx={{ mb: 0.75 }} />
               <Skeleton animation="wave" variant="rounded" height={46} sx={{ borderRadius: "12px" }} />
             </Box>
           ))}
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1.5 }}>
+          <Skeleton animation="wave" variant="rounded" width={120} height={44} sx={{ borderRadius: "12px" }} />
           <Skeleton
             animation="wave"
             variant="rounded"
@@ -1140,8 +1142,8 @@ export const AboutSkeleton = () => (
 /**
  * Policy (/policy) skeleton matching policy tab chips, header banner, and document card.
  */
-export const PolicySkeleton = () => (
-  <PageShell breadcrumbWidth={210}>
+export const PolicySkeleton = ({ showBreadcrumb = true }) => (
+  <PageShell showBreadcrumb={showBreadcrumb} breadcrumbWidth={210}>
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.25, mb: 2.5 }}>
       {[140, 155, 130].map((w, idx) => (
         <Skeleton
