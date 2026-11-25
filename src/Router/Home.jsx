@@ -39,7 +39,14 @@ const HomeRouter = () => {
   return (
     <Suspense fallback={<LoadingSpinner type="page" />}>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<LoadingSpinner type="home" />}>
+              <HomePage />
+            </Suspense>
+          }
+        />
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/policy/:policyId" element={<PolicyPage />} />
         <Route path="/policy" element={<PolicyPage />} />

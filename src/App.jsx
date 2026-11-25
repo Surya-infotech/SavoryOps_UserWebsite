@@ -149,7 +149,13 @@ const AppContent = () => {
 
       {/* Main Content Router */}
       <Box component="main" className="user-app-main">
-        <Suspense fallback={<LoadingSpinner type="page" />}>
+        <Suspense
+          fallback={
+            <LoadingSpinner
+              type={location.pathname === "/" ? "home" : "page"}
+            />
+          }
+        >
           <HomeRouter />
         </Suspense>
       </Box>
