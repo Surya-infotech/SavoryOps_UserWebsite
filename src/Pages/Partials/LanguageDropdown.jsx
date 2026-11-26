@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import FlagModule from "react-world-flags";
 import CheckIcon from "@mui/icons-material/Check";
 import { useLanguage } from "../../Context/useLanguage.js";
-import { getLanguageOptions } from "../../constants/languages";
+import { getLanguageOptions, resolveInitialLanguage } from "../../constants/languages";
 
 const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.default || FlagModule);
 
@@ -12,7 +12,7 @@ export const LanguageDropdown = ({ className = "" }) => {
   const dropdownRef = useRef(null);
   const languages = getLanguageOptions();
 
-  const currentLanguage = language || localStorage.getItem("selectedLanguage") || "English";
+  const currentLanguage = language || resolveInitialLanguage();
 
   const selectedLang =
     languages.find((lang) => lang.name.toLowerCase() === currentLanguage.toLowerCase()) ||

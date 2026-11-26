@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
 import loadLanguage, { defaultTranslations } from '../utils/LanguageLoader';
 import { LanguageContext } from './languageContext.core.js';
-import { getHtmlLangCode, isRtlLanguage } from '../constants/languages';
+import { getHtmlLangCode, isRtlLanguage, resolveInitialLanguage } from '../constants/languages';
 
 function readInitialLanguage(defaultLanguage) {
-    if (typeof window === 'undefined') return null;
-    return (
-        localStorage.getItem('selectedLanguage') ??
-        defaultLanguage ??
-        import.meta.env.VITE_DEFAULT_LANGUAGE ??
-        'English'
-    );
+    return resolveInitialLanguage(defaultLanguage);
 }
 
 export function LanguageProvider({ children, defaultLanguage }) {
@@ -20,9 +14,24 @@ export function LanguageProvider({ children, defaultLanguage }) {
 
     const changeLanguage = (lang) => {
         if (!lang) return;
-        localStorage.setItem('selectedLanguage', lang);
+        try {
+            localStorage.setItem('selectedLanguage', lang);
+        } catch {
+            /* ignore storage access errors */
+        }
         setLanguage(lang);
     };
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || !language) return;
+        try {
+            if (localStorage.getItem('selectedLanguage') !== language) {
+                localStorage.setItem('selectedLanguage', language);
+            }
+        } catch {
+            /* ignore storage access errors */
+        }
+    }, [language]);
 
     useEffect(() => {
         if (typeof document !== 'undefined') {
@@ -37,13 +46,9 @@ export function LanguageProvider({ children, defaultLanguage }) {
     }, [isRtl, language]);
 
     useEffect(() => {
-        if (!language) {
-            setTranslations({});
-            return;
-        }
         let cancelled = false;
         (async () => {
-            const loaded = await loadLanguage(language);
+            const loaded = language ? await loadLanguage(language) : {};
             if (!cancelled) setTranslations(loaded);
         })();
         return () => {
