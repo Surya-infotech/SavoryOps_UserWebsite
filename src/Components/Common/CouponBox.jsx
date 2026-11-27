@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import CheckIcon from "@mui/icons-material/Check";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { formatPriceFromBranch } from "../../utils/formatCurrency.js";
@@ -33,6 +36,7 @@ const CouponBox = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loadingCoupons, setLoadingCoupons] = useState(false);
   const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [copiedCode, setCopiedCode] = useState("");
 
   const loadCoupons = useCallback(async () => {
     if (!couponEnabled || !branchId) return;
@@ -67,6 +71,54 @@ const CouponBox = ({
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [isModalOpen]);
+
+  const estimateCouponSavings = useCallback(
+    (c) => {
+      if (!c) return 0;
+      const sub = Number(subtotal || 0);
+      if (sub <= 0) return 0;
+      const val = Number(c.discountvalue || 0);
+      if (String(c.discounttype || "").toLowerCase() === "percentage") {
+        const raw = (sub * val) / 100;
+        const maxDisc = Number(c.maxdiscountamount || 0);
+        return maxDisc > 0 ? Math.min(raw, maxDisc) : raw;
+      }
+      return Math.min(sub, val);
+    },
+    [subtotal]
+  );
+
+  const bestCouponCode = useMemo(() => {
+    const eligible = availableCoupons.filter((c) => c && c.isEligible !== false);
+    if (eligible.length < 2) return null;
+    let bestCode = null;
+    let maxSavings = 0;
+    for (const c of eligible) {
+      const savings = estimateCouponSavings(c);
+      if (savings > maxSavings) {
+        maxSavings = savings;
+        bestCode = c.couponcode;
+      }
+    }
+    return maxSavings > 0 ? bestCode : null;
+  }, [availableCoupons, estimateCouponSavings]);
+
+  const handleCopyCode = async (code) => {
+    const clean = String(code || "").trim().toUpperCase();
+    if (!clean) return;
+    try {
+      await navigator.clipboard?.writeText(clean);
+      setCopiedCode(clean);
+      if (typeof showSnackbar === "function") {
+        showSnackbar(`${clean} - ${translations.couponcopied || "Coupon code copied"}`, "info", 2000);
+      }
+      setTimeout(() => {
+        setCopiedCode((prev) => (prev === clean ? "" : prev));
+      }, 1800);
+    } catch {
+      /* ignore clipboard errors */
+    }
+  };
 
   if (!couponEnabled) return null;
 
@@ -126,12 +178,21 @@ const CouponBox = ({
     }
   };
 
+  const formatDiscountStub = (c) => {
+    if (!c) return { main: "", sub: "" };
+    const isPct = String(c.discounttype || "").toLowerCase() === "percentage";
+    const main = isPct
+      ? `${Number(c.discountvalue || 0)}%`
+      : formatPriceFromBranch(Number(c.discountvalue || 0), selectedBranch);
+    return {
+      main,
+      sub: translations.offdiscount || "OFF",
+    };
+  };
+
   const formatDiscountBadge = (c) => {
-    if (!c) return "";
-    if (String(c.discounttype || "").toLowerCase() === "percentage") {
-      return `${Number(c.discountvalue || 0)}% ${translations.offdiscount}`;
-    }
-    return `${formatPriceFromBranch(Number(c.discountvalue || 0), selectedBranch)} ${translations.offdiscount}`;
+    const { main, sub } = formatDiscountStub(c);
+    return main ? `${main} ${sub}` : "";
   };
 
   return (
@@ -256,51 +317,130 @@ const CouponBox = ({
                   <div className="coupon-modal-list">
                     {availableCoupons.map((c) => {
                       const isEligible = c.isEligible !== false;
+                      const isApplied =
+                        appliedCoupon?.couponcode &&
+                        String(appliedCoupon.couponcode).toUpperCase() ===
+                        String(c.couponcode || "").toUpperCase();
+                      const isCopied = copiedCode === String(c.couponcode || "").toUpperCase();
+                      const isBestOffer = isEligible && bestCouponCode === c.couponcode;
+                      const stub = formatDiscountStub(c);
+                      const estimatedSavings = isEligible ? estimateCouponSavings(c) : 0;
+                      const minOrder = Number(c.minorderamount || 0);
+                      const maxDiscount =
+                        String(c.discounttype || "").toLowerCase() === "percentage"
+                          ? Number(c.maxdiscountamount || 0)
+                          : 0;
+                      const unlockProgress =
+                        !isEligible && minOrder > 0
+                          ? Math.min(100, Math.max(6, Math.round((Number(subtotal || 0) / minOrder) * 100)))
+                          : 0;
+
+                      const summaryParts = [];
+                      if (maxDiscount > 0) {
+                        summaryParts.push(
+                          `${translations.maxdiscount}: ${formatPriceFromBranch(maxDiscount, selectedBranch)}`
+                        );
+                      }
+                      if (minOrder > 0) {
+                        summaryParts.push(
+                          `${translations.minorder}: ${formatPriceFromBranch(minOrder, selectedBranch)}`
+                        );
+                      }
+
                       return (
                         <div
                           key={c.couponid || c.couponcode}
-                          className={`coupon-offer-item ${!isEligible ? "is-ineligible" : ""}`}
+                          className={`coupon-ticket-card ${!isEligible ? "is-ineligible" : ""} ${isApplied ? "is-applied" : ""
+                            }`.trim()}
                         >
-                          <div className="coupon-offer-top">
-                            <div className="coupon-offer-code-group">
-                              <span className="coupon-code-chip">{c.couponcode}</span>
-                              <span className="coupon-discount-pill">{formatDiscountBadge(c)}</span>
-                            </div>
-                            <button
-                              type="button"
-                              className="coupon-offer-apply-btn"
-                              disabled={!isEligible || isApplying || disabled}
-                              onClick={() => handleApplyCode(c.couponcode)}
-                            >
-                              {translations.apply}
-                            </button>
+                          {/* Left Ticket Stub */}
+                          <div className="coupon-ticket-stub">
+                            <span className="coupon-stub-value">{stub.main}</span>
+                            <span className="coupon-stub-label">{stub.sub}</span>
                           </div>
 
-                          {c.couponname && <h4 className="coupon-offer-title">{c.couponname}</h4>}
-                          {c.description && <p className="coupon-offer-desc">{c.description}</p>}
+                          {/* Right Ticket Details */}
+                          <div className="coupon-ticket-main">
+                            <div className="coupon-ticket-top">
+                              <div className="coupon-ticket-code-row">
+                                <button
+                                  type="button"
+                                  className={`coupon-code-pill-btn ${isCopied ? "is-copied" : ""}`}
+                                  onClick={() => handleCopyCode(c.couponcode)}
+                                  title={translations.copycode || "Copy Code"}
+                                >
+                                  <span className="coupon-code-text">{c.couponcode}</span>
+                                  {isCopied ? (
+                                    <CheckIcon className="coupon-copy-icon" />
+                                  ) : (
+                                    <ContentCopyIcon className="coupon-copy-icon" />
+                                  )}
+                                </button>
+                                {isBestOffer && (
+                                  <span className="coupon-best-tag">Best Offer</span>
+                                )}
+                              </div>
 
-                          <div className="coupon-offer-meta">
-                            {Number(c.minorderamount) > 0 && (
-                              <span className="coupon-meta-chip">
-                                {translations.minorder}: {formatPriceFromBranch(c.minorderamount, selectedBranch)}
-                              </span>
-                            )}
-                            {String(c.discounttype || "").toLowerCase() === "percentage" &&
-                              Number(c.maxdiscountamount) > 0 && (
-                                <span className="coupon-meta-chip">
-                                  {translations.maxdiscount}: {formatPriceFromBranch(c.maxdiscountamount, selectedBranch)}
+                              <button
+                                type="button"
+                                className={`coupon-ticket-apply-btn ${isApplied ? "is-applied" : ""}`}
+                                disabled={!isEligible || isApplying || disabled || isApplied}
+                                onClick={() => handleApplyCode(c.couponcode)}
+                              >
+                                {isApplied ? (
+                                  <>
+                                    <CheckIcon className="apply-check-icon" />
+                                    <span>{translations.applied || "Applied"}</span>
+                                  </>
+                                ) : (
+                                  translations.apply
+                                )}
+                              </button>
+                            </div>
+
+                            <div className="coupon-ticket-heading-row">
+                              {c.couponname && (
+                                <h4 className="coupon-ticket-title">{c.couponname}</h4>
+                              )}
+                              {isEligible && estimatedSavings > 0 && (
+                                <span className="coupon-savings-hint">
+                                  {translations.yousaved || "Save"}{" "}
+                                  {formatPriceFromBranch(estimatedSavings, selectedBranch)}
                                 </span>
                               )}
+                            </div>
+
+                            {c.description && (
+                              <p className="coupon-ticket-desc">{c.description}</p>
+                            )}
+
+                            {summaryParts.length > 0 && (
+                              <p className="coupon-ticket-terms">{summaryParts.join(" · ")}</p>
+                            )}
+
+                            {!isEligible && c.ineligibleReason && (
+                              <div className="coupon-unlock-box">
+                                {minOrder > 0 && (
+                                  <div className="coupon-unlock-track">
+                                    <div
+                                      className="coupon-unlock-fill"
+                                      style={{ width: `${unlockProgress}%` }}
+                                    />
+                                  </div>
+                                )}
+                                <p className="coupon-ineligible-note">{c.ineligibleReason}</p>
+                              </div>
+                            )}
+
                             {c.endDate && (
-                              <span className="coupon-meta-chip">
-                                {translations.validuntil}: {String(c.endDate).slice(0, 10)}
-                              </span>
+                              <div className="coupon-ticket-footer">
+                                <ScheduleOutlinedIcon className="coupon-expiry-icon" />
+                                <span>
+                                  {translations.validuntil}: {String(c.endDate).slice(0, 10)}
+                                </span>
+                              </div>
                             )}
                           </div>
-
-                          {!isEligible && c.ineligibleReason && (
-                            <p className="coupon-ineligible-note">{c.ineligibleReason}</p>
-                          )}
                         </div>
                       );
                     })}
