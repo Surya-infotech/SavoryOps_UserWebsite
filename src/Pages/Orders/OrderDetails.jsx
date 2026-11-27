@@ -1398,7 +1398,7 @@ const OrderDetails = ({ orderId, onBack }) => {
 
                 {/* Coupon Discount */}
                 {Number(order.discountAmount ?? order.coupon?.discountamount ?? 0) > 0 && (
-                  <div className="bill-row discount-row" style={{ color: "#059669" }}>
+                  <div className="bill-row discount-row">
                     <span className="label">
                       <span>{translations.discount}</span>
                       {order.coupon?.couponcode && (
