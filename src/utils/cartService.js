@@ -346,9 +346,11 @@ export const clearCart = () => {
   try {
     if (typeof localStorage !== "undefined") {
       localStorage.removeItem(CART_STORAGE_KEY);
+      localStorage.removeItem("appliedWebsiteCoupon");
     }
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("cartUpdated", { detail: [] }));
+      window.dispatchEvent(new CustomEvent("couponUpdated", { detail: null }));
     }
     return { success: true };
   } catch (error) {

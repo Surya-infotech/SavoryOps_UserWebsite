@@ -548,8 +548,9 @@ const OrderDetails = ({ orderId, onBack }) => {
             ? parseFloat(data.totalprice)
             : null;
 
+        const serverDiscountAmt = Number(data.discountAmount ?? data.coupon?.discountamount ?? 0);
         const computedGrandTotal =
-          effectiveSubtotal +
+          Math.max(0, effectiveSubtotal - serverDiscountAmt) +
           beforeTaxAmt +
           finalTax +
           afterTaxAmt +
@@ -1394,6 +1395,23 @@ const OrderDetails = ({ orderId, onBack }) => {
                     {formatOrderPrice(order.subtotalprice, order)}
                   </span>
                 </div>
+
+                {/* Coupon Discount */}
+                {Number(order.discountAmount ?? order.coupon?.discountamount ?? 0) > 0 && (
+                  <div className="bill-row discount-row" style={{ color: "#059669" }}>
+                    <span className="label">
+                      <span>{translations.discount}</span>
+                      {order.coupon?.couponcode && (
+                        <span className="rate-badge" style={{ marginLeft: "6px", fontWeight: 700 }}>
+                          ({order.coupon.couponcode})
+                        </span>
+                      )}
+                    </span>
+                    <span className="value">
+                      - {formatOrderPrice(order.discountAmount ?? order.coupon?.discountamount ?? 0, order)}
+                    </span>
+                  </div>
+                )}
 
                 {/* Before-Tax Additional Charges */}
                 {beforeTaxCharges.map((chg, idx) => {

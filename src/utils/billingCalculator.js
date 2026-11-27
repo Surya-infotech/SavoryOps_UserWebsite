@@ -55,10 +55,39 @@ const resolveActiveCharges = (payload) => {
   return { activeCharges: activeAdditional, isSpecialDay: false };
 };
 
-export const computeCartBilling = (items, payload, selectedOrderType = null) => {
+export const computeCouponDiscount = (coupon, subtotal, decimalPlaces = 2) => {
+  const sub = Math.max(0, Number(subtotal) || 0);
+  if (!coupon || sub <= 0) return 0;
+
+  let raw;
+  const type = String(coupon.discounttype || "").toLowerCase();
+  const val = Number(coupon.discountvalue) || 0;
+
+  if (type === "percentage") {
+    raw = sub * (val / 100);
+    const cap = Number(coupon.maxdiscountamount) || 0;
+    if (cap > 0) {
+      raw = Math.min(raw, cap);
+    }
+  } else if (type === "fixed") {
+    raw = val;
+  } else {
+    raw = Number(coupon.discountamount ?? coupon.discountAmount ?? 0) || 0;
+  }
+
+  const clamped = Math.min(sub, Math.max(0, raw));
+  const places = Number.isFinite(Number(decimalPlaces)) ? Number(decimalPlaces) : 2;
+  return parseFloat(clamped.toFixed(places));
+};
+
+export const computeCartBilling = (items, payload, selectedOrderType = null, appliedCoupon = null) => {
+  const decimalPlaces = Number.isFinite(Number(payload?.decimal)) ? Number(payload.decimal) : 2;
   if (!items || items.length === 0) {
     return {
       subtotal: 0,
+      discountAmount: 0,
+      netSubtotal: 0,
+      coupon: null,
       beforeTaxCharges: [],
       taxRows: [],
       totalExclusiveTax: 0,
@@ -81,7 +110,18 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
     return sum + itemPrice * itemQty + addonsTotal;
   }, 0);
 
-  // STAGE 2: Priority Charges & BEFORE TAX Charges
+  // STAGE 1B: Pre-Tax Coupon Discount Resolution
+  const discountAmount = appliedCoupon ? computeCouponDiscount(appliedCoupon, subtotal, decimalPlaces) : 0;
+  const netSubtotal = parseFloat(Math.max(0, subtotal - discountAmount).toFixed(decimalPlaces));
+  const discountFactor = subtotal > 0 ? netSubtotal / subtotal : 1;
+  const couponSnapshot = appliedCoupon && appliedCoupon.couponcode
+    ? {
+        ...appliedCoupon,
+        discountamount: discountAmount,
+      }
+    : null;
+
+  // STAGE 2: Priority Charges & BEFORE TAX Charges (percentage computed against netSubtotal)
   const { activeCharges, isSpecialDay } = resolveActiveCharges(payload);
   let totalBeforeTaxChargeAmount = 0;
   const beforeTaxCharges = activeCharges
@@ -89,7 +129,7 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
     .map((c) => {
       const val = Number(c.chargevalue ?? c.chargeValue ?? c.val ?? c.value ?? c.price ?? c.amount) || 0;
       const isPct = String(c.chargetype || c.chargeType || c.type || c.charge_type || "percentage").toLowerCase().trim() === "percentage";
-      const amount = isPct ? (subtotal * val) / 100 : val;
+      const amount = isPct ? (netSubtotal * val) / 100 : val;
       totalBeforeTaxChargeAmount += amount;
       const id = isSpecialDay
         ? (c.specialdayid || c._id || c.id || c.eventname || c.chargename)
@@ -229,7 +269,8 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
     item.appliedTaxes = dedupedTaxes;
 
     const lineRatio = subtotal > 0 ? lineSub / subtotal : 0;
-    const lineTaxableBase = lineSub + lineRatio * totalBeforeTaxChargeAmount;
+    const discountedLineSub = lineSub * discountFactor;
+    const lineTaxableBase = discountedLineSub + lineRatio * totalBeforeTaxChargeAmount;
 
     dedupedTaxes.forEach((tax) => {
       addTaxBreakdown(tax, lineTaxableBase, tax.taxLevel, itemQty);
@@ -237,7 +278,7 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
   }
 
   // STAGE 4: AFTER TAX Charges
-  const afterTaxBase = subtotal + totalBeforeTaxChargeAmount + totalExclusiveTax;
+  const afterTaxBase = netSubtotal + totalBeforeTaxChargeAmount + totalExclusiveTax;
   let totalAfterTaxChargeAmount = 0;
   const afterTaxCharges = activeCharges
     .filter((c) => c.applicationtiming === "after_tax")
@@ -273,7 +314,7 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
   const additionalCharges = !isSpecialDay ? allMappedCharges : [];
 
   // STAGE 5: Round Off & Grand Total
-  const rawGrand = subtotal + totalBeforeTaxChargeAmount + totalExclusiveTax + totalAfterTaxChargeAmount;
+  const rawGrand = netSubtotal + totalBeforeTaxChargeAmount + totalExclusiveTax + totalAfterTaxChargeAmount;
   let grandTotal = rawGrand;
   let roundoffObj = { status: false, roundedAmount: 0, roundtype: null, roundoffType: null };
 
@@ -318,6 +359,9 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
 
   return {
     subtotal: Number(subtotal.toFixed(2)),
+    discountAmount: Number(discountAmount.toFixed(decimalPlaces)),
+    netSubtotal,
+    coupon: couponSnapshot,
     beforeTaxCharges,
     taxRows: rows,
     totalExclusiveTax: Number(totalExclusiveTax.toFixed(2)),
@@ -331,5 +375,6 @@ export const computeCartBilling = (items, payload, selectedOrderType = null) => 
 
 export default {
   resolveActiveCharges,
+  computeCouponDiscount,
   computeCartBilling,
 };

@@ -738,22 +738,22 @@ const generateInvoiceBodyHTML = (
             </div>
             <div style="display: flex; flex-direction: column; gap: 3px;">
               ${bundleItems
-                .map((bi) => {
-                  const isBiUnlim = Boolean(bi?.isunlimited);
-                  const biQty = bi?.qty || bi?.quantity || 1;
-                  const biName = bi?.itemname || bi?.name || bi?.productname || "";
-                  const qtyBadge = isBiUnlim
-                    ? `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 11px; line-height: 1;">&infin;</span>`
-                    : `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>`;
+            .map((bi) => {
+              const isBiUnlim = Boolean(bi?.isunlimited);
+              const biQty = bi?.qty || bi?.quantity || 1;
+              const biName = bi?.itemname || bi?.name || bi?.productname || "";
+              const qtyBadge = isBiUnlim
+                ? `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 11px; line-height: 1;">&infin;</span>`
+                : `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>`;
 
-                  return `
+              return `
                     <div style="display: flex; align-items: center; gap: 5px; font-size: 10px; color: #374151; background: #ffffff; border: 1px solid #E5E7EB; border-radius: 4px; padding: 2px 6px;">
                       ${qtyBadge}
                       <span>${escapeHtml(biName)}</span>
                     </div>
                   `;
-                })
-                .join("")}
+            })
+            .join("")}
             </div>
           </div>
         `;
@@ -872,22 +872,22 @@ const generateInvoiceBodyHTML = (
             </div>
             <div style="display: flex; flex-direction: column; gap: 3px;">
               ${bundleItems
-                .map((bi) => {
-                  const isBiUnlim = Boolean(bi?.isunlimited);
-                  const biQty = bi?.qty || bi?.quantity || 1;
-                  const biName = bi?.itemname || bi?.name || bi?.productname || "";
-                  const qtyBadge = isBiUnlim
-                    ? `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 11px; line-height: 1;">&infin;</span>`
-                    : `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>`;
+            .map((bi) => {
+              const isBiUnlim = Boolean(bi?.isunlimited);
+              const biQty = bi?.qty || bi?.quantity || 1;
+              const biName = bi?.itemname || bi?.name || bi?.productname || "";
+              const qtyBadge = isBiUnlim
+                ? `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 11px; line-height: 1;">&infin;</span>`
+                : `<span style="background-color: #DCFCE7; color: #16A34A; font-weight: bold; padding: 0 4px; border-radius: 3px; font-size: 9px;">${escapeHtml(String(biQty))}x</span>`;
 
-                  return `
+              return `
                     <div style="display: flex; align-items: center; gap: 5px; font-size: 10px; color: #374151; background: #ffffff; border: 1px solid #E5E7EB; border-radius: 4px; padding: 2px 6px;">
                       ${qtyBadge}
                       <span>${escapeHtml(biName)}</span>
                     </div>
                   `;
-                })
-                .join("")}
+            })
+            .join("")}
             </div>
           </div>
         `;
@@ -957,6 +957,18 @@ const generateInvoiceBodyHTML = (
   }
 
   // Before-tax charges
+  // Coupon Discount Row (Pre-Tax)
+  const discountAmount = Number(orderData?.discountAmount ?? orderData?.coupon?.discountamount ?? 0);
+  const discountCodeLabel = orderData?.coupon?.couponcode ? ` (${escapeHtml(orderData.coupon.couponcode)})` : "";
+  const discountRow = discountAmount > 0
+    ? `
+      <div class="summary-row" style="color: #059669; font-weight: 600;">
+        <span>${escapeHtml(getTranslation("discount"))}${discountCodeLabel}</span>
+        <span>- ${formatPrice(discountAmount)}</span>
+      </div>
+    `
+    : "";
+
   const beforeTaxCharges = (orderData?.additionalCharges || [])
     .concat(orderData?.specialDayCharges || [])
     .filter((c) => c.applicationtiming === "before_tax");
@@ -1150,12 +1162,12 @@ const generateInvoiceBodyHTML = (
               <span class="info-value">${escapeHtml(formatCustomerField(orderData.customerPhone))}</span>
             </div>
             ${hasCustomerEmail
-        ? `<div class="info-item">
+      ? `<div class="info-item">
                     <span class="info-label">${escapeHtml(getTranslation("customeremail"))}:</span>
                     <span class="info-value">${escapeHtml(customerEmail)}</span>
                   </div>`
-        : ""
-      }
+      : ""
+    }
           </div>
         </div>
 
@@ -1171,12 +1183,12 @@ const generateInvoiceBodyHTML = (
               <span class="info-value">${escapeHtml(branchAddressDisplay)}</span>
             </div>
             ${tableDetailsHTML
-        ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
+      ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eeeeee;">
                       <div class="info-item" style="margin-bottom: 6px;"><span class="info-label" style="font-weight: bold; color: #28a745;">${escapeHtml(getTranslation("tabledetails"))}</span></div>
                       ${tableDetailsHTML}
                     </div>`
-        : ""
-      }
+      : ""
+    }
           </div>
         </div>
       </div>
@@ -1245,6 +1257,7 @@ const generateInvoiceBodyHTML = (
           <span>${escapeHtml(getTranslation("subtotal"))}</span>
           <span>${formatPrice(orderData.subtotalprice)}</span>
         </div>
+        ${discountRow}
         ${beforeTaxRows}
         ${taxesRows}
         ${afterTaxRows}

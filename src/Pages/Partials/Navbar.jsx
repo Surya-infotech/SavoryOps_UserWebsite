@@ -28,6 +28,7 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 const QrScannerModal = lazy(() => import("./QrScannerModal.jsx"));
 import { useLanguage } from "../../Context/useLanguage.js";
 import { getCartTotalCount } from "../../utils/cartService.js";
+import { clearAppliedCoupon } from "../../utils/couponService.js";
 import { clearStorageOnLogout, logoutCustomerApi } from "../../utils/authUtils.js";
 import HandleUnauthorized from "../../utils/HandleUnauthorized.jsx";
 import { clearSelectedTable } from "../../utils/qrTableService.js";
@@ -251,8 +252,9 @@ const BranchDropdown = ({ className = "", onBranchChange }) => {
     setIsOpen(false);
     setSearch("");
 
-    // Remove table details when switching branch
+    // Remove table & coupon details when switching branch
     clearSelectedTable();
+    clearAppliedCoupon();
 
     if (typeof onBranchChange === "function") {
       onBranchChange(branch);
@@ -424,9 +426,13 @@ const OrderTypeDropdown = ({ className = "" }) => {
 
       const data = await res.json();
       if (res.ok && data.success && data.branchSetting) {
+        const nextModules = data.modules && typeof data.modules === "object" ? data.modules : (window.__modules || {});
+        const nextCouponEnabled = data.couponEnabled === true || nextModules.coupon === true;
         if (typeof window !== "undefined") {
           window.__branchSetting = data.branchSetting;
           window.__branchHours = data.branchHours || null;
+          window.__modules = nextModules;
+          window.__couponEnabled = nextCouponEnabled;
         }
         window.dispatchEvent(
           new CustomEvent("branchSettingChange", {
@@ -438,6 +444,8 @@ const OrderTypeDropdown = ({ className = "" }) => {
             detail: {
               branchSetting: data.branchSetting,
               branchHours: data.branchHours || null,
+              modules: nextModules,
+              couponEnabled: nextCouponEnabled,
             },
           })
         );

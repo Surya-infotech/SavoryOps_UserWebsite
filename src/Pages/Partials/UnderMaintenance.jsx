@@ -46,6 +46,8 @@ export const WebsiteStatusProvider = ({ children }) => {
   const [isWebsiteEnabled, setIsWebsiteEnabled] = useState(true);
   const [business, setBusiness] = useState(null);
   const [policies, setPolicies] = useState([]);
+  const [modules, setModules] = useState({});
+  const [couponEnabled, setCouponEnabled] = useState(false);
   const [subdomain, setSubdomain] = useState(() => getWebsiteSubdomain());
   const [error, setError] = useState(null);
   const [lastChecked, setLastChecked] = useState(null);
@@ -105,6 +107,14 @@ export const WebsiteStatusProvider = ({ children }) => {
         if (Array.isArray(data.policies)) {
           setPolicies(data.policies);
         }
+        const nextModules = data.modules && typeof data.modules === "object" ? data.modules : {};
+        const nextCouponEnabled = data.couponEnabled === true || nextModules.coupon === true;
+        setModules(nextModules);
+        setCouponEnabled(nextCouponEnabled);
+        if (typeof window !== "undefined") {
+          window.__modules = nextModules;
+          window.__couponEnabled = nextCouponEnabled;
+        }
         setError(null);
       } else {
         setIsWebsiteEnabled(false);
@@ -149,6 +159,8 @@ export const WebsiteStatusProvider = ({ children }) => {
     isWebsiteEnabled,
     business,
     policies,
+    modules,
+    couponEnabled,
     subdomain,
     error,
     lastChecked,

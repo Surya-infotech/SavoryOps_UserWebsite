@@ -2,6 +2,9 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
+import CheckIcon from "@mui/icons-material/Check";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
 import { useLanguage } from "../../Context/useLanguage.js";
@@ -9,22 +12,32 @@ import { useSnackbar } from "../../Context/SnackbarContext.jsx";
 import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import DishCard, { DishDetailModal, DishAddonModal } from "../../Components/Common/DishCard.jsx";
-import { getActiveBranch } from "../../utils/formatCurrency.js";
+import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
-import { addItemToCart, getItemQuantitiesMap } from "../../utils/cartService.js";
+import { addItemToCart, getCart, getItemQuantitiesMap } from "../../utils/cartService.js";
+import {
+  fetchAvailableCoupons,
+  validateCouponCode,
+  getAppliedCoupon,
+  saveAppliedCoupon,
+} from "../../utils/couponService.js";
 import "../../Scss/Pages/Offers/offerspage.scss";
 
 const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
 
 const OffersPage = () => {
   const { translations = {}, isRtl } = useLanguage();
   const { showSnackbar } = useSnackbar();
-  const { business } = useWebsiteStatus();
+  const { business, couponEnabled } = useWebsiteStatus();
   const businessDisplayName = business?.businessname;
 
   const [loading, setLoading] = useState(true);
   const [rawDealsBundles, setRawDealsBundles] = useState([]);
+  const [promoCoupons, setPromoCoupons] = useState([]);
+  const [copiedCode, setCopiedCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(getAppliedCoupon);
   const [branchCurrencySymbol, setBranchCurrencySymbol] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
@@ -41,8 +54,15 @@ const OffersPage = () => {
     const handleCartUpdated = () => {
       setAddedItems(getItemQuantitiesMap());
     };
+    const handleCouponUpdated = () => {
+      setAppliedCoupon(getAppliedCoupon());
+    };
     window.addEventListener("cartUpdated", handleCartUpdated);
-    return () => window.removeEventListener("cartUpdated", handleCartUpdated);
+    window.addEventListener("couponUpdated", handleCouponUpdated);
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdated);
+      window.removeEventListener("couponUpdated", handleCouponUpdated);
+    };
   }, []);
 
   // Filter States: Deal Type (all | combo | unlimited) and Diet (all | veg | nonveg)
@@ -202,6 +222,109 @@ const OffersPage = () => {
     };
   }, [fetchOffersData]);
 
+  // Fetch available promotional coupons for active branch
+  const promoBranchId =
+    selectedBranch?.branchid ||
+    selectedBranch?._id ||
+    localStorage.getItem("selectedBranchid") ||
+    localStorage.getItem("selectedBranchId");
+
+  useEffect(() => {
+    if (!couponEnabled || !promoBranchId) {
+      return;
+    }
+
+    const customerId = localStorage.getItem(customerIdName) || null;
+    const subdomain = getWebsiteSubdomain();
+    const orderTypeName =
+      typeof selectedOrderType === "object" && selectedOrderType !== null
+        ? selectedOrderType.ordertypename || selectedOrderType.name || ""
+        : selectedOrderType || "";
+
+    let cancelled = false;
+    fetchAvailableCoupons({
+      branchId: promoBranchId,
+      customerId,
+      orderType: orderTypeName,
+      subtotalprice: 0,
+      subdomain,
+    })
+      .then((res) => {
+        if (!cancelled) {
+          setPromoCoupons(res.enabled ? res.coupons || [] : []);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setPromoCoupons([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [couponEnabled, promoBranchId, selectedOrderType]);
+
+  const visiblePromoCoupons = couponEnabled && promoBranchId ? promoCoupons : [];
+
+  const handleCopyCouponCode = async (code) => {
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+      }
+      setCopiedCode(code);
+      showSnackbar(`${code} - ${translations.couponcopied}`, "success", 2500);
+      setTimeout(() => setCopiedCode((prev) => (prev === code ? "" : prev)), 2500);
+    } catch {
+      showSnackbar(code, "info", 2500);
+    }
+  };
+
+  const handleApplyOfferCoupon = async (coupon) => {
+    const cart = getCart();
+    if (!cart || cart.length === 0) {
+      await handleCopyCouponCode(coupon.couponcode);
+      return;
+    }
+    const branchId =
+      selectedBranch?.branchid ||
+      selectedBranch?._id ||
+      localStorage.getItem("selectedBranchid") ||
+      localStorage.getItem("selectedBranchId");
+    const customerId = localStorage.getItem(customerIdName) || null;
+    const subdomain = getWebsiteSubdomain();
+    const orderTypeName =
+      typeof selectedOrderType === "object" && selectedOrderType !== null
+        ? selectedOrderType.ordertypename || selectedOrderType.name || ""
+        : selectedOrderType || "";
+    const cartSubtotal = cart.reduce((sum, item) => {
+      const qty = Number(item.quantity) || 1;
+      const addons = (item.addons || []).reduce(
+        (s, a) => (a && a.selected !== false ? s + (Number(a.price) || 0) * qty : s),
+        0
+      );
+      return sum + (Number(item.price) || 0) * qty + addons;
+    }, 0);
+
+    try {
+      const res = await validateCouponCode({
+        branchId,
+        customerId,
+        couponCode: coupon.couponcode,
+        orderType: orderTypeName,
+        subtotalprice: cartSubtotal,
+        subdomain,
+      });
+      if (!res.valid || !res.coupon) {
+        showSnackbar(res.message || translations.invalidcouponcode, "warning", 3500);
+        return;
+      }
+      saveAppliedCoupon(res.coupon);
+      setAppliedCoupon(res.coupon);
+      showSnackbar(`${res.coupon.couponcode} - ${translations.couponapplied}`, "success", 3000);
+    } catch {
+      showSnackbar(translations.failedtoapplycoupon, "error", 3000);
+    }
+  };
+
   // Format deals to match MenuPage schema
   const formattedDeals = useMemo(() => {
     return rawDealsBundles.map((b) => {
@@ -315,11 +438,11 @@ const OffersPage = () => {
     };
     const addons = itemWithPrice.addons
       ? itemWithPrice.addons.map((addon) => ({
-          addonid: addon.addonid || addon._id || addon.id,
-          addonname: addon.addonname || addon.name,
-          price: Number(addon.price ?? addon.addonprice ?? 0),
-          selected: false,
-        }))
+        addonid: addon.addonid || addon._id || addon.id,
+        addonname: addon.addonname || addon.name,
+        price: Number(addon.price ?? addon.addonprice ?? 0),
+        selected: false,
+      }))
       : [];
 
     addItemToCart(itemWithPrice, {
@@ -365,6 +488,71 @@ const OffersPage = () => {
       <Breadcrumbs currentPage={translations.specialoffers} />
 
       <div className="offers-main-content-container">
+        {/* Promo Coupons Section (when Coupon module enabled & branch has visible coupons) */}
+        {!loading && couponEnabled && visiblePromoCoupons.length > 0 && (
+          <div className="promo-coupons-section">
+            <div className="promo-coupons-header">
+              <ConfirmationNumberOutlinedIcon className="promo-header-icon" />
+              <h2 className="promo-coupons-title">{translations.promocoupons}</h2>
+            </div>
+            <div className="promo-coupons-grid">
+              {visiblePromoCoupons.map((c) => {
+                const isApplied = appliedCoupon?.couponcode === c.couponcode;
+                const isCopied = copiedCode === c.couponcode;
+                const badgeText =
+                  String(c.discounttype || "").toLowerCase() === "percentage"
+                    ? `${Number(c.discountvalue || 0)}% ${translations.offdiscount}`
+                    : `${formatPriceFromBranch(Number(c.discountvalue || 0), selectedBranch)} ${translations.offdiscount}`;
+                return (
+                  <div key={c.couponid || c.couponcode} className="promo-coupon-card">
+                    <div className="promo-coupon-top">
+                      <span className="promo-discount-badge">{badgeText}</span>
+                      {c.endDate && (
+                        <span className="promo-expiry-text">
+                          {translations.validuntil}: {String(c.endDate).slice(0, 10)}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="promo-coupon-name">{c.couponname || c.couponcode}</h3>
+                    {c.description && <p className="promo-coupon-desc">{c.description}</p>}
+                    <div className="promo-coupon-constraints">
+                      {Number(c.minorderamount) > 0 && (
+                        <span className="promo-meta-pill">
+                          {translations.minorder}: {formatPriceFromBranch(c.minorderamount, selectedBranch)}
+                        </span>
+                      )}
+                      {String(c.discounttype || "").toLowerCase() === "percentage" &&
+                        Number(c.maxdiscountamount) > 0 && (
+                          <span className="promo-meta-pill">
+                            {translations.maxdiscount}: {formatPriceFromBranch(c.maxdiscountamount, selectedBranch)}
+                          </span>
+                        )}
+                    </div>
+                    <div className="promo-coupon-footer">
+                      <button
+                        type="button"
+                        className="promo-code-copy-btn"
+                        onClick={() => handleCopyCouponCode(c.couponcode)}
+                        title={translations.copycode}
+                      >
+                        <span className="promo-code-value">{c.couponcode}</span>
+                        {isCopied ? <CheckIcon fontSize="inherit" /> : <ContentCopyIcon fontSize="inherit" />}
+                      </button>
+                      <button
+                        type="button"
+                        className={`promo-apply-btn ${isApplied ? "is-applied" : ""}`}
+                        onClick={() => handleApplyOfferCoupon(c)}
+                      >
+                        {isApplied ? translations.applied : translations.apply}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Filter Bar (matching MenuPage ultra-compact design, fully responsive on mobile/tablet) */}
         {!loading && formattedDeals.length > 0 && (
           <div className="offers-filters-wrapper">
@@ -512,8 +700,8 @@ const OffersPage = () => {
               </button>
             )}
           </div>
-        ) : (
-          /* Empty State (No Deals at Branch) - Exact parity with Manage Address */
+        ) : visiblePromoCoupons.length === 0 ? (
+          /* Empty State (No Deals or Coupons at Branch) - Exact parity with Manage Address */
           <div className="offers-empty-state no-offers-state">
             <div className="empty-icon-wrap">
               <LocalOfferOutlinedIcon className="empty-icon" />
@@ -529,7 +717,7 @@ const OffersPage = () => {
               <span>{translations.exploremenu}</span>
             </Link>
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Centralized Deal Detail Modal */}
@@ -542,9 +730,9 @@ const OffersPage = () => {
         initialQuantity={
           selectedItemModal
             ? addedItems[selectedItemModal.id] ||
-              addedItems[selectedItemModal.dealsbundlesid] ||
-              addedItems[String(selectedItemModal.dealsbundlesid)] ||
-              1
+            addedItems[selectedItemModal.dealsbundlesid] ||
+            addedItems[String(selectedItemModal.dealsbundlesid)] ||
+            1
             : 1
         }
       />

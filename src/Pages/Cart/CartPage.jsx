@@ -18,9 +18,10 @@ import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import { isDineInOrderType } from "../Orders/orderHelpers.js";
 import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
+import CouponBox from "../../Components/Common/CouponBox.jsx";
 import { useLanguage } from "../../Context/useLanguage.js";
 import { useSnackbar } from "../../Context/SnackbarContext.jsx";
-import { useWebsiteStatus } from "../Partials/UnderMaintenance.jsx";
+import { useWebsiteStatus, getWebsiteSubdomain } from "../Partials/UnderMaintenance.jsx";
 import { formatPriceFromBranch, getActiveBranch } from "../../utils/formatCurrency.js";
 import { evaluateBranchOperatingHours } from "../../utils/operatingHoursHelper.js";
 import {
@@ -32,6 +33,12 @@ import {
   updateCartItemInstructions,
   updateCartItemAddons,
 } from "../../utils/cartService.js";
+import {
+  getAppliedCoupon,
+  saveAppliedCoupon,
+  clearAppliedCoupon,
+  validateCouponCode,
+} from "../../utils/couponService.js";
 import { calculateItemPrice } from "../../utils/priceCalculator.js";
 import { computeCartBilling } from "../../utils/billingCalculator.js";
 import { clearSelectedTable } from "../../utils/qrTableService.js";
@@ -88,11 +95,16 @@ const getOrderTypeIcon = (orderType) => {
 const CartPage = () => {
   const navigate = useNavigate();
   const { translations = {}, isRtl } = useLanguage();
-  const { business } = useWebsiteStatus();
+  const { business, couponEnabled: ctxCouponEnabled } = useWebsiteStatus();
   const { showSnackbar } = useSnackbar();
   const businessDisplayName = business?.businessname || "";
 
   const [cartItems, setCartItems] = useState(getCart);
+  const [appliedCoupon, setAppliedCoupon] = useState(getAppliedCoupon);
+  const [branchCouponEnabled, setBranchCouponEnabled] = useState(() =>
+    Boolean(typeof window !== "undefined" && window.__couponEnabled)
+  );
+  const couponEnabled = Boolean(ctxCouponEnabled || branchCouponEnabled);
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const [openNotesMap, setOpenNotesMap] = useState({});
   const [selectedOrderType, setSelectedOrderType] = useState(() => {
@@ -116,7 +128,7 @@ const CartPage = () => {
   const [editingCartItem, setEditingCartItem] = useState(null);
   const [selectedModalAddonIds, setSelectedModalAddonIds] = useState([]);
 
-  // Sync cart items with global cartUpdated event
+  // Sync cart items & applied coupon with global events
   useEffect(() => {
     const handleCartUpdated = (e) => {
       if (e?.detail) {
@@ -125,9 +137,16 @@ const CartPage = () => {
         setCartItems(getCart());
       }
     };
+    const handleCouponUpdated = () => {
+      setAppliedCoupon(getAppliedCoupon());
+    };
 
     window.addEventListener("cartUpdated", handleCartUpdated);
-    return () => window.removeEventListener("cartUpdated", handleCartUpdated);
+    window.addEventListener("couponUpdated", handleCouponUpdated);
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdated);
+      window.removeEventListener("couponUpdated", handleCouponUpdated);
+    };
   }, []);
 
   // Sync active branch currency settings
@@ -159,6 +178,9 @@ const CartPage = () => {
       if (e?.detail) {
         if (e.detail.branchSetting) setPosPayload(e.detail.branchSetting);
         if (e.detail.branchHours) setBranchHours(e.detail.branchHours);
+        if (e.detail.couponEnabled !== undefined) {
+          setBranchCouponEnabled(Boolean(e.detail.couponEnabled || e.detail.modules?.coupon));
+        }
       }
     };
     const handleTableChange = (e) => {
@@ -348,11 +370,63 @@ const CartPage = () => {
   };
 
   // Calculations & Billing Summary
+  const activeCartCoupon = currentOrderNo ? null : appliedCoupon;
   const billingSummary = useMemo(() => {
-    return computeCartBilling(cartItems, posPayload, selectedOrderType);
-  }, [cartItems, posPayload, selectedOrderType]);
+    return computeCartBilling(cartItems, posPayload, selectedOrderType, activeCartCoupon);
+  }, [cartItems, posPayload, selectedOrderType, activeCartCoupon]);
 
   const grandTotal = billingSummary.grandTotal;
+  const activeBranchIdForCoupon =
+    selectedBranch?.branchid ||
+    selectedBranch?._id ||
+    localStorage.getItem("selectedBranchid") ||
+    localStorage.getItem("selectedBranchId");
+  const cartCustomerId = localStorage.getItem(customerIdName) || null;
+  const cartSubdomain = getWebsiteSubdomain();
+
+  // Re-validate applied coupon whenever subtotal, branch, or order type changes
+  useEffect(() => {
+    if (!appliedCoupon?.couponcode || currentOrderNo || !cartItems.length || !activeBranchIdForCoupon) {
+      return;
+    }
+    let cancelled = false;
+    validateCouponCode({
+      branchId: activeBranchIdForCoupon,
+      customerId: cartCustomerId,
+      couponCode: appliedCoupon.couponcode,
+      orderType:
+        typeof selectedOrderType === "object" && selectedOrderType !== null
+          ? selectedOrderType.ordertypename || selectedOrderType.name || ""
+          : selectedOrderType || "",
+      subtotalprice: billingSummary.subtotal,
+      subdomain: cartSubdomain,
+    })
+      .then((res) => {
+        if (cancelled) return;
+        if (!res.valid) {
+          clearAppliedCoupon();
+          if (typeof showSnackbar === "function") {
+            showSnackbar(res.message || translations.couponremoved, "warning", 3500);
+          }
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    appliedCoupon?.couponcode,
+    currentOrderNo,
+    cartItems.length,
+    activeBranchIdForCoupon,
+    cartCustomerId,
+    selectedOrderType,
+    billingSummary.subtotal,
+    cartSubdomain,
+    showSnackbar,
+    translations.couponremoved,
+  ]);
 
   const modalAvailableAddons = useMemo(() => {
     if (!editingCartItem) return [];
@@ -510,6 +584,15 @@ const CartPage = () => {
           items: processedItems,
           subtotal: billingSummary.subtotal,
           subtotalprice: billingSummary.subtotal,
+          discountAmount: billingSummary.discountAmount || 0,
+          coupon: billingSummary.coupon || null,
+          ...(billingSummary.coupon?.couponcode
+            ? {
+                couponcode: billingSummary.coupon.couponcode,
+                couponCode: billingSummary.coupon.couponcode,
+              }
+            : {}),
+          channel: "website",
           beforeTaxCharges: billingSummary.beforeTaxCharges,
           taxes: billingSummary.taxRows,
           branchTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "branch"),
@@ -621,6 +704,15 @@ const CartPage = () => {
           items: processedItems,
           subtotal: billingSummary.subtotal,
           subtotalprice: billingSummary.subtotal,
+          discountAmount: billingSummary.discountAmount || 0,
+          coupon: billingSummary.coupon || null,
+          ...(billingSummary.coupon?.couponcode
+            ? {
+                couponcode: billingSummary.coupon.couponcode,
+                couponCode: billingSummary.coupon.couponcode,
+              }
+            : {}),
+          channel: "website",
           beforeTaxCharges: billingSummary.beforeTaxCharges,
           taxes: billingSummary.taxRows,
           branchTaxes: billingSummary.taxRows.filter((t) => t.taxLevel === "branch"),
@@ -1048,6 +1140,23 @@ const CartPage = () => {
                 </div>
 
                 <div className="cart-bill-summary-card">
+                  {!currentOrderNo && (
+                    <CouponBox
+                      branchId={activeBranchIdForCoupon}
+                      customerId={cartCustomerId}
+                      selectedBranch={selectedBranch}
+                      orderType={effectiveOrderType}
+                      subtotal={billingSummary.subtotal}
+                      subdomain={cartSubdomain}
+                      couponEnabled={couponEnabled}
+                      appliedCoupon={appliedCoupon}
+                      discountAmount={billingSummary.discountAmount}
+                      onApplyCoupon={saveAppliedCoupon}
+                      onRemoveCoupon={clearAppliedCoupon}
+                      disabled={isSubmitting}
+                      showSnackbar={showSnackbar}
+                    />
+                  )}
                   <div className="bill-rows-container">
                     {/* Sub Total */}
                     <div className="bill-row">
@@ -1056,6 +1165,19 @@ const CartPage = () => {
                         {formatPriceFromBranch(billingSummary.subtotal, selectedBranch)}
                       </span>
                     </div>
+
+                    {/* Coupon Discount */}
+                    {billingSummary.discountAmount > 0 && (
+                      <div className="bill-row bill-discount-row">
+                        <span className="bill-row-label">
+                          {translations.discount}
+                          {billingSummary.coupon?.couponcode ? ` (${billingSummary.coupon.couponcode})` : ""}
+                        </span>
+                        <span className="bill-row-value">
+                          - {formatPriceFromBranch(billingSummary.discountAmount, selectedBranch)}
+                        </span>
+                      </div>
+                    )}
 
                     {/* Before Tax Charges */}
                     {billingSummary.beforeTaxCharges.map((charge, idx) => {
