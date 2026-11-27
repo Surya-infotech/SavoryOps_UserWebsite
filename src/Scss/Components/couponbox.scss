@@ -40,11 +40,14 @@
       color: #028802;
       font-size: 0.8rem;
       font-weight: 700;
+      text-decoration: none;
       cursor: pointer;
-      transition: opacity 0.15s ease;
+      transition: opacity 0.15s ease, color 0.15s ease;
 
       &:hover:not(:disabled) {
-        text-decoration: underline;
+        text-decoration: none;
+        color: #026b02;
+        opacity: 0.85;
       }
 
       &:disabled {
