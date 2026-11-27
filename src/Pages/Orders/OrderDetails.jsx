@@ -412,6 +412,9 @@ const OrderDetails = ({ orderId, onBack }) => {
           };
         });
 
+        const serverDiscountAmt = Number(data.discountAmount ?? data.coupon?.discountamount ?? 0);
+        const netEffectiveSubtotal = Math.max(0, effectiveSubtotal - serverDiscountAmt);
+
         const rawAdditionalCharges = (data.additionalCharges || []).map((c) => {
           const chg = c.toObject ? c.toObject() : { ...c };
           if (chg.amount != null && !isNaN(parseFloat(chg.amount))) {
@@ -419,7 +422,7 @@ const OrderDetails = ({ orderId, onBack }) => {
           } else if (chg.chargetype === "percentage" && chg.chargevalue) {
             chg.amount = parseFloat(
               (
-                (effectiveSubtotal * parseFloat(chg.chargevalue)) /
+                (netEffectiveSubtotal * parseFloat(chg.chargevalue)) /
                 100
               ).toFixed(data.decimal || 2)
             );
@@ -440,7 +443,10 @@ const OrderDetails = ({ orderId, onBack }) => {
           data.roundoff?.roundedAmount ?? data.roundoffAmount ?? 0
         );
 
-        const taxBaseForInit = effectiveSubtotal + beforeTaxAmt;
+        const taxBaseForInit = netEffectiveSubtotal + beforeTaxAmt;
+        const subtotalMatchesServer =
+          serverSubtotal === null ||
+          Math.abs(serverSubtotal - effectiveSubtotal) < 0.01;
         const allTaxesList =
           Array.isArray(data.taxes) && data.taxes.length > 0
             ? data.taxes
@@ -464,6 +470,7 @@ const OrderDetails = ({ orderId, onBack }) => {
           }
         });
 
+        const taxDecimals = Number.isFinite(Number(data.decimal)) ? Number(data.decimal) : 2;
         let computedTotalTax = 0;
         const formattedTaxes = Array.from(validTaxesMap.values()).map((t) => {
           const taxObj = { ...t };
@@ -471,9 +478,18 @@ const OrderDetails = ({ orderId, onBack }) => {
           const isP =
             String(taxObj.taxtype ?? "percentage").toLowerCase() ===
             "percentage";
+          const serverTaxVal = taxObj.calculatedAmount ?? taxObj.amount;
           let amt;
-          if (isP) {
-            amt = (taxBaseForInit * r) / 100;
+          if (!isOrderCancelled && !isOrderPaid && !hasNonCancelledItems && hasItems) {
+            amt = 0;
+          } else if (
+            subtotalMatchesServer &&
+            serverTaxVal != null &&
+            !isNaN(Number(serverTaxVal))
+          ) {
+            amt = Number(serverTaxVal);
+          } else if (isP) {
+            amt = parseFloat(((taxBaseForInit * r) / 100).toFixed(taxDecimals));
           } else {
             const tKey =
               taxObj.taxid != null
@@ -548,9 +564,8 @@ const OrderDetails = ({ orderId, onBack }) => {
             ? parseFloat(data.totalprice)
             : null;
 
-        const serverDiscountAmt = Number(data.discountAmount ?? data.coupon?.discountamount ?? 0);
         const computedGrandTotal =
-          Math.max(0, effectiveSubtotal - serverDiscountAmt) +
+          netEffectiveSubtotal +
           beforeTaxAmt +
           finalTax +
           afterTaxAmt +
