@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import CloseIcon from "@mui/icons-material/Close";
@@ -25,7 +26,7 @@ const CouponBox = ({
   disabled = false,
   showSnackbar,
 }) => {
-  const { translations = {} } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState("");
   const [isApplying, setIsApplying] = useState(false);
@@ -215,98 +216,101 @@ const CouponBox = ({
         </div>
       )}
 
-      {isModalOpen && (
-        <div
-          className="coupon-modal-overlay"
-          onClick={() => !isApplying && setIsModalOpen(false)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="coupon-modal-dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="coupon-modal-header">
-              <div className="coupon-modal-title-wrap">
-                <ConfirmationNumberOutlinedIcon className="coupon-modal-icon" />
-                <h3>{translations.availablecoupons}</h3>
+      {isModalOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className={`coupon-modal-overlay ${isRtl ? "is-rtl" : ""}`.trim()}
+            onClick={() => !isApplying && setIsModalOpen(false)}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="coupon-modal-dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="coupon-modal-header">
+                <div className="coupon-modal-title-wrap">
+                  <ConfirmationNumberOutlinedIcon className="coupon-modal-icon" />
+                  <h3>{translations.availablecoupons || "Available Coupons"}</h3>
+                </div>
+                <button
+                  type="button"
+                  className="coupon-modal-close"
+                  onClick={() => setIsModalOpen(false)}
+                  aria-label={translations.close || "Close"}
+                >
+                  <CloseIcon fontSize="small" />
+                </button>
               </div>
-              <button
-                type="button"
-                className="coupon-modal-close"
-                onClick={() => setIsModalOpen(false)}
-                aria-label={translations.close}
-              >
-                <CloseIcon fontSize="small" />
-              </button>
-            </div>
 
-            <div className="coupon-modal-body">
-              {loadingCoupons ? (
-                <div className="coupon-modal-loading">
-                  <CircularProgress size={28} color="success" />
-                  <span>{translations.loading}</span>
-                </div>
-              ) : availableCoupons.length === 0 ? (
-                <div className="coupon-modal-empty">
-                  <LocalOfferOutlinedIcon className="empty-coupon-icon" />
-                  <p>{translations.nocouponsavailable}</p>
-                </div>
-              ) : (
-                <div className="coupon-modal-list">
-                  {availableCoupons.map((c) => {
-                    const isEligible = c.isEligible !== false;
-                    return (
-                      <div
-                        key={c.couponid || c.couponcode}
-                        className={`coupon-offer-item ${!isEligible ? "is-ineligible" : ""}`}
-                      >
-                        <div className="coupon-offer-top">
-                          <div className="coupon-offer-code-group">
-                            <span className="coupon-code-chip">{c.couponcode}</span>
-                            <span className="coupon-discount-pill">{formatDiscountBadge(c)}</span>
+              <div className="coupon-modal-body">
+                {loadingCoupons ? (
+                  <div className="coupon-modal-loading">
+                    <CircularProgress size={28} color="success" />
+                    <span>{translations.loading}</span>
+                  </div>
+                ) : availableCoupons.length === 0 ? (
+                  <div className="coupon-modal-empty">
+                    <LocalOfferOutlinedIcon className="empty-coupon-icon" />
+                    <p>{translations.nocouponsavailable}</p>
+                  </div>
+                ) : (
+                  <div className="coupon-modal-list">
+                    {availableCoupons.map((c) => {
+                      const isEligible = c.isEligible !== false;
+                      return (
+                        <div
+                          key={c.couponid || c.couponcode}
+                          className={`coupon-offer-item ${!isEligible ? "is-ineligible" : ""}`}
+                        >
+                          <div className="coupon-offer-top">
+                            <div className="coupon-offer-code-group">
+                              <span className="coupon-code-chip">{c.couponcode}</span>
+                              <span className="coupon-discount-pill">{formatDiscountBadge(c)}</span>
+                            </div>
+                            <button
+                              type="button"
+                              className="coupon-offer-apply-btn"
+                              disabled={!isEligible || isApplying || disabled}
+                              onClick={() => handleApplyCode(c.couponcode)}
+                            >
+                              {translations.apply}
+                            </button>
                           </div>
-                          <button
-                            type="button"
-                            className="coupon-offer-apply-btn"
-                            disabled={!isEligible || isApplying || disabled}
-                            onClick={() => handleApplyCode(c.couponcode)}
-                          >
-                            {translations.apply}
-                          </button>
-                        </div>
 
-                        {c.couponname && <h4 className="coupon-offer-title">{c.couponname}</h4>}
-                        {c.description && <p className="coupon-offer-desc">{c.description}</p>}
+                          {c.couponname && <h4 className="coupon-offer-title">{c.couponname}</h4>}
+                          {c.description && <p className="coupon-offer-desc">{c.description}</p>}
 
-                        <div className="coupon-offer-meta">
-                          {Number(c.minorderamount) > 0 && (
-                            <span className="coupon-meta-chip">
-                              {translations.minorder}: {formatPriceFromBranch(c.minorderamount, selectedBranch)}
-                            </span>
-                          )}
-                          {String(c.discounttype || "").toLowerCase() === "percentage" &&
-                            Number(c.maxdiscountamount) > 0 && (
+                          <div className="coupon-offer-meta">
+                            {Number(c.minorderamount) > 0 && (
                               <span className="coupon-meta-chip">
-                                {translations.maxdiscount}: {formatPriceFromBranch(c.maxdiscountamount, selectedBranch)}
+                                {translations.minorder}: {formatPriceFromBranch(c.minorderamount, selectedBranch)}
                               </span>
                             )}
-                          {c.endDate && (
-                            <span className="coupon-meta-chip">
-                              {translations.validuntil}: {String(c.endDate).slice(0, 10)}
-                            </span>
+                            {String(c.discounttype || "").toLowerCase() === "percentage" &&
+                              Number(c.maxdiscountamount) > 0 && (
+                                <span className="coupon-meta-chip">
+                                  {translations.maxdiscount}: {formatPriceFromBranch(c.maxdiscountamount, selectedBranch)}
+                                </span>
+                              )}
+                            {c.endDate && (
+                              <span className="coupon-meta-chip">
+                                {translations.validuntil}: {String(c.endDate).slice(0, 10)}
+                              </span>
+                            )}
+                          </div>
+
+                          {!isEligible && c.ineligibleReason && (
+                            <p className="coupon-ineligible-note">{c.ineligibleReason}</p>
                           )}
                         </div>
-
-                        {!isEligible && c.ineligibleReason && (
-                          <p className="coupon-ineligible-note">{c.ineligibleReason}</p>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
