@@ -208,17 +208,18 @@
   }
 }
 
-.bill-row.bill-discount-row {
-  color: #059669;
+.bill-row.bill-discount-row,
+.cart-bill-summary-card .bill-rows-container .bill-row.bill-discount-row {
+  color: #028802;
   font-weight: 700;
 
   .bill-row-label {
-    color: #059669;
+    color: #028802;
     font-weight: 700;
   }
 
   .bill-row-value {
-    color: #059669;
+    color: #028802;
     font-weight: 800;
   }
 }
