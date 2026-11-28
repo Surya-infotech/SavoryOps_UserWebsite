@@ -43,9 +43,9 @@ const ShimmerCard = () => (
 );
 
 const ADDRESS_TYPES = [
-  { id: "home", label: "Home", icon: HomeOutlinedIcon },
-  { id: "work", label: "Work", icon: WorkOutlineOutlinedIcon },
-  { id: "other", label: "Other", icon: PlaceOutlinedIcon },
+  { id: "home", icon: HomeOutlinedIcon },
+  { id: "work", icon: WorkOutlineOutlinedIcon },
+  { id: "other", icon: PlaceOutlinedIcon },
 ];
 
 const ManageAddressPage = () => {
@@ -597,7 +597,7 @@ const ManageAddressPage = () => {
                         onClick={() => setAddressType(typeObj.id)}
                       >
                         <IconComp fontSize="small" />
-                        <span>{translations[typeObj.id] || typeObj.label}</span>
+                        <span>{translations[typeObj.id]}</span>
                       </button>
                     );
                   })}

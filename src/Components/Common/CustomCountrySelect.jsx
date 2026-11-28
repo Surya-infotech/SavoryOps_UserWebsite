@@ -144,8 +144,8 @@ export const CustomCountrySelect = ({
         disabled={disabled || readOnly}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-label={ariaLabel || "Select country"}
-        title={selectedOption ? `${selectedOption.label} (+${dialCode})` : "Select country"}
+        aria-label={ariaLabel || translations.countryselect}
+        title={selectedOption ? `${selectedOption.label} (+${dialCode})` : translations.countryselect}
       >
         <div className="custom-country-flag-icon">
           {selectedOption?.value && Icon ? (
@@ -219,7 +219,7 @@ export const CustomCountrySelect = ({
               })
             ) : (
               <div className="custom-country-empty">
-                <span>No countries matching "{search}"</span>
+                <span>{translations.nocountriesmatching} "{search}"</span>
               </div>
             )}
           </div>

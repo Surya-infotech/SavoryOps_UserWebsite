@@ -62,7 +62,7 @@ const QrScannerModal = ({ isOpen, onClose }) => {
       onClose();
 
       try {
-        const result = await processTableQrCode(scannedText);
+        const result = await processTableQrCode(scannedText, translations);
 
         if (result && result.success && result.tableNo) {
           const branchPart = result.branchName ? ` (${result.branchName})` : "";

@@ -229,8 +229,9 @@ const CartPage = () => {
       branchHoursDoc: branchHours,
       branchSetting: posPayload,
       requestedOrderType: selectedOrderType,
+      translations,
     });
-  }, [branchHours, posPayload, selectedOrderType]);
+  }, [branchHours, posPayload, selectedOrderType, translations]);
 
   // Dynamically update cart items price when order type or branch tax settings change
   useEffect(() => {
@@ -400,6 +401,7 @@ const CartPage = () => {
           : selectedOrderType || "",
       subtotalprice: billingSummary.subtotal,
       subdomain: cartSubdomain,
+      translations,
     })
       .then((res) => {
         if (cancelled) return;
@@ -468,7 +470,7 @@ const CartPage = () => {
     if (!operatingHoursEval.canOrder) {
       if (typeof showSnackbar === "function") {
         showSnackbar(
-          operatingHoursEval.statusMessage || "Ordering is currently unavailable.",
+          operatingHoursEval.statusMessage || translations.orderingcurrentlyunavailable,
           "warning",
           4000
         );
@@ -665,7 +667,7 @@ const CartPage = () => {
             navigate("/orders");
           }
         } else {
-          const errorMsg = data?.message || "Failed to add items to order. Please try again.";
+          const errorMsg = data?.message || translations.failedtoadditemstoorder;
           if (typeof showSnackbar === "function") {
             showSnackbar(errorMsg, "error", 4000);
           }
@@ -1297,7 +1299,7 @@ const CartPage = () => {
                         </span>
                       </>
                     ) : !operatingHoursEval.canOrder ? (
-                      <span>{operatingHoursEval.isAfterHours ? "Unavailable After Hours" : "Branch Closed"}</span>
+                      <span>{operatingHoursEval.isAfterHours ? translations.unavailableafterhours : translations.branchclosed}</span>
                     ) : currentOrderNo ? (
                       <>
                         <span>

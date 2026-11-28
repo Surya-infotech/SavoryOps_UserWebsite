@@ -431,7 +431,7 @@ const SettingsPage = () => {
         {/* Vertical Tabs & Content Layout */}
         <div className="settings-layout">
           {/* Vertical Tabs Sidebar */}
-          <aside className="settings-sidebar" aria-label="Settings navigation">
+          <aside className="settings-sidebar" aria-label={translations.settingsnavigation}>
             <button
               type="button"
               className={`settings-tab-btn ${activeTab === "datetime" ? "active" : ""}`}

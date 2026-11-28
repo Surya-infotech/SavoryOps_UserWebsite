@@ -199,9 +199,9 @@ const applyTableAndBranchSettings = ({
  * 4. URLs with explicit ?table=... or ?tableno=... and optional ?branch=...
  * 5. Simple plain-text table names like "Table 14" or "14"
  */
-export const processTableQrCode = async (scannedText) => {
+export const processTableQrCode = async (scannedText, translations = {}) => {
   if (!scannedText || typeof scannedText !== "string") {
-    return { success: false, message: "Invalid QR code" };
+    return { success: false, message: translations.invalidqrcode };
   }
 
   const trimmed = scannedText.trim();
@@ -295,7 +295,7 @@ export const processTableQrCode = async (scannedText) => {
 
   return {
     success: false,
-    message: "Unrecognized QR code format",
+    message: translations.unrecognizedqrcodeformat,
   };
 };
 

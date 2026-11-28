@@ -98,7 +98,7 @@ export const DishDetailModal = ({
   const handleConfirm = () => {
     if (isComboItem && !isAvail) {
       showSnackbar(
-        `${item.title || "This deal"} is currently unavailable (${item.availabilityBadge || "Unavailable"})`,
+        `${item.title || translations.thisdeal} ${translations.iscurrentlyunavailable} (${item.availabilityBadge || translations.unavailable})`,
         "warning"
       );
       return;
@@ -186,7 +186,7 @@ export const DishDetailModal = ({
                     className={`tag-badge dish-status-badge dish-status-badge--${item.statusColor || (isAvail ? "success" : "warning")}`}
                     style={{ position: "static" }}
                   >
-                    {item.availabilityBadge || (isAvail ? "Available" : "Unavailable")}
+                    {item.availabilityBadge || (isAvail ? translations.available : translations.unavailable)}
                   </span>
                 )}
                 {isComboItem && item.sessionBadge && (

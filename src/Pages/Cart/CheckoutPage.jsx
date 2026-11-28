@@ -47,9 +47,9 @@ const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
 const ADDRESS_TYPES = [
-  { id: "home", label: "Home", icon: HomeOutlinedIcon },
-  { id: "work", label: "Work", icon: WorkOutlineOutlinedIcon },
-  { id: "other", label: "Other", icon: PlaceOutlinedIcon },
+  { id: "home", icon: HomeOutlinedIcon },
+  { id: "work", icon: WorkOutlineOutlinedIcon },
+  { id: "other", icon: PlaceOutlinedIcon },
 ];
 
 const formatAddressLine = (addr) => {
@@ -153,10 +153,10 @@ const CheckoutPage = () => {
   const resolvedOrderTypeName = isDelivery
     ? "Delivery"
     : isPickup
-    ? "Pickup"
-    : isDineIn
-    ? "Dine-in"
-    : (orderTypeStr || "Pickup");
+      ? "Pickup"
+      : isDineIn
+        ? "Dine-in"
+        : (orderTypeStr || "Pickup");
 
   // Sync Branch, Order Type, Branch Setting, and Cart
   useEffect(() => {
@@ -386,6 +386,7 @@ const CheckoutPage = () => {
       orderType: resolvedOrderTypeName,
       subtotalprice: billingSummary.subtotal,
       subdomain: checkoutSubdomain,
+      translations,
     })
       .then((res) => {
         if (cancelled) return;
@@ -394,7 +395,7 @@ const CheckoutPage = () => {
           showSnackbar(res.message || translations.couponremoved, "warning", 3500);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       cancelled = true;
@@ -638,20 +639,20 @@ const CheckoutPage = () => {
 
         const mappedBundleItems = Array.isArray(item.bundleItems) && item.bundleItems.length > 0
           ? item.bundleItems.map((bi) => ({
+            itemid: bi.itemid != null && !isNaN(Number(bi.itemid)) ? Number(bi.itemid) : undefined,
+            itemname: bi.itemname || bi.name || "",
+            quantity: bi.quantity ?? bi.qty ?? 1,
+            qty: bi.quantity ?? bi.qty ?? 1,
+            isunlimited: Boolean(bi.isunlimited),
+          }))
+          : (Array.isArray(item.items)
+            ? item.items.map((bi) => ({
               itemid: bi.itemid != null && !isNaN(Number(bi.itemid)) ? Number(bi.itemid) : undefined,
               itemname: bi.itemname || bi.name || "",
               quantity: bi.quantity ?? bi.qty ?? 1,
               qty: bi.quantity ?? bi.qty ?? 1,
               isunlimited: Boolean(bi.isunlimited),
             }))
-          : (Array.isArray(item.items)
-            ? item.items.map((bi) => ({
-                itemid: bi.itemid != null && !isNaN(Number(bi.itemid)) ? Number(bi.itemid) : undefined,
-                itemname: bi.itemname || bi.name || "",
-                quantity: bi.quantity ?? bi.qty ?? 1,
-                qty: bi.quantity ?? bi.qty ?? 1,
-                isunlimited: Boolean(bi.isunlimited),
-              }))
             : []);
 
         return {
@@ -687,9 +688,9 @@ const CheckoutPage = () => {
         coupon: billingSummary.coupon || null,
         ...(billingSummary.coupon?.couponcode
           ? {
-              couponcode: billingSummary.coupon.couponcode,
-              couponCode: billingSummary.coupon.couponcode,
-            }
+            couponcode: billingSummary.coupon.couponcode,
+            couponCode: billingSummary.coupon.couponcode,
+          }
           : {}),
         channel: "website",
         beforeTaxCharges: billingSummary.beforeTaxCharges,
@@ -801,7 +802,7 @@ const CheckoutPage = () => {
           }
         }
       } else {
-        const errorMsg = data?.message || (isUpdate ? "Failed to add items to order. Please try again." : "Failed to process order. Please try again.");
+        const errorMsg = data?.message || (isUpdate ? translations.failedtoadditemstoorder : translations.failedtoprocessorder);
         showSnackbar(errorMsg, "error", 4000);
       }
     } catch (err) {
@@ -894,7 +895,7 @@ const CheckoutPage = () => {
                     >
                       <div className="address-type-badge">
                         {getAddressTypeIcon(selectedAddress.addresstype)}
-                        <span>{selectedAddress.addresstype || "Home"}</span>
+                        <span>{selectedAddress.addresstype || translations.home}</span>
                       </div>
                       <p className="selected-address-text">
                         {formatAddressLine(selectedAddress)}
@@ -1256,7 +1257,7 @@ const CheckoutPage = () => {
                       <div className="address-modal-left">
                         <div className="address-modal-type">
                           {getAddressTypeIcon(item.addresstype)}
-                          <span>{item.addresstype || "Home"}</span>
+                          <span>{item.addresstype || translations.home}</span>
                         </div>
                         <p className="address-modal-full-text">
                           {formatAddressLine(item)}
@@ -1333,7 +1334,7 @@ const CheckoutPage = () => {
                         onClick={() => setAddressType(typeObj.id)}
                       >
                         <IconComp fontSize="small" />
-                        <span>{translations[typeObj.id] || typeObj.label}</span>
+                        <span>{translations[typeObj.id]}</span>
                       </button>
                     );
                   })}

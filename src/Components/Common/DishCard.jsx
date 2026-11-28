@@ -185,7 +185,7 @@ const DishCard = ({
             <span
               className={`dish-status-badge dish-status-badge--${dish.statusColor || (isAvail ? "success" : "warning")}`}
             >
-              {dish.availabilityBadge || (isAvail ? "Available" : "Unavailable")}
+              {dish.availabilityBadge || (isAvail ? translations.available : translations.unavailable)}
             </span>
           </div>
         )}
@@ -249,7 +249,7 @@ const DishCard = ({
                 aria-label={translations.addtocart}
                 title={
                   !isAvail
-                    ? (dish.availabilityBadge || "Unavailable")
+                    ? (dish.availabilityBadge || translations.unavailable)
                     : count > 0
                       ? `${translations.added} (${count})`
                       : translations.addtocart

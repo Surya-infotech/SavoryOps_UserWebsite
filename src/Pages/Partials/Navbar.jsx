@@ -453,6 +453,7 @@ const OrderTypeDropdown = ({ className = "" }) => {
         const hoursInfo = getAvailableOrderTypes({
           branchSetting: data.branchSetting,
           branchHoursDoc: data.branchHours,
+          translations,
         });
 
         setIsAfterHours(Boolean(hoursInfo.isAfterHours));
@@ -1137,7 +1138,7 @@ const Navbar = () => {
 
   const navLinks = [
     { label: translations.menu, path: "/menu", icon: <RestaurantMenuIcon fontSize="inherit" /> },
-    { label: translations.offers, path: "/offers", badge: "Hot", icon: <LocalOfferIcon fontSize="inherit" /> },
+    { label: translations.offers, path: "/offers", badge: translations.hot, icon: <LocalOfferIcon fontSize="inherit" /> },
     { label: translations.booktable, path: "/reservation", icon: <TableRestaurantIcon fontSize="inherit" /> },
   ];
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
@@ -70,6 +70,12 @@ const readStoredTableDetails = () => {
 
 const AppContent = () => {
   const location = useLocation();
+  const { translations = {} } = useLanguage();
+  const translationsRef = useRef(translations);
+  useEffect(() => {
+    translationsRef.current = translations;
+  }, [translations]);
+
   const isAuthPage = location.pathname.toLowerCase() === "/signin";
   const isOrderDetailsPage =
     location.pathname.toLowerCase().startsWith("/orderdetails") ||
@@ -127,7 +133,7 @@ const AppContent = () => {
   useEffect(() => {
     const search = location.search;
     if (search && (search.includes("data=") || search.includes("qr=") || search.includes("table="))) {
-      processTableQrCode(window.location.href).then((res) => {
+      processTableQrCode(window.location.href, translationsRef.current).then((res) => {
         if (res && res.success && res.tableNo) {
           try {
             const params = new URLSearchParams(window.location.search);

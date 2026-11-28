@@ -255,7 +255,7 @@ const HomeReviews = ({ reviews = [] }) => {
       avatarBg: "linear-gradient(135deg, #028802 0%, #69e869 100%)",
       verifiedBadge: `${translations.verifieddiner} • Web Review`,
       orderNo: `SO-${randomOrderNum}`,
-      date: "Just now",
+      date: translations.justnow,
       diningType: newDiningType,
       diningLabel:
         newDiningType === "dine-in"
@@ -265,7 +265,7 @@ const HomeReviews = ({ reviews = [] }) => {
             : translations.takeaway,
       branch: brandName,
       rating: newRating,
-      sentiment: newRating >= 4 ? "Exceptional" : "Good Experience",
+      sentiment: newRating >= 4 ? translations.exceptional : translations.goodexperience,
       headline: `${newRating}-Star Dining Experience`,
       review: newReviewText.trim(),
       dishOrdered: newDish.trim() || translations.artisanpizzas,
@@ -279,7 +279,7 @@ const HomeReviews = ({ reviews = [] }) => {
       },
       itemsOrdered: [
         {
-          name: newDish.trim() || "Artisan Specialty Selection",
+          name: newDish.trim() || translations.artisanspecialtyselection,
           qty: 1,
           price: "$21.50",
           isVeg: true,
@@ -287,7 +287,7 @@ const HomeReviews = ({ reviews = [] }) => {
       ],
       managerResponse: {
         author: `${brandName} Management`,
-        date: "Just now",
+        date: translations.justnow,
         message: `Thank you ${newName.trim()}! We value your feedback and look forward to welcoming you back soon!`,
       },
     };
@@ -355,8 +355,8 @@ const HomeReviews = ({ reviews = [] }) => {
             className="carousel-side-arrow-btn left"
             onClick={() => handleScroll("left")}
             disabled={!canScrollLeft}
-            aria-label="Scroll reviews left"
-            title="Scroll left"
+            aria-label={translations.scrollreviewsleft}
+            title={translations.scrollleft}
           >
             <ChevronLeftIcon />
           </button>
@@ -367,8 +367,8 @@ const HomeReviews = ({ reviews = [] }) => {
             className="carousel-side-arrow-btn right"
             onClick={() => handleScroll("right")}
             disabled={!canScrollRight}
-            aria-label="Scroll reviews right"
-            title="Scroll right"
+            aria-label={translations.scrollreviewsright}
+            title={translations.scrollright}
           >
             <ChevronRightIcon />
           </button>
@@ -486,7 +486,7 @@ const HomeReviews = ({ reviews = [] }) => {
                 type="button"
                 className="modal-close-btn"
                 onClick={() => setActiveReviewDetails(null)}
-                aria-label="Close review details"
+                aria-label={translations.closereview}
               >
                 <CloseIcon fontSize="inherit" />
               </button>
@@ -607,7 +607,7 @@ const HomeReviews = ({ reviews = [] }) => {
                         <div className="item-left">
                           <span
                             className={`diet-dot ${dish.isVeg ? "veg" : "non-veg"}`}
-                            title={dish.isVeg ? "Vegetarian" : "Non-Vegetarian"}
+                            title={dish.isVeg ? translations.vegetarian : translations.nonvegetarian}
                           />
                           <span className="dish-qty">{dish.qty}x</span>
                           <span className="dish-name">{dish.name}</span>

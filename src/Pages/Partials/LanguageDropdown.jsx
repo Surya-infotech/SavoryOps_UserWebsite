@@ -8,7 +8,7 @@ const Flag = typeof FlagModule === "function" ? FlagModule : (FlagModule?.defaul
 
 export const LanguageDropdown = ({ className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { language, changeLanguage } = useLanguage();
+  const { language, changeLanguage, translations = {} } = useLanguage();
   const dropdownRef = useRef(null);
   const languages = getLanguageOptions();
 
@@ -60,7 +60,7 @@ export const LanguageDropdown = ({ className = "" }) => {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={`Selected Language: ${selectedLang?.name}`}
+        title={`${translations.selectedlanguage}: ${selectedLang?.name}`}
       >
         <span className="lang-flag-container">
           <Flag code={selectedLang?.code} className="flag-icon" alt={selectedLang?.name} />

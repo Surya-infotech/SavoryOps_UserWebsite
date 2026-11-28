@@ -90,9 +90,10 @@ export const validateCouponCode = async ({
   orderType = "",
   subtotalprice = 0,
   subdomain = "",
+  translations = {},
 } = {}) => {
   if (!branchId || !adminPanelBackendPath) {
-    return { valid: false, message: "Branch information is missing." };
+    return { valid: false, message: translations.branchinformationnotfound };
   }
 
   const url = customerId
@@ -120,7 +121,7 @@ export const validateCouponCode = async ({
     return {
       valid: false,
       status: response.status,
-      message: data?.message || "Invalid coupon code.",
+      message: data?.message || translations.invalidcouponcode,
     };
   }
 

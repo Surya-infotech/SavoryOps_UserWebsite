@@ -696,7 +696,7 @@ const generateInvoiceBodyHTML = (
   let itemsRows = "";
   if (activeProducts.length > 0) {
     activeProducts.forEach((product) => {
-      const productName = product.productname || product.itemname || product.name || "Item";
+      const productName = product.productname || product.itemname || product.name || getTranslation("item");
       const productPrice = product.price || 0;
       const productQuantity = product.quantity || product.qty || 1;
       const regularTotal = (parseFloat(productPrice) || 0) * productQuantity;
@@ -831,7 +831,7 @@ const generateInvoiceBodyHTML = (
   let cancelledItemsRows = "";
   if (cancelledProducts.length > 0) {
     cancelledProducts.forEach((product) => {
-      const productName = product.productname || product.itemname || product.name || "Item";
+      const productName = product.productname || product.itemname || product.name || getTranslation("item");
       const productPrice = product.price || 0;
       const productQuantity = product.quantity || product.qty || 1;
       const regularTotal = (parseFloat(productPrice) || 0) * productQuantity;
@@ -986,7 +986,7 @@ const generateInvoiceBodyHTML = (
         : "";
     beforeTaxRows += `
       <div class="summary-row">
-        <span>${escapeHtml(chg.name || chg.chargename || chg.eventname || "Charge")}${valLabel}</span>
+        <span>${escapeHtml(chg.name || chg.chargename || chg.eventname || getTranslation("charge"))}${valLabel}</span>
         <span>${formatPrice(chg.amount || 0)}</span>
       </div>
     `;
@@ -1073,7 +1073,7 @@ const generateInvoiceBodyHTML = (
         : "";
     afterTaxRows += `
       <div class="summary-row">
-        <span>${escapeHtml(chg.name || chg.chargename || chg.eventname || "Charge")}${valLabel}</span>
+        <span>${escapeHtml(chg.name || chg.chargename || chg.eventname || getTranslation("charge"))}${valLabel}</span>
         <span>${formatPrice(chg.amount || 0)}</span>
       </div>
     `;
@@ -1464,7 +1464,7 @@ export const downloadOrderInvoicePDF = async (
       orderData.invoiceNo ||
       String(orderData._id || "order").slice(-6);
     const safeOrderNo = String(orderIdentifier).replace(/[^\w-]/g, "");
-    const fileName = `Invoice_Order_${safeOrderNo || "Receipt"}.pdf`;
+    const fileName = `Invoice_Order_${safeOrderNo || translations.receipt}.pdf`;
 
     doc.save(fileName);
     return true;

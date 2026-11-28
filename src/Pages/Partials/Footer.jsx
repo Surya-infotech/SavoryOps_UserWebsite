@@ -206,7 +206,7 @@ const Footer = () => {
       } else {
         setSubscribed(true);
         setIsSuccess(false);
-        setSubscribeMessage(data.message || "Failed to subscribe. Please try again.");
+        setSubscribeMessage(data.message || translations.failedtosubscribe);
         setTimeout(() => {
           setSubscribed(false);
           setSubscribeMessage("");
@@ -216,7 +216,7 @@ const Footer = () => {
       console.error("Error subscribing to newsletter:", err);
       setSubscribed(true);
       setIsSuccess(false);
-      setSubscribeMessage("Network error. Please try again.");
+      setSubscribeMessage(translations.networkerror);
       setTimeout(() => {
         setSubscribed(false);
         setSubscribeMessage("");
@@ -283,8 +283,8 @@ const Footer = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="footer-social-btn"
-                      title={item.platform || "Social Profile"}
-                      aria-label={item.platform || "Social Profile"}
+                      title={item.platform || translations.socialprofile}
+                      aria-label={item.platform || translations.socialprofile}
                     >
                       {getSocialIcon(item.platform)}
                     </a>

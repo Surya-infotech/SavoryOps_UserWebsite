@@ -513,7 +513,7 @@ const ReservationDetails = ({
                         <EventSeatIcon fontSize="small" />
                       </div>
                       <div className="tile-text">
-                        <span>{reservation.areaname || "Main Area"}</span>
+                        <span>{reservation.areaname || translations.mainarea}</span>
                       </div>
                     </div>
 
@@ -527,7 +527,7 @@ const ReservationDetails = ({
                         </span>
                         {reservation.capacity ? (
                           <span className="cap-badge">
-                            {reservation.capacity} seats
+                            {reservation.capacity} {translations.seats}
                           </span>
                         ) : null}
                       </div>
@@ -541,7 +541,7 @@ const ReservationDetails = ({
                     <div className="tile-text">
                       <span className="guest-highlight">
                         {reservation.guest || 1}{" "}
-                        {reservation.guest === 1 ? "Guest" : "Guests"}
+                        {reservation.guest === 1 ? translations.guest : translations.guests}
                       </span>
                     </div>
                   </div>

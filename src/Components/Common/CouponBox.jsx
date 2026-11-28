@@ -121,7 +121,7 @@ const CouponBox = ({
       await navigator.clipboard?.writeText(clean);
       setCopiedCode(clean);
       if (typeof showSnackbar === "function") {
-        showSnackbar(`${clean} - ${translations.couponcopied || "Coupon code copied"}`, "info", 2000);
+        showSnackbar(`${clean} - ${translations.couponcopied}`, "info", 2000);
       }
       setTimeout(() => {
         setCopiedCode((prev) => (prev === clean ? "" : prev));
@@ -151,6 +151,7 @@ const CouponBox = ({
         orderType,
         subtotalprice: subtotal,
         subdomain,
+        translations,
       });
 
       if (!result.valid || !result.coupon) {
@@ -197,7 +198,7 @@ const CouponBox = ({
       : formatPriceFromBranch(Number(c.discountvalue || 0), selectedBranch);
     return {
       main,
-      sub: translations.offdiscount || "OFF",
+      sub: translations.offdiscount,
     };
   };
 
@@ -301,13 +302,13 @@ const CouponBox = ({
               <div className="coupon-modal-header">
                 <div className="coupon-modal-title-wrap">
                   <ConfirmationNumberOutlinedIcon className="coupon-modal-icon" />
-                  <h3>{translations.availablecoupons || "Available Coupons"}</h3>
+                  <h3>{translations.availablecoupons}</h3>
                 </div>
                 <button
                   type="button"
                   className="coupon-modal-close"
                   onClick={() => setIsModalOpen(false)}
-                  aria-label={translations.close || "Close"}
+                  aria-label={translations.close}
                 >
                   <CloseIcon fontSize="small" />
                 </button>
@@ -378,7 +379,7 @@ const CouponBox = ({
                                   type="button"
                                   className={`coupon-code-pill-btn ${isCopied ? "is-copied" : ""}`}
                                   onClick={() => handleCopyCode(c.couponcode)}
-                                  title={translations.copycode || "Copy Code"}
+                                  title={translations.copycode}
                                 >
                                   <span className="coupon-code-text">{c.couponcode}</span>
                                   {isCopied ? (
@@ -388,7 +389,7 @@ const CouponBox = ({
                                   )}
                                 </button>
                                 {isBestOffer && (
-                                  <span className="coupon-best-tag">Best Offer</span>
+                                  <span className="coupon-best-tag">{translations.bestoffer}</span>
                                 )}
                               </div>
 
@@ -401,7 +402,7 @@ const CouponBox = ({
                                 {isApplied ? (
                                   <>
                                     <CheckIcon className="apply-check-icon" />
-                                    <span>{translations.applied || "Applied"}</span>
+                                    <span>{translations.applied}</span>
                                   </>
                                 ) : (
                                   translations.apply
@@ -415,7 +416,7 @@ const CouponBox = ({
                               )}
                               {isEligible && estimatedSavings > 0 && (
                                 <span className="coupon-savings-hint">
-                                  {translations.yousaved || "Save"}{" "}
+                                  {translations.yousaved}{" "}
                                   {formatPriceFromBranch(estimatedSavings, selectedBranch)}
                                 </span>
                               )}

@@ -41,7 +41,7 @@ const Breadcrumbs = ({
   const breadcrumbsNav = (
     <nav
       className={`app-breadcrumbs app-breadcrumbs--${variant} ${isRtl ? "is-rtl" : ""} ${className}`}
-      aria-label="Breadcrumb"
+      aria-label={translations.breadcrumb}
     >
       <ol className="breadcrumbs-list">
         {breadcrumbList.map((item, index) => {

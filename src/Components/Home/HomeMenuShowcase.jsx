@@ -25,7 +25,7 @@ const CarouselRow = ({
   branchSetting,
   selectedOrderType,
 }) => {
-  const { isRtl } = useLanguage();
+  const { translations = {}, isRtl } = useLanguage();
   const navigate = useNavigate();
   const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -160,8 +160,8 @@ const CarouselRow = ({
           className="carousel-side-arrow-btn left"
           onClick={() => handleScroll("left")}
           disabled={!canScrollLeft}
-          aria-label={`Scroll ${section.title} left`}
-          title="Scroll left"
+          aria-label={`${translations.scrollleft} ${section.title}`}
+          title={translations.scrollleft}
         >
           <ChevronLeftIcon />
         </button>
@@ -172,8 +172,8 @@ const CarouselRow = ({
           className="carousel-side-arrow-btn right"
           onClick={() => handleScroll("right")}
           disabled={!canScrollRight}
-          aria-label={`Scroll ${section.title} right`}
-          title="Scroll right"
+          aria-label={`${translations.scrollright} ${section.title}`}
+          title={translations.scrollright}
         >
           <ChevronRightIcon />
         </button>
@@ -189,7 +189,7 @@ const CarouselRow = ({
           {section.type === "menu" ? (
             (section.menuDetails || section.items || []).map((menuItem, idx) => {
               const menuId = menuItem.menuid ?? menuItem._id ?? menuItem.id ?? idx;
-              const menuName = menuItem.menuname || menuItem.title || menuItem.name || "Menu";
+              const menuName = menuItem.menuname || menuItem.title || menuItem.name || translations.menu;
               const imageUrl = menuItem.imageUrl || menuItem.image || menuItem.menuimage || menuItem.img || "";
 
               return (
@@ -230,7 +230,7 @@ const CarouselRow = ({
           ) : section.type === "category" ? (
             (section.categoryDetails || section.items || []).map((catItem, idx) => {
               const catId = catItem.itemcategoryid ?? catItem._id ?? catItem.id ?? idx;
-              const catName = catItem.itemcategoryname || catItem.title || catItem.name || "Category";
+              const catName = catItem.itemcategoryname || catItem.title || catItem.name || translations.category;
               const imageUrl = catItem.imageUrl || catItem.image || catItem.categoryimage || catItem.itemcategoryimage || catItem.img || "";
 
               return (
@@ -342,6 +342,7 @@ const CarouselRow = ({
  * Main Home Menu Showcase Section Component
  */
 const HomeMenuShowcase = ({ showcases = [], branchSetting: propBranchSetting }) => {
+  const { translations = {} } = useLanguage();
   const [selectedBranch, setSelectedBranch] = useState(getActiveBranch);
   const { showSnackbar } = useSnackbar();
 
@@ -426,7 +427,7 @@ const HomeMenuShowcase = ({ showcases = [], branchSetting: propBranchSetting }) 
     e.stopPropagation();
     if (dish?.isDeal && dish?.isAvailable === false) {
       showSnackbar(
-        `${dish.title || dish.dealsbundlesname || "This deal"} is currently unavailable (${dish.availabilityBadge || "Unavailable"})`,
+        `${dish.title || dish.dealsbundlesname || translations.thisdeal} ${translations.iscurrentlyunavailable} (${dish.availabilityBadge || translations.unavailable})`,
         "warning"
       );
       return;
@@ -462,7 +463,7 @@ const HomeMenuShowcase = ({ showcases = [], branchSetting: propBranchSetting }) 
     e.stopPropagation();
     if (dish?.isDeal && dish?.isAvailable === false) {
       showSnackbar(
-        `${dish.title || dish.dealsbundlesname || "This deal"} is currently unavailable (${dish.availabilityBadge || "Unavailable"})`,
+        `${dish.title || dish.dealsbundlesname || translations.thisdeal} ${translations.iscurrentlyunavailable} (${dish.availabilityBadge || translations.unavailable})`,
         "warning"
       );
       return;
@@ -475,7 +476,7 @@ const HomeMenuShowcase = ({ showcases = [], branchSetting: propBranchSetting }) 
   }
 
   return (
-    <section className="home-menu-showcase-section" aria-label="Curated Menu Showcase">
+    <section className="home-menu-showcase-section" aria-label={translations.curatedmenushowcase}>
       {/* --- Section-Wise Horizontal Carousels --- */}
       <div className="showcase-sections-list">
         {displaySections.map((section, sIdx) => (

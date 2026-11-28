@@ -22,6 +22,7 @@ export function evaluateBranchOperatingHours({
   branchHoursDoc,
   branchSetting,
   requestedOrderType = null,
+  translations = {},
 } = {}) {
   // If no branchHoursDoc is configured, assume branch is open by default
   if (!branchHoursDoc || !Array.isArray(branchHoursDoc.workinghours) || branchHoursDoc.workinghours.length === 0) {
@@ -31,7 +32,7 @@ export function evaluateBranchOperatingHours({
       isOpen: true,
       isAfterHours: false,
       canOrder: true,
-      statusMessage: "Branch is Open",
+      statusMessage: translations.branchisopen,
       allowedOrderTypes: allowed,
       isBranchClosed: false,
     };
@@ -47,11 +48,11 @@ export function evaluateBranchOperatingHours({
   );
 
   let isOpen = true;
-  let statusMessage = "Branch is Open";
+  let statusMessage = translations.branchisopen;
 
   if (!todaySchedule || todaySchedule.dayoff) {
     isOpen = false;
-    statusMessage = `Branch is closed today (${branchLocalDay})`;
+    statusMessage = `${translations.branchclosedtoday} (${branchLocalDay})`;
   } else {
     const currentMinutes = branchNow.hours() * 60 + branchNow.minutes();
     const openMinutes = parseToMinutes(todaySchedule.openingtime);
@@ -66,7 +67,7 @@ export function evaluateBranchOperatingHours({
         const closeH = todaySchedule.closingtime?.closeingtimeHour || 12;
         const closeM = String(todaySchedule.closingtime?.closeingtimeMinute || 0).padStart(2, "0");
         const closeP = todaySchedule.closingtime?.closeingperiod || "PM";
-        statusMessage = `Branch operating hours are complete (${openH}:${openM} ${openP} - ${closeH}:${closeM} ${closeP})`;
+        statusMessage = `${translations.branchhourscomplete} (${openH}:${openM} ${openP} - ${closeH}:${closeM} ${closeP})`;
       }
     }
 
@@ -76,7 +77,7 @@ export function evaluateBranchOperatingHours({
         const bEnd = parseToMinutes(bt.breakendtime);
         if (bStart != null && bEnd != null && currentMinutes >= bStart && currentMinutes <= bEnd) {
           isOpen = false;
-          statusMessage = "Branch is currently on a scheduled break";
+          statusMessage = translations.branchonbreak;
           break;
         }
       }
@@ -94,7 +95,7 @@ export function evaluateBranchOperatingHours({
       isOpen: true,
       isAfterHours: false,
       canOrder: true,
-      statusMessage: "Branch is Open",
+      statusMessage: translations.branchisopen,
       allowedOrderTypes,
       isBranchClosed: false,
     };
@@ -123,8 +124,8 @@ export function evaluateBranchOperatingHours({
       isAfterHours: true,
       canOrder: isTypeAllowed,
       statusMessage: isTypeAllowed
-        ? `After-hours ordering active for ${requestedOrderType}`
-        : `${requestedOrderType} is not available after branch hours. Available: ${allowedOrderTypes.join(", ") || "None"}`,
+        ? `${translations.afterhoursorderingactive}: ${requestedOrderType}`
+        : `${requestedOrderType} - ${translations.notavailableafterhours} (${translations.available}: ${allowedOrderTypes.join(", ") || translations.none})`,
       allowedOrderTypes,
       isBranchClosed: true,
     };
@@ -134,7 +135,7 @@ export function evaluateBranchOperatingHours({
     isOpen: false,
     isAfterHours: true,
     canOrder: allowedOrderTypes.length > 0,
-    statusMessage: `After-hours ordering active for: ${allowedOrderTypes.join(", ")}`,
+    statusMessage: `${translations.afterhoursorderingactive}: ${allowedOrderTypes.join(", ")}`,
     allowedOrderTypes,
     isBranchClosed: true,
   };
@@ -147,7 +148,7 @@ export function evaluateBranchOperatingHours({
  * @param {Object} options.branchHoursDoc
  * @returns {{ activeOrderTypes: Array, isAfterHours: Boolean, isOpen: Boolean, statusMessage: String }}
  */
-export function getAvailableOrderTypes({ branchSetting, branchHoursDoc } = {}) {
+export function getAvailableOrderTypes({ branchSetting, branchHoursDoc, translations = {} } = {}) {
   const rawTypes = Array.isArray(branchSetting?.ordertypes)
     ? branchSetting.ordertypes.filter((t) => t.isEnabled === true)
     : [];
@@ -155,6 +156,7 @@ export function getAvailableOrderTypes({ branchSetting, branchHoursDoc } = {}) {
   const evaluation = evaluateBranchOperatingHours({
     branchHoursDoc,
     branchSetting,
+    translations,
   });
 
   if (evaluation.isOpen) {
@@ -162,7 +164,7 @@ export function getAvailableOrderTypes({ branchSetting, branchHoursDoc } = {}) {
       activeOrderTypes: rawTypes,
       isAfterHours: false,
       isOpen: true,
-      statusMessage: "Branch is Open",
+      statusMessage: translations.branchisopen,
     };
   }
 

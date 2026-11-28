@@ -312,6 +312,7 @@ const OffersPage = () => {
         orderType: orderTypeName,
         subtotalprice: cartSubtotal,
         subdomain,
+        translations,
       });
       if (!res.valid || !res.coupon) {
         showSnackbar(res.message || translations.invalidcouponcode, "warning", 3500);
@@ -414,7 +415,7 @@ const OffersPage = () => {
     e.stopPropagation();
     if (dish?.isDeal && dish?.isAvailable === false) {
       showSnackbar(
-        `${dish.title || dish.dealsbundlesname || "This deal"} is currently unavailable (${dish.availabilityBadge || "Unavailable"})`,
+        `${dish.title || dish.dealsbundlesname || translations.thisdeal} ${translations.iscurrentlyunavailable} (${dish.availabilityBadge || translations.unavailable})`,
         "warning"
       );
       return;
@@ -426,7 +427,7 @@ const OffersPage = () => {
     e.stopPropagation();
     if (item?.isDeal && item?.isAvailable === false) {
       showSnackbar(
-        `${item.title || item.dealsbundlesname || "This deal"} is currently unavailable (${item.availabilityBadge || "Unavailable"})`,
+        `${item.title || item.dealsbundlesname || translations.thisdeal} ${translations.iscurrentlyunavailable} (${item.availabilityBadge || translations.unavailable})`,
         "warning"
       );
       return;
@@ -561,7 +562,7 @@ const OffersPage = () => {
               <div
                 className="offers-category-pills-bar"
                 role="tablist"
-                aria-label="Deals Categories"
+                aria-label={translations.dealscategories}
               >
                 <button
                   type="button"
@@ -600,7 +601,7 @@ const OffersPage = () => {
 
               {/* Diet Filter (Veg / Non-Veg) - positioned on left next to Category Pills */}
               <div className="offers-diet-toggle-wrap">
-                <div className="offers-diet-segmented-group" role="group" aria-label="Dietary preference">
+                <div className="offers-diet-segmented-group" role="group" aria-label={translations.dietarypreference}>
                   <button
                     type="button"
                     tabIndex={-1}

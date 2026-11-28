@@ -41,6 +41,12 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const POLL_INTERVAL_MS = 30000;
 
 export const WebsiteStatusProvider = ({ children }) => {
+  const { translations = {} } = useLanguage();
+  const translationsRef = useRef(translations);
+  useEffect(() => {
+    translationsRef.current = translations;
+  }, [translations]);
+
   const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(false);
   const [isWebsiteEnabled, setIsWebsiteEnabled] = useState(true);
@@ -118,7 +124,7 @@ export const WebsiteStatusProvider = ({ children }) => {
         setError(null);
       } else {
         setIsWebsiteEnabled(false);
-        setError(data?.message || "Website is currently unavailable.");
+        setError(data?.message || translationsRef.current.websitecurrentlyunavailable);
       }
     } catch (err) {
       console.error("Error checking website status:", err);
@@ -255,7 +261,7 @@ export const UnderMaintenance = () => {
           <div className="maintenance-domain-pill">
             <LanguageIcon className="domain-globe-icon" />
             <span className="domain-text">{domainDisplay}</span>
-            <span className="domain-status-dot" title="Maintenance Active" />
+            <span className="domain-status-dot" title={translations.maintenanceactive} />
           </div>
 
           {/* Main Headings */}
@@ -310,13 +316,13 @@ export const UnderMaintenance = () => {
 
               <div className="contact-buttons-row">
                 {email && (
-                  <a href={`mailto:${email}`} className="contact-action-chip" title="Email restaurant">
+                  <a href={`mailto:${email}`} className="contact-action-chip" title={translations.emailrestaurant}>
                     <EmailOutlinedIcon className="chip-icon" />
                     <span>{email}</span>
                   </a>
                 )}
                 {business?.phone && (
-                  <a href={`tel:${business.phone}`} className="contact-action-chip" title="Call helpline">
+                  <a href={`tel:${business.phone}`} className="contact-action-chip" title={translations.callhelpline}>
                     <PhoneOutlinedIcon className="chip-icon" />
                     <span>{business.phone}</span>
                   </a>
@@ -339,7 +345,7 @@ export const UnderMaintenance = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon-btn"
-                        title={item.platform || "Social Profile"}
+                        title={item.platform || translations.socialprofile}
                       >
                         <IconComponent />
                       </a>

@@ -8,11 +8,13 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import StarIcon from "@mui/icons-material/Star";
 import SpaIcon from "@mui/icons-material/Spa";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useLanguage } from "../../Context/useLanguage.js";
 import "../../Scss/Components/Home/homebanner.scss";
 
 const SLIDE_DURATION = 5000; // 5 seconds per slide
 
 const HomeBanner = ({ banners = [] }) => {
+  const { translations = {} } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);
@@ -79,7 +81,7 @@ const HomeBanner = ({ banners = [] }) => {
       className="hero-banner-container"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      aria-label="Featured Restaurant Banners Carousel"
+      aria-label={translations.featuredrestaurantbanners}
     >
       {/* Navigation Arrows */}
       {bannerSlides.length > 1 && (
@@ -88,7 +90,7 @@ const HomeBanner = ({ banners = [] }) => {
             type="button"
             className="hero-nav-arrow hero-nav-prev"
             onClick={prevSlide}
-            aria-label="Previous Slide"
+            aria-label={translations.previousslide}
           >
             <ArrowBackIosNewIcon fontSize="small" />
           </button>
@@ -97,7 +99,7 @@ const HomeBanner = ({ banners = [] }) => {
             type="button"
             className="hero-nav-arrow hero-nav-next"
             onClick={nextSlide}
-            aria-label="Next Slide"
+            aria-label={translations.nextslide}
           >
             <ArrowForwardIosIcon fontSize="small" />
           </button>

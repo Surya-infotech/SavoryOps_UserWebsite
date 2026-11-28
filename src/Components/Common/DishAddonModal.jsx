@@ -96,7 +96,7 @@ export const DishAddonModal = ({
   const handleConfirm = () => {
     if (isDeal && !isAvail) {
       showSnackbar(
-        `${item.title || "This deal"} is currently unavailable (${item.availabilityBadge || "Unavailable"})`,
+        `${item.title || translations.thisdeal} ${translations.iscurrentlyunavailable} (${item.availabilityBadge || translations.unavailable})`,
         "warning"
       );
       return;
@@ -165,7 +165,7 @@ export const DishAddonModal = ({
               )}
               {isDeal && (item.availabilityBadge || item.isAvailable !== undefined) && (
                 <span className={`dish-status-badge dish-status-badge--${item.statusColor || (isAvail ? "success" : "warning")}`}>
-                  {item.availabilityBadge || (isAvail ? "Available" : "Unavailable")}
+                  {item.availabilityBadge || (isAvail ? translations.available : translations.unavailable)}
                 </span>
               )}
             </div>

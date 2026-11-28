@@ -10,16 +10,16 @@ import Breadcrumbs from "../../Components/Common/Breadcrumbs.jsx";
 import LoadingSpinner from "../Custom/LoadingSpinner.jsx";
 import "../../Scss/Pages/Partials/policypage.scss";
 
-const POLICY_TYPE_LABELS = {
-  general: "General Policy",
-  order: "Order & Delivery Policy",
-  table_reservation: "Table Reservation Policy",
-};
-
 const PolicyPage = () => {
   const { policyId } = useParams();
   const { business, policies = [], loading } = useWebsiteStatus();
   const { translations = {}, isRtl } = useLanguage();
+
+  const policyTypeLabels = {
+    general: translations.generalpolicy,
+    order: translations.orderdeliverypolicy,
+    table_reservation: translations.tablereservationpolicy,
+  };
 
   // Active policies for this business
   const activePolicies = useMemo(() => {
@@ -147,18 +147,18 @@ const PolicyPage = () => {
             <div className="policy-hero-meta">
               <div className="policy-badges-row">
                 <span className="policy-type-badge">
-                  {currentPolicy ? POLICY_TYPE_LABELS[currentPolicy.policyType] || currentPolicy.policyType : "Official Policy"}
+                  {currentPolicy ? policyTypeLabels[currentPolicy.policyType] || currentPolicy.policyType : translations.officialpolicy}
                 </span>
                 {currentPolicy?.updatedAt && (
                   <span className="policy-updated-badge">
                     <AccessTimeOutlinedIcon fontSize="inherit" />
-                    <span>Updated {formatDate(currentPolicy.updatedAt)}</span>
+                    <span>{translations.updated} {formatDate(currentPolicy.updatedAt)}</span>
                   </span>
                 )}
               </div>
               {businessName && (
                 <p className="policy-business-tag">
-                  {businessName} • Official Restaurant Policy
+                  {businessName} • {translations.officialrestaurantpolicy}
                 </p>
               )}
             </div>

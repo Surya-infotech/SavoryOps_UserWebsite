@@ -342,13 +342,13 @@ const MenuPage = () => {
       if (matchingDishes.length > 0) {
         list.push({
           id: catId,
-          name: cat.itemcategoryname || "Category",
+          name: cat.itemcategoryname || translations.category,
           count: matchingDishes.length,
         });
       }
     });
     return list;
-  }, [rawCategories, allDishes, selectedMenu]);
+  }, [rawCategories, allDishes, selectedMenu, translations.category]);
 
   // Options for custom Category Dropdown component
   const categoryOptions = useMemo(() => {
@@ -511,7 +511,7 @@ const MenuPage = () => {
                 <div className="filter-controls-secondary">
                   {/* 3. Diet Filter (Veg / Non-Veg) Segmented Group */}
                   <div className="filter-item-wrap diet-toggle-wrap">
-                    <div className="diet-segmented-group" role="group" aria-label="Dietary preference">
+                    <div className="diet-segmented-group" role="group" aria-label={translations.dietarypreference}>
                       <button
                         type="button"
                         tabIndex={-1}
