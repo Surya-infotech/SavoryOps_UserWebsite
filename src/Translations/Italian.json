@@ -617,5 +617,8 @@
   "processingpayment": "Elaborazione pagamento...",
   "paymentcancelled": "Il pagamento è stato annullato.",
   "paymentfailed": "Verifica del pagamento non riuscita. Riprova.",
-  "onlinepaymentunavailable": "Il pagamento online non è al momento disponibile per questo punto vendita."
+  "onlinepaymentunavailable": "Il pagamento online non è al momento disponibile per questo punto vendita.",
+  "cardsupinetbanking": "UPI, carte e home banking",
+  "cardswallets": "Carte e portafogli digitali",
+  "paypalandcards": "Account PayPal e carte"
 }

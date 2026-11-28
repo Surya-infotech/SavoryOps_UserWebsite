@@ -617,5 +617,8 @@
   "processingpayment": "Se procesează plata...",
   "paymentcancelled": "Plata a fost anulată.",
   "paymentfailed": "Verificarea plății a eșuat. Te rugăm să încerci din nou.",
-  "onlinepaymentunavailable": "Plata online este indisponibilă momentan pentru această locație."
+  "onlinepaymentunavailable": "Plata online este indisponibilă momentan pentru această locație.",
+  "cardsupinetbanking": "UPI, carduri și internet banking",
+  "cardswallets": "Carduri și portofele digitale",
+  "paypalandcards": "Cont PayPal și carduri"
 }

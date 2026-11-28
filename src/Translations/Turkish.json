@@ -617,5 +617,8 @@
   "processingpayment": "Ödeme işleniyor...",
   "paymentcancelled": "Ödeme iptal edildi.",
   "paymentfailed": "Ödeme doğrulaması başarısız oldu. Lütfen tekrar deneyin.",
-  "onlinepaymentunavailable": "Bu şube için çevrimiçi ödeme şu anda kullanılamıyor."
+  "onlinepaymentunavailable": "Bu şube için çevrimiçi ödeme şu anda kullanılamıyor.",
+  "cardsupinetbanking": "UPI, Kartlar ve İnternet Bankacılığı",
+  "cardswallets": "Kartlar ve Dijital Cüzdanlar",
+  "paypalandcards": "PayPal Hesabı ve Kartlar"
 }

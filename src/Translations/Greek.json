@@ -617,5 +617,8 @@
   "processingpayment": "Επεξεργασία πληρωμής...",
   "paymentcancelled": "Η πληρωμή ακυρώθηκε.",
   "paymentfailed": "Η επαλήθευση πληρωμής απέτυχε. Προσπαθήστε ξανά.",
-  "onlinepaymentunavailable": "Η ηλεκτρονική πληρωμή δεν είναι διαθέσιμη για αυτό το κατάστημα."
+  "onlinepaymentunavailable": "Η ηλεκτρονική πληρωμή δεν είναι διαθέσιμη για αυτό το κατάστημα.",
+  "cardsupinetbanking": "UPI, κάρτες & ηλεκτρονική τραπεζική",
+  "cardswallets": "Κάρτες & ψηφιακά πορτοφόλια",
+  "paypalandcards": "Λογαριασμός PayPal & κάρτες"
 }

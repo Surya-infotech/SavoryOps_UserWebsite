@@ -617,5 +617,8 @@
   "processingpayment": "正在处理支付...",
   "paymentcancelled": "支付已取消。",
   "paymentfailed": "支付验证失败，请重试。",
-  "onlinepaymentunavailable": "该门店暂不支持在线支付。"
+  "onlinepaymentunavailable": "该门店暂不支持在线支付。",
+  "cardsupinetbanking": "UPI、银行卡和网银",
+  "cardswallets": "银行卡和数字钱包",
+  "paypalandcards": "PayPal 账户和银行卡"
 }

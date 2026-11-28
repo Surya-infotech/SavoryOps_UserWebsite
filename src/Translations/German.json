@@ -617,5 +617,8 @@
   "processingpayment": "Zahlung wird verarbeitet...",
   "paymentcancelled": "Die Zahlung wurde abgebrochen.",
   "paymentfailed": "Zahlungsüberprüfung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-  "onlinepaymentunavailable": "Online-Zahlung ist für diese Filiale derzeit nicht verfügbar."
+  "onlinepaymentunavailable": "Online-Zahlung ist für diese Filiale derzeit nicht verfügbar.",
+  "cardsupinetbanking": "UPI, Karten & Online-Banking",
+  "cardswallets": "Karten & digitale Wallets",
+  "paypalandcards": "PayPal-Konto & Karten"
 }

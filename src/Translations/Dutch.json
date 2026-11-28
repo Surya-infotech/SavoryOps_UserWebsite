@@ -617,5 +617,8 @@
   "processingpayment": "Betaling wordt verwerkt...",
   "paymentcancelled": "Betaling is geannuleerd.",
   "paymentfailed": "Betalingsverificatie mislukt. Probeer het opnieuw.",
-  "onlinepaymentunavailable": "Online betalen is momenteel niet beschikbaar voor deze vestiging."
+  "onlinepaymentunavailable": "Online betalen is momenteel niet beschikbaar voor deze vestiging.",
+  "cardsupinetbanking": "UPI, kaarten & internetbankieren",
+  "cardswallets": "Kaarten & digitale wallets",
+  "paypalandcards": "PayPal-account & kaarten"
 }

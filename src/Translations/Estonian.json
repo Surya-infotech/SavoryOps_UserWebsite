@@ -617,5 +617,8 @@
   "processingpayment": "Makse töötlemine...",
   "paymentcancelled": "Makse tühistati.",
   "paymentfailed": "Makse kinnitamine ebaõnnestus. Palun proovi uuesti.",
-  "onlinepaymentunavailable": "Veebimakse pole selles poes praegu saadaval."
+  "onlinepaymentunavailable": "Veebimakse pole selles poes praegu saadaval.",
+  "cardsupinetbanking": "UPI, kaardid ja internetipank",
+  "cardswallets": "Kaardid ja digirahakotid",
+  "paypalandcards": "PayPal konto ja kaardid"
 }

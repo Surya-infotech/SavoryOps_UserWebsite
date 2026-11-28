@@ -617,5 +617,8 @@
   "processingpayment": "Обработка платежа...",
   "paymentcancelled": "Платёж отменён.",
   "paymentfailed": "Не удалось подтвердить платёж. Попробуйте ещё раз.",
-  "onlinepaymentunavailable": "Онлайн-оплата временно недоступна для этого заведения."
+  "onlinepaymentunavailable": "Онлайн-оплата временно недоступна для этого заведения.",
+  "cardsupinetbanking": "UPI, карты и онлайн-банкинг",
+  "cardswallets": "Карты и цифровые кошельки",
+  "paypalandcards": "Счёт PayPal и карты"
 }

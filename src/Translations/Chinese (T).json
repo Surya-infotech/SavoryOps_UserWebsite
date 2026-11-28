@@ -617,5 +617,8 @@
   "processingpayment": "正在處理付款...",
   "paymentcancelled": "付款已取消。",
   "paymentfailed": "付款驗證失敗，請重試。",
-  "onlinepaymentunavailable": "此門市目前不提供線上付款。"
+  "onlinepaymentunavailable": "此門市目前不提供線上付款。",
+  "cardsupinetbanking": "UPI、銀行卡與網路銀行",
+  "cardswallets": "銀行卡與數位錢包",
+  "paypalandcards": "PayPal 帳戶與銀行卡"
 }

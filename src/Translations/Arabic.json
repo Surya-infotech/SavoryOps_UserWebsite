@@ -617,5 +617,8 @@
   "processingpayment": "جارٍ معالجة الدفع...",
   "paymentcancelled": "تم إلغاء الدفع.",
   "paymentfailed": "فشل التحقق من الدفع. يرجى المحاولة مرة أخرى.",
-  "onlinepaymentunavailable": "الدفع الإلكتروني غير متاح حالياً لهذا المتجر."
+  "onlinepaymentunavailable": "الدفع الإلكتروني غير متاح حالياً لهذا المتجر.",
+  "cardsupinetbanking": "UPI والبطاقات والخدمات المصرفية عبر الإنترنت",
+  "cardswallets": "البطاقات والمحافظ الرقمية",
+  "paypalandcards": "حساب PayPal والبطاقات"
 }

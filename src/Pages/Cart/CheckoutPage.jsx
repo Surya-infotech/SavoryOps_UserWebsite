@@ -96,19 +96,25 @@ const GATEWAY_LOGO_PATHS = {
     "M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z",
 };
 
+const GATEWAY_SUBTITLE_KEYS = {
+  razorpay: "cardsupinetbanking",
+  stripe: "cardswallets",
+  paypal: "paypalandcards",
+};
+
 const GatewayLogo = ({ id }) => {
   const key = String(id || "").toLowerCase().trim();
   const path = GATEWAY_LOGO_PATHS[key];
   return (
-    <span className={`provider-logo-badge ${path ? `${key}-logo` : "default-logo"}`} aria-hidden="true">
+    <div className={`option-icon-wrap provider-logo-badge ${path ? `${key}-logo` : "default-logo"}`} aria-hidden="true">
       {path ? (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
           <path d={path} />
         </svg>
       ) : (
-        <CreditCardOutlinedIcon fontSize="small" />
+        <CreditCardOutlinedIcon />
       )}
-    </span>
+    </div>
   );
 };
 
@@ -1193,82 +1199,81 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              <div className="payment-options-grid">
-                {/* Cash Option (Hidden when order type is Delivery, shown for Pickup) */}
-                {!isDelivery && (
-                  <button
-                    type="button"
-                    className={`payment-option-pill ${selectedPaymentMethod === "Cash" ? "active" : ""}`}
-                    onClick={() => setSelectedPaymentMethod("Cash")}
+              {loadingGateways && isDelivery ? (
+                <div className="provider-loading-row">
+                  <CircularProgress size={18} color="inherit" />
+                  <span>{translations.processingpayment}</span>
+                </div>
+              ) : isDelivery && activeGateways.length === 0 ? (
+                <div className="provider-unavailable-note">
+                  {translations.onlinepaymentunavailable}
+                </div>
+              ) : (
+                <>
+                  <div
+                    className={`payment-options-grid ${
+                      (!isDelivery ? 1 : 0) + activeGateways.length === 4 ? "grid-two-col" : ""
+                    }`.trim()}
                   >
-                    <div className="option-icon-wrap">
-                      <PaymentsOutlinedIcon />
-                    </div>
-                    <div className="option-info">
-                      <span className="option-title">{translations.cash}</span>
-                      <span className="option-subtitle">{translations.payatcounter}</span>
-                    </div>
-                    {selectedPaymentMethod === "Cash" && (
-                      <CheckCircleIcon className="option-check-icon" />
+                    {/* Cash Option (Shown for Pickup & Dine-in) */}
+                    {!isDelivery && (
+                      <button
+                        type="button"
+                        className={`payment-option-pill ${selectedPaymentMethod === "Cash" ? "active" : ""}`}
+                        onClick={() => setSelectedPaymentMethod("Cash")}
+                      >
+                        <div className="option-icon-wrap">
+                          <PaymentsOutlinedIcon />
+                        </div>
+                        <div className="option-info">
+                          <span className="option-title">{translations.cash}</span>
+                          <span className="option-subtitle">{translations.payatcounter}</span>
+                        </div>
+                        {selectedPaymentMethod === "Cash" && (
+                          <CheckCircleIcon className="option-check-icon" />
+                        )}
+                      </button>
                     )}
-                  </button>
-                )}
 
-                {/* Online Option */}
-                <button
-                  type="button"
-                  className={`payment-option-pill ${selectedPaymentMethod === "Online" ? "active" : ""}`}
-                  onClick={() => setSelectedPaymentMethod("Online")}
-                >
-                  <div className="option-icon-wrap">
-                    <CreditCardOutlinedIcon />
+                    {/* Active Online Payment Gateways */}
+                    {activeGateways.map((gw) => {
+                      const gwKey = String(gw.id || "").toLowerCase().trim();
+                      const isSelectedGw =
+                        selectedPaymentMethod === "Online" && selectedProvider === gw.id;
+                      const subtitleKey =
+                        GATEWAY_SUBTITLE_KEYS[gwKey] || "creditdebitcardnetbanking";
+                      return (
+                        <button
+                          key={gw.id}
+                          type="button"
+                          className={`payment-option-pill gateway-option-pill ${
+                            isSelectedGw ? "active" : ""
+                          }`}
+                          onClick={() => {
+                            setSelectedPaymentMethod("Online");
+                            setSelectedProvider(gw.id);
+                          }}
+                        >
+                          <GatewayLogo id={gw.id} />
+                          <div className="option-info">
+                            <span className="option-title">{translations[gwKey] || gw.name}</span>
+                            <span className="option-subtitle">{translations[subtitleKey]}</span>
+                          </div>
+                          {isSelectedGw && (
+                            <CheckCircleIcon className="option-check-icon" />
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
-                  <div className="option-info">
-                    <span className="option-title">{translations.online}</span>
-                    <span className="option-subtitle">{translations.creditdebitcardnetbanking}</span>
-                  </div>
-                  {selectedPaymentMethod === "Online" && (
-                    <CheckCircleIcon className="option-check-icon" />
-                  )}
-                </button>
-              </div>
 
-              {selectedPaymentMethod === "Online" && (
-                <div className="payment-provider-section">
-                  {loadingGateways ? (
-                    <div className="provider-loading-row">
-                      <CircularProgress size={18} color="inherit" />
+                  {loadingGateways && !isDelivery && (
+                    <div className="provider-loading-row" style={{ marginTop: "0.75rem" }}>
+                      <CircularProgress size={16} color="inherit" />
                       <span>{translations.processingpayment}</span>
                     </div>
-                  ) : activeGateways.length === 0 ? (
-                    <div className="provider-unavailable-note">
-                      {translations.onlinepaymentunavailable}
-                    </div>
-                  ) : (
-                    <>
-                      <span className="provider-section-label">{translations.selectpaymentprovider}</span>
-                      <div className="provider-pills-grid">
-                        {activeGateways.map((gw) => {
-                          const isSelectedGw = selectedProvider === gw.id;
-                          return (
-                            <button
-                              key={gw.id}
-                              type="button"
-                              className={`provider-pill-btn ${isSelectedGw ? "active" : ""}`}
-                              onClick={() => setSelectedProvider(gw.id)}
-                            >
-                              <span className="provider-pill-info">
-                                <GatewayLogo id={gw.id} />
-                                <span className="provider-pill-name">{translations[gw.id] || gw.name}</span>
-                              </span>
-                              {isSelectedGw && <CheckCircleIcon className="provider-check-icon" />}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </>
                   )}
-                </div>
+                </>
               )}
             </div>
 

@@ -617,5 +617,8 @@
   "processingpayment": "در حال پردازش پرداخت...",
   "paymentcancelled": "پرداخت لغو شد.",
   "paymentfailed": "تأیید پرداخت ناموفق بود. لطفاً دوباره تلاش کنید.",
-  "onlinepaymentunavailable": "پرداخت آنلاین در حال حاضر برای این شعبه در دسترس نیست."
+  "onlinepaymentunavailable": "پرداخت آنلاین در حال حاضر برای این شعبه در دسترس نیست.",
+  "cardsupinetbanking": "UPI، کارت‌ها و بانکداری اینترنتی",
+  "cardswallets": "کارت‌ها و کیف پول‌های دیجیتال",
+  "paypalandcards": "حساب PayPal و کارت‌ها"
 }

@@ -617,5 +617,8 @@
   "processingpayment": "Procesando pago...",
   "paymentcancelled": "El pago fue cancelado.",
   "paymentfailed": "Error al verificar el pago. Inténtalo de nuevo.",
-  "onlinepaymentunavailable": "El pago en línea no está disponible actualmente para esta tienda."
+  "onlinepaymentunavailable": "El pago en línea no está disponible actualmente para esta tienda.",
+  "cardsupinetbanking": "UPI, tarjetas y banca en línea",
+  "cardswallets": "Tarjetas y billeteras digitales",
+  "paypalandcards": "Cuenta PayPal y tarjetas"
 }

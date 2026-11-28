@@ -617,5 +617,8 @@
   "processingpayment": "Processing payment...",
   "paymentcancelled": "Payment was cancelled.",
   "paymentfailed": "Payment verification failed. Please try again.",
-  "onlinepaymentunavailable": "Online payment is currently unavailable for this store."
+  "onlinepaymentunavailable": "Online payment is currently unavailable for this store.",
+  "cardsupinetbanking": "UPI, Cards & Netbanking",
+  "cardswallets": "Cards & Digital Wallets",
+  "paypalandcards": "PayPal Account & Cards"
 }
