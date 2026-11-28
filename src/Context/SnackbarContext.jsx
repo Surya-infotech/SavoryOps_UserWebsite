@@ -94,5 +94,3 @@ export const SnackbarProvider = ({ children }) => {
     </SnackbarContext.Provider>
   );
 };
-
-export default SnackbarContext;

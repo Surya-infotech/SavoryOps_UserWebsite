@@ -313,5 +313,3 @@ export const clearSelectedTable = () => {
     window.dispatchEvent(new CustomEvent("tableChange", { detail: null }));
   }
 };
-
-export default processTableQrCode;

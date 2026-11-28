@@ -131,11 +131,3 @@ export const validateCouponCode = async ({
     coupon: data.coupon || null,
   };
 };
-
-export default {
-  getAppliedCoupon,
-  saveAppliedCoupon,
-  clearAppliedCoupon,
-  fetchAvailableCoupons,
-  validateCouponCode,
-};

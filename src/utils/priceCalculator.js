@@ -118,7 +118,3 @@ export const calculateItemPrice = (item, posPayload, selectedOrderType = null) =
   const displayPrice = rawPrice * (1 + incPercent) + incFixed;
   return Number(displayPrice.toFixed(2));
 };
-
-export default {
-  calculateItemPrice,
-};

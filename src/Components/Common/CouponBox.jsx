@@ -222,7 +222,7 @@ const CouponBox = ({
                 </span>
               </div>
               <span className="applied-coupon-savings">
-                {translations.youSaved || translations.yousaved}{" "}
+                {translations.yousaved}{" "}
                 <strong>{formatPriceFromBranch(discountAmount, selectedBranch)}</strong>
               </span>
             </div>

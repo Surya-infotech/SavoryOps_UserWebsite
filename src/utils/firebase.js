@@ -361,5 +361,3 @@ export const setupCustomerForegroundNotificationListener = async (onReceive) => 
   });
 };
 
-export default app;
-

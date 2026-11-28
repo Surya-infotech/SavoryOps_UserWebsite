@@ -358,14 +358,3 @@ export const clearCart = () => {
     return { success: false, error };
   }
 };
-
-export default {
-  getCart,
-  saveCart,
-  addItemToCart,
-  getCartTotalCount,
-  getItemQuantitiesMap,
-  updateCartItemQuantity,
-  removeCartItem,
-  clearCart,
-};

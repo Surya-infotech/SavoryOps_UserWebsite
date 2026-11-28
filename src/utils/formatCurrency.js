@@ -130,5 +130,3 @@ export function formatPriceFromBranch(amount, branchDetails) {
     currencyposition
   );
 }
-
-export default formatPriceFromBranch;

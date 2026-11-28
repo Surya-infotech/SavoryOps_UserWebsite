@@ -19,7 +19,7 @@ const LANGUAGE_OPTIONS = [
   { name: 'Turkish', code: 'TR', short: 'Tur' },
 ];
 
-export const DEFAULT_LANGUAGE = 'English';
+const DEFAULT_LANGUAGE = 'English';
 
 const BROWSER_LANG_MAP = {
   ar: 'Arabic',
@@ -39,14 +39,14 @@ const BROWSER_LANG_MAP = {
   tr: 'Turkish',
 };
 
-export const isSupportedLanguage = (lang) =>
+const isSupportedLanguage = (lang) =>
   typeof lang === 'string' && LANGUAGE_OPTIONS.some((option) => option.name === lang);
 
 /**
  * Map a browser BCP-47 language tag (e.g. "en-US", "pt-BR", "zh-TW")
  * to a supported software language name, or null if unsupported.
  */
-export const matchBrowserLanguage = (browserTag) => {
+const matchBrowserLanguage = (browserTag) => {
   if (!browserTag || typeof browserTag !== 'string') return null;
   const normalized = browserTag.trim().toLowerCase().replace(/_/g, '-');
   if (!normalized) return null;
@@ -77,7 +77,7 @@ export const matchBrowserLanguage = (browserTag) => {
  * Detect the best matching software language from the browser's preferred languages,
  * or null if none of the browser languages are supported.
  */
-export const detectBrowserLanguage = () => {
+const detectBrowserLanguage = () => {
   if (typeof navigator === 'undefined') return null;
 
   const candidates = [];
@@ -179,5 +179,3 @@ export const isRtlLanguage = (lang) => {
 };
 
 export const getLanguageOptions = () => [...LANGUAGE_OPTIONS].sort((a, b) => a.name.localeCompare(b.name));
-
-export default LANGUAGE_OPTIONS;

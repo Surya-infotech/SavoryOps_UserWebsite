@@ -364,5 +364,3 @@ export const UnderMaintenance = () => {
     </div>
   );
 };
-
-export default UnderMaintenance;

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import PropTypes from "prop-types";
 import { getCountryCallingCode } from "react-phone-number-input";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SearchIcon from "@mui/icons-material/Search";
@@ -228,23 +227,6 @@ export const CustomCountrySelect = ({
       )}
     </div>
   );
-};
-
-CustomCountrySelect.propTypes = {
-  value: PropTypes.string,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.string,
-      divider: PropTypes.bool,
-    })
-  ),
-  onChange: PropTypes.func.isRequired,
-  iconComponent: PropTypes.elementType,
-  disabled: PropTypes.bool,
-  readOnly: PropTypes.bool,
-  "aria-label": PropTypes.string,
-  className: PropTypes.string,
 };
 
 export default CustomCountrySelect;

@@ -101,5 +101,3 @@ export const LanguageDropdown = ({ className = "" }) => {
     </div>
   );
 };
-
-export default LanguageDropdown;

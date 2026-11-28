@@ -636,7 +636,7 @@ const CartPage = () => {
 
         const data = await response.json().catch(() => ({}));
         if (HandleUnauthorized(data, null, navigate)) {
-          setIsOrderPlacing(false);
+          setIsSubmitting(false);
           return;
         }
 
@@ -758,7 +758,7 @@ const CartPage = () => {
 
         const data = await response.json().catch(() => ({}));
         if (HandleUnauthorized(data, null, navigate)) {
-          setIsOrderPlacing(false);
+          setIsSubmitting(false);
           return;
         }
 

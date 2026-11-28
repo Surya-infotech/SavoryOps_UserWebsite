@@ -55,7 +55,7 @@ const resolveActiveCharges = (payload) => {
   return { activeCharges: activeAdditional, isSpecialDay: false };
 };
 
-export const computeCouponDiscount = (coupon, subtotal, decimalPlaces = 2) => {
+const computeCouponDiscount = (coupon, subtotal, decimalPlaces = 2) => {
   const sub = Math.max(0, Number(subtotal) || 0);
   if (!coupon || sub <= 0) return 0;
 
@@ -373,10 +373,4 @@ export const computeCartBilling = (items, payload, selectedOrderType = null, app
     roundoff: roundoffObj,
     grandTotal,
   };
-};
-
-export default {
-  resolveActiveCharges,
-  computeCouponDiscount,
-  computeCartBilling,
 };
