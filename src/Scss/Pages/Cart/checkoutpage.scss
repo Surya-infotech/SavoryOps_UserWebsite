@@ -366,7 +366,7 @@
           align-items: center;
           justify-content: space-between;
           gap: 0.5rem;
-          padding: 0.75rem 1rem;
+          padding: 0.7rem 0.95rem;
           border-radius: 10px;
           border: 1.5px solid #e2e8f0;
           background: #ffffff;
@@ -376,6 +376,54 @@
           cursor: pointer;
           transition: all 0.2s ease;
 
+          .provider-pill-info {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            min-width: 0;
+          }
+
+          .provider-logo-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background-color 0.2s ease;
+
+            svg {
+              display: block;
+            }
+
+            &.razorpay-logo {
+              background: rgba(12, 35, 64, 0.08);
+              color: #0c2340;
+            }
+
+            &.paypal-logo {
+              background: rgba(0, 48, 135, 0.08);
+              color: #003087;
+            }
+
+            &.stripe-logo {
+              background: rgba(99, 91, 255, 0.1);
+              color: #635bff;
+            }
+
+            &.default-logo {
+              background: #f1f5f9;
+              color: #64748b;
+            }
+          }
+
+          .provider-pill-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
           &:hover {
             border-color: #cbd5e1;
           }
@@ -384,11 +432,17 @@
             border-color: #028802;
             background: #f0fdf4;
             color: #028802;
+
+            .provider-logo-badge {
+              background: #ffffff;
+              box-shadow: 0 1px 4px rgba(2, 136, 2, 0.12);
+            }
           }
 
           .provider-check-icon {
             font-size: 1.1rem;
             color: #028802;
+            flex-shrink: 0;
           }
         }
       }
