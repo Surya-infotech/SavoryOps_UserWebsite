@@ -609,5 +609,13 @@
   "branchclosedtoday": "Vestiging is vandaag gesloten",
   "branchhourscomplete": "Openingstijden van de vestiging zijn voorbij",
   "notavailableafterhours": "is niet beschikbaar buiten openingstijden. Beschikbaar:",
-  "none": "Geen"
+  "none": "Geen",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Selecteer betaalprovider",
+  "processingpayment": "Betaling wordt verwerkt...",
+  "paymentcancelled": "Betaling is geannuleerd.",
+  "paymentfailed": "Betalingsverificatie mislukt. Probeer het opnieuw.",
+  "onlinepaymentunavailable": "Online betalen is momenteel niet beschikbaar voor deze vestiging."
 }

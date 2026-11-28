@@ -609,5 +609,13 @@
   "branchclosedtoday": "Haru on täna suletud",
   "branchhourscomplete": "Haru lahtiolekuaeg on lõppenud",
   "notavailableafterhours": "pole pärast tööaega saadaval. Saadaval:",
-  "none": "Puudub"
+  "none": "Puudub",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Vali makseteenuse pakkuja",
+  "processingpayment": "Makse töötlemine...",
+  "paymentcancelled": "Makse tühistati.",
+  "paymentfailed": "Makse kinnitamine ebaõnnestus. Palun proovi uuesti.",
+  "onlinepaymentunavailable": "Veebimakse pole selles poes praegu saadaval."
 }

@@ -609,5 +609,13 @@
   "branchclosedtoday": "A unidade está fechada hoje",
   "branchhourscomplete": "O horário de funcionamento da unidade terminou",
   "notavailableafterhours": "não está disponível fora de horas. Disponível:",
-  "none": "Nenhum"
+  "none": "Nenhum",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Selecionar gateway de pagamento",
+  "processingpayment": "A processar pagamento...",
+  "paymentcancelled": "O pagamento foi cancelado.",
+  "paymentfailed": "A verificação do pagamento falhou. Tente novamente.",
+  "onlinepaymentunavailable": "O pagamento online está indisponível de momento para esta loja."
 }

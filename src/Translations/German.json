@@ -609,5 +609,13 @@
   "branchclosedtoday": "Die Filiale ist heute geschlossen",
   "branchhourscomplete": "Die Öffnungszeiten der Filiale sind beendet",
   "notavailableafterhours": "ist außerhalb der Geschäftszeiten nicht verfügbar. Verfügbar:",
-  "none": "Keine"
+  "none": "Keine",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Zahlungsanbieter auswählen",
+  "processingpayment": "Zahlung wird verarbeitet...",
+  "paymentcancelled": "Die Zahlung wurde abgebrochen.",
+  "paymentfailed": "Zahlungsüberprüfung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+  "onlinepaymentunavailable": "Online-Zahlung ist für diese Filiale derzeit nicht verfügbar."
 }

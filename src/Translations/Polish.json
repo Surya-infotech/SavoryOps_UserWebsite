@@ -609,5 +609,13 @@
   "branchclosedtoday": "Lokal jest dzisiaj zamknięty",
   "branchhourscomplete": "Godziny otwarcia lokalu dobiegły końca",
   "notavailableafterhours": "nie jest dostępne po godzinach otwarcia. Dostępne:",
-  "none": "Brak"
+  "none": "Brak",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Wybierz bramkę płatności",
+  "processingpayment": "Przetwarzanie płatności...",
+  "paymentcancelled": "Płatność została anulowana.",
+  "paymentfailed": "Weryfikacja płatności nie powiodła się. Spróbuj ponownie.",
+  "onlinepaymentunavailable": "Płatność online jest obecnie niedostępna dla tego lokalu."
 }

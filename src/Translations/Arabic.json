@@ -609,5 +609,13 @@
   "branchclosedtoday": "الفرع مغلق اليوم",
   "branchhourscomplete": "انتهت ساعات عمل الفرع",
   "notavailableafterhours": "غير متاح بعد ساعات عمل الفرع. المتاح:",
-  "none": "لا شيء"
+  "none": "لا شيء",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "اختر بوابة الدفع",
+  "processingpayment": "جارٍ معالجة الدفع...",
+  "paymentcancelled": "تم إلغاء الدفع.",
+  "paymentfailed": "فشل التحقق من الدفع. يرجى المحاولة مرة أخرى.",
+  "onlinepaymentunavailable": "الدفع الإلكتروني غير متاح حالياً لهذا المتجر."
 }

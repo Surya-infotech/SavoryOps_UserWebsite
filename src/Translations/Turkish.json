@@ -609,5 +609,13 @@
   "branchclosedtoday": "Şube bugün kapalı",
   "branchhourscomplete": "Şube çalışma saatleri sona erdi",
   "notavailableafterhours": "mesai saatleri dışında kullanılamaz. Mevcut:",
-  "none": "Yok"
+  "none": "Yok",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Ödeme Sağlayıcısı Seçin",
+  "processingpayment": "Ödeme işleniyor...",
+  "paymentcancelled": "Ödeme iptal edildi.",
+  "paymentfailed": "Ödeme doğrulaması başarısız oldu. Lütfen tekrar deneyin.",
+  "onlinepaymentunavailable": "Bu şube için çevrimiçi ödeme şu anda kullanılamıyor."
 }

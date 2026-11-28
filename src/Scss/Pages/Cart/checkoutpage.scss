@@ -322,6 +322,75 @@
         }
       }
     }
+
+    .payment-provider-section {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #e2e8f0;
+
+      .provider-loading-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: #64748b;
+      }
+
+      .provider-unavailable-note {
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .provider-section-label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 0.6rem;
+      }
+
+      .provider-pills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 0.75rem;
+
+        .provider-pill-btn {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem;
+          border-radius: 10px;
+          border: 1.5px solid #e2e8f0;
+          background: #ffffff;
+          color: #0f172a;
+          font-size: 0.9rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            border-color: #cbd5e1;
+          }
+
+          &.active {
+            border-color: #028802;
+            background: #f0fdf4;
+            color: #028802;
+          }
+
+          .provider-check-icon {
+            font-size: 1.1rem;
+            color: #028802;
+          }
+        }
+      }
+    }
   }
 
   /* Order Items Card */

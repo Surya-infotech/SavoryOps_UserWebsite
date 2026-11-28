@@ -609,5 +609,13 @@
   "branchclosedtoday": "門市今日公休",
   "branchhourscomplete": "門市營業時間已結束",
   "notavailableafterhours": "在非營業時間無法使用。可用：",
-  "none": "無"
+  "none": "無",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "選擇付款閘道",
+  "processingpayment": "正在處理付款...",
+  "paymentcancelled": "付款已取消。",
+  "paymentfailed": "付款驗證失敗，請重試。",
+  "onlinepaymentunavailable": "此門市目前不提供線上付款。"
 }

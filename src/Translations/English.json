@@ -609,5 +609,13 @@
   "branchclosedtoday": "Branch is closed today",
   "branchhourscomplete": "Branch operating hours are complete",
   "notavailableafterhours": "is not available after branch hours. Available:",
-  "none": "None"
+  "none": "None",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Select Payment Gateway",
+  "processingpayment": "Processing payment...",
+  "paymentcancelled": "Payment was cancelled.",
+  "paymentfailed": "Payment verification failed. Please try again.",
+  "onlinepaymentunavailable": "Online payment is currently unavailable for this store."
 }

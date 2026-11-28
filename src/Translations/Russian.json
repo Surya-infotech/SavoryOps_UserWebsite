@@ -609,5 +609,13 @@
   "branchclosedtoday": "Филиал сегодня закрыт",
   "branchhourscomplete": "Время работы филиала завершено",
   "notavailableafterhours": "недоступно в нерабочее время. Доступно:",
-  "none": "Нет"
+  "none": "Нет",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Выберите платёжный шлюз",
+  "processingpayment": "Обработка платежа...",
+  "paymentcancelled": "Платёж отменён.",
+  "paymentfailed": "Не удалось подтвердить платёж. Попробуйте ещё раз.",
+  "onlinepaymentunavailable": "Онлайн-оплата временно недоступна для этого заведения."
 }

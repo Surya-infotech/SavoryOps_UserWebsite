@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import EditLocationAltOutlinedIcon from "@mui/icons-material/EditLocationAltOutlined";
 import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
@@ -46,6 +46,27 @@ const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
 const customerTokenName = import.meta.env.VITE_CUSTOMERTOKEN_NAME;
 const customerIdName = import.meta.env.VITE_CUSTOMERID_NAME;
 
+const loadRazorpayCheckoutScript = () =>
+  new Promise((resolve) => {
+    if (typeof window !== "undefined" && typeof window.Razorpay === "function") {
+      resolve(true);
+      return;
+    }
+    const existing = document.getElementById("razorpay-checkout-js");
+    if (existing) {
+      existing.addEventListener("load", () => resolve(typeof window.Razorpay === "function"));
+      existing.addEventListener("error", () => resolve(false));
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = "razorpay-checkout-js";
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(typeof window.Razorpay === "function");
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
 const ADDRESS_TYPES = [
   { id: "home", icon: HomeOutlinedIcon },
   { id: "work", icon: WorkOutlineOutlinedIcon },
@@ -68,6 +89,7 @@ const getAddressTypeIcon = (type) => {
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { translations = {}, isRtl } = useLanguage();
   const { business, couponEnabled: ctxCouponEnabled } = useWebsiteStatus();
   const { showSnackbar } = useSnackbar();
@@ -98,6 +120,9 @@ const CheckoutPage = () => {
   const [loadingAddresses, setLoadingAddresses] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("Online");
+  const [activeGateways, setActiveGateways] = useState([]);
+  const [loadingGateways, setLoadingGateways] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Add Address Modal States (Parity with ManageAddressPage)
@@ -373,6 +398,138 @@ const CheckoutPage = () => {
     localStorage.getItem("selectedBranchId");
   const checkoutCustomerId = localStorage.getItem(customerIdName) || null;
   const checkoutSubdomain = getWebsiteSubdomain();
+
+  useEffect(() => {
+    if (!checkoutBranchId) return undefined;
+    let cancelled = false;
+    (async () => {
+      await Promise.resolve();
+      if (cancelled) return;
+      setLoadingGateways(true);
+      try {
+        const res = await fetch(`${adminPanelBackendPath}/Website/Setting/GetActivePaymentGateways/${checkoutBranchId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "x-user": "admin" },
+        });
+        const d = await res.json();
+        if (cancelled) return;
+        const list = res.ok && Array.isArray(d?.gateways) ? d.gateways : [];
+        setActiveGateways(list);
+        setSelectedProvider((prev) => {
+          if (prev && list.some((g) => g.id === prev)) return prev;
+          return list[0]?.id || "";
+        });
+        if (list.length === 0 && !isDelivery) {
+          setSelectedPaymentMethod("Cash");
+        }
+      } catch {
+        if (!cancelled) setActiveGateways([]);
+      } finally {
+        if (!cancelled) setLoadingGateways(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [checkoutBranchId, isDelivery]);
+
+  const completeWebsiteOrderCleanup = useCallback((data, isUpdateOrder = false) => {
+    isOrderPlacedRef.current = true;
+    clearCart();
+    clearAppliedCoupon();
+    clearSelectedTable();
+    setSelectedTableNo(null);
+
+    const currentOrderId = localStorage.getItem("currentOrderId");
+    if (isUpdateOrder) {
+      localStorage.removeItem("currentOrderNo");
+      localStorage.removeItem("currentOrderId");
+      localStorage.removeItem("orderType");
+    }
+
+    showSnackbar(
+      isUpdateOrder ? translations.orderupdatedsuccessfully : translations.orderplacedsuccessfully,
+      "success",
+      4000
+    );
+
+    const targetOrderId =
+      (isUpdateOrder ? currentOrderId : null) ||
+      data?.customerOrder?._id ||
+      data?.order?._id ||
+      data?.orderId ||
+      data?._id;
+    navigate(targetOrderId ? `/orderdetails/${targetOrderId}` : "/orders");
+  }, [navigate, showSnackbar, translations.orderplacedsuccessfully, translations.orderupdatedsuccessfully]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const paymentStatus = params.get("payment_status");
+    const txn = params.get("txn");
+    const sessionId = params.get("session_id");
+    const tokenParam = params.get("token");
+
+    if (!paymentStatus) return;
+
+    if (paymentStatus === "cancel") {
+      showSnackbar(translations.paymentcancelled, "warning", 4000);
+      navigate("/checkout", { replace: true });
+      return;
+    }
+
+    if (paymentStatus === "success" && (txn || sessionId || tokenParam) && checkoutBranchId) {
+      let cancelled = false;
+      const token = localStorage.getItem(customerTokenName);
+      (async () => {
+        await Promise.resolve();
+        if (cancelled) return;
+        setIsSubmitting(true);
+        try {
+          const r = await fetch(`${adminPanelBackendPath}/Website/Order/VerifyPaymentAndComplete`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user": "admin",
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            body: JSON.stringify({
+              branchid: checkoutBranchId,
+              transactionRef: txn || "",
+              sessionId: sessionId || "",
+              token: tokenParam || "",
+            }),
+          });
+          const d = await r.json().catch(() => ({}));
+          if (cancelled) return;
+          if (r.ok) {
+            completeWebsiteOrderCleanup(d, false);
+          } else {
+            showSnackbar(d?.message || translations.paymentfailed, "error", 5000);
+            navigate("/checkout", { replace: true });
+          }
+        } catch {
+          if (!cancelled) {
+            showSnackbar(translations.paymentfailed, "error", 5000);
+            navigate("/checkout", { replace: true });
+          }
+        } finally {
+          if (!cancelled) setIsSubmitting(false);
+        }
+      })();
+
+      return () => {
+        cancelled = true;
+      };
+    }
+  }, [
+    location.search,
+    checkoutBranchId,
+    navigate,
+    showSnackbar,
+    completeWebsiteOrderCleanup,
+    translations.paymentcancelled,
+    translations.paymentfailed,
+  ]);
 
   useEffect(() => {
     if (!appliedCoupon?.couponcode || isUpdatingExistingOrder || !cartItems.length || !checkoutBranchId) {
@@ -732,8 +889,129 @@ const CheckoutPage = () => {
       }
 
       const currentOrderNo = localStorage.getItem("currentOrderNo");
-      const currentOrderId = localStorage.getItem("currentOrderId");
       const isUpdate = Boolean(currentOrderNo);
+
+      if (!isUpdate && selectedPaymentMethod === "Online") {
+        if (!activeGateways.length) {
+          showSnackbar(translations.onlinepaymentunavailable, "error", 4000);
+          setIsSubmitting(false);
+          return;
+        }
+        if (!selectedProvider) {
+          showSnackbar(translations.selectpaymentprovider, "error", 4000);
+          setIsSubmitting(false);
+          return;
+        }
+
+        const returnBase = `${window.location.origin}/checkout`;
+        const sessionRes = await fetch(
+          `${adminPanelBackendPath}/Website/Order/CreatePaymentSession/${customerId}/${branchId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user": "admin",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              ...orderData,
+              provider: selectedProvider,
+              successUrl: returnBase,
+              cancelUrl: returnBase,
+              idempotencyKey: `web_${customerId}_${branchId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            }),
+          }
+        );
+
+        const sessionData = await sessionRes.json().catch(() => ({}));
+        if (HandleUnauthorized(sessionData, null, navigate)) {
+          setIsSubmitting(false);
+          return;
+        }
+        if (!sessionRes.ok) {
+          showSnackbar(sessionData?.message || translations.paymentfailed, "error", 4000);
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (sessionData.alreadyPaid && sessionData.targetEntityId) {
+          completeWebsiteOrderCleanup(sessionData, false);
+          return;
+        }
+
+        const { transactionRef, session } = sessionData;
+        if (selectedProvider === "stripe" && session?.checkoutUrl) {
+          window.location.href = session.checkoutUrl;
+          return;
+        }
+        if (selectedProvider === "paypal" && session?.approvalUrl) {
+          window.location.href = session.approvalUrl;
+          return;
+        }
+        if (selectedProvider === "razorpay" && session?.providerOrderId) {
+          const loaded = await loadRazorpayCheckoutScript();
+          if (!loaded) {
+            showSnackbar(translations.paymentfailed, "error", 4000);
+            setIsSubmitting(false);
+            return;
+          }
+
+          const options = {
+            key: session.publicKey,
+            order_id: session.providerOrderId,
+            currency: session.currency,
+            name: businessDisplayName || selectedBranch?.businessname || "SavoryOps",
+            description: `${translations.orders} (${transactionRef})`,
+            handler: async (rzpResponse) => {
+              try {
+                setIsSubmitting(true);
+                const verifyRes = await fetch(`${adminPanelBackendPath}/Website/Order/VerifyPaymentAndComplete`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-user": "admin",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({
+                    branchid: branchId,
+                    transactionRef,
+                    verificationPayload: rzpResponse,
+                  }),
+                });
+                const verifyData = await verifyRes.json().catch(() => ({}));
+                if (verifyRes.ok) {
+                  completeWebsiteOrderCleanup(verifyData, false);
+                } else {
+                  showSnackbar(verifyData?.message || translations.paymentfailed, "error", 5000);
+                  setIsSubmitting(false);
+                }
+              } catch {
+                showSnackbar(translations.paymentfailed, "error", 5000);
+                setIsSubmitting(false);
+              }
+            },
+            modal: {
+              ondismiss: () => {
+                setIsSubmitting(false);
+                showSnackbar(translations.paymentcancelled, "warning", 3500);
+              },
+            },
+            theme: { color: "#028802" },
+          };
+
+          const rzpInstance = new window.Razorpay(options);
+          rzpInstance.on("payment.failed", (failRes) => {
+            setIsSubmitting(false);
+            showSnackbar(failRes?.error?.description || translations.paymentfailed, "error", 5000);
+          });
+          rzpInstance.open();
+          return;
+        }
+
+        showSnackbar(translations.paymentfailed, "error", 4000);
+        setIsSubmitting(false);
+        return;
+      }
 
       const orderUrl = isUpdate
         ? `${adminPanelBackendPath}/Website/Order/UpdateOrder/${customerId}/${branchId}/${currentOrderNo}`
@@ -759,48 +1037,7 @@ const CheckoutPage = () => {
       }
 
       if (response.ok) {
-        isOrderPlacedRef.current = true;
-        clearCart();
-        clearSelectedTable();
-        setSelectedTableNo(null);
-
-        if (isUpdate) {
-          localStorage.removeItem("currentOrderNo");
-          localStorage.removeItem("currentOrderId");
-          localStorage.removeItem("orderType");
-          showSnackbar(
-            translations.orderupdatedsuccessfully,
-            "success",
-            4000
-          );
-          const targetOrderId =
-            currentOrderId ||
-            data?.customerOrder?._id ||
-            data?.order?._id ||
-            data?.orderId ||
-            data?._id;
-          if (targetOrderId) {
-            navigate(`/orderdetails/${targetOrderId}`);
-          } else {
-            navigate("/orders");
-          }
-        } else {
-          showSnackbar(
-            translations.orderplacedsuccessfully,
-            "success",
-            4000
-          );
-          const targetOrderId =
-            data?.customerOrder?._id ||
-            data?.order?._id ||
-            data?.orderId ||
-            data?._id;
-          if (targetOrderId) {
-            navigate(`/orderdetails/${targetOrderId}`);
-          } else {
-            navigate("/orders");
-          }
-        }
+        completeWebsiteOrderCleanup(data, isUpdate);
       } else {
         const errorMsg = data?.message || (isUpdate ? translations.failedtoadditemstoorder : translations.failedtoprocessorder);
         showSnackbar(errorMsg, "error", 4000);
@@ -970,6 +1207,41 @@ const CheckoutPage = () => {
                   )}
                 </button>
               </div>
+
+              {selectedPaymentMethod === "Online" && (
+                <div className="payment-provider-section">
+                  {loadingGateways ? (
+                    <div className="provider-loading-row">
+                      <CircularProgress size={18} color="inherit" />
+                      <span>{translations.processingpayment}</span>
+                    </div>
+                  ) : activeGateways.length === 0 ? (
+                    <div className="provider-unavailable-note">
+                      {translations.onlinepaymentunavailable}
+                    </div>
+                  ) : (
+                    <>
+                      <span className="provider-section-label">{translations.selectpaymentprovider}</span>
+                      <div className="provider-pills-grid">
+                        {activeGateways.map((gw) => {
+                          const isSelectedGw = selectedProvider === gw.id;
+                          return (
+                            <button
+                              key={gw.id}
+                              type="button"
+                              className={`provider-pill-btn ${isSelectedGw ? "active" : ""}`}
+                              onClick={() => setSelectedProvider(gw.id)}
+                            >
+                              <span className="provider-pill-name">{translations[gw.id] || gw.name}</span>
+                              {isSelectedGw && <CheckCircleIcon className="provider-check-icon" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* 3. Items Preview Card */}

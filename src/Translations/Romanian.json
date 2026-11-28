@@ -609,5 +609,13 @@
   "branchclosedtoday": "Locația este închisă astăzi",
   "branchhourscomplete": "Programul de funcționare s-a încheiat",
   "notavailableafterhours": "nu este disponibil în afara programului. Disponibil:",
-  "none": "Niciunul"
+  "none": "Niciunul",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "Selectează procesatorul de plăți",
+  "processingpayment": "Se procesează plata...",
+  "paymentcancelled": "Plata a fost anulată.",
+  "paymentfailed": "Verificarea plății a eșuat. Te rugăm să încerci din nou.",
+  "onlinepaymentunavailable": "Plata online este indisponibilă momentan pentru această locație."
 }

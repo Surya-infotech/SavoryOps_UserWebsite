@@ -609,5 +609,13 @@
   "branchclosedtoday": "شعبه امروز تعطیل است",
   "branchhourscomplete": "ساعات کاری شعبه به پایان رسیده است",
   "notavailableafterhours": "پس از ساعات کاری شعبه در دسترس نیست. موارد موجود:",
-  "none": "هیچ‌کدام"
+  "none": "هیچ‌کدام",
+  "razorpay": "Razorpay",
+  "stripe": "Stripe",
+  "paypal": "PayPal",
+  "selectpaymentprovider": "درگاه پرداخت را انتخاب کنید",
+  "processingpayment": "در حال پردازش پرداخت...",
+  "paymentcancelled": "پرداخت لغو شد.",
+  "paymentfailed": "تأیید پرداخت ناموفق بود. لطفاً دوباره تلاش کنید.",
+  "onlinepaymentunavailable": "پرداخت آنلاین در حال حاضر برای این شعبه در دسترس نیست."
 }
