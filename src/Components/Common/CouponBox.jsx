@@ -89,7 +89,7 @@ const CouponBox = ({
   );
 
   const bestCouponCode = useMemo(() => {
-    const eligible = availableCoupons.filter((c) => c && c.isEligible !== false);
+    const eligible = availableCoupons.filter((c) => c && c.isEligible !== false && c.eligible !== false);
     if (eligible.length < 2) return null;
     let bestCode = null;
     let maxSavings = 0;
@@ -101,6 +101,17 @@ const CouponBox = ({
       }
     }
     return maxSavings > 0 ? bestCode : null;
+  }, [availableCoupons, estimateCouponSavings]);
+
+  const sortedCoupons = useMemo(() => {
+    return [...availableCoupons].sort((a, b) => {
+      const aLocked = a?.isEligible === false || a?.eligible === false ? 1 : 0;
+      const bLocked = b?.isEligible === false || b?.eligible === false ? 1 : 0;
+      if (aLocked !== bLocked) return aLocked - bLocked;
+      const aEst = Number(a?.estimatedDiscount ?? estimateCouponSavings(a)) || 0;
+      const bEst = Number(b?.estimatedDiscount ?? estimateCouponSavings(b)) || 0;
+      return bEst - aEst;
+    });
   }, [availableCoupons, estimateCouponSavings]);
 
   const handleCopyCode = async (code) => {
@@ -308,15 +319,15 @@ const CouponBox = ({
                     <CircularProgress size={28} color="success" />
                     <span>{translations.loading}</span>
                   </div>
-                ) : availableCoupons.length === 0 ? (
+                ) : sortedCoupons.length === 0 ? (
                   <div className="coupon-modal-empty">
                     <LocalOfferOutlinedIcon className="empty-coupon-icon" />
                     <p>{translations.nocouponsavailable}</p>
                   </div>
                 ) : (
                   <div className="coupon-modal-list">
-                    {availableCoupons.map((c) => {
-                      const isEligible = c.isEligible !== false;
+                    {sortedCoupons.map((c) => {
+                      const isEligible = c.isEligible !== false && c.eligible !== false;
                       const isApplied =
                         appliedCoupon?.couponcode &&
                         String(appliedCoupon.couponcode).toUpperCase() ===
